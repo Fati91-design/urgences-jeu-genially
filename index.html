@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Urgences – Agir pour sauver</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding-top: 60px;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 8px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚑 Urgences – Agir pour sauver</h1>
+
+<p>Votre prénom :</p>
+<input id="name" placeholder="Votre prénom">
+
+<p>Niveau :</p>
+<select id="level">
+  <option value="facile">Facile</option>
+  <option value="intermediaire">Intermédiaire</option>
+  <option value="expert">Expert</option>
+</select>
+
+<br><br>
+<button onclick="start()">Commencer</button>
+
+<script>
+function start() {
+  const name = document.getElementById("name").value;
+  const level = document.getElementById("level").value;
+
+  if (!name) {
+    alert("Veuillez entrer votre prénom");
+    return;
+  }
+
+  localStorage.setItem("playerName", name);
+  localStorage.setItem("level", level);
+  localStorage.setItem("score", 0);
+
+  alert("Bienvenue " + name + " !");
+}
+</script>
+
+</body>
+</html>
