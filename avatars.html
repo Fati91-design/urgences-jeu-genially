@@ -16,21 +16,46 @@
       align-items:center;
       justify-content:center;
       padding: 32px 18px;
+      position: relative;
     }
 
     .glass{
-      width: min(900px, 100%);
+      width: min(920px, 100%);
       background: rgba(0,0,0,.42);
       border: 1px solid rgba(255,255,255,.14);
       backdrop-filter: blur(10px);
       border-radius: 22px;
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
       overflow: hidden;
+      position: relative;
+    }
+
+    /* Particles overlay */
+    #fx {
+      position:absolute;
+      inset: 0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      opacity: .85;
+      mix-blend-mode: screen;
     }
 
     .header{
       padding: 18px 18px 10px;
       border-bottom: 1px solid rgba(255,255,255,.10);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hello{
+      font-size: 13px;
+      color: rgba(255,255,255,.78);
+      margin: 0 0 6px;
+      letter-spacing: .2px;
+    }
+    .hello b{
+      color: rgba(255, 190, 110, 0.98);
     }
 
     .title{
@@ -42,7 +67,7 @@
 
     .subtitle{
       margin: 6px 0 0;
-      color: rgba(255,255,255,.75);
+      color: rgba(255,255,255,.72);
       font-size: 13px;
     }
 
@@ -51,11 +76,13 @@
       padding: 18px;
       display:flex;
       justify-content:center;
+      position: relative;
+      z-index: 2;
     }
 
     .trio{
-      width: min(720px, 100%);
-      height: 360px;                 /* ajuste si besoin */
+      width: min(740px, 100%);
+      height: 360px;
       position: relative;
       display:flex;
       justify-content:center;
@@ -65,17 +92,16 @@
     .avatar-pick{
       position:absolute;
       bottom: 0;
-      height: 330px;                 /* hauteur commune */
+      height: 330px;
       width: auto;
       cursor: pointer;
       user-select: none;
       -webkit-user-drag: none;
       filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
-      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+      transition: transform .16s ease, filter .16s ease, opacity .16s ease;
       outline: none;
     }
 
-    /* positions */
     .left  { left: 6%;  transform: scale(.96); z-index: 1; opacity: .98; }
     .center{ left: 50%; transform: translateX(-50%) scale(1.03); z-index: 3; }
     .right { right: 6%; transform: scale(.96); z-index: 1; opacity: .98; }
@@ -85,7 +111,6 @@
       filter: drop-shadow(0 22px 22px rgba(0,0,0,.55));
     }
 
-    /* Sélection */
     .selected{
       filter:
         drop-shadow(0 26px 28px rgba(0,0,0,.65))
@@ -94,7 +119,6 @@
       opacity: 1 !important;
       transform: translateY(-6px) scale(1.03) !important;
     }
-
     .dimmed{
       opacity: .55;
       transform: scale(.94);
@@ -108,6 +132,17 @@
       gap: 10px;
       align-items: center;
       justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Animated appearance */
+    .pop {
+      animation: popIn .25s ease both;
+    }
+    @keyframes popIn{
+      from{ transform: translateY(8px) scale(.98); opacity: 0; }
+      to  { transform: translateY(0)   scale(1);   opacity: 1; }
     }
 
     .badge-ready{
@@ -118,10 +153,12 @@
       padding: 8px 12px;
       border-radius: 999px;
       font-size: 12px;
+      gap: 8px;
+      align-items:center;
     }
 
     .btn-ember{
-      display:none; /* apparaît seulement après sélection */
+      display:none;
       border: 0;
       border-radius: 14px;
       padding: 10px 14px;
@@ -140,7 +177,6 @@
       font-weight: 700;
     }
 
-    /* Responsive */
     @media (max-width: 576px){
       .trio{ height: 270px; }
       .avatar-pick{ height: 240px; }
@@ -153,9 +189,11 @@
 <body>
   <div class="page-wrap">
     <div class="glass">
+      <canvas id="fx"></canvas>
 
       <div class="header">
-        <div class="title">Choisissez votre avatar</div>
+        <p class="hello" id="helloLine"></p>
+        <div class="title">Choisis ton avatar</div>
         <div class="subtitle" id="roleLine"></div>
       </div>
 
@@ -164,10 +202,10 @@
       </div>
 
       <div class="footer">
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
           <span class="badge-ready" id="readyBadge">✅ Avatar sélectionné</span>
           <span class="text-white-50" style="font-size:12px;" id="helpTxt">
-            Cliquez sur un avatar pour le sélectionner.
+            Clique sur un avatar pour le sélectionner.
           </span>
         </div>
 
@@ -181,7 +219,12 @@
   </div>
 
 <script>
-  // ---- 1) Récupérer le rôle choisi ----
+  // ---- A) Bonjour [Prénom] ----
+  const playerName = localStorage.getItem("playerName") || "Joueur";
+  document.getElementById("helloLine").innerHTML =
+    `Bonjour <b>${escapeHtml(playerName)}</b>, choisis ton avatar.`;
+
+  // ---- B) Métier ----
   const role = localStorage.getItem("role");
   const roleLine = document.getElementById("roleLine");
 
@@ -197,7 +240,7 @@
     roleLine.textContent = roleLabels[role];
   }
 
-  // ---- 2) Définir les 3 avatars par métier ----
+  // ---- C) Avatars par métier ----
   const avatarsByRole = {
     medecin: [
       {pos:"left",   file:"medecin_f.png",         alt:"Médecin femme"},
@@ -226,7 +269,6 @@
 
   function renderTrio() {
     trio.innerHTML = "";
-
     const items = avatarsByRole[role];
     if (!items) return;
 
@@ -236,39 +278,42 @@
       img.src = `assets/avatars/${item.file}`;
       img.alt = item.alt;
       img.dataset.file = item.file;
-
       img.addEventListener("click", () => selectAvatar(item.file));
       trio.appendChild(img);
     });
 
-    // Si l'utilisateur avait déjà choisi, on restaure la sélection
+    // Restore previous selection if any
     const saved = localStorage.getItem("avatar");
     if (saved) selectAvatar(saved, true);
+  }
+
+  function showReadyUI(silent){
+    readyBadge.style.display = "inline-flex";
+    nextBtn.style.display = "inline-block";
+
+    // animate only once
+    if (!readyBadge.classList.contains("pop")) readyBadge.classList.add("pop");
+    if (!nextBtn.classList.contains("pop")) nextBtn.classList.add("pop");
+
+    helpTxt.textContent = silent ? "Avatar restauré. Clique sur Suivant." : "Parfait. Tu peux continuer.";
   }
 
   function selectAvatar(file, silent=false) {
     selectedFile = file;
 
-    // Visuel: sélectionner + atténuer les autres
     document.querySelectorAll(".avatar-pick").forEach(el => {
       const isSelected = el.dataset.file === file;
       el.classList.toggle("selected", isSelected);
       el.classList.toggle("dimmed", !isSelected);
     });
 
-    // Sauvegarder
     localStorage.setItem("avatar", file);
     localStorage.setItem("setupDone", "true");
 
-    // UI: afficher badge + bouton suivant
-    readyBadge.style.display = "inline-flex";
-    nextBtn.style.display = "inline-block";
-    helpTxt.textContent = silent ? "Avatar restauré. Cliquez sur Suivant." : "Parfait. Vous pouvez continuer.";
+    // Start particles burst on selection
+    particles.burst();
 
-    if (!silent) {
-      // petit feedback discret (sans popup agressive)
-      // (tu peux enlever si tu veux zéro message)
-    }
+    showReadyUI(silent);
   }
 
   resetBtn.addEventListener("click", () => {
@@ -282,20 +327,109 @@
 
     readyBadge.style.display = "none";
     nextBtn.style.display = "none";
-    helpTxt.textContent = "Cliquez sur un avatar pour le sélectionner.";
+    helpTxt.textContent = "Clique sur un avatar pour le sélectionner.";
+
+    // reset animation classes so they pop again later
+    readyBadge.classList.remove("pop");
+    nextBtn.classList.remove("pop");
   });
 
   nextBtn.addEventListener("click", () => {
     if (!selectedFile) return;
 
-    // ✅ Option A (recommandée avec Genially) :
-    // on ne force pas la navigation Genially, on affiche un message
-    alert("✅ Prêt ! Cliquez sur le bouton « Suivant » dans Genially pour commencer le jeu.");
+    // Avec Genially, le plus fiable est de cliquer sur le bouton "Suivant" Genially
+    alert("✅ Prêt ! Clique maintenant sur « Suivant » dans Genially pour commencer le jeu.");
 
-    // ✅ Option B (si tu as une page HTML scene1.html et tu veux y aller) :
+    // Si tu as une page HTML scene1.html et tu veux y aller directement :
     // window.location.href = "scene1.html";
   });
 
+  // ---- D) Particules (canvas) ----
+  const canvas = document.getElementById("fx");
+  const ctx = canvas.getContext("2d");
+
+  function resize(){
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = Math.floor(rect.width);
+    canvas.height = Math.floor(rect.height);
+  }
+  window.addEventListener("resize", resize);
+
+  const particles = {
+    list: [],
+    last: performance.now(),
+    enabled: true,
+
+    spawn(x, y, count, power){
+      for(let i=0;i<count;i++){
+        const a = Math.random() * Math.PI * 2;
+        const sp = (Math.random() * 0.9 + 0.2) * power;
+        this.list.push({
+          x, y,
+          vx: Math.cos(a) * sp,
+          vy: Math.sin(a) * sp - 0.6,
+          life: 1,
+          size: Math.random()*2.2 + 0.9,
+          hue: 28 + Math.random()*18, // ember-ish
+          alpha: 0.85
+        });
+      }
+    },
+
+    burst(){
+      // centre de la carte (légèrement au-dessus)
+      const x = canvas.width * 0.50;
+      const y = canvas.height * 0.50;
+      this.spawn(x, y, 52, 2.2);
+    },
+
+    tick(now){
+      const dt = Math.min(0.033, (now - this.last) / 1000);
+      this.last = now;
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // faint ambient sparks (low rate)
+      if (Math.random() < 0.08) {
+        this.spawn(canvas.width*(0.2+Math.random()*0.6), canvas.height*(0.2+Math.random()*0.6), 2, 0.8);
+      }
+
+      // update
+      this.list = this.list.filter(p => p.life > 0);
+      for(const p of this.list){
+        p.vy += 1.2 * dt;        // gravity
+        p.vx *= (1 - 0.7*dt);    // drag
+        p.vy *= (1 - 0.5*dt);
+
+        p.x += p.vx * 60 * dt;
+        p.y += p.vy * 60 * dt;
+
+        p.life -= 1.25 * dt;
+        const t = Math.max(0, p.life);
+        const a = p.alpha * t;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${a})`;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(this.tick.bind(this));
+    }
+  };
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  // init
+  resize();
+  requestAnimationFrame(particles.tick.bind(particles));
   renderTrio();
 </script>
 
