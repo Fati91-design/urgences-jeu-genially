@@ -1,69 +1,302 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Urgences – Avatar</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Urgences – Choix de l’avatar</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-html, body { background: transparent; color: white; }
-.avatar {
-  cursor: pointer;
-  border-radius: 16px;
-  transition: transform .15s, box-shadow .15s;
-}
-.avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 0 4px rgba(255,165,0,.5);
-}
-</style>
+  <style>
+    html, body { background: transparent; margin: 0; color: #fff; }
+
+    .page-wrap{
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 32px 18px;
+    }
+
+    .glass{
+      width: min(900px, 100%);
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+
+    .header{
+      padding: 18px 18px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .title{
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: .2px;
+      font-size: 22px;
+    }
+
+    .subtitle{
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.75);
+      font-size: 13px;
+    }
+
+    /* Trio assemblé */
+    .trio-wrap{
+      padding: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .trio{
+      width: min(720px, 100%);
+      height: 360px;                 /* ajuste si besoin */
+      position: relative;
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
+    }
+
+    .avatar-pick{
+      position:absolute;
+      bottom: 0;
+      height: 330px;                 /* hauteur commune */
+      width: auto;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+      filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+      outline: none;
+    }
+
+    /* positions */
+    .left  { left: 6%;  transform: scale(.96); z-index: 1; opacity: .98; }
+    .center{ left: 50%; transform: translateX(-50%) scale(1.03); z-index: 3; }
+    .right { right: 6%; transform: scale(.96); z-index: 1; opacity: .98; }
+
+    .avatar-pick:hover{
+      transform: translateY(-3px) scale(1.00);
+      filter: drop-shadow(0 22px 22px rgba(0,0,0,.55));
+    }
+
+    /* Sélection */
+    .selected{
+      filter:
+        drop-shadow(0 26px 28px rgba(0,0,0,.65))
+        drop-shadow(0 0 18px rgba(255,165,0,.55));
+      z-index: 5 !important;
+      opacity: 1 !important;
+      transform: translateY(-6px) scale(1.03) !important;
+    }
+
+    .dimmed{
+      opacity: .55;
+      transform: scale(.94);
+    }
+
+    .footer{
+      padding: 14px 18px 18px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge-ready{
+      display:none;
+      background: rgba(25, 135, 84, .22);
+      border: 1px solid rgba(25, 135, 84, .35);
+      color: rgba(255,255,255,.92);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .btn-ember{
+      display:none; /* apparaît seulement après sélection */
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 800;
+      background: linear-gradient(180deg, rgba(255, 176, 90, 1), rgba(255, 120, 50, 1));
+      color: rgba(10,12,18,.95);
+      box-shadow: 0 16px 35px rgba(255, 120, 50, .22);
+    }
+
+    .btn-ghost{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.12);
+      color: rgba(255,255,255,.85);
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 576px){
+      .trio{ height: 270px; }
+      .avatar-pick{ height: 240px; }
+      .left{ left: 1%; }
+      .right{ right: 1%; }
+    }
+  </style>
 </head>
 
-<body class="container py-5 text-center">
+<body>
+  <div class="page-wrap">
+    <div class="glass">
 
-<h3 class="mb-4">Choisissez votre avatar</h3>
+      <div class="header">
+        <div class="title">Choisissez votre avatar</div>
+        <div class="subtitle" id="roleLine"></div>
+      </div>
 
-<div class="row g-4 justify-content-center" id="avatars"></div>
+      <div class="trio-wrap">
+        <div class="trio" id="trio"></div>
+      </div>
+
+      <div class="footer">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge-ready" id="readyBadge">✅ Avatar sélectionné</span>
+          <span class="text-white-50" style="font-size:12px;" id="helpTxt">
+            Cliquez sur un avatar pour le sélectionner.
+          </span>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn-ghost" type="button" id="resetBtn">Réinitialiser</button>
+          <button class="btn-ember" type="button" id="nextBtn">Suivant</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 <script>
-const role = localStorage.getItem("role");
+  // ---- 1) Récupérer le rôle choisi ----
+  const role = localStorage.getItem("role");
+  const roleLine = document.getElementById("roleLine");
 
-const avatars = {
-  medecin: [
-    "medecin_f.png",
-    "medecin_f_voilee.png",
-    "medecin_h.png"
-  ],
-  infirmier: [
-    "infirmier_f.png",
-    "infirmier_f_voilee.png",
-    "infirmier_h.png"
-  ],
-  pompier: [
-    "pompier_f.png",
-    "pompier_f_voilee.png",
-    "pompier_h.png"
-  ]
-};
+  const roleLabels = {
+    medecin: "Métier choisi : Médecin",
+    infirmier: "Métier choisi : Infirmier",
+    pompier: "Métier choisi : Pompier"
+  };
 
-const container = document.getElementById("avatars");
+  if (!role || !roleLabels[role]) {
+    roleLine.textContent = "Aucun métier sélectionné. Retournez à l’étape précédente.";
+  } else {
+    roleLine.textContent = roleLabels[role];
+  }
 
-avatars[role].forEach(file => {
-  const col = document.createElement("div");
-  col.className = "col-md-3";
-  col.innerHTML = `
-    <img src="assets/avatars/${file}" class="img-fluid avatar"
-         onclick="choose('${file}')">
-  `;
-  container.appendChild(col);
-});
+  // ---- 2) Définir les 3 avatars par métier ----
+  const avatarsByRole = {
+    medecin: [
+      {pos:"left",   file:"medecin_f.png",         alt:"Médecin femme"},
+      {pos:"center", file:"medecin_f_voilee.png",  alt:"Médecin femme voilée"},
+      {pos:"right",  file:"medecin_h.png",         alt:"Médecin homme"}
+    ],
+    infirmier: [
+      {pos:"left",   file:"infirmier_f.png",        alt:"Infirmier femme"},
+      {pos:"center", file:"infirmier_f_voilee.png", alt:"Infirmier femme voilée"},
+      {pos:"right",  file:"infirmier_h.png",        alt:"Infirmier homme"}
+    ],
+    pompier: [
+      {pos:"left",   file:"pompier_f.png",          alt:"Pompier femme"},
+      {pos:"center", file:"pompier_f_voilee.png",   alt:"Pompier femme voilée"},
+      {pos:"right",  file:"pompier_h.png",          alt:"Pompier homme"}
+    ]
+  };
 
-function choose(file) {
-  localStorage.setItem("avatar", file);
-  alert("Avatar sélectionné ! Cliquez sur Continuer dans Genially.");
-  // ou window.location.href = "scene1.html";
-}
+  const trio = document.getElementById("trio");
+  const readyBadge = document.getElementById("readyBadge");
+  const nextBtn = document.getElementById("nextBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const helpTxt = document.getElementById("helpTxt");
+
+  let selectedFile = null;
+
+  function renderTrio() {
+    trio.innerHTML = "";
+
+    const items = avatarsByRole[role];
+    if (!items) return;
+
+    items.forEach(item => {
+      const img = document.createElement("img");
+      img.className = `avatar-pick ${item.pos}`;
+      img.src = `assets/avatars/${item.file}`;
+      img.alt = item.alt;
+      img.dataset.file = item.file;
+
+      img.addEventListener("click", () => selectAvatar(item.file));
+      trio.appendChild(img);
+    });
+
+    // Si l'utilisateur avait déjà choisi, on restaure la sélection
+    const saved = localStorage.getItem("avatar");
+    if (saved) selectAvatar(saved, true);
+  }
+
+  function selectAvatar(file, silent=false) {
+    selectedFile = file;
+
+    // Visuel: sélectionner + atténuer les autres
+    document.querySelectorAll(".avatar-pick").forEach(el => {
+      const isSelected = el.dataset.file === file;
+      el.classList.toggle("selected", isSelected);
+      el.classList.toggle("dimmed", !isSelected);
+    });
+
+    // Sauvegarder
+    localStorage.setItem("avatar", file);
+    localStorage.setItem("setupDone", "true");
+
+    // UI: afficher badge + bouton suivant
+    readyBadge.style.display = "inline-flex";
+    nextBtn.style.display = "inline-block";
+    helpTxt.textContent = silent ? "Avatar restauré. Cliquez sur Suivant." : "Parfait. Vous pouvez continuer.";
+
+    if (!silent) {
+      // petit feedback discret (sans popup agressive)
+      // (tu peux enlever si tu veux zéro message)
+    }
+  }
+
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem("avatar");
+    localStorage.removeItem("setupDone");
+    selectedFile = null;
+
+    document.querySelectorAll(".avatar-pick").forEach(el => {
+      el.classList.remove("selected", "dimmed");
+    });
+
+    readyBadge.style.display = "none";
+    nextBtn.style.display = "none";
+    helpTxt.textContent = "Cliquez sur un avatar pour le sélectionner.";
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (!selectedFile) return;
+
+    // ✅ Option A (recommandée avec Genially) :
+    // on ne force pas la navigation Genially, on affiche un message
+    alert("✅ Prêt ! Cliquez sur le bouton « Suivant » dans Genially pour commencer le jeu.");
+
+    // ✅ Option B (si tu as une page HTML scene1.html et tu veux y aller) :
+    // window.location.href = "scene1.html";
+  });
+
+  renderTrio();
 </script>
 
 </body>
