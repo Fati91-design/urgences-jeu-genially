@@ -1,0 +1,30 @@
+<div id="hud" style="
+  position:fixed; top:18px; left:18px;
+  background:rgba(0,0,0,.45); color:white;
+  padding:12px 14px; border-radius:16px;
+  display:flex; gap:12px; align-items:center;
+  backdrop-filter: blur(10px);
+">
+  <img id="av" style="width:56px; height:56px; border-radius:14px; object-fit:cover;">
+  <div>
+    <div style="font-weight:800;">👤 <span id="name"></span></div>
+    <div>🏷️ <span id="role"></span> • ⭐ <span id="score"></span></div>
+  </div>
+</div>
+
+<script>
+  const name = localStorage.getItem("playerName") || "Joueur";
+  const role = localStorage.getItem("role") || "—";
+  const avatar = localStorage.getItem("avatar") || "medecin_f.png";
+  const score = localStorage.getItem("score") || "0";
+
+  document.getElementById("name").textContent = name;
+  document.getElementById("role").textContent = role;
+  document.getElementById("score").textContent = score;
+  document.getElementById("av").src = "assets/avatars/" + avatar;
+
+  // mise à jour live du score
+  setInterval(() => {
+    document.getElementById("score").textContent = localStorage.getItem("score") || "0";
+  }, 400);
+</script>

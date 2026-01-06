@@ -1,55 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Urgences – Agir pour sauver</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-      padding-top: 60px;
-    }
-    input, select, button {
-      padding: 10px;
-      margin: 8px;
-      font-size: 16px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Urgences – Identité</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+html, body {
+  background: transparent;
+  margin: 0;
+  height: 100%;
+}
+.card-glass {
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  color: white;
+}
+</style>
 </head>
-<body>
 
-<h1>🚑 Urgences – Agir pour sauver</h1>
+<body class="d-flex align-items-center justify-content-center">
 
-<p>Votre prénom :</p>
-<input id="name" placeholder="Votre prénom">
+<div class="card card-glass p-4 text-center" style="max-width:420px;">
+  <h3 class="mb-3">👤 Votre identité</h3>
 
-<p>Niveau :</p>
-<select id="level">
-  <option value="facile">Facile</option>
-  <option value="intermediaire">Intermédiaire</option>
-  <option value="expert">Expert</option>
-</select>
+  <input id="name" class="form-control mb-3" placeholder="Entrez votre prénom">
 
-<br><br>
-<button onclick="start()">Commencer</button>
+  <button class="btn btn-warning fw-bold w-100" onclick="next()">
+    Continuer
+  </button>
+</div>
 
 <script>
-function start() {
-  const name = document.getElementById("name").value;
-  const level = document.getElementById("level").value;
-
+function next() {
+  const name = document.getElementById("name").value.trim();
   if (!name) {
     alert("Veuillez entrer votre prénom");
     return;
   }
-
   localStorage.setItem("playerName", name);
-  localStorage.setItem("level", level);
-  localStorage.setItem("score", 0);
-
-  alert("Bienvenue " + name + " !");
+  window.location.href = "roles.html";
 }
 </script>
 
