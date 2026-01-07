@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 1 – Étouffement (Pro)</title>
+  <title>Scénario 1 – Étouffement (Pro HUD)</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --bg: rgba(0,0,0,.46);
       --glass: rgba(0,0,0,.40);
       --border: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.94);
@@ -17,10 +16,6 @@
 
       --ember1: rgba(255,176,90,1);
       --ember2: rgba(255,120,50,1);
-      --good: rgba(25,135,84,.25);
-      --warn: rgba(255,193,7,.25);
-      --bad: rgba(220,53,69,.25);
-
       --shadow: 0 20px 60px rgba(0,0,0,.45);
     }
 
@@ -35,7 +30,7 @@
     /* ===== Layout ===== */
     .stage{
       min-height: 100vh;
-      padding: 92px 18px 20px; /* espace pour HUD */
+      padding: 92px 18px 20px; /* espace HUD */
       display:flex;
       align-items:flex-start;
       justify-content:center;
@@ -63,50 +58,66 @@
       z-index:0;
     }
 
-    .inner{
-      position:relative;
-      z-index:1;
-    }
+    .inner{ position:relative; z-index:1; }
 
-    /* ===== HUD ===== */
+    /* ===== HUD (reorganisé + avatar visage circulaire) ===== */
     .hud{
       position: fixed;
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
       width: min(980px, calc(100% - 28px));
-      background: rgba(0,0,0,.48);
+      background: rgba(0,0,0,.52);
       border: 1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       border-radius: 18px;
       box-shadow: 0 18px 50px rgba(0,0,0,.45);
       padding: 10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1.2fr;
       gap: 10px;
+      align-items:center;
       z-index: 50;
     }
 
+    /* LEFT */
     .hud-left{
       display:flex;
       align-items:center;
-      gap: 10px;
-      min-width: 220px;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .avatarWrap{
+      width: 54px;
+      height: 54px;
+      position: relative;
+      flex: 0 0 auto;
     }
 
     .hud-avatar{
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
       object-fit: cover;
+      object-position: 50% 18%; /* focus visage (ajustable) */
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 2px solid rgba(255,180,90,.45);
       box-shadow: 0 10px 25px rgba(0,0,0,.35);
     }
 
+    .avatarGlow{
+      position:absolute;
+      inset:-6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,165,0,.35), transparent 60%);
+      filter: blur(8px);
+      z-index:-1;
+    }
+
     .hud-name{
-      line-height: 1.05;
+      min-width: 0;
+      line-height: 1.1;
     }
     .hud-name .hello{
       font-size: 12px;
@@ -115,17 +126,111 @@
     }
     .hud-name .player{
       font-size: 15px;
-      font-weight: 900;
+      font-weight: 950;
       margin:0;
       letter-spacing: .2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hud-name .role{
+      margin-top: 2px;
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(255,210,170,.92);
+      opacity: .95;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .hud-mid{
+    /* CENTER timer (dominant) */
+    .hud-center{
+      display:flex;
+      justify-content:center;
+    }
+
+    .timerBig{
       display:flex;
       align-items:center;
       gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,140,60,.12);
+      border: 1px solid rgba(255,140,60,.22);
+      box-shadow: 0 12px 32px rgba(255,120,50,.14);
+    }
+
+    .timerRing{
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: conic-gradient(var(--ember1) 0deg, rgba(255,255,255,.10) 0deg);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    }
+    .timerRing span{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      font-size: 12px;
+    }
+
+    .timerText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.0;
+    }
+    .timerText .t1{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .timerText .t2{
+      font-size: 16px;
+      color: rgba(255,255,255,.96);
+      font-weight: 1000;
+    }
+
+    /* RIGHT */
+    .hud-right{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
       flex-wrap: wrap;
-      justify-content: center;
+      min-width: 0;
+    }
+
+    .scoreBox{
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .scoreLabel{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .scoreValue{
+      font-size: 22px;
+      font-weight: 1100;
+      color: rgba(255,215,170,.98);
+      text-shadow: 0 0 18px rgba(255,165,0,.25);
+      line-height: 1;
     }
 
     .pill{
@@ -141,102 +246,17 @@
       white-space: nowrap;
     }
 
-    /* SCORE super visible */
-    .scoreBox{
-      display:flex;
-      align-items:baseline;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 16px;
-      background: rgba(255,140,60,.12);
-      border: 1px solid rgba(255,140,60,.22);
-      box-shadow: 0 12px 32px rgba(255,120,50,.14);
-    }
-    .scoreLabel{
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-    .scoreValue{
-      font-size: 22px;
-      font-weight: 1000;
-      letter-spacing: .2px;
-      color: rgba(255,215,170,.98);
-      text-shadow: 0 0 18px rgba(255,165,0,.25);
-      line-height: 1;
-    }
-
-    /* TIMER stylé */
-    .timerBox{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.16);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-    .timerRing{
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background:
-        conic-gradient(var(--ember1) 0deg, rgba(255,255,255,.10) 0deg);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 28px rgba(0,0,0,.35);
-    }
-    .timerRing span{
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: rgba(0,0,0,.52);
-      border: 1px solid rgba(255,255,255,.10);
-      font-weight: 900;
-      font-size: 12px;
-    }
-    .timerText{
-      display:flex;
-      flex-direction:column;
-      line-height:1.0;
-    }
-    .timerText .t1{
-      font-size: 12px;
-      color: rgba(255,255,255,.75);
-      font-weight: 800;
-    }
-    .timerText .t2{
-      font-size: 12px;
-      color: rgba(255,255,255,.92);
-      font-weight: 900;
-    }
-
-    .hud-right{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      min-width: 220px;
-      justify-content: flex-end;
-    }
-
     .miniBtn{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.88);
       padding: 8px 10px;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 12px;
       transition: transform .12s ease, filter .12s ease;
     }
-    .miniBtn:hover{
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
+    .miniBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 
     /* ===== Content ===== */
     .head{
@@ -268,9 +288,7 @@
       line-height: 1.55;
     }
 
-    .content{
-      padding: 18px;
-    }
+    .content{ padding: 18px; }
 
     .options{
       display:grid;
@@ -318,9 +336,7 @@
     }
 
     /* Multi select */
-    .opt.checkbox{
-      cursor: default;
-    }
+    .opt.checkbox{ cursor: default; }
     .opt.checkbox input{
       margin-top: 3px;
       width: 18px;
@@ -354,13 +370,14 @@
     }
     .orderItem:active{ cursor: grabbing; }
     .orderItem .grab{
-      opacity:.8;
-      font-weight: 900;
+      opacity:.9;
+      font-weight: 950;
       background: rgba(0,0,0,.22);
       border: 1px solid rgba(255,255,255,.10);
       border-radius: 14px;
       padding: 6px 10px;
       font-size: 12px;
+      white-space: nowrap;
     }
     .orderItem .text{
       font-weight: 850;
@@ -441,15 +458,16 @@
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 950;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
+      white-space: nowrap;
     }
     .modalBody{
       padding: 14px 16px 16px;
       color: rgba(255,255,255,.92);
       line-height: 1.55;
-      font-weight: 700;
+      font-weight: 750;
     }
     .modalActions{
       padding: 0 16px 16px;
@@ -459,29 +477,24 @@
       flex-wrap:wrap;
     }
 
-    /* Pulse animations for score/timer */
-    .pulse{
-      animation: pulse .22s ease both;
-    }
+    /* Pulse animations */
+    .pulse{ animation: pulse .22s ease both; }
     @keyframes pulse{
       from{ transform: scale(.98); filter: brightness(.98); }
       to{ transform: scale(1); filter: brightness(1.08); }
     }
 
-    .dangerBlink{
-      animation: blink .55s ease-in-out infinite;
-    }
+    .dangerBlink{ animation: blink .55s ease-in-out infinite; }
     @keyframes blink{
       0%,100%{ filter: brightness(1); }
       50%{ filter: brightness(1.25); }
     }
 
-    @media (max-width: 576px){
-      .hud{ padding: 10px; }
-      .hud-left{ min-width: 0; }
-      .hud-right{ min-width: 0; }
-      .scoreValue{ font-size: 20px; }
-      .modalCard{ margin-top: 56px; }
+    @media (max-width: 720px){
+      .hud{ grid-template-columns: 1fr; gap: 8px; }
+      .hud-right{ justify-content:flex-start; }
+      .hud-center{ justify-content:flex-start; }
+      .stage{ padding-top: 150px; }
     }
   </style>
 </head>
@@ -490,35 +503,42 @@
 
   <!-- HUD -->
   <div class="hud">
+    <!-- LEFT: Identity -->
     <div class="hud-left">
-      <img id="hudAvatar" class="hud-avatar" alt="Avatar">
+      <div class="avatarWrap">
+        <img id="hudAvatar" class="hud-avatar" alt="Avatar">
+        <span class="avatarGlow"></span>
+      </div>
+
       <div class="hud-name">
         <p class="hello m-0">Joueur</p>
         <p class="player m-0" id="hudName">—</p>
+        <p class="role m-0" id="hudRole">—</p>
       </div>
     </div>
 
-    <div class="hud-mid">
+    <!-- CENTER: Timer -->
+    <div class="hud-center">
+      <div class="timerBig" id="timerBig">
+        <div class="timerRing" id="timerRing"><span id="timerNum">15</span></div>
+        <div class="timerText">
+          <div class="t1">⏱️ TEMPS RESTANT</div>
+          <div class="t2"><span id="timerLabel">15</span>s</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Score + Progress + Controls -->
+    <div class="hud-right">
       <div class="scoreBox" id="scoreBox">
         <span class="scoreLabel">⭐ SCORE</span>
         <span class="scoreValue" id="hudScore">0</span>
       </div>
 
-      <div class="timerBox" id="timerBox">
-        <div class="timerRing" id="timerRing"><span id="timerNum">15</span></div>
-        <div class="timerText">
-          <div class="t1">⏱ TIMER</div>
-          <div class="t2"><span id="timerLabel">15</span>s restantes</div>
-        </div>
-      </div>
-
-      <div class="pill" id="rolePill">🎭 Rôle : —</div>
       <div class="pill" id="qPill">🧩 Q : <b><span id="qIndex">1</span>/10</b></div>
-    </div>
 
-    <div class="hud-right">
-      <button class="miniBtn" id="resetRunBtn">↻ Recommencer</button>
-      <button class="miniBtn" id="muteBtn">🔊 Son: Off</button>
+      <button class="miniBtn" id="resetRunBtn">↻</button>
+      <button class="miniBtn" id="muteBtn">🔊 Off</button>
     </div>
   </div>
 
@@ -536,7 +556,7 @@
 
         <div class="footer">
           <div class="text-white-50" style="font-size:12px;">
-            Astuce : vise la bonne **séquence** (claques → compressions → RCP si inconscience).
+            Astuce : vise la bonne séquence (claques → compressions → RCP si inconscience).
           </div>
           <div class="d-flex gap-2">
             <button class="btn-ghost d-none" id="retryBtn">Revoir</button>
@@ -552,7 +572,7 @@
     <div class="modalCard">
       <div class="modalHead">
         <span class="tag" id="fbTag">—</span>
-        <span class="text-white-50" style="font-size:12px;" id="fbPoints"> </span>
+        <span class="text-white-50" style="font-size:12px;" id="fbPoints"></span>
       </div>
       <div class="modalBody" id="fbText"></div>
       <div class="modalActions">
@@ -566,32 +586,41 @@
 /* =========================
    0) CONTEXTE JOUEUR + HUD
 ========================= */
-const role = localStorage.getItem("role") || "medecin"; // fallback
-const roleLabel = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" }[role] || "—";
+const role = localStorage.getItem("role") || "medecin";
+const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
+const roleLabel = roleLabelMap[role] || "—";
 
 const playerName = localStorage.getItem("playerName") || "Joueur";
 const avatarFile = localStorage.getItem("avatar") || "medecin_f.png"; // ajuste si besoin
 
 document.getElementById("hudName").textContent = playerName;
-document.getElementById("rolePill").innerHTML = `🎭 Rôle : <b>${roleLabel}</b>`;
-document.getElementById("hudAvatar").src = `assets/avatars/${avatarFile}`;
+document.getElementById("hudRole").textContent = `🎭 ${roleLabel}`;
+
+const hudAvatar = document.getElementById("hudAvatar");
+hudAvatar.src = `assets/avatars/${avatarFile}`;
+// Focus visage (tu peux ajuster par avatar si besoin)
+hudAvatar.style.objectPosition = "50% 18%";
 
 /* =========================
    1) ÉTAT + SCORE + TIMER
 ========================= */
 let score = parseInt(localStorage.getItem("score") || "0");
+localStorage.setItem("score", String(score));
+
 let q = 0;
 
-const BASE_TIME = 18; // secondes par question (pro)
+const BASE_TIME = 18; // secondes par question
 let timeLeft = BASE_TIME;
 let timerId = null;
 
 const hudScore = document.getElementById("hudScore");
 const scoreBox = document.getElementById("scoreBox");
-const timerBox = document.getElementById("timerBox");
+const timerBox = document.getElementById("timerBig");
 const timerRing = document.getElementById("timerRing");
 const timerNum = document.getElementById("timerNum");
 const timerLabel = document.getElementById("timerLabel");
+
+hudScore.textContent = score;
 
 function setScore(delta){
   score += delta;
@@ -607,7 +636,6 @@ function setTimerUI(){
   timerNum.textContent = timeLeft;
   timerLabel.textContent = timeLeft;
 
-  // ring progress
   const pct = Math.max(0, Math.min(1, timeLeft / BASE_TIME));
   const deg = Math.floor(pct * 360);
   timerRing.style.background = `conic-gradient(var(--ember1) ${deg}deg, rgba(255,255,255,.10) 0deg)`;
@@ -619,98 +647,92 @@ function startTimer(){
   clearInterval(timerId);
   timeLeft = BASE_TIME;
   setTimerUI();
+
   timerId = setInterval(() => {
     timeLeft--;
     setTimerUI();
+
     if(timeLeft <= 0){
       clearInterval(timerId);
-      // Time out -> feedback + petite pénalité (stress)
+      setScore(-5);
+      flashTimerPulse();
+
       showFeedback({
         kind: "⏱ Temps écoulé",
-        text: "Tu as dépassé le temps. En situation réelle, chaque seconde compte : prends une décision structurée.",
+        text: "Tu as dépassé le temps. En urgence, chaque seconde compte : décide vite mais méthodiquement.",
         points: "-5",
         style: "warn",
         canContinue: false
       });
-      setScore(-5);
-      // retour à la même question
       showRetry();
     }
   }, 1000);
 }
 
+function flashTimerPulse(){
+  timerBox.classList.remove("pulse");
+  void timerBox.offsetWidth;
+  timerBox.classList.add("pulse");
+}
+
 /* =========================
    2) QUESTIONS (10) multi-types
-   Types: qcm, tf, multi, order
 ========================= */
-
 function byRoleText(base){
-  // petites nuances selon métier (pro)
   if(role === "pompier") return base.replace("Tu", "En tant que premier intervenant, tu");
   if(role === "infirmier") return base.replace("Tu", "Comme soignant de proximité, tu");
-  return base; // médecin
+  return base;
 }
 
 const QUESTIONS = [
-  // 1 QCM
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"Reconnaître l’étouffement sévère",
     sub: byRoleText("Tu observes : mains à la gorge, impossibilité de parler, toux faible. Quelle conclusion ?"),
     options:[
       {k:"A", t:"Obstruction légère (toux efficace)", ok:false, fb:"Non : la toux est faible/inefficace et la victime ne parle pas."},
       {k:"B", t:"Obstruction sévère (urgence)", ok:true, pts:+10, fb:"Oui : incapacité à parler + toux inefficace = obstruction sévère."},
-      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible mais ici les signes d’obstruction sévère sont dominants."},
-      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : les signes orientent plutôt vers une obstruction des voies aériennes."}
+      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible mais ici les signes d’obstruction sévère dominent."},
+      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : le contexte et les signes orientent vers une obstruction."}
     ]
   },
 
-  // 2 Vrai/Faux
-  {
-    type:"tf",
+  { type:"tf",
     title:"Décision rapide",
-    sub:"Vrai ou Faux : si la victime tousse efficacement et peut parler, on intervient immédiatement (claques/compressions).",
-    correct:false,
-    pts:+10,
-    fbOk:"Correct : si la toux est efficace, on encourage la toux et on surveille.",
+    sub:"Vrai ou Faux : si la victime tousse efficacement et peut parler, on intervient immédiatement.",
+    correct:false, pts:+10,
+    fbOk:"Correct : on encourage la toux et on surveille.",
     fbBad:"Non : intervenir alors que la toux est efficace peut aggraver."
   },
 
-  // 3 QCM
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"Séquence recommandée (adulte conscient, obstruction sévère)",
     sub:"Quelle séquence est la plus adaptée ?",
     options:[
-      {k:"A", t:"10 claques puis 10 compressions", ok:false, fb:"Non : la recommandation standard est plutôt par cycles de 5."},
+      {k:"A", t:"10 claques puis 10 compressions", ok:false, fb:"Non : la logique standard est par cycles de 5."},
       {k:"B", t:"5 claques dorsales puis 5 compressions abdominales, en cycles", ok:true, pts:+10, fb:"Oui : alternance 5/5 jusqu’à expulsion ou perte de conscience."},
-      {k:"C", t:"Compressions abdominales uniquement", ok:true, pts:+5, fb:"Partiel : utile, mais tu as sauté les claques dorsales (étape importante)."},
-      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : ici on est sur étouffement conscient (pas de ventilation)."}
+      {k:"C", t:"Compressions abdominales uniquement", ok:true, pts:+5, fb:"Partiel : utile, mais tu as sauté les claques dorsales."},
+      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : ici la victime est consciente (pas de ventilation)."}
     ]
   },
 
-  // 4 QCM
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"Position pour les claques dorsales",
     sub:"Pour optimiser l’efficacité, la victime doit être…",
     options:[
-      {k:"A", t:"Allongée sur le dos", ok:false, fb:"Non : ce n’est pas la position recommandée pour des claques dorsales."},
-      {k:"B", t:"Penchée en avant, bouche vers le sol", ok:true, pts:+10, fb:"Oui : gravité + efficacité, l’objet peut sortir plus facilement."},
+      {k:"A", t:"Allongée sur le dos", ok:false, fb:"Non : ce n’est pas la position recommandée."},
+      {k:"B", t:"Penchée en avant, bouche vers le sol", ok:true, pts:+10, fb:"Oui : gravité + efficacité."},
       {k:"C", t:"Tête en arrière", ok:false, fb:"Non : cela ne favorise pas l’expulsion."},
       {k:"D", t:"Assise, tête droite", ok:false, fb:"Moins efficace : on préfère pencher en avant."}
     ]
   },
 
-  // 5 ERREUR CRITIQUE (QCM)
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"Erreur critique",
     sub:"La victime ne respire pas bien. Que faut-il éviter absolument ?",
     options:[
       {k:"A", t:"Balayage du doigt dans la bouche sans voir l’objet", crit:true, fb:"🚨 Geste dangereux : risque d’enfoncer l’objet plus loin."},
-      {k:"B", t:"Retirer l’objet seulement s’il est visible", ok:true, pts:+10, fb:"Correct : uniquement si tu vois clairement l’objet."},
-      {k:"C", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui, mais ici on est en obstruction sévère : priorité à la séquence."},
+      {k:"B", t:"Retirer l’objet seulement s’il est visible", ok:true, pts:+10, fb:"Correct : uniquement si l’objet est clairement visible."},
+      {k:"C", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui, mais si obstruction sévère, priorité aux manœuvres."},
       {k:"D", t:"Pencher en avant avant les claques", ok:true, pts:+5, fb:"Bonne préparation de la manœuvre."}
     ],
     criticalTag:"🚨 Erreur critique",
@@ -718,9 +740,7 @@ const QUESTIONS = [
     criticalGeniallyEvent:"CRITICAL_FINGER_SWEEP"
   },
 
-  // 6 MULTI (2 bonnes)
-  {
-    type:"multi",
+  { type:"multi",
     title:"Signes d’obstruction sévère (2 réponses)",
     sub:"Sélectionne les 2 signes les plus caractéristiques.",
     options:[
@@ -729,32 +749,27 @@ const QUESTIONS = [
       {id:"c", t:"Respiration confortable", ok:false},
       {id:"d", t:"Peau rosée et normale", ok:false}
     ],
-    ptsFull:+10,
-    ptsPartial:+5,
+    ptsFull:+10, ptsPartial:+5,
     fbFull:"Excellent : incapacité à parler + toux inefficace = obstruction sévère.",
-    fbPartial:"Partiel : tu as identifié un signe, mais pas les 2 essentiels.",
-    fbBad:"Non : ces choix ne reflètent pas les signes d’obstruction sévère."
+    fbPartial:"Partiel : tu as identifié un signe essentiel, mais pas les deux.",
+    fbBad:"À revoir : ces choix ne décrivent pas une obstruction sévère."
   },
 
-  // 7 QCM (grossesse/corpulent)
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"Cas particulier : femme enceinte / corpulence importante",
     sub:"Si les claques dorsales échouent, quelle technique est privilégiée ?",
     options:[
-      {k:"A", t:"Compressions thoraciques", ok:true, pts:+10, fb:"Oui : alternative recommandée lorsque les compressions abdominales sont inadaptées."},
+      {k:"A", t:"Compressions thoraciques", ok:true, pts:+10, fb:"Oui : alternative lorsque les compressions abdominales sont inadaptées."},
       {k:"B", t:"Compressions abdominales", crit:true, fb:"🚨 Risque de blessure : on évite chez femme enceinte."},
-      {k:"C", t:"Donner de l’eau", ok:false, fb:"Non : risque d’aggravation, priorité aux manœuvres."},
-      {k:"D", t:"Attendre sans agir", ok:false, fb:"Non : l’obstruction sévère nécessite action + alerte."}
+      {k:"C", t:"Donner de l’eau", ok:false, fb:"Non : priorité aux manœuvres."},
+      {k:"D", t:"Attendre sans agir", ok:false, fb:"Non : agir et alerter si besoin."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
     criticalGeniallyEvent:"CRITICAL_PREGNANCY_ABDOMINAL"
   },
 
-  // 8 ORDER (séquence)
-  {
-    type:"order",
+  { type:"order",
     title:"Ordonnancement",
     sub:"Remets la prise en charge dans le bon ordre (glisser-déposer).",
     items:[
@@ -764,36 +779,30 @@ const QUESTIONS = [
       "Si perte de conscience : allonger et commencer la RCP"
     ],
     correctOrder:[0,1,2,3],
-    ptsFull:+10,
-    ptsPartial:+5,
-    fbFull:"Parfait : bonne séquence, logique et sécurisée.",
-    fbPartial:"Presque : tu as la logique, mais une étape est mal placée.",
-    fbBad:"À revoir : l’ordre des actions est essentiel en urgence."
+    ptsFull:+10, ptsPartial:+5,
+    fbFull:"Parfait : séquence logique et sécurisée.",
+    fbPartial:"Presque : une étape est mal placée.",
+    fbBad:"À revoir : l’ordre des actions est essentiel."
   },
 
-  // 9 QCM (inconscience)
-  {
-    type:"qcm",
+  { type:"qcm",
     title:"La victime devient inconsciente",
     sub:"Pendant les manœuvres, la victime perd connaissance. Que fais-tu en priorité ?",
     options:[
       {k:"A", t:"Continuer les compressions abdominales", ok:false, fb:"Non : si inconsciente, on change de prise en charge."},
       {k:"B", t:"Allonger la victime et commencer la RCP (compressions)", ok:true, pts:+10, fb:"Oui : RCP si respiration anormale/absente."},
       {k:"C", t:"La relever et la faire marcher", crit:true, fb:"🚨 Perte de temps vital + risque d’aggravation."},
-      {k:"D", t:"Attendre les secours sans rien faire", ok:false, fb:"Non : l’action immédiate est nécessaire."}
+      {k:"D", t:"Attendre les secours sans rien faire", ok:false, fb:"Non : action immédiate nécessaire."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
     criticalGeniallyEvent:"CRITICAL_STAND_UP"
   },
 
-  // 10 TF (post-expulsion)
-  {
-    type:"tf",
+  { type:"tf",
     title:"Après expulsion",
-    sub:"Vrai ou Faux : une fois l’objet expulsé et la respiration revenue, on peut laisser la victime partir sans surveillance.",
-    correct:false,
-    pts:+10,
+    sub:"Vrai ou Faux : une fois l’objet expulsé et la respiration revenue, on peut laisser partir la victime sans surveillance.",
+    correct:false, pts:+10,
     fbOk:"Correct : on surveille et on recommande avis médical si douleur/symptômes persistants.",
     fbBad:"Non : une surveillance est importante après l’épisode."
   }
@@ -802,32 +811,23 @@ const QUESTIONS = [
 /* =========================
    3) RENDER + TYPES
 ========================= */
-
 const content = document.getElementById("content");
 const qTitle = document.getElementById("qTitle");
 const qSub = document.getElementById("qSub");
 const qIndex = document.getElementById("qIndex");
-const qPill = document.getElementById("qPill");
 
 const nextBtn = document.getElementById("nextBtn");
 const retryBtn = document.getElementById("retryBtn");
 
-function updateQCounter(){
-  qIndex.textContent = String(q + 1);
-}
+function updateQCounter(){ qIndex.textContent = String(q + 1); }
 
 function clearActions(){
   nextBtn.classList.add("d-none");
   retryBtn.classList.add("d-none");
 }
 
-function showNext(){
-  nextBtn.classList.remove("d-none");
-}
-
-function showRetry(){
-  retryBtn.classList.remove("d-none");
-}
+function showNext(){ nextBtn.classList.remove("d-none"); }
+function showRetry(){ retryBtn.classList.remove("d-none"); }
 
 function normalizeLetters(i){ return String.fromCharCode(65+i); }
 
@@ -840,21 +840,13 @@ function renderQuestion(){
   qSub.textContent = Q.sub;
 
   content.innerHTML = "";
-
-  // timer refresh
   startTimer();
 
-  if(Q.type === "qcm"){
-    renderQCM(Q);
-  } else if(Q.type === "tf"){
-    renderTF(Q);
-  } else if(Q.type === "multi"){
-    renderMulti(Q);
-  } else if(Q.type === "order"){
-    renderOrder(Q);
-  } else {
-    content.innerHTML = `<div class="text-warning">Type non supporté : ${Q.type}</div>`;
-  }
+  if(Q.type === "qcm") renderQCM(Q);
+  else if(Q.type === "tf") renderTF(Q);
+  else if(Q.type === "multi") renderMulti(Q);
+  else if(Q.type === "order") renderOrder(Q);
+  else content.innerHTML = `<div class="text-warning">Type non supporté : ${Q.type}</div>`;
 }
 
 function renderQCM(Q){
@@ -881,17 +873,19 @@ function renderQCM(Q){
 function handleChoice_QCM(Q, opt){
   clearInterval(timerId);
 
-  // Critical
   if(opt.crit){
-    setScore(Q.criticalPenalty ?? -10);
+    const pen = Q.criticalPenalty ?? -10;
+    setScore(pen);
     flashTimerPulse();
+
     showFeedback({
       kind: Q.criticalTag || "🚨 Erreur critique",
       text: opt.fb || "Geste dangereux.",
-      points: String(Q.criticalPenalty ?? -10),
+      points: String(pen),
       style: "bad",
       canContinue: false
     });
+
     geniallyTrigger(Q.criticalGeniallyEvent || "CRITICAL_ERROR");
     showRetry();
     return;
@@ -900,7 +894,7 @@ function handleChoice_QCM(Q, opt){
   if(opt.ok){
     const pts = opt.pts ?? 10;
     setScore(pts);
-    flashScorePulse();
+
     showFeedback({
       kind: "✅ Correct",
       text: opt.fb || "Bonne réponse.",
@@ -908,18 +902,20 @@ function handleChoice_QCM(Q, opt){
       style: "good",
       canContinue: true
     });
+
     showNext();
   } else {
-    // mauvaise réponse => petite pénalité temps (pro) pour accent timer/score
     setScore(-2);
     flashTimerPulse();
+
     showFeedback({
       kind: "⚠️ À corriger",
-      text: opt.fb || "Réponse incorrecte. Relis la situation et réessaie.",
+      text: opt.fb || "Réponse incorrecte. Réessaie.",
       points: "-2",
       style: "warn",
       canContinue: false
     });
+
     showRetry();
   }
 }
@@ -951,17 +947,22 @@ function handleChoice_TF(Q, val){
   clearInterval(timerId);
 
   if(val === Q.correct){
-    setScore(Q.pts ?? 10);
+    const pts = Q.pts ?? 10;
+    setScore(pts);
+
     showFeedback({
       kind:"✅ Correct",
       text: Q.fbOk || "Bonne réponse.",
-      points:`+${Q.pts ?? 10}`,
+      points:`+${pts}`,
       style:"good",
       canContinue:true
     });
+
     showNext();
   } else {
     setScore(-2);
+    flashTimerPulse();
+
     showFeedback({
       kind:"⚠️ À corriger",
       text: Q.fbBad || "Incorrect.",
@@ -969,6 +970,7 @@ function handleChoice_TF(Q, val){
       style:"warn",
       canContinue:false
     });
+
     showRetry();
   }
 }
@@ -977,19 +979,17 @@ function renderMulti(Q){
   const wrap = document.createElement("div");
   wrap.className = "options";
 
-  const state = {};
   Q.options.forEach((o, idx) => {
-    const row = document.createElement("div");
+    const row = document.createElement("label");
     row.className = "opt checkbox";
+    row.setAttribute("for", `cb_${idx}`);
     row.innerHTML = `
       <input type="checkbox" id="cb_${idx}">
       <div>
         <div class="txt">${escapeHtml(o.t)}</div>
-        <small>Cocher si tu penses que c’est un signe important</small>
+        <small>Choisis les 2 options les plus pertinentes</small>
       </div>
     `;
-    const cb = row.querySelector("input");
-    cb.addEventListener("change", () => state[o.id] = cb.checked);
     wrap.appendChild(row);
   });
 
@@ -1005,41 +1005,50 @@ function renderMulti(Q){
 
   document.getElementById("clearMulti").addEventListener("click", () => {
     wrap.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = false);
-    for(const k in state) delete state[k];
   });
 
   document.getElementById("validateMulti").addEventListener("click", () => {
     clearInterval(timerId);
 
-    const selectedIds = Q.options.filter((o, idx) => wrap.querySelector(`#cb_${idx}`).checked).map(o => o.id);
-    const correctIds = Q.options.filter(o => o.ok).map(o => o.id);
+    const selected = [];
+    Q.options.forEach((o, idx) => {
+      if(wrap.querySelector(`#cb_${idx}`).checked) selected.push(o);
+    });
 
-    const goodCount = selectedIds.filter(id => correctIds.includes(id)).length;
-    const badCount = selectedIds.filter(id => !correctIds.includes(id)).length;
+    const correct = Q.options.filter(o => o.ok);
+    const good = selected.filter(o => o.ok).length;
+    const bad = selected.filter(o => !o.ok).length;
 
-    // grading
-    if(goodCount === correctIds.length && badCount === 0){
-      setScore(Q.ptsFull ?? 10);
+    if(good === correct.length && bad === 0){
+      const pts = Q.ptsFull ?? 10;
+      setScore(pts);
+
       showFeedback({
         kind:"✅ Excellent",
         text: Q.fbFull || "Parfait.",
-        points:`+${Q.ptsFull ?? 10}`,
+        points:`+${pts}`,
         style:"good",
         canContinue:true
       });
+
       showNext();
-    } else if(goodCount >= 1 && badCount === 0){
-      setScore(Q.ptsPartial ?? 5);
+    } else if(good >= 1 && bad === 0){
+      const pts = Q.ptsPartial ?? 5;
+      setScore(pts);
+
       showFeedback({
         kind:"🟡 Partiel",
         text: Q.fbPartial || "Tu es proche.",
-        points:`+${Q.ptsPartial ?? 5}`,
+        points:`+${pts}`,
         style:"warn",
         canContinue:true
       });
+
       showNext();
     } else {
       setScore(-2);
+      flashTimerPulse();
+
       showFeedback({
         kind:"⚠️ À corriger",
         text: Q.fbBad || "Sélection incorrecte.",
@@ -1047,6 +1056,7 @@ function renderMulti(Q){
         style:"warn",
         canContinue:false
       });
+
       showRetry();
     }
   });
@@ -1062,7 +1072,6 @@ function renderOrder(Q){
   list.className = "orderList";
   list.id = "orderList";
 
-  // initial order shuffled but stable-ish
   const indices = Q.items.map((_,i)=>i);
   shuffle(indices);
 
@@ -1072,14 +1081,13 @@ function renderOrder(Q){
     it.draggable = true;
     it.dataset.idx = String(idx);
     it.innerHTML = `
-      <div class="grab">⠿</div>
+      <div class="grab">⠿ DRAG</div>
       <div class="text">${escapeHtml(Q.items[idx])}</div>
-      <div class="text-white-50" style="font-size:12px;font-weight:800;">drag</div>
+      <div class="text-white-50" style="font-size:12px;font-weight:900;">#${idx+1}</div>
     `;
     list.appendChild(it);
   });
 
-  // Drag & drop handlers
   let draggingEl = null;
 
   list.addEventListener("dragstart", (e) => {
@@ -1138,27 +1146,35 @@ function renderOrder(Q){
     }
 
     if(correctPositions === correct.length){
-      setScore(Q.ptsFull ?? 10);
+      const pts = Q.ptsFull ?? 10;
+      setScore(pts);
+
       showFeedback({
         kind:"✅ Excellent",
         text: Q.fbFull || "Ordre parfait.",
-        points:`+${Q.ptsFull ?? 10}`,
+        points:`+${pts}`,
         style:"good",
         canContinue:true
       });
+
       showNext();
     } else if(correctPositions >= correct.length - 1){
-      setScore(Q.ptsPartial ?? 5);
+      const pts = Q.ptsPartial ?? 5;
+      setScore(pts);
+
       showFeedback({
         kind:"🟡 Presque",
         text: Q.fbPartial || "Tu es proche.",
-        points:`+${Q.ptsPartial ?? 5}`,
+        points:`+${pts}`,
         style:"warn",
         canContinue:true
       });
+
       showNext();
     } else {
       setScore(-2);
+      flashTimerPulse();
+
       showFeedback({
         kind:"⚠️ À corriger",
         text: Q.fbBad || "Ordre incorrect.",
@@ -1166,6 +1182,7 @@ function renderOrder(Q){
         style:"warn",
         canContinue:false
       });
+
       showRetry();
     }
   });
@@ -1181,88 +1198,66 @@ const fbPoints = document.getElementById("fbPoints");
 const fbCloseBtn = document.getElementById("fbCloseBtn");
 const fbContinueBtn = document.getElementById("fbContinueBtn");
 
-let pendingContinue = false;
-
 function showFeedback({kind, text, points, style, canContinue}){
   fbTag.textContent = kind;
   fbText.textContent = text;
   fbPoints.textContent = points ? `Impact score : ${points}` : "";
 
-  // color tag
   const map = { good: "rgba(25,135,84,.25)", warn: "rgba(255,193,7,.25)", bad:"rgba(220,53,69,.25)" };
   fbTag.style.background = map[style] || "rgba(255,255,255,.06)";
   fbTag.style.borderColor = "rgba(255,255,255,.14)";
 
   overlay.style.display = "flex";
-  pendingContinue = !!canContinue;
-  fbContinueBtn.classList.toggle("d-none", !pendingContinue);
-
-  // focus safety
+  fbContinueBtn.classList.toggle("d-none", !canContinue);
   setTimeout(() => fbCloseBtn.focus(), 50);
 }
 
-function hideFeedback(){
-  overlay.style.display = "none";
-}
+function hideFeedback(){ overlay.style.display = "none"; }
 
-fbCloseBtn.addEventListener("click", () => {
-  hideFeedback();
-});
+fbCloseBtn.addEventListener("click", hideFeedback);
 
 fbContinueBtn.addEventListener("click", () => {
   hideFeedback();
-  // continue to next question
   goNext();
 });
 
 /* =========================
-   5) NAVIGATION (NEXT/RETRY/END)
+   5) NAVIGATION
 ========================= */
 nextBtn.addEventListener("click", goNext);
-retryBtn.addEventListener("click", () => {
-  // refaire la même question
-  renderQuestion();
-});
+retryBtn.addEventListener("click", () => renderQuestion());
 
 function goNext(){
   clearInterval(timerId);
   q++;
-  if(q < QUESTIONS.length){
-    renderQuestion();
-  } else {
-    endScenario();
-  }
+  if(q < QUESTIONS.length) renderQuestion();
+  else endScenario();
 }
 
 function endScenario(){
   clearInterval(timerId);
   clearActions();
-  qTitle.textContent = "Fin du scénario – Étouffement";
-  qSub.textContent = "Bravo ! Voici ton bilan. Clique sur « Suivant » dans Genially pour continuer.";
 
-  const msg = document.createElement("div");
-  msg.className = "mt-2";
-  msg.innerHTML = `
+  qTitle.textContent = "Fin du scénario – Étouffement";
+  qSub.textContent = "Bravo ! Clique sur « Suivant » dans Genially pour continuer.";
+
+  content.innerHTML = `
     <div class="p-3" style="border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);">
       <div style="font-weight:1000;font-size:18px;">⭐ Score final : <span style="color:rgba(255,215,170,.98);">${score}</span></div>
       <div class="text-white-50 mt-1" style="font-weight:800;">
         ${score >= 75 ? "🟢 Intervention maîtrisée" : (score >= 55 ? "🟡 Bon niveau, révisions conseillées" : "🔴 Reprise recommandée")}
       </div>
       <div class="text-white-50 mt-2" style="font-size:12px;">
-        Astuce : répète la séquence “claques → compressions → RCP si inconscience” jusqu’à automatisation.
+        Astuce : répète la séquence “claques → compressions → RCP si inconscience”.
       </div>
     </div>
   `;
-  content.innerHTML = "";
-  content.appendChild(msg);
 
-  // Optionnel: signaler à Genially la fin
   geniallyTrigger("SCENARIO_DONE_ETOUFFEMENT");
 }
 
 /* =========================
-   6) GENIALLY: TRIGGERS D'ANIMATION
-   -> on envoie un message au parent
+   6) GENIALLY TRIGGERS
 ========================= */
 function geniallyTrigger(eventName){
   try{
@@ -1271,24 +1266,9 @@ function geniallyTrigger(eventName){
 }
 
 /* =========================
-   7) UX: pulses
-========================= */
-function flashScorePulse(){
-  scoreBox.classList.remove("pulse");
-  void scoreBox.offsetWidth;
-  scoreBox.classList.add("pulse");
-}
-function flashTimerPulse(){
-  timerBox.classList.remove("pulse");
-  void timerBox.offsetWidth;
-  timerBox.classList.add("pulse");
-}
-
-/* =========================
-   8) TOOLBAR
+   7) TOOLBAR
 ========================= */
 document.getElementById("resetRunBtn").addEventListener("click", () => {
-  // reset scenario state, keep player identity
   localStorage.setItem("score", "0");
   score = 0;
   hudScore.textContent = "0";
@@ -1300,11 +1280,11 @@ let muted = true;
 const muteBtn = document.getElementById("muteBtn");
 muteBtn.addEventListener("click", () => {
   muted = !muted;
-  muteBtn.textContent = muted ? "🔊 Son: Off" : "🔊 Son: On";
+  muteBtn.textContent = muted ? "🔊 Off" : "🔊 On";
 });
 
 /* =========================
-   9) Helpers
+   8) Helpers
 ========================= */
 function escapeHtml(str){
   return String(str)
@@ -1325,7 +1305,6 @@ function shuffle(arr){
 /* =========================
    INIT
 ========================= */
-hudScore.textContent = score;
 document.getElementById("qIndex").textContent = "1";
 renderQuestion();
 </script>
