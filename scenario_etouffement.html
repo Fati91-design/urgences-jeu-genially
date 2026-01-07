@@ -9,13 +9,14 @@
 
   <style>
     :root{
-      --bgGlass: rgba(8,10,14,.66);
-      --bgGlass2: rgba(8,10,14,.46);
-      --stroke: rgba(255, 180, 120, .24);
+      /* Palette “embers / urgence” (cohérente avec tes fonds orange/feu) */
+      --bgGlass: rgba(8,10,14,.62);
+      --bgGlass2: rgba(8,10,14,.44);
+      --stroke: rgba(255, 180, 120, .22);
       --stroke2: rgba(255,255,255,.10);
 
-      --text: rgba(255,255,255,.93);
-      --muted: rgba(255,255,255,.73);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
 
       --ember: rgba(255,150,70,1);
       --ember2: rgba(255,120,50,1);
@@ -23,6 +24,12 @@
       --red: rgba(255,70,70,1);
       --green: rgba(45,200,120,1);
       --blue: rgba(80,170,255,1);
+
+      /* Difficulty defaults (modifiable via localStorage difficulty) */
+      --baseTime: 12;
+      --stressTick: 2;
+      --stressWrong: 6;
+      --stressCritical: 18;
     }
 
     html, body{
@@ -32,6 +39,7 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
+    /* ===== Layout (reduced container size) ===== */
     .game{
       min-height: 100vh;
       display:flex;
@@ -41,127 +49,97 @@
     }
 
     .panel{
-      width: min(980px, 100%);
+      width: min(980px, 100%);              /* ✅ réduit */
       border-radius: 18px;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(180deg, rgba(255,140,60,.11), rgba(0,0,0,.10));
+      background: linear-gradient(180deg, rgba(255,140,60,.10), rgba(0,0,0,.10));
     }
+
     .panel::before{
       content:"";
       position:absolute;
       inset:0;
       border-radius: 18px;
-      border: 1px solid rgba(255, 180, 120, .20);
+      border: 1px solid rgba(255, 180, 120, .22);
       box-shadow:
-        0 0 0 1px rgba(0,0,0,.34) inset,
-        0 0 65px rgba(255,120,50,.10),
-        0 24px 90px rgba(0,0,0,.52);
+        0 0 0 1px rgba(0,0,0,.30) inset,
+        0 0 55px rgba(255,120,50,.10),
+        0 22px 80px rgba(0,0,0,.45);
       pointer-events:none;
-      z-index:0;
     }
+
+    /* Subtle ember glow layers */
     .panel::after{
       content:"";
       position:absolute;
       inset:-2px;
       background:
-        radial-gradient(650px 240px at 70% 18%, rgba(255,150,70,.22), transparent 60%),
-        radial-gradient(520px 260px at 18% 92%, rgba(255,90,50,.16), transparent 65%),
-        radial-gradient(420px 180px at 50% 55%, rgba(80,170,255,.08), transparent 70%);
+        radial-gradient(650px 240px at 70% 22%, rgba(255,150,70,.22), transparent 60%),
+        radial-gradient(600px 280px at 20% 90%, rgba(255,90,50,.15), transparent 65%);
       pointer-events:none;
       z-index:0;
     }
 
-    /* ========= HUD SEPARATION ========= */
-    .hudWrap{
-      padding: 14px 14px 0;
-      position: relative;
-      z-index: 2;
-    }
-    .hudContainer{
-      background: rgba(0,0,0,.10);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 16px 60px rgba(0,0,0,.35);
-    }
-
+    /* ===== Top HUD (2 boxes like your design) ===== */
     .topbar{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+      padding: 14px 14px 10px;
+      position: relative;
+      z-index: 2;
     }
 
     .hudbox{
       background: var(--bgGlass);
       border: 1px solid var(--stroke);
-      border-radius: 14px;
+      border-radius: 12px;
       padding: 12px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 12px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 16px 50px rgba(0,0,0,.40);
-      min-height: 90px;
-      position: relative;
-      overflow:hidden;
-    }
-    .hudbox::after{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(280px 120px at 20% 0%, rgba(255,150,70,.18), transparent 60%);
-      pointer-events:none;
-      opacity:.85;
+      box-shadow: 0 14px 45px rgba(0,0,0,.35);
+      min-height: 82px;                     /* ✅ plus “HUD” */
     }
 
+    /* Left HUD: avatar + name */
     .profile{
       display:flex;
       align-items:center;
       gap: 12px;
       min-width: 0;
-      position: relative;
-      z-index:2;
     }
 
-    /* ✅ Avatar portrait + zoom visage */
-    .avatarFrame{
-      width: 86px;
-      height: 86px;
-      border-radius: 22px;
-      padding: 4px;
-      background: linear-gradient(180deg, rgba(255,150,70,.35), rgba(80,170,255,.12));
-      box-shadow: 0 14px 34px rgba(0,0,0,.45);
-      flex: 0 0 auto;
-    }
     .avatar{
-      width: 100%;
-      height: 100%;
+      width: 78px;                          /* ✅ avatar plus grand */
+      height: 78px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
+      box-shadow: 0 12px 30px rgba(0,0,0,.40);
       object-fit: cover;
-      object-position: 50% 8%;   /* ✅ zoom + focus visage (plus haut) */
-      transform: scale(1.22);    /* ✅ zoom supplémentaire */
-      transform-origin: 50% 15%;
+      object-position: 50% 18%;             /* ✅ cadrage visage (ajuste si besoin) */
+      flex: 0 0 auto;
     }
 
-    .ptext{ min-width: 0; position: relative; z-index:2; }
+    .ptext{ min-width: 0; }
     .pname{
       font-weight: 950;
       letter-spacing: .2px;
-      font-size: 19px;
+      font-size: 18px;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
-      text-shadow: 0 14px 28px rgba(0,0,0,.58);
+      text-shadow: 0 14px 28px rgba(0,0,0,.55);
     }
     .prole{
       margin-top: 2px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 850;
+      font-weight: 800;
       white-space: nowrap;
       overflow:hidden;
       text-overflow: ellipsis;
@@ -174,20 +152,17 @@
       border-radius: 999px;
       padding: 7px 10px;
       font-size: 12px;
-      font-weight: 950;
+      font-weight: 900;
       white-space: nowrap;
-      position: relative;
-      z-index:2;
     }
 
+    /* Right HUD: score + Q# + timer ring + stress */
     .stats{
       display:flex;
       align-items:center;
       gap: 10px;
       flex-wrap: wrap;
       justify-content:flex-end;
-      position: relative;
-      z-index:2;
     }
 
     .stat{
@@ -199,11 +174,11 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-size: 12px;
-      font-weight: 950;
+      font-weight: 900;
       white-space: nowrap;
     }
 
-    /* Timer improved (ring + glow) */
+    /* ✅ Improved timer: ring + big seconds */
     .timerWrap{
       display:flex;
       align-items:center;
@@ -213,24 +188,25 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
     }
+
     .ring{
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
       background:
         conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.12) 0);
       display:grid;
       place-items:center;
-      box-shadow: 0 0 0 4px rgba(255,200,80,.14);
-      transition: box-shadow .2s ease;
+      box-shadow: 0 0 0 4px rgba(255,200,80,.12);
     }
     .ringInner{
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 999px;
-      background: rgba(0,0,0,.32);
-      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.10);
     }
+
     .sec{
       font-weight: 950;
       font-size: 14px;
@@ -238,16 +214,15 @@
     }
     .timerDanger .ring{
       background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.12) 0);
-      box-shadow: 0 0 0 4px rgba(255,70,70,.16), 0 0 30px rgba(255,70,70,.20);
+      box-shadow: 0 0 0 4px rgba(255,70,70,.14);
     }
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.12) 0);
-      box-shadow: 0 0 0 4px rgba(255,200,80,.16), 0 0 28px rgba(255,200,80,.14);
+      box-shadow: 0 0 0 4px rgba(255,200,80,.14);
     }
 
-    /* Stress */
     .stressWrap{
-      width: 170px;
+      width: 160px;
       height: 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.10);
@@ -261,20 +236,11 @@
       transition: width .25s ease;
     }
 
-    /* ========= QUESTION CONTAINER (separate from HUD) ========= */
+    /* ===== Main frame ===== */
     .main{
-      padding: 12px 14px 14px;
+      padding: 0 14px 14px;
       position: relative;
       z-index: 2;
-    }
-
-    .questionContainer{
-      margin-top: 12px;
-      background: rgba(0,0,0,.10);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 16px 60px rgba(0,0,0,.35);
     }
 
     .frame{
@@ -283,7 +249,7 @@
       border-radius: 16px;
       padding: 16px;
       backdrop-filter: blur(10px);
-      box-shadow: 0 18px 60px rgba(0,0,0,.42);
+      box-shadow: 0 18px 60px rgba(0,0,0,.40);
       position: relative;
       overflow:hidden;
     }
@@ -293,7 +259,7 @@
       inset:-2px;
       pointer-events:none;
       background:
-        radial-gradient(720px 220px at 55% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(700px 220px at 55% 0%, rgba(255,150,70,.18), transparent 60%),
         radial-gradient(700px 240px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
       opacity:.9;
     }
@@ -301,25 +267,28 @@
     .qmeta{
       color: rgba(255,255,255,.70);
       font-size: 12px;
-      font-weight: 950;
+      font-weight: 900;
       letter-spacing: .35px;
       text-transform: uppercase;
     }
+
     .qtitle{
       margin-top: 4px;
       font-weight: 950;
       font-size: clamp(18px, 2.1vw, 24px);
       line-height: 1.2;
-      text-shadow: 0 14px 28px rgba(0,0,0,.58);
+      text-shadow: 0 14px 28px rgba(0,0,0,.55);
     }
+
     .qdesc{
       margin-top: 8px;
-      color: rgba(255,255,255,.80);
+      color: rgba(255,255,255,.78);
       font-size: 13px;
       line-height: 1.45;
       max-width: 920px;
     }
 
+    /* Options: ember/blue mix */
     .options{
       display:flex;
       flex-direction:column;
@@ -336,21 +305,23 @@
       user-select:none;
       transition: transform .12s ease, filter .12s ease, background .12s ease;
       border: 1px solid rgba(255,255,255,.10);
+
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
     }
     .opt:hover{
       transform: translateY(-1px);
-      filter: brightness(1.07);
-      background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10));
+      filter: brightness(1.06);
     }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
 
+    /* Toggle selection for multi/sequence */
     .opt.sel{
       background: linear-gradient(180deg, rgba(255,150,70,.30), rgba(255,120,50,.18));
       border-color: rgba(255,150,70,.30);
       box-shadow: 0 0 0 3px rgba(255,150,70,.10);
     }
 
+    /* Action row inside frame */
     .actions{
       display:flex;
       gap: 10px;
@@ -381,7 +352,7 @@
     }
     .btnPrimary.show{ display:inline-block; }
 
-    /* Overlay feedback */
+    /* ===== Feedback overlay (separate container in front) ===== */
     .overlay{
       position: absolute;
       inset: 0;
@@ -389,26 +360,18 @@
       align-items:center;
       justify-content:center;
       z-index: 10;
-      background: rgba(0,0,0,.44);
-      backdrop-filter: blur(7px);
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(6px);
     }
 
     .modalBox{
       width: min(720px, 92%);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(8,10,14,.80);
-      box-shadow: 0 24px 90px rgba(0,0,0,.58);
+      background: rgba(8,10,14,.78);
+      box-shadow: 0 24px 90px rgba(0,0,0,.55);
       overflow:hidden;
       position: relative;
-    }
-    .modalBox::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(420px 180px at 30% 0%, rgba(255,150,70,.18), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
     }
 
     .modalTop{
@@ -418,9 +381,8 @@
       align-items:center;
       justify-content:space-between;
       gap: 10px;
-      position: relative;
-      z-index:2;
     }
+
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
@@ -428,7 +390,6 @@
       font-size: 12px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
-      white-space: nowrap;
     }
     .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
@@ -436,11 +397,9 @@
 
     .modalBody{
       padding: 14px 16px;
-      color: rgba(255,255,255,.92);
+      color: rgba(255,255,255,.90);
       line-height: 1.5;
       font-size: 14px;
-      position: relative;
-      z-index:2;
     }
 
     .modalActions{
@@ -450,11 +409,9 @@
       justify-content:flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      position: relative;
-      z-index:2;
     }
 
-    /* motion */
+    /* ===== Motion effects ===== */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -464,34 +421,29 @@
       80%{ transform: translateX(4px); }
       100%{ transform: translateX(0px); }
     }
+
     .pulseGood{ animation: pulseGood .32s ease 1; }
     @keyframes pulseGood{
       from{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
-      50%{ box-shadow: 0 0 0 7px rgba(45,200,120,.18); }
+      50%{ box-shadow: 0 0 0 6px rgba(45,200,120,.18); }
       to{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
     }
-    .flashBad{ animation: flashBad .30s ease 1; }
+
+    .flashBad{
+      animation: flashBad .30s ease 1;
+    }
     @keyframes flashBad{
       from{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
-      50%{ box-shadow: 0 0 0 7px rgba(255,70,70,.22); }
+      50%{ box-shadow: 0 0 0 6px rgba(255,70,70,.22); }
       to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
     }
 
-    /* timeout alarm visual */
-    .alarmGlow{
-      animation: alarmGlow 1.2s ease-in-out infinite;
-    }
-    @keyframes alarmGlow{
-      0%{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
-      50%{ box-shadow: 0 0 0 6px rgba(255,70,70,.18); }
-      100%{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
-    }
-
+    /* responsive */
     @media (max-width: 720px){
       .topbar{ grid-template-columns: 1fr; }
       .stats{ justify-content:flex-start; }
       .stressWrap{ width: 140px; }
-      .avatarFrame{ width: 80px; height: 80px; }
+      .avatar{ width: 70px; height: 70px; }
     }
   </style>
 </head>
@@ -500,85 +452,81 @@
 <div class="game">
   <div class="panel" id="panel">
 
-    <!-- HUD separated -->
-    <div class="hudWrap">
-      <div class="hudContainer">
-        <div class="topbar">
-          <div class="hudbox">
-            <div class="profile">
-              <div class="avatarFrame">
-                <img class="avatar" id="hudAvatar" alt="Avatar">
-              </div>
-              <div class="ptext">
-                <div class="pname" id="hudName">Joueur</div>
-                <div class="prole" id="hudRole">Rôle: —</div>
-              </div>
-            </div>
-            <div class="chip" id="difficultyChip">MODE: NORMAL</div>
-          </div>
-
-          <div class="hudbox">
-            <div class="stats">
-              <div class="stat">⭐ <span id="hudScore">0</span></div>
-              <div class="stat">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-
-              <div class="timerWrap" id="timerWrap">
-                <div class="ring" id="ring"><div class="ringInner"></div></div>
-                <div class="sec"><span id="hudTime">12</span>s</div>
-              </div>
-
-              <div class="stressWrap" title="Stress">
-                <div class="stressBar" id="stressBar"></div>
-              </div>
-            </div>
+    <!-- TOP HUD -->
+    <div class="topbar">
+      <!-- LEFT -->
+      <div class="hudbox">
+        <div class="profile">
+          <img class="avatar" id="hudAvatar" alt="Avatar">
+          <div class="ptext">
+            <div class="pname" id="hudName">Joueur</div>
+            <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
-      </div><!-- /hudContainer -->
-    </div><!-- /hudWrap -->
+        <div class="chip" id="difficultyChip">MODE: NORMAL</div>
+      </div>
 
-    <!-- Questions separated -->
+      <!-- RIGHT -->
+      <div class="hudbox">
+        <div class="stats">
+          <div class="stat">⭐ <span id="hudScore">0</span></div>
+          <div class="stat">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
+
+          <div class="timerWrap" id="timerWrap">
+            <div class="ring" id="ring"><div class="ringInner"></div></div>
+            <div class="sec"><span id="hudTime">12</span>s</div>
+          </div>
+
+          <div class="stressWrap" title="Stress">
+            <div class="stressBar" id="stressBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
     <div class="main">
-      <div class="questionContainer">
-        <div class="frame" id="frame">
-          <div class="frameGlow"></div>
+      <div class="frame" id="frame">
+        <div class="frameGlow"></div>
 
-          <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
-          <div class="qtitle" id="qTitle">…</div>
-          <div class="qdesc" id="qDesc">…</div>
+        <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
+        <div class="qtitle" id="qTitle">…</div>
+        <div class="qdesc" id="qDesc">…</div>
 
-          <div class="options" id="options"></div>
+        <div class="options" id="options"></div>
 
-          <div class="actions">
-            <button class="btnNeo" id="submitBtn" style="display:none;">Valider</button>
-            <button class="btnNeo" id="resetBtn" style="display:none;">Réinitialiser</button>
-          </div>
+        <div class="actions">
+          <button class="btnNeo" id="submitBtn" style="display:none;">Valider</button>
+          <button class="btnNeo" id="resetBtn" style="display:none;">Réinitialiser</button>
+        </div>
 
-          <!-- Feedback overlay -->
-          <div class="overlay" id="overlay">
-            <div class="modalBox" id="modalBox">
-              <div class="modalTop">
-                <div class="badgeState" id="badgeState">—</div>
-                <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-                  Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
-                </div>
-              </div>
-              <div class="modalBody" id="modalText">…</div>
-              <div class="modalActions">
-                <button class="btnNeo" id="retryBtn">Réessayer</button>
-                <button class="btnPrimary" id="nextBtn">Suivant</button>
+        <!-- Feedback overlay -->
+        <div class="overlay" id="overlay">
+          <div class="modalBox" id="modalBox">
+            <div class="modalTop">
+              <div class="badgeState" id="badgeState">—</div>
+              <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:900;">
+                Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
               </div>
             </div>
+            <div class="modalBody" id="modalText">…</div>
+            <div class="modalActions">
+              <button class="btnNeo" id="retryBtn">Réessayer</button>
+              <button class="btnPrimary" id="nextBtn">Suivant</button>
+            </div>
           </div>
-
         </div>
-      </div><!-- /questionContainer -->
-    </div><!-- /main -->
+
+      </div>
+    </div>
 
   </div>
 </div>
 
 <script>
-/* ===== utilities ===== */
+/* =========================
+   0) UTILITAIRES
+========================= */
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -587,47 +535,51 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
-/* ===== AUDIO (web audio) ===== */
+/* =========================
+   1) AUDIO (WebAudio)
+   - Sons selon réponse
+========================= */
 let audioCtx = null;
-function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
-function tone(freq, dur=0.08, type="sine", gain=0.05){
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+function beep(freq, dur=0.08, type="sine", gain=0.05){
   ensureAudio();
   const t0 = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  osc.type = type; osc.frequency.value = freq;
+  osc.type = type;
+  osc.frequency.value = freq;
   g.gain.value = gain;
-  osc.connect(g); g.connect(audioCtx.destination);
-  osc.start(t0); osc.stop(t0 + dur);
+  osc.connect(g);
+  g.connect(audioCtx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur);
 }
-function sfxClick(){ tone(520,0.04,"triangle",0.035); }
-function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
-function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
-function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
-
-/* ✅ Long alarm when time is up */
-function sfxAlarmLong(){
-  ensureAudio();
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.type = "sawtooth";
-  osc.frequency.setValueAtTime(520, now);
-  osc.frequency.linearRampToValueAtTime(380, now + 0.35);
-  osc.frequency.linearRampToValueAtTime(520, now + 0.70);
-  g.gain.setValueAtTime(0.0001, now);
-  g.gain.exponentialRampToValueAtTime(0.06, now + 0.02);
-  g.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
-  osc.connect(g); g.connect(audioCtx.destination);
-  osc.start(now);
-  osc.stop(now + 1.0);
+function sfxCorrect(){
+  beep(660,0.07,"sine",0.06);
+  setTimeout(()=>beep(880,0.08,"sine",0.06), 80);
 }
+function sfxWrong(){
+  beep(220,0.10,"square",0.05);
+  setTimeout(()=>beep(180,0.12,"square",0.05), 90);
+}
+function sfxCritical(){
+  beep(140,0.14,"sawtooth",0.05);
+  setTimeout(()=>beep(120,0.16,"sawtooth",0.05), 120);
+}
+function sfxClick(){ beep(520,0.04,"triangle",0.035); }
 
+/* Auto-enable sound on first click anywhere (browser policy) */
 window.addEventListener("pointerdown", ()=>ensureAudio(), { once:true });
 
-/* ===== player context ===== */
+/* =========================
+   2) CONTEXTE JOUEUR
+========================= */
 const role = localStorage.getItem("role") || "infirmier";
 const playerName = localStorage.getItem("playerName") || "Joueur";
 const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
@@ -647,7 +599,7 @@ const difficultyConfig = {
 const cfg = difficultyConfig[difficulty] || difficultyConfig.normal;
 document.getElementById("difficultyChip").textContent = "MODE: " + difficulty.toUpperCase();
 
-/* role modifiers */
+/* Role modifier */
 const roleMods = {
   medecin:   { stressMul: 1.15, scoreMul: 1.00 },
   infirmier: { stressMul: 1.00, scoreMul: 1.00 },
@@ -657,7 +609,9 @@ const rm = roleMods[role] || roleMods.infirmier;
 const roleStress = (v)=> Math.round(v * rm.stressMul);
 const roleScore  = (v)=> Math.round(v * rm.scoreMul);
 
-/* ===== score / stress ===== */
+/* =========================
+   3) SCORE / STRESS
+========================= */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
 score = isNaN(score) ? 0 : score;
@@ -682,12 +636,21 @@ function addStress(d){ setStress(stress + d); }
 setScore(score);
 setStress(stress);
 
-/* ===== questions (same diversified set as before) ===== */
+/* =========================
+   4) QUESTIONS DIVERSIFIÉES
+   Types:
+   - "single"   : QCM 1 choix
+   - "multi"    : plusieurs bonnes réponses (Valider)
+   - "tf"       : vrai/faux
+   - "sequence" : choisir l’ordre (tap 3 étapes)
+========================= */
 const TOTAL = 10;
 document.getElementById("hudQtotal").textContent = String(TOTAL);
 
 const questions = [
-  { type:"single", title:"Reconnaître l’obstruction sévère",
+  {
+    type:"single",
+    title:"Reconnaître l’obstruction sévère",
     desc:"La victime ne peut pas parler et sa toux est faible. Quelle conclusion ?",
     options:[
       {text:"Obstruction légère (encourager la toux)", kind:"wrong", fb:"❌ Toux faible/inefficace + impossibilité de parler = obstruction sévère."},
@@ -695,14 +658,20 @@ const questions = [
       {text:"Crise d’angoisse uniquement", kind:"wrong", fb:"❌ Les signes orientent d’abord vers l’obstruction."}
     ]
   },
-  { type:"tf", title:"Toux efficace",
+
+  {
+    type:"tf",
+    title:"Toux efficace",
     desc:"Vrai ou faux : si la victime tousse fort et parle, on fait Heimlich immédiatement.",
     tf:{
       trueOpt: {kind:"wrong", fb:"❌ Faux : si la toux est efficace, on encourage la toux et on surveille."},
       falseOpt:{kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Vrai : on encourage la toux et on surveille."}
     }
   },
-  { type:"single", title:"Séquence recommandée (adulte conscient)",
+
+  {
+    type:"single",
+    title:"Séquence recommandée (adulte conscient)",
     desc:"Obstruction sévère chez adulte conscient : que fais-tu ?",
     options:[
       {text:"5 claques dorsales puis 5 compressions abdominales (en cycles)", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Correct : alterner 5 claques + 5 compressions."},
@@ -710,18 +679,24 @@ const questions = [
       {text:"Insufflations (bouche-à-bouche) directement", kind:"wrong", fb:"❌ Non : priorité à la désobstruction chez une victime consciente."}
     ]
   },
-  { type:"sequence", title:"Ordre des actions",
+
+  {
+    type:"sequence",
+    title:"Ordre des actions",
     desc:"Choisis l’ordre logique des 3 actions (tape dans l’ordre).",
     steps:[
-      {id:"eval", label:"Évaluer : parler / tousser / respirer"},
-      {id:"act",  label:"Appliquer le geste adapté (claques/pressions)"},
-      {id:"call", label:"Alerter / demander de l’aide"}
+      {id:"eval", label:"Évaluer : parler / tousser / respirer", must:1},
+      {id:"act",  label:"Appliquer le geste adapté (claques/pressions)", must:2},
+      {id:"call", label:"Alerter / demander de l’aide", must:3}
     ],
     okPts: roleScore(cfg.scoreOk),
     okFb:"✅ Bon ordre : évaluer → agir → alerter (et poursuivre les gestes si besoin).",
     badFb:"❌ L’ordre est important : évaluer d’abord, puis agir, alerter rapidement si sévère."
   },
-  { type:"multi", title:"Signes d’étouffement sévère",
+
+  {
+    type:"multi",
+    title:"Signes d’étouffement sévère",
     desc:"Sélectionne TOUTES les réponses correctes, puis clique Valider.",
     options:[
       {text:"Impossible de parler", correct:true},
@@ -733,7 +708,10 @@ const questions = [
     okFb:"✅ Exact : incapacité à parler + toux inefficace + détresse = sévère.",
     badFb:"❌ Revois : “respiration normale” n’est pas un signe de sévère."
   },
-  { type:"single", title:"Position pour les claques dorsales",
+
+  {
+    type:"single",
+    title:"Position pour les claques dorsales",
     desc:"Pour des claques dorsales efficaces, la victime doit être…",
     options:[
       {text:"Penchée en avant", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : gravité + efficacité."},
@@ -741,7 +719,10 @@ const questions = [
       {text:"Allongée sur le dos", kind:"wrong", fb:"❌ Non (sauf inconscience / RCP)."}
     ]
   },
-  { type:"single", title:"Erreur critique",
+
+  {
+    type:"single",
+    title:"Erreur critique",
     desc:"Quel geste est dangereux ?",
     options:[
       {text:"Balayage du doigt à l’aveugle", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : tu peux enfoncer l’objet plus loin."},
@@ -749,7 +730,10 @@ const questions = [
       {text:"Encourager la toux si elle est efficace", kind:"ok", pts: roleScore(5), fb:"🟡 Correct (si toux efficace)."}
     ]
   },
-  { type:"single", title:"Femme enceinte / personne corpulente",
+
+  {
+    type:"single",
+    title:"Femme enceinte / personne corpulente",
     desc:"Si les claques échouent, tu fais…",
     options:[
       {text:"Compressions thoraciques", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Correct : thoraciques à la place des abdominales."},
@@ -757,7 +741,10 @@ const questions = [
       {text:"Donner de l’eau", kind:"wrong", fb:"❌ Non : risque d’inhalation."}
     ]
   },
-  { type:"single", title:"Victime inconsciente",
+
+  {
+    type:"single",
+    title:"Victime inconsciente",
     desc:"La victime perd connaissance. Que fais-tu en priorité ?",
     options:[
       {text:"Allonger au sol + RCP (compressions)", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : inconsciente → au sol, RCP si respiration anormale."},
@@ -765,7 +752,10 @@ const questions = [
       {text:"Attendre sans rien faire", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : inaction = risque vital."}
     ]
   },
-  { type:"single", title:"Après expulsion de l’objet",
+
+  {
+    type:"single",
+    title:"Après expulsion de l’objet",
     desc:"L’objet sort, la victime respire mais tousse encore. Que fais-tu ?",
     options:[
       {text:"Surveiller + avis médical si symptômes persistent", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : surveillance et avis si douleur/toux persistante."},
@@ -775,7 +765,9 @@ const questions = [
   },
 ];
 
-/* ===== timer (ring progress) ===== */
+/* =========================
+   5) TIMER (ring progress) + STRESS
+========================= */
 let idx = 0;
 let locked = false;
 let timeLeft = cfg.time;
@@ -808,23 +800,21 @@ function startTimer(){
 
     if(timeLeft <= 0){
       clearInterval(timerId);
-
-      // ✅ long alarm + visual alarm pulse
-      sfxAlarmLong();
-      timerWrap.classList.add("alarmGlow");
-      setTimeout(()=>timerWrap.classList.remove("alarmGlow"), 1600);
-
+      // timeout => stress + overlay warning + retry
       addStress(roleStress(cfg.stressTick));
       showOverlay("warn",
         "⏱️ Temps écoulé ! Sous stress, tu peux commettre une erreur. Relis la situation et réessaie.",
         { allowRetry:true, allowNext:false }
       );
+      sfxWrong();
       motion("wrong");
     }
   }, 1000);
 }
 
-/* ===== render & interactions ===== */
+/* =========================
+   6) UI RENDER & INTERACTIONS
+========================= */
 const qTitle = document.getElementById("qTitle");
 const qDesc  = document.getElementById("qDesc");
 const optionsEl = document.getElementById("options");
@@ -840,7 +830,8 @@ const frame = document.getElementById("frame");
 const modalBox = document.getElementById("modalBox");
 
 let multiSelected = new Set();
-let seqOrder = [];
+let seqOrder = []; // for sequence
+let currentType = "single";
 
 function clearActions(){
   submitBtn.style.display = "none";
@@ -858,8 +849,9 @@ function setQuestion(i){
   hideOverlay();
 
   const q = questions[i];
-  hudQnum.textContent = String(i+1);
+  currentType = q.type;
 
+  hudQnum.textContent = String(i+1);
   qTitle.textContent = q.title;
   qDesc.innerHTML = q.desc;
 
@@ -870,31 +862,38 @@ function setQuestion(i){
       const d = document.createElement("div");
       d.className = "opt";
       d.textContent = opt.text;
-      d.onclick = ()=>{ sfxClick(); handleSingle(opt); };
+      d.onclick = ()=> { sfxClick(); handleSingle(opt); };
       optionsEl.appendChild(d);
     });
   }
+
   else if(q.type === "tf"){
     const t = document.createElement("div");
-    t.className = "opt"; t.textContent = "Vrai";
+    t.className = "opt";
+    t.textContent = "Vrai";
     t.onclick = ()=>{ sfxClick(); handleSingle(q.tf.trueOpt); };
     optionsEl.appendChild(t);
 
     const f = document.createElement("div");
-    f.className = "opt"; f.textContent = "Faux";
+    f.className = "opt";
+    f.textContent = "Faux";
     f.onclick = ()=>{ sfxClick(); handleSingle(q.tf.falseOpt); };
     optionsEl.appendChild(f);
   }
+
   else if(q.type === "multi"){
     q.options.forEach((opt, idxOpt)=>{
       const d = document.createElement("div");
-      d.className = "opt"; d.textContent = opt.text;
+      d.className = "opt";
+      d.textContent = opt.text;
       d.onclick = ()=>{
         sfxClick();
         if(multiSelected.has(idxOpt)){
-          multiSelected.delete(idxOpt); d.classList.remove("sel");
+          multiSelected.delete(idxOpt);
+          d.classList.remove("sel");
         } else {
-          multiSelected.add(idxOpt); d.classList.add("sel");
+          multiSelected.add(idxOpt);
+          d.classList.add("sel");
         }
       };
       optionsEl.appendChild(d);
@@ -911,13 +910,16 @@ function setQuestion(i){
       [...optionsEl.children].forEach(ch=>ch.classList.remove("sel"));
     };
   }
+
   else if(q.type === "sequence"){
+    // "tap in order" interface
     q.steps.forEach(step=>{
       const d = document.createElement("div");
-      d.className = "opt"; d.textContent = step.label;
+      d.className = "opt";
+      d.textContent = step.label;
       d.onclick = ()=>{
         sfxClick();
-        if(seqOrder.includes(step.id)) return;
+        if(seqOrder.includes(step.id)) return; // already chosen
         seqOrder.push(step.id);
         d.classList.add("sel");
         d.textContent = `${seqOrder.length}. ${step.label}`;
@@ -931,7 +933,24 @@ function setQuestion(i){
     resetBtn.textContent = "Réinitialiser";
 
     submitBtn.onclick = ()=> handleSequence(q);
-    resetBtn.onclick = ()=> setQuestion(i);
+    resetBtn.onclick = ()=> {
+      seqOrder = [];
+      // restore labels
+      optionsEl.innerHTML = "";
+      q.steps.forEach(step=>{
+        const d = document.createElement("div");
+        d.className="opt";
+        d.textContent = step.label;
+        d.onclick = ()=>{
+          sfxClick();
+          if(seqOrder.includes(step.id)) return;
+          seqOrder.push(step.id);
+          d.classList.add("sel");
+          d.textContent = `${seqOrder.length}. ${step.label}`;
+        };
+        optionsEl.appendChild(d);
+      });
+    };
   }
 
   startTimer();
@@ -959,6 +978,7 @@ function handleSingle(opt){
     showOverlay("bad", opt.fb || "🚨 Erreur critique.", { allowRetry:true, allowNext:false });
     sfxCritical();
     motion("critical");
+    // optional: message to parent (if you decide to handle later)
     try{ window.parent.postMessage({type:"CRITICAL_ERROR", q: idx+1}, "*"); }catch(e){}
   } else {
     addStress(roleStress(cfg.stressWrong));
@@ -973,12 +993,14 @@ function handleMulti(q){
   locked = true;
   clearInterval(timerId);
 
+  // Evaluate: must match exactly all correct answers
   const chosen = [...multiSelected].sort((a,b)=>a-b);
   const correctIdx = q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
 
-  const ok = chosen.length === correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
+  const sameLength = chosen.length === correctIdx.length;
+  const same = sameLength && chosen.every((v,i)=>v === correctIdx[i]);
 
-  if(ok){
+  if(same){
     addScore(q.okPts || roleScore(cfg.scoreOk));
     showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true });
     sfxCorrect();
@@ -996,8 +1018,9 @@ function handleSequence(q){
   locked = true;
   clearInterval(timerId);
 
+  // Expected order: eval -> act -> call
   const expected = ["eval","act","call"];
-  const ok = seqOrder.length === 3 && expected.every((v,i)=>seqOrder[i]===v);
+  const ok = seqOrder.length === 3 && expected.every((v,i)=>seqOrder[i] === v);
 
   if(ok){
     addScore(q.okPts || roleScore(cfg.scoreOk));
@@ -1012,12 +1035,15 @@ function handleSequence(q){
   }
 }
 
-/* ===== overlay ===== */
+/* =========================
+   7) FEEDBACK OVERLAY
+========================= */
 function showOverlay(kind, text, {allowRetry, allowNext}){
+  // badge styling
   badgeState.className = "badgeState";
-  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
-  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
-  if(kind==="bad"){  badgeState.classList.add("bBad");  badgeState.textContent="🚨 Erreur critique"; }
+  if(kind === "good"){ badgeState.classList.add("bGood"); badgeState.textContent = "✅ Bonne réponse"; }
+  if(kind === "warn"){ badgeState.classList.add("bWarn"); badgeState.textContent = "⚠️ À corriger"; }
+  if(kind === "bad"){  badgeState.classList.add("bBad");  badgeState.textContent = "🚨 Erreur critique"; }
 
   modalText.textContent = text;
   overlay.style.display = "flex";
@@ -1026,32 +1052,43 @@ function showOverlay(kind, text, {allowRetry, allowNext}){
   nextBtn.classList.toggle("show", !!allowNext);
   nextBtn.style.display = allowNext ? "inline-block" : "none";
 
-  retryBtn.onclick = ()=>{ hideOverlay(); setQuestion(idx); };
-  nextBtn.onclick  = ()=>{
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    setQuestion(idx);
+  };
+  nextBtn.onclick = ()=>{
     hideOverlay();
     idx++;
     if(idx < TOTAL) setQuestion(idx);
     else endScenario();
   };
 }
-function hideOverlay(){ overlay.style.display = "none"; }
 
-/* ===== motion ===== */
+function hideOverlay(){
+  overlay.style.display = "none";
+}
+
+/* =========================
+   8) MOTION / FX
+========================= */
 function motion(type){
+  // reset
   frame.classList.remove("shake","pulseGood","flashBad");
   modalBox.classList.remove("shake","pulseGood","flashBad");
 
-  if(type==="good"){
+  if(type === "good"){
     frame.classList.add("pulseGood");
-  } else if(type==="wrong"){
+  } else if(type === "wrong"){
     modalBox.classList.add("shake");
-  } else if(type==="critical"){
+  } else if(type === "critical"){
     modalBox.classList.add("shake");
     frame.classList.add("flashBad");
   }
 }
 
-/* ===== end ===== */
+/* =========================
+   9) FIN DU SCÉNARIO
+========================= */
 function endScenario(){
   clearInterval(timerId);
   hideOverlay();
@@ -1077,11 +1114,17 @@ function endScenario(){
   document.getElementById("qMeta").textContent = "Debrief";
 }
 
-/* ===== init ===== */
+/* =========================
+   10) INIT
+========================= */
 localStorage.setItem("playerName", playerName);
 localStorage.setItem("role", role);
 localStorage.setItem("avatar", avatarFile);
 
+// Set Q#
+document.getElementById("hudQnum").textContent = "1";
+
+// Start first
 setQuestion(0);
 </script>
 
