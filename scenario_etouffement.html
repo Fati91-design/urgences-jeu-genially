@@ -20,12 +20,12 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:28px;
+  padding:24px;
 }
 
 .card-game{
-  width:min(900px,100%);
-  background:rgba(0,0,0,.45);
+  width:min(920px,100%);
+  background:rgba(0,0,0,.48);
   backdrop-filter: blur(12px);
   border-radius:24px;
   border:1px solid rgba(255,255,255,.14);
@@ -34,7 +34,7 @@ html,body{
 }
 
 .header{
-  padding:22px;
+  padding:20px;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
 
@@ -46,6 +46,29 @@ html,body{
 .header p{
   margin:6px 0 0;
   color:rgba(255,255,255,.75);
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
+  font-size:13px;
+}
+
+.stress{
+  height:8px;
+  background:rgba(255,255,255,.15);
+  border-radius:999px;
+  overflow:hidden;
+  width:160px;
+}
+.stress span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#ffc107,#dc3545);
+  width:0%;
+  transition:.3s;
 }
 
 .content{
@@ -69,7 +92,7 @@ html,body{
 
 .feedback{
   display:none;
-  margin-top:18px;
+  margin-top:16px;
   padding:16px;
   border-radius:16px;
 }
@@ -93,6 +116,7 @@ html,body{
   padding:10px 18px;
   font-weight:900;
   color:#111;
+  display:none;
 }
 </style>
 </head>
@@ -104,88 +128,167 @@ html,body{
     <div class="header">
       <h2 id="title"></h2>
       <p id="subtitle"></p>
+
+      <div class="topbar">
+        <div>👤 <span id="roleLabel"></span></div>
+        <div>⏱️ <span id="timer">15</span>s</div>
+        <div class="stress"><span id="stressBar"></span></div>
+      </div>
     </div>
 
     <div class="content" id="content"></div>
 
     <div class="footer">
       <div>⭐ Score : <span id="score">0</span></div>
-      <button class="btn-next d-none" id="nextBtn">Suivant</button>
+      <button class="btn-next" id="nextBtn">Suivant</button>
     </div>
 
   </div>
 </div>
 
 <script>
-/* ---------------- DONNÉES ---------------- */
+/* ---------------- CONTEXTE JOUEUR ---------------- */
+const role = localStorage.getItem("role") || "citoyen";
+const roleText = {
+  medecin:"Médecin",
+  infirmier:"Infirmier",
+  pompier:"Pompier"
+};
+document.getElementById("roleLabel").textContent = roleText[role];
 
+/* ---------------- ÉTAT ---------------- */
 let score = parseInt(localStorage.getItem("score") || "0");
+let stress = parseInt(localStorage.getItem("stress") || "0");
+let step = 0;
+let time = 15;
+let timerId = null;
+
 document.getElementById("score").textContent = score;
 
-let step = 0;
-
+/* ---------------- QUESTIONS (10) ---------------- */
 const questions = [
 {
-  title:"Reconnaître l’urgence",
-  subtitle:"La victime ne parle pas et tousse faiblement.",
-  options:[
-    {t:"Obstruction légère", ok:false},
-    {t:"Obstruction sévère", ok:true, pts:10},
-    {t:"Crise d’angoisse", ok:false}
+  t:"Reconnaître l’urgence",
+  s:"La victime ne parle pas et tousse faiblement.",
+  opts:[
+    {txt:"Obstruction légère", ok:false},
+    {txt:"Obstruction sévère", ok:true, pts:10},
+    {txt:"Crise d’angoisse", ok:false}
   ],
-  feedbackOk:"✔️ Incapacité à parler + toux inefficace = obstruction sévère.",
-  feedbackBad:"❌ Ces signes indiquent une obstruction grave."
+  ok:"✔️ Incapacité à parler + toux inefficace = obstruction sévère.",
+  bad:"❌ Ces signes indiquent une obstruction grave."
 },
 {
-  title:"Toux efficace",
-  subtitle:"La victime tousse fort et parle.",
-  options:[
-    {t:"Claques dorsales", ok:false},
-    {t:"Encourager la toux", ok:true, pts:10},
-    {t:"Compressions abdominales", ok:false}
+  t:"Toux efficace",
+  s:"La victime tousse fort et parle.",
+  opts:[
+    {txt:"Encourager la toux", ok:true, pts:10},
+    {txt:"Claques dorsales", ok:false},
+    {txt:"Compressions abdominales", ok:false}
   ],
-  feedbackOk:"✔️ Une toux efficace doit être encouragée.",
-  feedbackBad:"❌ Intervenir peut aggraver la situation."
+  ok:"✔️ Une toux efficace doit être encouragée.",
+  bad:"❌ Intervenir peut aggraver la situation."
 },
 {
-  title:"Séquence des gestes",
-  subtitle:"Adulte conscient – obstruction sévère",
-  options:[
-    {t:"5 claques + 5 compressions", ok:true, pts:10},
-    {t:"Compressions seules", ok:true, pts:5},
-    {t:"Insufflations", ok:false}
+  t:"Séquence des gestes",
+  s:"Adulte conscient – obstruction sévère",
+  opts:[
+    {txt:"5 claques + 5 compressions", ok:true, pts:10},
+    {txt:"Compressions seules", ok:true, pts:5},
+    {txt:"Insufflations", ok:false}
   ],
-  feedbackOk:"✔️ La bonne séquence est essentielle.",
-  feedbackBad:"❌ Cette action n’est pas adaptée."
+  ok:"✔️ La bonne séquence est essentielle.",
+  bad:"❌ Cette action n’est pas adaptée."
 },
 {
-  title:"Erreur critique",
-  subtitle:"Que faut-il absolument éviter ?",
-  options:[
-    {t:"Balayage du doigt à l’aveugle", ok:false, crit:true},
-    {t:"Pencher la victime en avant", ok:true, pts:10}
+  t:"Position correcte",
+  s:"Pour les claques dorsales, la victime doit être…",
+  opts:[
+    {txt:"Penchée en avant", ok:true, pts:10},
+    {txt:"Allongée", ok:false},
+    {txt:"Tête en arrière", ok:false}
   ],
-  feedbackOk:"✔️ On ne met jamais les doigts sans voir l’objet.",
-  feedbackCrit:"🚨 GESTE DANGEREUX : vous pouvez aggraver l’obstruction."
+  ok:"✔️ La gravité aide à l’expulsion.",
+  bad:"❌ Cette position réduit l’efficacité."
+},
+{
+  t:"Erreur critique",
+  s:"Quel geste est dangereux ?",
+  opts:[
+    {txt:"Balayage du doigt à l’aveugle", crit:true},
+    {txt:"Observer la bouche", ok:true, pts:10}
+  ],
+  crit:"🚨 GESTE DANGEREUX : risque d’enfoncer l’objet."
+},
+{
+  t:"Femme enceinte",
+  s:"Que faire si les claques échouent ?",
+  opts:[
+    {txt:"Compressions thoraciques", ok:true, pts:10},
+    {txt:"Compressions abdominales", crit:true}
+  ],
+  crit:"🚨 Risque de blessure grave chez la femme enceinte."
+},
+{
+  t:"Appel des secours",
+  s:"Quand alerter ?",
+  opts:[
+    {txt:"Dès obstruction sévère", ok:true, pts:10},
+    {txt:"Après 10 minutes", ok:false}
+  ],
+  ok:"✔️ L’alerte doit être rapide.",
+  bad:"❌ L’attente augmente le risque."
+},
+{
+  t:"Victime inconsciente",
+  s:"La victime perd connaissance.",
+  opts:[
+    {txt:"Allonger + RCP", ok:true, pts:10},
+    {txt:"La relever", crit:true}
+  ],
+  crit:"🚨 Geste dangereux : perte de temps vital."
+},
+{
+  t:"Après expulsion",
+  s:"L’objet est sorti, la victime respire.",
+  opts:[
+    {txt:"Surveiller + avis médical", ok:true, pts:10},
+    {txt:"Je pars", ok:true, pts:5}
+  ],
+  ok:"✔️ La surveillance reste indispensable."
+},
+{
+  t:"Responsabilité",
+  s:`En tant que ${roleText[role]}, ton rôle principal est…`,
+  opts:[
+    {txt:"Agir méthodiquement et sécuriser", ok:true, pts:10},
+    {txt:"Agir vite sans réfléchir", ok:false}
+  ],
+  ok:"✔️ La méthode sauve des vies.",
+  bad:"❌ La précipitation augmente les erreurs."
 }
 ];
 
-/* ---------------- LOGIQUE ---------------- */
-
+/* ---------------- RENDER ---------------- */
 function render(){
+  clearInterval(timerId);
+  time = 15;
+  document.getElementById("timer").textContent = time;
+  timerId = setInterval(tick,1000);
+
   const q = questions[step];
-  document.getElementById("title").textContent = q.title;
-  document.getElementById("subtitle").textContent = q.subtitle;
+  document.getElementById("title").textContent = q.t;
+  document.getElementById("subtitle").textContent = q.s;
 
   const c = document.getElementById("content");
   c.innerHTML = "";
 
-  q.options.forEach(o=>{
-    const div = document.createElement("div");
-    div.className="option";
-    div.textContent=o.t;
-    div.onclick=()=>answer(o,q);
-    c.appendChild(div);
+  q.opts.forEach(o=>{
+    const d = document.createElement("div");
+    d.className="option";
+    d.textContent=o.txt;
+    d.onclick=()=>answer(o,q);
+    c.appendChild(d);
   });
 
   const fb = document.createElement("div");
@@ -193,25 +296,50 @@ function render(){
   fb.className="feedback";
   c.appendChild(fb);
 
-  document.getElementById("nextBtn").classList.add("d-none");
+  document.getElementById("nextBtn").style.display="none";
 }
 
-function answer(opt,q){
+/* ---------------- TIMER / STRESS ---------------- */
+function tick(){
+  time--;
+  document.getElementById("timer").textContent = time;
+  if(time<=0){
+    addStress(10);
+    clearInterval(timerId);
+  }
+}
+
+function addStress(v){
+  stress = Math.min(100, stress+v);
+  localStorage.setItem("stress",stress);
+  document.getElementById("stressBar").style.width = stress+"%";
+}
+
+/* ---------------- RÉPONSES ---------------- */
+function answer(o,q){
+  clearInterval(timerId);
   const fb = document.getElementById("fb");
   fb.style.display="block";
 
-  if(opt.crit){
+  if(o.crit){
     score -= 10;
+    addStress(20);
     fb.className="feedback bad";
-    fb.textContent=q.feedbackCrit;
-  } else if(opt.ok){
-    score += opt.pts || 0;
+    fb.textContent=q.crit;
+
+    // 🔗 TRIGGER ANIMATION GENIALLY
+    window.parent.postMessage("CRITICAL_ERROR", "*");
+  }
+  else if(o.ok){
+    score += o.pts||0;
     fb.className="feedback good";
-    fb.textContent=q.feedbackOk;
-    document.getElementById("nextBtn").classList.remove("d-none");
-  } else {
+    fb.textContent=q.ok;
+    document.getElementById("nextBtn").style.display="inline-block";
+  }
+  else{
+    addStress(5);
     fb.className="feedback warn";
-    fb.textContent=q.feedbackBad;
+    fb.textContent=q.bad;
   }
 
   localStorage.setItem("score",score);
@@ -220,23 +348,23 @@ function answer(opt,q){
 
 document.getElementById("nextBtn").onclick=()=>{
   step++;
-  if(step < questions.length){
-    render();
-  } else {
-    endGame();
-  }
+  if(step<questions.length) render();
+  else end();
 };
 
-function endGame(){
+/* ---------------- FIN ---------------- */
+function end(){
   document.getElementById("content").innerHTML=`
-    <h3>Fin du scénario</h3>
-    <p>Score final : <b>${score}</b></p>
-    <p>${score>=30?"🟢 Bonne maîtrise":"🔴 Révisions conseillées"}</p>
+    <h3>Fin du scénario – Étouffement</h3>
+    <p>⭐ Score final : <b>${score}</b></p>
+    <p>😰 Stress : <b>${stress}%</b></p>
+    <p>${score>=80?"🟢 Intervention maîtrisée":"🟡 Révisions conseillées"}</p>
     <p>Cliquez sur <b>Suivant</b> dans Genially pour continuer.</p>
   `;
-  document.getElementById("nextBtn").classList.add("d-none");
 }
 
+/* ---------------- INIT ---------------- */
+document.getElementById("stressBar").style.width = stress+"%";
 render();
 </script>
 </body>
