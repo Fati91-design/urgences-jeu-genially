@@ -12,17 +12,16 @@
       --glass: rgba(25, 27, 31, .72);
       --glass2: rgba(15, 17, 20, .55);
       --stroke: rgba(255, 200, 150, .22);
-      --strokeW: rgba(255,255,255,.10);
 
       --text: rgba(255,255,255,.93);
       --muted: rgba(255,255,255,.70);
 
-      --ember: rgba(255,150,70,1);
-      --ember2: rgba(255,120,50,1);
       --gold: rgba(255,200,80,1);
       --red: rgba(255,70,70,1);
       --green: rgba(45,200,120,1);
       --blue: rgba(80,170,255,1);
+      --ember: rgba(255,150,70,1);
+      --ember2: rgba(255,120,50,1);
     }
 
     html,body{
@@ -32,7 +31,6 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* ✅ plus de "grand conteneur" */
     .stage{
       min-height: 100vh;
       display:flex;
@@ -41,11 +39,8 @@
       padding: 18px;
     }
 
-    .wrap{
-      width: min(1120px, 100%);
-    }
+    .wrap{ width: min(1120px, 100%); }
 
-    /* ===== HUD (2 blocs séparés, sans conteneur global du haut) ===== */
     .hud{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -55,7 +50,7 @@
 
     .hudbox{
       background: var(--glass);
-      border: 1px solid var(--stroke);
+      border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
       padding: 14px 16px;
       display:flex;
@@ -104,8 +99,6 @@
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
-
-      /* zoom + focus visage */
       object-position: 50% 6%;
       transform: scale(1.35);
       transform-origin: 50% 12%;
@@ -167,7 +160,6 @@
       white-space: nowrap;
     }
 
-    /* ✅ Timer plus attrayant */
     .timerPill{
       padding: 8px 10px;
       gap: 10px;
@@ -198,21 +190,9 @@
       font-weight: 950;
     }
 
-    .timeText{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-    }
-    .timeText .label{
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(255,255,255,.75);
-      letter-spacing: .2px;
-    }
-    .timeText .sec{
-      font-size: 16px;
-      font-weight: 950;
-    }
+    .timeText{ display:flex; align-items:center; gap: 8px; }
+    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 16px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -238,10 +218,9 @@
       transition: width .25s ease;
     }
 
-    /* ===== Question container ===== */
     .frame{
       background: var(--glass2);
-      border: 1px solid var(--stroke);
+      border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
       padding: 18px;
       position: relative;
@@ -357,7 +336,6 @@
     }
     .btnPrimary.show{ display:inline-block; }
 
-    /* ===== Overlays ===== */
     .overlay{
       position: fixed;
       inset: 0;
@@ -417,17 +395,8 @@
       flex-wrap: wrap;
     }
 
-    /* ✅ Start overlay */
-    .startTitle{
-      font-weight: 950;
-      font-size: 22px;
-      margin-bottom: 6px;
-    }
-    .startText{
-      color: rgba(255,255,255,.82);
-      font-size: 14px;
-      line-height: 1.45;
-    }
+    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
+    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
     .startBtn{
       border:none;
       border-radius: 14px;
@@ -439,7 +408,6 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
 
-    /* Motion */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -473,9 +441,7 @@
 <div class="stage">
   <div class="wrap">
 
-    <!-- HUD -->
     <div class="hud">
-      <!-- Left -->
       <div class="hudbox">
         <div class="profile">
           <div class="avatarFrame">
@@ -489,7 +455,6 @@
         <div class="chip" id="difficultyChip">MODE: NORMAL</div>
       </div>
 
-      <!-- Right -->
       <div class="hudbox">
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
@@ -510,7 +475,6 @@
       </div>
     </div>
 
-    <!-- Questions -->
     <div class="frame" id="frame">
       <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
       <div class="qtitle" id="qTitle">…</div>
@@ -541,7 +505,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission.</b>
+        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -571,7 +535,7 @@
 
 <script>
 /* =========================
-   AUDIO (WebAudio)
+   AUDIO
 ========================= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
@@ -668,10 +632,18 @@ setStress(stress);
 
 /* =========================
    REGLES MISSION
-   - temps écoulé -> retour début mission + score=0
-   - 2 tentatives ratées -> retour début mission + score=0
 ========================= */
 let attemptsForCurrentQuestion = 0;
+
+let idx = 0;
+let locked = true;
+let timeLeft = cfg.time;
+let timerId = null;
+
+const hudQnum = document.getElementById("hudQnum");
+const hudTime = document.getElementById("hudTime");
+const ring = document.getElementById("ring");
+const timerPill = document.getElementById("timerPill");
 
 function resetMission({showStart=true} = {}){
   clearInterval(timerId);
@@ -680,18 +652,15 @@ function resetMission({showStart=true} = {}){
   idx = 0;
   attemptsForCurrentQuestion = 0;
 
-  // score et stress remis à zéro
   setScore(0);
   setStress(0);
 
-  // remettre UI timer
   timeLeft = cfg.time;
-  document.getElementById("hudQnum").textContent = "1";
-  document.getElementById("hudTime").textContent = String(cfg.time);
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(cfg.time);
   ring.style.setProperty("--p", "100%");
   timerPill.classList.remove("timerWarn","timerDanger");
 
-  // remettre la question en "preview"
   locked = true;
   document.getElementById("qMeta").textContent = "Scénario 1 — Étouffement";
   document.getElementById("qTitle").textContent = "Mission réinitialisée";
@@ -821,18 +790,8 @@ const questions = [
 ];
 
 /* =========================
-   TIMER + UI
+   TIMER
 ========================= */
-let idx = 0;
-let locked = true;         // bloqué tant que pas démarré
-let timeLeft = cfg.time;
-let timerId = null;
-
-const hudQnum = document.getElementById("hudQnum");
-const hudTime = document.getElementById("hudTime");
-const ring = document.getElementById("ring");
-const timerPill = document.getElementById("timerPill");
-
 function setRingProgress(){
   const p = clamp(Math.round((timeLeft / cfg.time) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
@@ -858,7 +817,6 @@ function startTimer(){
       clearInterval(timerId);
       sfxAlarmLong();
 
-      // ✅ NOUVELLE REGLE : temps écoulé => retour départ mission + score=0
       showOverlay("bad",
         "⏱️ Temps écoulé ! Mission échouée. Retour au départ… (score remis à zéro)",
         { allowRetry:false, allowNext:false, missionFail:true }
@@ -895,7 +853,8 @@ function clearActions(){
   resetBtn.onclick = null;
 }
 
-function setQuestion(i){
+/* ✅ IMPORTANT: resetAttempts param */
+function setQuestion(i, resetAttempts = true){
   locked = false;
   clearInterval(timerId);
   multiSelected.clear();
@@ -903,14 +862,13 @@ function setQuestion(i){
   clearActions();
   hideOverlay();
 
-  attemptsForCurrentQuestion = 0; // ✅ reset tentatives à chaque nouvelle question
+  if(resetAttempts) attemptsForCurrentQuestion = 0;
 
   const q = questions[i];
   hudQnum.textContent = String(i+1);
 
   qTitle.textContent = q.title;
   qDesc.innerHTML = q.desc;
-
   optionsEl.innerHTML = "";
 
   if(q.type === "single"){
@@ -979,21 +937,18 @@ function setQuestion(i){
     resetBtn.textContent = "Réinitialiser";
 
     submitBtn.onclick = ()=> handleSequence(q);
-    resetBtn.onclick = ()=> setQuestion(i);
+    resetBtn.onclick = ()=> setQuestion(i, true);
   }
 
   startTimer();
 }
 
 /* =========================
-   REGLE: 2 tentatives ratées => reset mission
-   Ici, on considère "bonne réponse" = kind ok (ou multi/sequence correct).
-   partial/wrong/critical = tentative ratée.
+   TENTATIVES
 ========================= */
 function registerFailureAndCheck(){
   attemptsForCurrentQuestion++;
   if(attemptsForCurrentQuestion >= 2){
-    // reset mission + score=0
     showOverlay("bad",
       "❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)",
       { allowRetry:false, allowNext:false, missionFail:true }
@@ -1021,7 +976,6 @@ function handleSingle(opt){
     return;
   }
 
-  // échec (partial/wrong/critical) => tentative ratée
   if(opt.kind === "critical"){
     addScore(opt.pts || -10);
     addStress(roleStress(cfg.stressCritical));
@@ -1039,10 +993,8 @@ function handleSingle(opt){
     motion("wrong");
   }
 
-  // ✅ vérifier règle 2 tentatives
   if(registerFailureAndCheck()) return;
 
-  // sinon, feedback normal et réessai
   const msg = opt.fb || "❌ Incorrect.";
   showOverlay(opt.kind === "critical" ? "bad" : "warn", msg + ` (Tentative ${attemptsForCurrentQuestion}/2)`,
     { allowRetry:true, allowNext:false }
@@ -1107,7 +1059,7 @@ function handleSequence(q){
 }
 
 /* =========================
-   OVERLAY FEEDBACK
+   OVERLAY
 ========================= */
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   badgeState.className = "badgeState";
@@ -1122,23 +1074,22 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   nextBtn.classList.toggle("show", !!allowNext);
   nextBtn.style.display = allowNext ? "inline-block" : "none";
 
+  /* ✅ IMPORTANT: retry DOES NOT reset attempts */
   retryBtn.onclick = ()=>{
     hideOverlay();
-    setQuestion(idx);
+    setQuestion(idx, false);
   };
 
   nextBtn.onclick = ()=>{
     hideOverlay();
     idx++;
-    if(idx < TOTAL) setQuestion(idx);
+    if(idx < TOTAL) setQuestion(idx, true);
     else endScenario();
   };
 
-  // ✅ si missionFail (temps écoulé ou 2 tentatives ratées)
   if(missionFail){
     retryBtn.style.display = "none";
     nextBtn.style.display = "none";
-    // après petit délai, reset mission et afficher écran prêt
     setTimeout(()=> resetMission({showStart:true}), 850);
   }
 }
@@ -1195,7 +1146,7 @@ function endScenario(){
 }
 
 /* =========================
-   START BUTTON
+   START
 ========================= */
 const startOverlay = document.getElementById("startOverlay");
 const startBtn = document.getElementById("startBtn");
@@ -1206,20 +1157,19 @@ startBtn.addEventListener("click", ()=>{
   startOverlay.style.display = "none";
   idx = 0;
   attemptsForCurrentQuestion = 0;
-  setQuestion(0);
+  setQuestion(0, true);
 });
 
-/* Init preview */
+/* Preview */
 (function initPreview(){
   locked = true;
   document.getElementById("qTitle").textContent = "Prépare-toi…";
   document.getElementById("qDesc").innerHTML = "Clique sur <b>DÉMARRER</b> pour lancer la mission (le timer commencera).";
   document.getElementById("options").innerHTML = "";
-  document.getElementById("hudQnum").textContent = "1";
-  document.getElementById("hudTime").textContent = String(cfg.time);
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(cfg.time);
   ring.style.setProperty("--p", "100%");
 })();
 </script>
-
 </body>
 </html>
