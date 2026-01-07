@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 1 – Étouffement (Pro Layout + Audio)</title>
+  <title>Scénario 1 – Étouffement (Layout Fixe Pro)</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --glass: rgba(0,0,0,.46);
-      --glass2: rgba(0,0,0,.58);
-      --border: rgba(255,255,255,.14);
+      --glass: rgba(0,0,0,.48);
+      --glass2: rgba(0,0,0,.62);
+      --border: rgba(255,255,255,.16);
       --text: rgba(255,255,255,.94);
-      --muted: rgba(255,255,255,.70);
+      --muted: rgba(255,255,255,.72);
 
       --ember1: rgba(255,176,90,1);
       --ember2: rgba(255,120,50,1);
 
-      --shadow: 0 18px 50px rgba(0,0,0,.45);
-      --shadow2: 0 24px 70px rgba(0,0,0,.55);
+      --shadow: 0 18px 55px rgba(0,0,0,.48);
+      --shadow2: 0 26px 80px rgba(0,0,0,.60);
     }
 
-    /* ✅ PAS DE SCROLL */
+    /* ✅ Page verrouillée (pas de scroll) */
     html, body{
       margin:0;
       height:100%;
@@ -32,56 +32,73 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
-    /* Container global fixe */
+    /* ✅ Conteneur global fixe (référence stable) */
     .app{
       position: fixed;
       inset: 0;
-      display:flex;
-      align-items:flex-end; /* questions en bas */
-      justify-content:center;
-      padding: 18px;
+      background: transparent;
     }
 
-    /* BG glow subtil */
+    /* Glow décoratif */
     .app::before{
       content:"";
       position:absolute;
       inset:-2px;
       background:
-        radial-gradient(520px 220px at 72% 18%, rgba(255,150,70,.22), transparent 60%),
-        radial-gradient(520px 240px at 20% 86%, rgba(255,110,40,.14), transparent 65%);
+        radial-gradient(580px 240px at 72% 14%, rgba(255,150,70,.22), transparent 60%),
+        radial-gradient(640px 280px at 20% 92%, rgba(255,110,40,.14), transparent 66%);
       pointer-events:none;
       z-index:0;
     }
 
-    /* ===== HUD zones ===== */
-    .hud-left{
-      position: fixed;
-      top: 14px;
-      left: 14px;
-      z-index: 50;
-      display:flex;
-      align-items:center;
+    /* ✅ GRILLE FIXE: haut (HUD) + bas (questions) */
+    .layout{
+      position:absolute;
+      inset: 0;
+      display:grid;
+      grid-template-rows: 88px 1fr; /* HUD + contenu */
       gap: 12px;
-      padding: 10px 12px;
+      padding: 14px;
+      z-index: 1;
+    }
+
+    /* ===== Top Bar : 3 zones alignées (Gauche / Centre / Droite) ===== */
+    .topbar{
+      display:grid;
+      grid-template-columns: 320px 1fr 420px;
+      align-items: stretch;
+      gap: 12px;
+      min-height: 88px;
+    }
+
+    .box{
       background: var(--glass);
-      border: 1px solid rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.18);
       backdrop-filter: blur(14px);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      max-width: min(360px, calc(100% - 28px));
+      overflow:hidden;
+    }
+
+    /* LEFT: identité */
+    .identity{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 12px;
+      min-width: 0;
     }
 
     .avatarWrap{
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       position: relative;
       flex: 0 0 auto;
     }
 
     .hud-avatar{
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       border-radius: 999px;
       object-fit: cover;
       object-position: 50% 18%;
@@ -92,10 +109,10 @@
 
     .avatarGlow{
       position:absolute;
-      inset:-6px;
+      inset:-7px;
       border-radius: 999px;
-      background: radial-gradient(circle, rgba(255,165,0,.35), transparent 60%);
-      filter: blur(8px);
+      background: radial-gradient(circle, rgba(255,165,0,.35), transparent 62%);
+      filter: blur(9px);
       z-index:-1;
     }
 
@@ -110,7 +127,7 @@
     }
     .hud-name .player{
       font-size: 16px;
-      font-weight: 1000;
+      font-weight: 1100;
       margin:0;
       letter-spacing: .2px;
       white-space: nowrap;
@@ -120,7 +137,7 @@
     .hud-name .role{
       margin-top: 2px;
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 950;
       color: rgba(255,210,170,.92);
       opacity: .95;
       white-space: nowrap;
@@ -128,112 +145,46 @@
       text-overflow: ellipsis;
     }
 
-    .hud-right{
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      z-index: 50;
+    /* CENTER: Timer tab fixé */
+    .timerTab{
       display:flex;
       align-items:center;
-      gap: 10px;
-      flex-wrap: wrap;
+      justify-content:center;
       padding: 10px 12px;
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(14px);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      max-width: min(520px, calc(100% - 28px));
-      justify-content:flex-end;
     }
-
-    .scoreBox{
-      display:flex;
-      align-items:baseline;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-    .scoreLabel{
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-weight: 900;
-      white-space: nowrap;
-    }
-    .scoreValue{
-      font-size: 22px;
-      font-weight: 1100;
-      color: rgba(255,215,170,.98);
-      text-shadow: 0 0 18px rgba(255,165,0,.25);
-      line-height: 1;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.90);
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .miniBtn{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.88);
-      padding: 8px 10px;
-      font-weight: 900;
-      font-size: 12px;
-      transition: transform .12s ease, filter .12s ease;
-    }
-    .miniBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
-
-    /* ✅ TIMER EN ONGLET (tab) */
-    .timer-tab{
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 55;
-      padding: 10px 12px;
-      border-radius: 18px;
-      background: rgba(255,140,60,.14);
-      border: 1px solid rgba(255,140,60,.24);
-      box-shadow: 0 12px 32px rgba(255,120,50,.16);
+    .timerInner{
       display:flex;
       align-items:center;
       gap: 10px;
-      backdrop-filter: blur(14px);
-      min-width: 220px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,140,60,.16);
+      border: 1px solid rgba(255,140,60,.26);
+      box-shadow: 0 14px 40px rgba(255,120,50,.14);
+      min-width: 240px;
       justify-content:center;
     }
 
     .timerRing{
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 999px;
       display:grid;
       place-items:center;
       background: conic-gradient(var(--ember1) 0deg, rgba(255,255,255,.10) 0deg);
       border: 1px solid rgba(255,255,255,.12);
       box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      flex: 0 0 auto;
     }
     .timerRing span{
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
       display:grid;
       place-items:center;
-      background: rgba(0,0,0,.55);
+      background: rgba(0,0,0,.58);
       border: 1px solid rgba(255,255,255,.10);
-      font-weight: 1000;
+      font-weight: 1100;
       font-size: 12px;
     }
 
@@ -246,44 +197,111 @@
     .timerText .t1{
       font-size: 12px;
       color: rgba(255,255,255,.78);
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: .2px;
     }
     .timerText .t2{
       font-size: 16px;
       color: rgba(255,255,255,.98);
-      font-weight: 1100;
+      font-weight: 1200;
     }
 
-    .dangerBlink{ animation: blink .55s ease-in-out infinite; }
-    @keyframes blink{
-      0%,100%{ filter: brightness(1); }
-      50%{ filter: brightness(1.25); }
+    /* RIGHT: score + progression + boutons alignés */
+    .status{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
+      padding: 12px;
+      flex-wrap: nowrap;
     }
+
+    .scoreBox{
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      flex: 0 0 auto;
+    }
+    .scoreLabel{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+    .scoreValue{
+      font-size: 22px;
+      font-weight: 1200;
+      color: rgba(255,215,170,.98);
+      text-shadow: 0 0 18px rgba(255,165,0,.25);
+      line-height: 1;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      font-size: 12px;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .miniBtn{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      padding: 10px 12px;
+      font-weight: 950;
+      font-size: 12px;
+      transition: transform .12s ease, filter .12s ease;
+      flex: 0 0 auto;
+    }
+    .miniBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+
+    /* Animations */
+    .dangerBlink{ animation: blink .55s ease-in-out infinite; }
+    @keyframes blink{ 0%,100%{ filter: brightness(1); } 50%{ filter: brightness(1.25); } }
 
     .pulse{ animation: pulse .22s ease both; }
-    @keyframes pulse{
-      from{ transform: scale(.98); filter: brightness(.98); }
-      to{ transform: scale(1); filter: brightness(1.08); }
+    @keyframes pulse{ from{ transform: scale(.98); filter: brightness(.98);} to{ transform: scale(1); filter: brightness(1.08);} }
+
+    /* ✅ QUESTIONS: CONTENEUR FIXE (taille + emplacement stables) */
+    .questionArea{
+      display:flex;
+      align-items:flex-end; /* collé en bas de sa zone */
+      justify-content:center;
+      padding-bottom: 0;
+      min-height: 0; /* important pour grid */
     }
 
-    /* ===== Questions container en bas ===== */
     .panel{
-      position: relative;
-      z-index: 1;
       width: min(980px, 100%);
+      height: min(520px, calc(100vh - 88px - 28px)); /* ✅ hauteur fixée stable */
       background: var(--glass2);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.16);
       backdrop-filter: blur(14px);
       border-radius: 22px;
       box-shadow: var(--shadow2);
-      overflow:hidden;
+      overflow: hidden; /* ✅ pas de scroll global */
+      display:flex;
+      flex-direction:column;
     }
 
     .head{
       padding: 16px 18px 12px;
       border-bottom: 1px solid rgba(255,255,255,.10);
+      flex: 0 0 auto;
     }
+
     .head .kicker{
       display:inline-flex;
       align-items:center;
@@ -295,13 +313,15 @@
       border-radius: 999px;
       padding: 6px 10px;
     }
+
     .head h2{
       margin: 10px 0 6px;
-      font-weight: 1100;
+      font-weight: 1200;
       letter-spacing: .2px;
       font-size: 22px;
       text-shadow: 0 12px 30px rgba(0,0,0,.5);
     }
+
     .head p{
       margin:0;
       color: var(--muted);
@@ -309,8 +329,17 @@
       line-height: 1.55;
     }
 
+    /* ✅ Contenu interne peut scroller si nécessaire (pas la page) */
     .content{
-      padding: 16px 18px 18px;
+      padding: 14px 18px 16px;
+      overflow: auto; /* scroll interne seulement si besoin */
+      flex: 1 1 auto;
+    }
+
+    .content::-webkit-scrollbar{ width: 8px; }
+    .content::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.12);
+      border-radius: 99px;
     }
 
     .options{
@@ -339,7 +368,7 @@
     .opt .badge{
       border-radius: 12px;
       padding: 6px 10px;
-      font-weight: 950;
+      font-weight: 1000;
       background: rgba(0,0,0,.28);
       border: 1px solid rgba(255,255,255,.10);
       color: rgba(255,255,255,.9);
@@ -347,7 +376,7 @@
       text-align:center;
     }
     .opt .txt{
-      font-weight: 850;
+      font-weight: 900;
       color: rgba(255,255,255,.92);
       line-height: 1.25;
     }
@@ -358,15 +387,14 @@
       font-weight: 650;
     }
 
-    .opt.checkbox{
-      cursor: default;
-    }
+    .opt.checkbox{ cursor: default; }
     .opt.checkbox input{
       margin-top: 3px;
       width: 18px;
       height: 18px;
       accent-color: #ff9b3a;
     }
+
     .multi-actions{
       display:flex;
       gap: 10px;
@@ -390,7 +418,7 @@
     .orderItem:active{ cursor: grabbing; }
     .orderItem .grab{
       opacity:.9;
-      font-weight: 1000;
+      font-weight: 1100;
       background: rgba(0,0,0,.22);
       border: 1px solid rgba(255,255,255,.10);
       border-radius: 14px;
@@ -399,7 +427,7 @@
       white-space: nowrap;
     }
     .orderItem .text{
-      font-weight: 900;
+      font-weight: 950;
       color: rgba(255,255,255,.92);
       flex:1;
     }
@@ -412,13 +440,14 @@
       justify-content: space-between;
       gap: 12px;
       flex-wrap:wrap;
+      flex: 0 0 auto;
     }
 
     .btn-ember{
       border:0;
       border-radius: 16px;
       padding: 12px 14px;
-      font-weight: 1100;
+      font-weight: 1200;
       letter-spacing:.2px;
       background: linear-gradient(180deg, var(--ember1), var(--ember2));
       color: rgba(10,12,18,.96);
@@ -426,13 +455,14 @@
       transition: transform .12s ease, filter .12s ease;
     }
     .btn-ember:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+
     .btn-ghost{
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.88);
       padding: 12px 14px;
-      font-weight: 950;
+      font-weight: 1000;
     }
 
     /* ===== Feedback Modal ===== */
@@ -476,7 +506,7 @@
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 1000;
+      font-weight: 1100;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
@@ -485,7 +515,7 @@
       padding: 14px 16px 16px;
       color: rgba(255,255,255,.92);
       line-height: 1.55;
-      font-weight: 800;
+      font-weight: 850;
     }
     .modalActions{
       padding: 0 16px 16px;
@@ -495,73 +525,86 @@
       flex-wrap:wrap;
     }
 
-    @media (max-width: 720px){
-      .timer-tab{ top: 84px; }
-      .hud-right{ max-width: calc(100% - 28px); }
-      .hud-left{ max-width: calc(100% - 28px); }
-      .app{ padding-bottom: 14px; }
+    /* ===== Responsive: topbar devient 1 colonne ===== */
+    @media (max-width: 980px){
+      .topbar{
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .panel{
+        height: min(560px, calc(100vh - 88px - 28px));
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- Haut gauche -->
-  <div class="hud-left">
-    <div class="avatarWrap">
-      <img id="hudAvatar" class="hud-avatar" alt="Avatar">
-      <span class="avatarGlow"></span>
-    </div>
-
-    <div class="hud-name">
-      <p class="hello m-0">Joueur</p>
-      <p class="player m-0" id="hudName">—</p>
-      <p class="role m-0" id="hudRole">—</p>
-    </div>
-  </div>
-
-  <!-- Timer onglet (haut centre) -->
-  <div class="timer-tab" id="timerTab">
-    <div class="timerRing" id="timerRing"><span id="timerNum">18</span></div>
-    <div class="timerText">
-      <div class="t1">⏱️ TIMER</div>
-      <div class="t2"><span id="timerLabel">18</span>s</div>
-    </div>
-  </div>
-
-  <!-- Haut droite -->
-  <div class="hud-right">
-    <div class="scoreBox" id="scoreBox">
-      <span class="scoreLabel">⭐ SCORE</span>
-      <span class="scoreValue" id="hudScore">0</span>
-    </div>
-
-    <div class="pill">🧩 Q : <b><span id="qIndex">1</span>/10</b></div>
-
-    <button class="miniBtn" id="resetRunBtn">↻</button>
-    <button class="miniBtn" id="muteBtn">🔊 Off</button>
-  </div>
-
-  <!-- App / Questions en bas -->
   <div class="app">
-    <div class="panel">
-      <div class="head">
-        <div class="kicker">🚑 Scénario 1 • Étouffement</div>
-        <h2 id="qTitle">—</h2>
-        <p id="qSub">—</p>
+    <div class="layout">
+
+      <!-- ✅ TOPBAR fixe et aligné -->
+      <div class="topbar">
+        <!-- Left -->
+        <div class="box identity">
+          <div class="avatarWrap">
+            <img id="hudAvatar" class="hud-avatar" alt="Avatar">
+            <span class="avatarGlow"></span>
+          </div>
+          <div class="hud-name">
+            <p class="hello m-0">Joueur</p>
+            <p class="player m-0" id="hudName">—</p>
+            <p class="role m-0" id="hudRole">—</p>
+          </div>
+        </div>
+
+        <!-- Center -->
+        <div class="box timerTab" id="timerTab">
+          <div class="timerInner" id="timerInner">
+            <div class="timerRing" id="timerRing"><span id="timerNum">18</span></div>
+            <div class="timerText">
+              <div class="t1">⏱️ TIMER</div>
+              <div class="t2"><span id="timerLabel">18</span>s</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="box status">
+          <div class="scoreBox" id="scoreBox">
+            <span class="scoreLabel">⭐ SCORE</span>
+            <span class="scoreValue" id="hudScore">0</span>
+          </div>
+
+          <div class="pill">🧩 Q : <b><span id="qIndex">1</span>/10</b></div>
+
+          <button class="miniBtn" id="resetRunBtn">↻</button>
+          <button class="miniBtn" id="muteBtn">🔊 Off</button>
+        </div>
       </div>
 
-      <div class="content" id="content"></div>
+      <!-- ✅ Zone Questions FIXE en bas -->
+      <div class="questionArea">
+        <div class="panel">
+          <div class="head">
+            <div class="kicker">🚑 Scénario 1 • Étouffement</div>
+            <h2 id="qTitle">—</h2>
+            <p id="qSub">—</p>
+          </div>
 
-      <div class="footer">
-        <div class="text-white-50" style="font-size:12px;font-weight:800;">
-          Astuce : “5 claques → 5 compressions → RCP si inconscience”.
-        </div>
-        <div class="d-flex gap-2">
-          <button class="btn-ghost d-none" id="retryBtn">Revoir</button>
-          <button class="btn-ember d-none" id="nextBtn">Suivant</button>
+          <div class="content" id="content"></div>
+
+          <div class="footer">
+            <div class="text-white-50" style="font-size:12px;font-weight:850;">
+              Astuce : “5 claques → 5 compressions → RCP si inconscience”.
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn-ghost d-none" id="retryBtn">Revoir</button>
+              <button class="btn-ember d-none" id="nextBtn">Suivant</button>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -570,7 +613,7 @@
     <div class="modalCard">
       <div class="modalHead">
         <span class="tag" id="fbTag">—</span>
-        <span class="text-white-50" style="font-size:12px;font-weight:900;" id="fbPoints"></span>
+        <span class="text-white-50" style="font-size:12px;font-weight:1000;" id="fbPoints"></span>
       </div>
       <div class="modalBody" id="fbText"></div>
       <div class="modalActions">
@@ -582,20 +625,15 @@
 
 <script>
 /* =========================
-   AUDIO (WebAudio) - sans fichiers
-   (évite problèmes de liens .mp3 sur Genially)
+   AUDIO (WebAudio)
 ========================= */
-let audioEnabled = false;
 let muted = true;
 let audioCtx = null;
 
 function ensureAudio(){
   if(muted) return false;
-  if(!audioCtx){
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if(audioCtx.state === "suspended") audioCtx.resume();
-  audioEnabled = true;
   return true;
 }
 
@@ -609,37 +647,14 @@ function beep({freq=440, duration=0.12, type="sine", gain=0.05} = {}){
   g.gain.setValueAtTime(gain, t0);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
   o.connect(g); g.connect(audioCtx.destination);
-  o.start(t0);
-  o.stop(t0 + duration);
+  o.start(t0); o.stop(t0 + duration);
 }
+function soundCorrect(){ beep({freq:659,duration:0.10,gain:0.06}); setTimeout(()=>beep({freq:880,duration:0.12,gain:0.06}),110); }
+function soundWrong(){ beep({freq:220,duration:0.12,type:"square",gain:0.05}); setTimeout(()=>beep({freq:196,duration:0.14,type:"square",gain:0.05}),130); }
+function soundCritical(){ beep({freq:700,duration:0.10,type:"sawtooth",gain:0.06}); setTimeout(()=>beep({freq:500,duration:0.10,type:"sawtooth",gain:0.06}),120); setTimeout(()=>beep({freq:700,duration:0.12,type:"sawtooth",gain:0.06}),240); }
+function soundTimeout(){ beep({freq:520,duration:0.22,type:"sawtooth",gain:0.06}); setTimeout(()=>beep({freq:520,duration:0.22,type:"sawtooth",gain:0.06}),260); setTimeout(()=>beep({freq:520,duration:0.28,type:"sawtooth",gain:0.06}),520); }
 
-function soundCorrect(){
-  // petit jingle positif
-  beep({freq:659, duration:0.10, type:"sine", gain:0.06});
-  setTimeout(()=>beep({freq:880, duration:0.12, type:"sine", gain:0.06}), 110);
-}
-
-function soundWrong(){
-  // double beep bas
-  beep({freq:220, duration:0.12, type:"square", gain:0.05});
-  setTimeout(()=>beep({freq:196, duration:0.14, type:"square", gain:0.05}), 130);
-}
-
-function soundCritical(){
-  // alarme rapide (3 bips)
-  beep({freq:700, duration:0.10, type:"sawtooth", gain:0.06});
-  setTimeout(()=>beep({freq:500, duration:0.10, type:"sawtooth", gain:0.06}), 120);
-  setTimeout(()=>beep({freq:700, duration:0.12, type:"sawtooth", gain:0.06}), 240);
-}
-
-function soundTimeout(){
-  // alarme plus longue
-  beep({freq:520, duration:0.22, type:"sawtooth", gain:0.06});
-  setTimeout(()=>beep({freq:520, duration:0.22, type:"sawtooth", gain:0.06}), 260);
-  setTimeout(()=>beep({freq:520, duration:0.28, type:"sawtooth", gain:0.06}), 520);
-}
-
-/* 1er clic utilisateur -> autoriser audio */
+/* Permettre audio après première interaction */
 document.addEventListener("pointerdown", () => {
   if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if(audioCtx.state === "suspended") audioCtx.resume();
@@ -686,10 +701,7 @@ function setScore(delta){
   score += delta;
   localStorage.setItem("score", String(score));
   hudScore.textContent = score;
-
-  scoreBox.classList.remove("pulse");
-  void scoreBox.offsetWidth;
-  scoreBox.classList.add("pulse");
+  scoreBox.classList.remove("pulse"); void scoreBox.offsetWidth; scoreBox.classList.add("pulse");
 }
 
 function setTimerUI(){
@@ -712,7 +724,6 @@ function startTimer(){
     timeLeft--;
     setTimerUI();
 
-    // petit beep à 5,4,3,2,1 si tu veux (optionnel)
     if(timeLeft <= 5 && timeLeft >= 1 && !muted){
       beep({freq: 900, duration:0.06, type:"sine", gain:0.03});
     }
@@ -720,11 +731,7 @@ function startTimer(){
     if(timeLeft <= 0){
       clearInterval(timerId);
       setScore(-5);
-
-      timerTab.classList.remove("pulse");
-      void timerTab.offsetWidth;
-      timerTab.classList.add("pulse");
-
+      timerTab.classList.remove("pulse"); void timerTab.offsetWidth; timerTab.classList.add("pulse");
       soundTimeout();
 
       showFeedback({
@@ -741,7 +748,7 @@ function startTimer(){
 }
 
 /* =========================
-   QUESTIONS (10) multi-types
+   QUESTIONS (10)
 ========================= */
 function byRoleText(base){
   if(role === "pompier") return base.replace("Tu", "En tant que premier intervenant, tu");
@@ -754,57 +761,52 @@ const QUESTIONS = [
     title:"Reconnaître l’étouffement sévère",
     sub: byRoleText("Tu observes : mains à la gorge, impossibilité de parler, toux faible. Quelle conclusion ?"),
     options:[
-      {k:"A", t:"Obstruction légère (toux efficace)", ok:false, fb:"Non : la toux est faible/inefficace et la victime ne parle pas."},
+      {k:"A", t:"Obstruction légère (toux efficace)", ok:false, fb:"Non : toux inefficace + ne parle pas = sévère."},
       {k:"B", t:"Obstruction sévère (urgence)", ok:true, pts:+10, fb:"Oui : incapacité à parler + toux inefficace = obstruction sévère."},
-      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible, mais ici les signes d’obstruction sévère dominent."},
-      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : les signes orientent vers une obstruction."}
+      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible, mais ici les signes d’obstruction dominent."},
+      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : contexte et signes orientent vers obstruction."}
     ]
   },
-
   { type:"tf",
     title:"Décision rapide",
     sub:"Vrai ou Faux : si la victime tousse efficacement et peut parler, on intervient immédiatement.",
     correct:false, pts:+10,
-    fbOk:"Correct : on encourage la toux et on surveille.",
-    fbBad:"Non : intervenir alors que la toux est efficace peut aggraver."
+    fbOk:"Correct : encourager la toux et surveiller.",
+    fbBad:"Non : intervenir peut aggraver si toux efficace."
   },
-
   { type:"qcm",
-    title:"Séquence recommandée (adulte conscient, obstruction sévère)",
+    title:"Séquence recommandée (adulte conscient)",
     sub:"Quelle séquence est la plus adaptée ?",
     options:[
       {k:"A", t:"10 claques puis 10 compressions", ok:false, fb:"Non : on travaille par cycles de 5."},
-      {k:"B", t:"5 claques dorsales puis 5 compressions abdominales, en cycles", ok:true, pts:+10, fb:"Oui : alternance 5/5 jusqu’à expulsion ou perte de conscience."},
-      {k:"C", t:"Compressions abdominales uniquement", ok:true, pts:+5, fb:"Partiel : utile, mais tu as sauté les claques dorsales."},
-      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : pas de ventilation ici (victime consciente)."}
+      {k:"B", t:"5 claques dorsales puis 5 compressions abdominales, en cycles", ok:true, pts:+10, fb:"Oui : alternance 5/5."},
+      {k:"C", t:"Compressions abdominales uniquement", ok:true, pts:+5, fb:"Partiel : tu as sauté les claques."},
+      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : pas de ventilation si consciente."}
     ]
   },
-
   { type:"qcm",
     title:"Position pour les claques dorsales",
     sub:"Pour optimiser l’efficacité, la victime doit être…",
     options:[
-      {k:"A", t:"Allongée sur le dos", ok:false, fb:"Non : ce n’est pas la position recommandée."},
+      {k:"A", t:"Allongée sur le dos", ok:false, fb:"Non : pas recommandé."},
       {k:"B", t:"Penchée en avant, bouche vers le sol", ok:true, pts:+10, fb:"Oui : gravité + efficacité."},
-      {k:"C", t:"Tête en arrière", ok:false, fb:"Non : cela ne favorise pas l’expulsion."},
-      {k:"D", t:"Assise, tête droite", ok:false, fb:"Moins efficace : on préfère pencher en avant."}
+      {k:"C", t:"Tête en arrière", ok:false, fb:"Non : pas optimal."},
+      {k:"D", t:"Assise, tête droite", ok:false, fb:"Moins efficace."}
     ]
   },
-
   { type:"qcm",
     title:"Erreur critique",
     sub:"Que faut-il éviter absolument ?",
     options:[
-      {k:"A", t:"Balayage du doigt dans la bouche sans voir l’objet", crit:true, fb:"🚨 Geste dangereux : risque d’enfoncer l’objet."},
-      {k:"B", t:"Retirer l’objet seulement s’il est visible", ok:true, pts:+10, fb:"Correct : uniquement si l’objet est clairement visible."},
+      {k:"A", t:"Balayage du doigt dans la bouche sans voir l’objet", crit:true, fb:"🚨 Risque d’enfoncer l’objet."},
+      {k:"B", t:"Retirer l’objet seulement s’il est visible", ok:true, pts:+10, fb:"Correct : seulement si visible."},
       {k:"C", t:"Pencher en avant avant les claques", ok:true, pts:+5, fb:"Bonne préparation."},
-      {k:"D", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui si la toux est efficace."}
+      {k:"D", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui si toux efficace."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
     criticalGeniallyEvent:"CRITICAL_FINGER_SWEEP"
   },
-
   { type:"multi",
     title:"Signes d’obstruction sévère (2 réponses)",
     sub:"Sélectionne les 2 signes les plus caractéristiques.",
@@ -815,25 +817,23 @@ const QUESTIONS = [
       {id:"d", t:"Peau rosée et normale", ok:false}
     ],
     ptsFull:+10, ptsPartial:+5,
-    fbFull:"Excellent : incapacité à parler + toux inefficace = obstruction sévère.",
+    fbFull:"Excellent : c’est bien une obstruction sévère.",
     fbPartial:"Partiel : un signe correct, mais pas les deux.",
-    fbBad:"À revoir : ces choix ne décrivent pas une obstruction sévère."
+    fbBad:"À revoir : ces choix ne décrivent pas l’obstruction sévère."
   },
-
   { type:"qcm",
     title:"Cas particulier : femme enceinte / corpulence importante",
     sub:"Si les claques dorsales échouent, quelle technique est privilégiée ?",
     options:[
-      {k:"A", t:"Compressions thoraciques", ok:true, pts:+10, fb:"Oui : alternative lorsque les compressions abdominales sont inadaptées."},
-      {k:"B", t:"Compressions abdominales", crit:true, fb:"🚨 Risque de blessure : on évite chez femme enceinte."},
+      {k:"A", t:"Compressions thoraciques", ok:true, pts:+10, fb:"Oui : alternative si abdominales inadaptées."},
+      {k:"B", t:"Compressions abdominales", crit:true, fb:"🚨 On évite chez femme enceinte."},
       {k:"C", t:"Donner de l’eau", ok:false, fb:"Non : priorité aux manœuvres."},
-      {k:"D", t:"Attendre sans agir", ok:false, fb:"Non : agir et alerter si besoin."}
+      {k:"D", t:"Attendre sans agir", ok:false, fb:"Non : agir et alerter."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
     criticalGeniallyEvent:"CRITICAL_PREGNANCY_ABDOMINAL"
   },
-
   { type:"order",
     title:"Ordonnancement",
     sub:"Remets la prise en charge dans le bon ordre (glisser-déposer).",
@@ -845,53 +845,46 @@ const QUESTIONS = [
     ],
     correctOrder:[0,1,2,3],
     ptsFull:+10, ptsPartial:+5,
-    fbFull:"Parfait : séquence logique et sécurisée.",
+    fbFull:"Parfait : séquence logique.",
     fbPartial:"Presque : une étape est mal placée.",
-    fbBad:"À revoir : l’ordre des actions est essentiel."
+    fbBad:"À revoir : l’ordre est essentiel."
   },
-
   { type:"qcm",
     title:"La victime devient inconsciente",
     sub:"Que fais-tu en priorité ?",
     options:[
-      {k:"A", t:"Continuer les compressions abdominales", ok:false, fb:"Non : si inconsciente, on passe à la RCP."},
-      {k:"B", t:"Allonger la victime et commencer la RCP (compressions)", ok:true, pts:+10, fb:"Oui : RCP si respiration absente/anormale."},
-      {k:"C", t:"La relever et la faire marcher", crit:true, fb:"🚨 Perte de temps vital + risque d’aggravation."},
-      {k:"D", t:"Attendre les secours", ok:false, fb:"Non : action immédiate nécessaire."}
+      {k:"A", t:"Continuer les compressions abdominales", ok:false, fb:"Non : si inconsciente, RCP."},
+      {k:"B", t:"Allonger la victime et commencer la RCP", ok:true, pts:+10, fb:"Oui : compressions thoraciques."},
+      {k:"C", t:"La relever et la faire marcher", crit:true, fb:"🚨 Perte de temps vital."},
+      {k:"D", t:"Attendre les secours", ok:false, fb:"Non : agir immédiatement."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
     criticalGeniallyEvent:"CRITICAL_STAND_UP"
   },
-
   { type:"tf",
     title:"Après expulsion",
     sub:"Vrai ou Faux : une fois l’objet expulsé, on peut laisser partir la victime sans surveillance.",
     correct:false, pts:+10,
-    fbOk:"Correct : surveiller et recommander avis médical si symptômes.",
-    fbBad:"Non : la surveillance est importante après l’épisode."
+    fbOk:"Correct : surveillance + avis médical si symptômes.",
+    fbBad:"Non : on surveille après l’épisode."
   }
 ];
 
 /* =========================
-   RENDER
+   RENDER / LOGIQUE
 ========================= */
 const content = document.getElementById("content");
 const qTitle = document.getElementById("qTitle");
 const qSub = document.getElementById("qSub");
 const qIndex = document.getElementById("qIndex");
-
 const nextBtn = document.getElementById("nextBtn");
 const retryBtn = document.getElementById("retryBtn");
 
 function updateQCounter(){ qIndex.textContent = String(q + 1); }
-function clearActions(){
-  nextBtn.classList.add("d-none");
-  retryBtn.classList.add("d-none");
-}
+function clearActions(){ nextBtn.classList.add("d-none"); retryBtn.classList.add("d-none"); }
 function showNext(){ nextBtn.classList.remove("d-none"); }
 function showRetry(){ retryBtn.classList.remove("d-none"); }
-
 function normalizeLetters(i){ return String.fromCharCode(65+i); }
 
 function renderQuestion(){
@@ -921,9 +914,7 @@ function renderQCM(Q){
     div.className = "opt";
     div.innerHTML = `
       <div class="badge">${o.k || normalizeLetters(idx)}</div>
-      <div>
-        <div class="txt">${escapeHtml(o.t)}</div>
-      </div>
+      <div><div class="txt">${escapeHtml(o.t)}</div></div>
     `;
     div.addEventListener("click", () => handleChoice_QCM(Q, o));
     wrap.appendChild(div);
@@ -1086,42 +1077,18 @@ function renderMulti(Q){
       const pts = Q.ptsFull ?? 10;
       setScore(pts);
       soundCorrect();
-
-      showFeedback({
-        kind:"✅ Excellent",
-        text: Q.fbFull || "Parfait.",
-        points:`+${pts}`,
-        style:"good",
-        canContinue:true
-      });
-
+      showFeedback({ kind:"✅ Excellent", text: Q.fbFull || "Parfait.", points:`+${pts}`, style:"good", canContinue:true });
       showNext();
     } else if(good >= 1 && bad === 0){
       const pts = Q.ptsPartial ?? 5;
       setScore(pts);
       soundCorrect();
-
-      showFeedback({
-        kind:"🟡 Partiel",
-        text: Q.fbPartial || "Tu es proche.",
-        points:`+${pts}`,
-        style:"warn",
-        canContinue:true
-      });
-
+      showFeedback({ kind:"🟡 Partiel", text: Q.fbPartial || "Tu es proche.", points:`+${pts}`, style:"warn", canContinue:true });
       showNext();
     } else {
       setScore(-2);
       soundWrong();
-
-      showFeedback({
-        kind:"⚠️ À corriger",
-        text: Q.fbBad || "Sélection incorrecte.",
-        points:"-2",
-        style:"warn",
-        canContinue:false
-      });
-
+      showFeedback({ kind:"⚠️ À corriger", text: Q.fbBad || "Sélection incorrecte.", points:"-2", style:"warn", canContinue:false });
       showRetry();
     }
   });
@@ -1131,7 +1098,7 @@ function renderOrder(Q){
   const info = document.createElement("div");
   info.className = "text-white-50";
   info.style.fontSize = "12px";
-  info.style.fontWeight = "800";
+  info.style.fontWeight = "850";
   info.textContent = "Glisse les éléments pour mettre la procédure dans le bon ordre.";
 
   const list = document.createElement("div");
@@ -1149,7 +1116,7 @@ function renderOrder(Q){
     it.innerHTML = `
       <div class="grab">⠿ DRAG</div>
       <div class="text">${escapeHtml(Q.items[idx])}</div>
-      <div class="text-white-50" style="font-size:12px;font-weight:1000;">#${idx+1}</div>
+      <div class="text-white-50" style="font-size:12px;font-weight:1100;">#${idx+1}</div>
     `;
     list.appendChild(it);
   });
@@ -1172,10 +1139,7 @@ function renderOrder(Q){
     list.insertBefore(draggingEl, next ? over.nextSibling : over);
   });
 
-  list.addEventListener("drop", (e) => {
-    e.preventDefault();
-    draggingEl = null;
-  });
+  list.addEventListener("drop", (e) => { e.preventDefault(); draggingEl = null; });
 
   const actions = document.createElement("div");
   actions.className = "multi-actions";
@@ -1215,42 +1179,18 @@ function renderOrder(Q){
       const pts = Q.ptsFull ?? 10;
       setScore(pts);
       soundCorrect();
-
-      showFeedback({
-        kind:"✅ Excellent",
-        text: Q.fbFull || "Ordre parfait.",
-        points:`+${pts}`,
-        style:"good",
-        canContinue:true
-      });
-
+      showFeedback({ kind:"✅ Excellent", text: Q.fbFull || "Ordre parfait.", points:`+${pts}`, style:"good", canContinue:true });
       showNext();
     } else if(correctPositions >= correct.length - 1){
       const pts = Q.ptsPartial ?? 5;
       setScore(pts);
       soundCorrect();
-
-      showFeedback({
-        kind:"🟡 Presque",
-        text: Q.fbPartial || "Tu es proche.",
-        points:`+${pts}`,
-        style:"warn",
-        canContinue:true
-      });
-
+      showFeedback({ kind:"🟡 Presque", text: Q.fbPartial || "Tu es proche.", points:`+${pts}`, style:"warn", canContinue:true });
       showNext();
     } else {
       setScore(-2);
       soundWrong();
-
-      showFeedback({
-        kind:"⚠️ À corriger",
-        text: Q.fbBad || "Ordre incorrect.",
-        points:"-2",
-        style:"warn",
-        canContinue:false
-      });
-
+      showFeedback({ kind:"⚠️ À corriger", text: Q.fbBad || "Ordre incorrect.", points:"-2", style:"warn", canContinue:false });
       showRetry();
     }
   });
@@ -1279,7 +1219,6 @@ function showFeedback({kind, text, points, style, canContinue}){
   fbContinueBtn.classList.toggle("d-none", !canContinue);
   setTimeout(() => fbCloseBtn.focus(), 50);
 }
-
 function hideFeedback(){ overlay.style.display = "none"; }
 
 fbCloseBtn.addEventListener("click", hideFeedback);
@@ -1307,12 +1246,9 @@ function endScenario(){
 
   content.innerHTML = `
     <div class="p-3" style="border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);">
-      <div style="font-weight:1100;font-size:18px;">⭐ Score final : <span style="color:rgba(255,215,170,.98);">${score}</span></div>
-      <div class="text-white-50 mt-1" style="font-weight:900;">
+      <div style="font-weight:1200;font-size:18px;">⭐ Score final : <span style="color:rgba(255,215,170,.98);">${score}</span></div>
+      <div class="text-white-50 mt-1" style="font-weight:1000;">
         ${score >= 75 ? "🟢 Intervention maîtrisée" : (score >= 55 ? "🟡 Bon niveau, révisions conseillées" : "🔴 Reprise recommandée")}
-      </div>
-      <div class="text-white-50 mt-2" style="font-size:12px;font-weight:800;">
-        Astuce : répète la séquence “claques → compressions → RCP si inconscience”.
       </div>
     </div>
   `;
@@ -1321,12 +1257,10 @@ function endScenario(){
 }
 
 /* =========================
-   GENIALLY TRIGGERS
+   GENIALLY EVENT
 ========================= */
 function geniallyTrigger(eventName){
-  try{
-    window.parent.postMessage({ type:"GENIALLY_EVENT", name: eventName }, "*");
-  }catch(_){}
+  try{ window.parent.postMessage({ type:"GENIALLY_EVENT", name: eventName }, "*"); }catch(_){}
 }
 
 /* =========================
@@ -1344,15 +1278,10 @@ const muteBtn = document.getElementById("muteBtn");
 muteBtn.addEventListener("click", () => {
   muted = !muted;
   muteBtn.textContent = muted ? "🔊 Off" : "🔊 On";
-  if(!muted){
-    // premier petit son pour confirmer
-    soundCorrect();
-  }
+  if(!muted) soundCorrect();
 });
 
-/* =========================
-   Helpers
-========================= */
+/* Helpers */
 function escapeHtml(str){
   return String(str)
     .replaceAll("&", "&amp;")
@@ -1369,9 +1298,7 @@ function shuffle(arr){
   return arr;
 }
 
-/* =========================
-   INIT
-========================= */
+/* INIT */
 document.getElementById("qIndex").textContent = "1";
 renderQuestion();
 </script>
