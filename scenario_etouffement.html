@@ -3,51 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 1 – Étouffement (Pro HUD)</title>
+  <title>Scénario 1 – Étouffement (Pro Layout + Audio)</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --glass: rgba(0,0,0,.40);
+      --glass: rgba(0,0,0,.46);
+      --glass2: rgba(0,0,0,.58);
       --border: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.94);
       --muted: rgba(255,255,255,.70);
 
       --ember1: rgba(255,176,90,1);
       --ember2: rgba(255,120,50,1);
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
+
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --shadow2: 0 24px 70px rgba(0,0,0,.55);
     }
 
+    /* ✅ PAS DE SCROLL */
     html, body{
       margin:0;
       height:100%;
+      overflow:hidden;
       background: transparent;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
-    /* ===== Layout ===== */
-    .stage{
-      min-height: 100vh;
-      padding: 92px 18px 20px; /* espace HUD */
+    /* Container global fixe */
+    .app{
+      position: fixed;
+      inset: 0;
       display:flex;
-      align-items:flex-start;
+      align-items:flex-end; /* questions en bas */
       justify-content:center;
+      padding: 18px;
     }
 
-    .card-game{
-      width: min(980px, 100%);
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position: relative;
-    }
-
-    .card-game::before{
+    /* BG glow subtil */
+    .app::before{
       content:"";
       position:absolute;
       inset:-2px;
@@ -58,34 +54,22 @@
       z-index:0;
     }
 
-    .inner{ position:relative; z-index:1; }
-
-    /* ===== HUD (reorganisé + avatar visage circulaire) ===== */
-    .hud{
+    /* ===== HUD zones ===== */
+    .hud-left{
       position: fixed;
       top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(980px, calc(100% - 28px));
-      background: rgba(0,0,0,.52);
-      border: 1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(14px);
-      border-radius: 18px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.45);
-      padding: 10px 12px;
-      display:grid;
-      grid-template-columns: 1.2fr 1fr 1.2fr;
-      gap: 10px;
-      align-items:center;
+      left: 14px;
       z-index: 50;
-    }
-
-    /* LEFT */
-    .hud-left{
       display:flex;
       align-items:center;
       gap: 12px;
-      min-width: 0;
+      padding: 10px 12px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(14px);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      max-width: min(360px, calc(100% - 28px));
     }
 
     .avatarWrap{
@@ -100,7 +84,7 @@
       height: 54px;
       border-radius: 999px;
       object-fit: cover;
-      object-position: 50% 18%; /* focus visage (ajustable) */
+      object-position: 50% 18%;
       background: rgba(255,255,255,.06);
       border: 2px solid rgba(255,180,90,.45);
       box-shadow: 0 10px 25px rgba(0,0,0,.35);
@@ -125,8 +109,8 @@
       margin:0;
     }
     .hud-name .player{
-      font-size: 15px;
-      font-weight: 950;
+      font-size: 16px;
+      font-weight: 1000;
       margin:0;
       letter-spacing: .2px;
       white-space: nowrap;
@@ -144,70 +128,23 @@
       text-overflow: ellipsis;
     }
 
-    /* CENTER timer (dominant) */
-    .hud-center{
-      display:flex;
-      justify-content:center;
-    }
-
-    .timerBig{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(255,140,60,.12);
-      border: 1px solid rgba(255,140,60,.22);
-      box-shadow: 0 12px 32px rgba(255,120,50,.14);
-    }
-
-    .timerRing{
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: conic-gradient(var(--ember1) 0deg, rgba(255,255,255,.10) 0deg);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 10px 28px rgba(0,0,0,.35);
-    }
-    .timerRing span{
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: rgba(0,0,0,.55);
-      border: 1px solid rgba(255,255,255,.10);
-      font-weight: 950;
-      font-size: 12px;
-    }
-
-    .timerText{
-      display:flex;
-      flex-direction:column;
-      line-height:1.0;
-    }
-    .timerText .t1{
-      font-size: 12px;
-      color: rgba(255,255,255,.78);
-      font-weight: 900;
-      letter-spacing: .2px;
-    }
-    .timerText .t2{
-      font-size: 16px;
-      color: rgba(255,255,255,.96);
-      font-weight: 1000;
-    }
-
-    /* RIGHT */
     .hud-right{
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 50;
       display:flex;
       align-items:center;
-      justify-content:flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      min-width: 0;
+      padding: 10px 12px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(14px);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      max-width: min(520px, calc(100% - 28px));
+      justify-content:flex-end;
     }
 
     .scoreBox{
@@ -258,9 +195,93 @@
     }
     .miniBtn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
 
-    /* ===== Content ===== */
+    /* ✅ TIMER EN ONGLET (tab) */
+    .timer-tab{
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 55;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,140,60,.14);
+      border: 1px solid rgba(255,140,60,.24);
+      box-shadow: 0 12px 32px rgba(255,120,50,.16);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      backdrop-filter: blur(14px);
+      min-width: 220px;
+      justify-content:center;
+    }
+
+    .timerRing{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: conic-gradient(var(--ember1) 0deg, rgba(255,255,255,.10) 0deg);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    }
+    .timerRing span{
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    .timerText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.0;
+      text-align:left;
+    }
+    .timerText .t1{
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .timerText .t2{
+      font-size: 16px;
+      color: rgba(255,255,255,.98);
+      font-weight: 1100;
+    }
+
+    .dangerBlink{ animation: blink .55s ease-in-out infinite; }
+    @keyframes blink{
+      0%,100%{ filter: brightness(1); }
+      50%{ filter: brightness(1.25); }
+    }
+
+    .pulse{ animation: pulse .22s ease both; }
+    @keyframes pulse{
+      from{ transform: scale(.98); filter: brightness(.98); }
+      to{ transform: scale(1); filter: brightness(1.08); }
+    }
+
+    /* ===== Questions container en bas ===== */
+    .panel{
+      position: relative;
+      z-index: 1;
+      width: min(980px, 100%);
+      background: var(--glass2);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+
     .head{
-      padding: 18px 18px 12px;
+      padding: 16px 18px 12px;
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
     .head .kicker{
@@ -276,7 +297,7 @@
     }
     .head h2{
       margin: 10px 0 6px;
-      font-weight: 1000;
+      font-weight: 1100;
       letter-spacing: .2px;
       font-size: 22px;
       text-shadow: 0 12px 30px rgba(0,0,0,.5);
@@ -288,7 +309,9 @@
       line-height: 1.55;
     }
 
-    .content{ padding: 18px; }
+    .content{
+      padding: 16px 18px 18px;
+    }
 
     .options{
       display:grid;
@@ -316,7 +339,7 @@
     .opt .badge{
       border-radius: 12px;
       padding: 6px 10px;
-      font-weight: 900;
+      font-weight: 950;
       background: rgba(0,0,0,.28);
       border: 1px solid rgba(255,255,255,.10);
       color: rgba(255,255,255,.9);
@@ -324,7 +347,7 @@
       text-align:center;
     }
     .opt .txt{
-      font-weight: 800;
+      font-weight: 850;
       color: rgba(255,255,255,.92);
       line-height: 1.25;
     }
@@ -332,11 +355,12 @@
       display:block;
       margin-top: 6px;
       color: rgba(255,255,255,.70);
-      font-weight: 600;
+      font-weight: 650;
     }
 
-    /* Multi select */
-    .opt.checkbox{ cursor: default; }
+    .opt.checkbox{
+      cursor: default;
+    }
     .opt.checkbox input{
       margin-top: 3px;
       width: 18px;
@@ -350,12 +374,7 @@
       flex-wrap:wrap;
     }
 
-    /* Order (drag & drop) */
-    .orderList{
-      display:grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
+    .orderList{ display:grid; gap: 10px; margin-top: 12px; }
     .orderItem{
       padding: 14px 14px;
       border-radius: 18px;
@@ -371,7 +390,7 @@
     .orderItem:active{ cursor: grabbing; }
     .orderItem .grab{
       opacity:.9;
-      font-weight: 950;
+      font-weight: 1000;
       background: rgba(0,0,0,.22);
       border: 1px solid rgba(255,255,255,.10);
       border-radius: 14px;
@@ -380,14 +399,13 @@
       white-space: nowrap;
     }
     .orderItem .text{
-      font-weight: 850;
+      font-weight: 900;
       color: rgba(255,255,255,.92);
       flex:1;
     }
 
-    /* Footer buttons */
     .footer{
-      padding: 14px 18px 18px;
+      padding: 12px 18px 16px;
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex;
       align-items:center;
@@ -400,7 +418,7 @@
       border:0;
       border-radius: 16px;
       padding: 12px 14px;
-      font-weight: 1000;
+      font-weight: 1100;
       letter-spacing:.2px;
       background: linear-gradient(180deg, var(--ember1), var(--ember2));
       color: rgba(10,12,18,.96);
@@ -414,7 +432,7 @@
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.88);
       padding: 12px 14px;
-      font-weight: 900;
+      font-weight: 950;
     }
 
     /* ===== Feedback Modal ===== */
@@ -431,11 +449,11 @@
     }
     .modalCard{
       width: min(760px, 100%);
-      margin-top: 64px; /* petite fenêtre en haut */
+      margin-top: 64px;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.62);
-      box-shadow: 0 24px 70px rgba(0,0,0,.55);
+      box-shadow: var(--shadow2);
       overflow:hidden;
       animation: pop .18s ease both;
     }
@@ -458,7 +476,7 @@
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 950;
+      font-weight: 1000;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
@@ -467,7 +485,7 @@
       padding: 14px 16px 16px;
       color: rgba(255,255,255,.92);
       line-height: 1.55;
-      font-weight: 750;
+      font-weight: 800;
     }
     .modalActions{
       padding: 0 16px 16px;
@@ -477,91 +495,71 @@
       flex-wrap:wrap;
     }
 
-    /* Pulse animations */
-    .pulse{ animation: pulse .22s ease both; }
-    @keyframes pulse{
-      from{ transform: scale(.98); filter: brightness(.98); }
-      to{ transform: scale(1); filter: brightness(1.08); }
-    }
-
-    .dangerBlink{ animation: blink .55s ease-in-out infinite; }
-    @keyframes blink{
-      0%,100%{ filter: brightness(1); }
-      50%{ filter: brightness(1.25); }
-    }
-
     @media (max-width: 720px){
-      .hud{ grid-template-columns: 1fr; gap: 8px; }
-      .hud-right{ justify-content:flex-start; }
-      .hud-center{ justify-content:flex-start; }
-      .stage{ padding-top: 150px; }
+      .timer-tab{ top: 84px; }
+      .hud-right{ max-width: calc(100% - 28px); }
+      .hud-left{ max-width: calc(100% - 28px); }
+      .app{ padding-bottom: 14px; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HUD -->
-  <div class="hud">
-    <!-- LEFT: Identity -->
-    <div class="hud-left">
-      <div class="avatarWrap">
-        <img id="hudAvatar" class="hud-avatar" alt="Avatar">
-        <span class="avatarGlow"></span>
-      </div>
-
-      <div class="hud-name">
-        <p class="hello m-0">Joueur</p>
-        <p class="player m-0" id="hudName">—</p>
-        <p class="role m-0" id="hudRole">—</p>
-      </div>
+  <!-- Haut gauche -->
+  <div class="hud-left">
+    <div class="avatarWrap">
+      <img id="hudAvatar" class="hud-avatar" alt="Avatar">
+      <span class="avatarGlow"></span>
     </div>
 
-    <!-- CENTER: Timer -->
-    <div class="hud-center">
-      <div class="timerBig" id="timerBig">
-        <div class="timerRing" id="timerRing"><span id="timerNum">15</span></div>
-        <div class="timerText">
-          <div class="t1">⏱️ TEMPS RESTANT</div>
-          <div class="t2"><span id="timerLabel">15</span>s</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: Score + Progress + Controls -->
-    <div class="hud-right">
-      <div class="scoreBox" id="scoreBox">
-        <span class="scoreLabel">⭐ SCORE</span>
-        <span class="scoreValue" id="hudScore">0</span>
-      </div>
-
-      <div class="pill" id="qPill">🧩 Q : <b><span id="qIndex">1</span>/10</b></div>
-
-      <button class="miniBtn" id="resetRunBtn">↻</button>
-      <button class="miniBtn" id="muteBtn">🔊 Off</button>
+    <div class="hud-name">
+      <p class="hello m-0">Joueur</p>
+      <p class="player m-0" id="hudName">—</p>
+      <p class="role m-0" id="hudRole">—</p>
     </div>
   </div>
 
-  <!-- Main -->
-  <div class="stage">
-    <div class="card-game">
-      <div class="inner">
-        <div class="head">
-          <div class="kicker" id="kicker">🚑 Scénario 1 • Étouffement</div>
-          <h2 id="qTitle">—</h2>
-          <p id="qSub">—</p>
+  <!-- Timer onglet (haut centre) -->
+  <div class="timer-tab" id="timerTab">
+    <div class="timerRing" id="timerRing"><span id="timerNum">18</span></div>
+    <div class="timerText">
+      <div class="t1">⏱️ TIMER</div>
+      <div class="t2"><span id="timerLabel">18</span>s</div>
+    </div>
+  </div>
+
+  <!-- Haut droite -->
+  <div class="hud-right">
+    <div class="scoreBox" id="scoreBox">
+      <span class="scoreLabel">⭐ SCORE</span>
+      <span class="scoreValue" id="hudScore">0</span>
+    </div>
+
+    <div class="pill">🧩 Q : <b><span id="qIndex">1</span>/10</b></div>
+
+    <button class="miniBtn" id="resetRunBtn">↻</button>
+    <button class="miniBtn" id="muteBtn">🔊 Off</button>
+  </div>
+
+  <!-- App / Questions en bas -->
+  <div class="app">
+    <div class="panel">
+      <div class="head">
+        <div class="kicker">🚑 Scénario 1 • Étouffement</div>
+        <h2 id="qTitle">—</h2>
+        <p id="qSub">—</p>
+      </div>
+
+      <div class="content" id="content"></div>
+
+      <div class="footer">
+        <div class="text-white-50" style="font-size:12px;font-weight:800;">
+          Astuce : “5 claques → 5 compressions → RCP si inconscience”.
         </div>
-
-        <div class="content" id="content"></div>
-
-        <div class="footer">
-          <div class="text-white-50" style="font-size:12px;">
-            Astuce : vise la bonne séquence (claques → compressions → RCP si inconscience).
-          </div>
-          <div class="d-flex gap-2">
-            <button class="btn-ghost d-none" id="retryBtn">Revoir</button>
-            <button class="btn-ember d-none" id="nextBtn">Suivant</button>
-          </div>
+        <div class="d-flex gap-2">
+          <button class="btn-ghost d-none" id="retryBtn">Revoir</button>
+          <button class="btn-ember d-none" id="nextBtn">Suivant</button>
         </div>
       </div>
     </div>
@@ -572,7 +570,7 @@
     <div class="modalCard">
       <div class="modalHead">
         <span class="tag" id="fbTag">—</span>
-        <span class="text-white-50" style="font-size:12px;" id="fbPoints"></span>
+        <span class="text-white-50" style="font-size:12px;font-weight:900;" id="fbPoints"></span>
       </div>
       <div class="modalBody" id="fbText"></div>
       <div class="modalActions">
@@ -584,38 +582,100 @@
 
 <script>
 /* =========================
-   0) CONTEXTE JOUEUR + HUD
+   AUDIO (WebAudio) - sans fichiers
+   (évite problèmes de liens .mp3 sur Genially)
+========================= */
+let audioEnabled = false;
+let muted = true;
+let audioCtx = null;
+
+function ensureAudio(){
+  if(muted) return false;
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === "suspended") audioCtx.resume();
+  audioEnabled = true;
+  return true;
+}
+
+function beep({freq=440, duration=0.12, type="sine", gain=0.05} = {}){
+  if(!ensureAudio()) return;
+  const t0 = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(gain, t0);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(t0);
+  o.stop(t0 + duration);
+}
+
+function soundCorrect(){
+  // petit jingle positif
+  beep({freq:659, duration:0.10, type:"sine", gain:0.06});
+  setTimeout(()=>beep({freq:880, duration:0.12, type:"sine", gain:0.06}), 110);
+}
+
+function soundWrong(){
+  // double beep bas
+  beep({freq:220, duration:0.12, type:"square", gain:0.05});
+  setTimeout(()=>beep({freq:196, duration:0.14, type:"square", gain:0.05}), 130);
+}
+
+function soundCritical(){
+  // alarme rapide (3 bips)
+  beep({freq:700, duration:0.10, type:"sawtooth", gain:0.06});
+  setTimeout(()=>beep({freq:500, duration:0.10, type:"sawtooth", gain:0.06}), 120);
+  setTimeout(()=>beep({freq:700, duration:0.12, type:"sawtooth", gain:0.06}), 240);
+}
+
+function soundTimeout(){
+  // alarme plus longue
+  beep({freq:520, duration:0.22, type:"sawtooth", gain:0.06});
+  setTimeout(()=>beep({freq:520, duration:0.22, type:"sawtooth", gain:0.06}), 260);
+  setTimeout(()=>beep({freq:520, duration:0.28, type:"sawtooth", gain:0.06}), 520);
+}
+
+/* 1er clic utilisateur -> autoriser audio */
+document.addEventListener("pointerdown", () => {
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === "suspended") audioCtx.resume();
+}, {once:true});
+
+/* =========================
+   CONTEXTE JOUEUR
 ========================= */
 const role = localStorage.getItem("role") || "medecin";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 const roleLabel = roleLabelMap[role] || "—";
 
 const playerName = localStorage.getItem("playerName") || "Joueur";
-const avatarFile = localStorage.getItem("avatar") || "medecin_f.png"; // ajuste si besoin
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
 
 document.getElementById("hudName").textContent = playerName;
 document.getElementById("hudRole").textContent = `🎭 ${roleLabel}`;
 
 const hudAvatar = document.getElementById("hudAvatar");
 hudAvatar.src = `assets/avatars/${avatarFile}`;
-// Focus visage (tu peux ajuster par avatar si besoin)
 hudAvatar.style.objectPosition = "50% 18%";
 
 /* =========================
-   1) ÉTAT + SCORE + TIMER
+   SCORE + TIMER
 ========================= */
 let score = parseInt(localStorage.getItem("score") || "0");
 localStorage.setItem("score", String(score));
 
 let q = 0;
-
-const BASE_TIME = 18; // secondes par question
+const BASE_TIME = 18;
 let timeLeft = BASE_TIME;
 let timerId = null;
 
 const hudScore = document.getElementById("hudScore");
 const scoreBox = document.getElementById("scoreBox");
-const timerBox = document.getElementById("timerBig");
+const timerTab = document.getElementById("timerTab");
 const timerRing = document.getElementById("timerRing");
 const timerNum = document.getElementById("timerNum");
 const timerLabel = document.getElementById("timerLabel");
@@ -640,7 +700,7 @@ function setTimerUI(){
   const deg = Math.floor(pct * 360);
   timerRing.style.background = `conic-gradient(var(--ember1) ${deg}deg, rgba(255,255,255,.10) 0deg)`;
 
-  timerBox.classList.toggle("dangerBlink", timeLeft <= 5);
+  timerTab.classList.toggle("dangerBlink", timeLeft <= 5);
 }
 
 function startTimer(){
@@ -652,31 +712,36 @@ function startTimer(){
     timeLeft--;
     setTimerUI();
 
+    // petit beep à 5,4,3,2,1 si tu veux (optionnel)
+    if(timeLeft <= 5 && timeLeft >= 1 && !muted){
+      beep({freq: 900, duration:0.06, type:"sine", gain:0.03});
+    }
+
     if(timeLeft <= 0){
       clearInterval(timerId);
       setScore(-5);
-      flashTimerPulse();
+
+      timerTab.classList.remove("pulse");
+      void timerTab.offsetWidth;
+      timerTab.classList.add("pulse");
+
+      soundTimeout();
 
       showFeedback({
         kind: "⏱ Temps écoulé",
-        text: "Tu as dépassé le temps. En urgence, chaque seconde compte : décide vite mais méthodiquement.",
+        text: "Temps dépassé. En urgence, décide vite mais méthodiquement.",
         points: "-5",
         style: "warn",
         canContinue: false
       });
+
       showRetry();
     }
   }, 1000);
 }
 
-function flashTimerPulse(){
-  timerBox.classList.remove("pulse");
-  void timerBox.offsetWidth;
-  timerBox.classList.add("pulse");
-}
-
 /* =========================
-   2) QUESTIONS (10) multi-types
+   QUESTIONS (10) multi-types
 ========================= */
 function byRoleText(base){
   if(role === "pompier") return base.replace("Tu", "En tant que premier intervenant, tu");
@@ -691,8 +756,8 @@ const QUESTIONS = [
     options:[
       {k:"A", t:"Obstruction légère (toux efficace)", ok:false, fb:"Non : la toux est faible/inefficace et la victime ne parle pas."},
       {k:"B", t:"Obstruction sévère (urgence)", ok:true, pts:+10, fb:"Oui : incapacité à parler + toux inefficace = obstruction sévère."},
-      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible mais ici les signes d’obstruction sévère dominent."},
-      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : le contexte et les signes orientent vers une obstruction."}
+      {k:"C", t:"Crise d’angoisse uniquement", ok:false, fb:"Possible, mais ici les signes d’obstruction sévère dominent."},
+      {k:"D", t:"Malaise vagal", ok:false, fb:"Non : les signes orientent vers une obstruction."}
     ]
   },
 
@@ -708,10 +773,10 @@ const QUESTIONS = [
     title:"Séquence recommandée (adulte conscient, obstruction sévère)",
     sub:"Quelle séquence est la plus adaptée ?",
     options:[
-      {k:"A", t:"10 claques puis 10 compressions", ok:false, fb:"Non : la logique standard est par cycles de 5."},
+      {k:"A", t:"10 claques puis 10 compressions", ok:false, fb:"Non : on travaille par cycles de 5."},
       {k:"B", t:"5 claques dorsales puis 5 compressions abdominales, en cycles", ok:true, pts:+10, fb:"Oui : alternance 5/5 jusqu’à expulsion ou perte de conscience."},
       {k:"C", t:"Compressions abdominales uniquement", ok:true, pts:+5, fb:"Partiel : utile, mais tu as sauté les claques dorsales."},
-      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : ici la victime est consciente (pas de ventilation)."}
+      {k:"D", t:"Insufflations puis compressions thoraciques", ok:false, fb:"Non : pas de ventilation ici (victime consciente)."}
     ]
   },
 
@@ -728,12 +793,12 @@ const QUESTIONS = [
 
   { type:"qcm",
     title:"Erreur critique",
-    sub:"La victime ne respire pas bien. Que faut-il éviter absolument ?",
+    sub:"Que faut-il éviter absolument ?",
     options:[
-      {k:"A", t:"Balayage du doigt dans la bouche sans voir l’objet", crit:true, fb:"🚨 Geste dangereux : risque d’enfoncer l’objet plus loin."},
+      {k:"A", t:"Balayage du doigt dans la bouche sans voir l’objet", crit:true, fb:"🚨 Geste dangereux : risque d’enfoncer l’objet."},
       {k:"B", t:"Retirer l’objet seulement s’il est visible", ok:true, pts:+10, fb:"Correct : uniquement si l’objet est clairement visible."},
-      {k:"C", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui, mais si obstruction sévère, priorité aux manœuvres."},
-      {k:"D", t:"Pencher en avant avant les claques", ok:true, pts:+5, fb:"Bonne préparation de la manœuvre."}
+      {k:"C", t:"Pencher en avant avant les claques", ok:true, pts:+5, fb:"Bonne préparation."},
+      {k:"D", t:"Encourager la toux si elle est efficace", ok:true, pts:+5, fb:"Oui si la toux est efficace."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
@@ -751,7 +816,7 @@ const QUESTIONS = [
     ],
     ptsFull:+10, ptsPartial:+5,
     fbFull:"Excellent : incapacité à parler + toux inefficace = obstruction sévère.",
-    fbPartial:"Partiel : tu as identifié un signe essentiel, mais pas les deux.",
+    fbPartial:"Partiel : un signe correct, mais pas les deux.",
     fbBad:"À revoir : ces choix ne décrivent pas une obstruction sévère."
   },
 
@@ -787,12 +852,12 @@ const QUESTIONS = [
 
   { type:"qcm",
     title:"La victime devient inconsciente",
-    sub:"Pendant les manœuvres, la victime perd connaissance. Que fais-tu en priorité ?",
+    sub:"Que fais-tu en priorité ?",
     options:[
-      {k:"A", t:"Continuer les compressions abdominales", ok:false, fb:"Non : si inconsciente, on change de prise en charge."},
-      {k:"B", t:"Allonger la victime et commencer la RCP (compressions)", ok:true, pts:+10, fb:"Oui : RCP si respiration anormale/absente."},
+      {k:"A", t:"Continuer les compressions abdominales", ok:false, fb:"Non : si inconsciente, on passe à la RCP."},
+      {k:"B", t:"Allonger la victime et commencer la RCP (compressions)", ok:true, pts:+10, fb:"Oui : RCP si respiration absente/anormale."},
       {k:"C", t:"La relever et la faire marcher", crit:true, fb:"🚨 Perte de temps vital + risque d’aggravation."},
-      {k:"D", t:"Attendre les secours sans rien faire", ok:false, fb:"Non : action immédiate nécessaire."}
+      {k:"D", t:"Attendre les secours", ok:false, fb:"Non : action immédiate nécessaire."}
     ],
     criticalTag:"🚨 Erreur critique",
     criticalPenalty:-10,
@@ -801,15 +866,15 @@ const QUESTIONS = [
 
   { type:"tf",
     title:"Après expulsion",
-    sub:"Vrai ou Faux : une fois l’objet expulsé et la respiration revenue, on peut laisser partir la victime sans surveillance.",
+    sub:"Vrai ou Faux : une fois l’objet expulsé, on peut laisser partir la victime sans surveillance.",
     correct:false, pts:+10,
-    fbOk:"Correct : on surveille et on recommande avis médical si douleur/symptômes persistants.",
-    fbBad:"Non : une surveillance est importante après l’épisode."
+    fbOk:"Correct : surveiller et recommander avis médical si symptômes.",
+    fbBad:"Non : la surveillance est importante après l’épisode."
   }
 ];
 
 /* =========================
-   3) RENDER + TYPES
+   RENDER
 ========================= */
 const content = document.getElementById("content");
 const qTitle = document.getElementById("qTitle");
@@ -820,12 +885,10 @@ const nextBtn = document.getElementById("nextBtn");
 const retryBtn = document.getElementById("retryBtn");
 
 function updateQCounter(){ qIndex.textContent = String(q + 1); }
-
 function clearActions(){
   nextBtn.classList.add("d-none");
   retryBtn.classList.add("d-none");
 }
-
 function showNext(){ nextBtn.classList.remove("d-none"); }
 function showRetry(){ retryBtn.classList.remove("d-none"); }
 
@@ -860,7 +923,6 @@ function renderQCM(Q){
       <div class="badge">${o.k || normalizeLetters(idx)}</div>
       <div>
         <div class="txt">${escapeHtml(o.t)}</div>
-        ${o.hint ? `<small>${escapeHtml(o.hint)}</small>` : ""}
       </div>
     `;
     div.addEventListener("click", () => handleChoice_QCM(Q, o));
@@ -876,7 +938,8 @@ function handleChoice_QCM(Q, opt){
   if(opt.crit){
     const pen = Q.criticalPenalty ?? -10;
     setScore(pen);
-    flashTimerPulse();
+    timerTab.classList.remove("pulse"); void timerTab.offsetWidth; timerTab.classList.add("pulse");
+    soundCritical();
 
     showFeedback({
       kind: Q.criticalTag || "🚨 Erreur critique",
@@ -894,6 +957,7 @@ function handleChoice_QCM(Q, opt){
   if(opt.ok){
     const pts = opt.pts ?? 10;
     setScore(pts);
+    soundCorrect();
 
     showFeedback({
       kind: "✅ Correct",
@@ -906,7 +970,8 @@ function handleChoice_QCM(Q, opt){
     showNext();
   } else {
     setScore(-2);
-    flashTimerPulse();
+    timerTab.classList.remove("pulse"); void timerTab.offsetWidth; timerTab.classList.add("pulse");
+    soundWrong();
 
     showFeedback({
       kind: "⚠️ À corriger",
@@ -932,10 +997,7 @@ function renderTF(Q){
   opts.forEach(o => {
     const div = document.createElement("div");
     div.className = "opt";
-    div.innerHTML = `
-      <div class="badge">${o.k}</div>
-      <div class="txt">${o.t}</div>
-    `;
+    div.innerHTML = `<div class="badge">${o.k}</div><div class="txt">${o.t}</div>`;
     div.addEventListener("click", () => handleChoice_TF(Q, o.val));
     wrap.appendChild(div);
   });
@@ -949,6 +1011,7 @@ function handleChoice_TF(Q, val){
   if(val === Q.correct){
     const pts = Q.pts ?? 10;
     setScore(pts);
+    soundCorrect();
 
     showFeedback({
       kind:"✅ Correct",
@@ -961,7 +1024,7 @@ function handleChoice_TF(Q, val){
     showNext();
   } else {
     setScore(-2);
-    flashTimerPulse();
+    soundWrong();
 
     showFeedback({
       kind:"⚠️ À corriger",
@@ -1022,6 +1085,7 @@ function renderMulti(Q){
     if(good === correct.length && bad === 0){
       const pts = Q.ptsFull ?? 10;
       setScore(pts);
+      soundCorrect();
 
       showFeedback({
         kind:"✅ Excellent",
@@ -1035,6 +1099,7 @@ function renderMulti(Q){
     } else if(good >= 1 && bad === 0){
       const pts = Q.ptsPartial ?? 5;
       setScore(pts);
+      soundCorrect();
 
       showFeedback({
         kind:"🟡 Partiel",
@@ -1047,7 +1112,7 @@ function renderMulti(Q){
       showNext();
     } else {
       setScore(-2);
-      flashTimerPulse();
+      soundWrong();
 
       showFeedback({
         kind:"⚠️ À corriger",
@@ -1066,6 +1131,7 @@ function renderOrder(Q){
   const info = document.createElement("div");
   info.className = "text-white-50";
   info.style.fontSize = "12px";
+  info.style.fontWeight = "800";
   info.textContent = "Glisse les éléments pour mettre la procédure dans le bon ordre.";
 
   const list = document.createElement("div");
@@ -1083,7 +1149,7 @@ function renderOrder(Q){
     it.innerHTML = `
       <div class="grab">⠿ DRAG</div>
       <div class="text">${escapeHtml(Q.items[idx])}</div>
-      <div class="text-white-50" style="font-size:12px;font-weight:900;">#${idx+1}</div>
+      <div class="text-white-50" style="font-size:12px;font-weight:1000;">#${idx+1}</div>
     `;
     list.appendChild(it);
   });
@@ -1148,6 +1214,7 @@ function renderOrder(Q){
     if(correctPositions === correct.length){
       const pts = Q.ptsFull ?? 10;
       setScore(pts);
+      soundCorrect();
 
       showFeedback({
         kind:"✅ Excellent",
@@ -1161,6 +1228,7 @@ function renderOrder(Q){
     } else if(correctPositions >= correct.length - 1){
       const pts = Q.ptsPartial ?? 5;
       setScore(pts);
+      soundCorrect();
 
       showFeedback({
         kind:"🟡 Presque",
@@ -1173,7 +1241,7 @@ function renderOrder(Q){
       showNext();
     } else {
       setScore(-2);
-      flashTimerPulse();
+      soundWrong();
 
       showFeedback({
         kind:"⚠️ À corriger",
@@ -1189,7 +1257,7 @@ function renderOrder(Q){
 }
 
 /* =========================
-   4) FEEDBACK MODAL
+   FEEDBACK MODAL
 ========================= */
 const overlay = document.getElementById("overlay");
 const fbTag = document.getElementById("fbTag");
@@ -1215,14 +1283,10 @@ function showFeedback({kind, text, points, style, canContinue}){
 function hideFeedback(){ overlay.style.display = "none"; }
 
 fbCloseBtn.addEventListener("click", hideFeedback);
-
-fbContinueBtn.addEventListener("click", () => {
-  hideFeedback();
-  goNext();
-});
+fbContinueBtn.addEventListener("click", () => { hideFeedback(); goNext(); });
 
 /* =========================
-   5) NAVIGATION
+   NAVIGATION
 ========================= */
 nextBtn.addEventListener("click", goNext);
 retryBtn.addEventListener("click", () => renderQuestion());
@@ -1243,11 +1307,11 @@ function endScenario(){
 
   content.innerHTML = `
     <div class="p-3" style="border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);">
-      <div style="font-weight:1000;font-size:18px;">⭐ Score final : <span style="color:rgba(255,215,170,.98);">${score}</span></div>
-      <div class="text-white-50 mt-1" style="font-weight:800;">
+      <div style="font-weight:1100;font-size:18px;">⭐ Score final : <span style="color:rgba(255,215,170,.98);">${score}</span></div>
+      <div class="text-white-50 mt-1" style="font-weight:900;">
         ${score >= 75 ? "🟢 Intervention maîtrisée" : (score >= 55 ? "🟡 Bon niveau, révisions conseillées" : "🔴 Reprise recommandée")}
       </div>
-      <div class="text-white-50 mt-2" style="font-size:12px;">
+      <div class="text-white-50 mt-2" style="font-size:12px;font-weight:800;">
         Astuce : répète la séquence “claques → compressions → RCP si inconscience”.
       </div>
     </div>
@@ -1257,7 +1321,7 @@ function endScenario(){
 }
 
 /* =========================
-   6) GENIALLY TRIGGERS
+   GENIALLY TRIGGERS
 ========================= */
 function geniallyTrigger(eventName){
   try{
@@ -1266,7 +1330,7 @@ function geniallyTrigger(eventName){
 }
 
 /* =========================
-   7) TOOLBAR
+   TOOLBAR
 ========================= */
 document.getElementById("resetRunBtn").addEventListener("click", () => {
   localStorage.setItem("score", "0");
@@ -1276,15 +1340,18 @@ document.getElementById("resetRunBtn").addEventListener("click", () => {
   renderQuestion();
 });
 
-let muted = true;
 const muteBtn = document.getElementById("muteBtn");
 muteBtn.addEventListener("click", () => {
   muted = !muted;
   muteBtn.textContent = muted ? "🔊 Off" : "🔊 On";
+  if(!muted){
+    // premier petit son pour confirmer
+    soundCorrect();
+  }
 });
 
 /* =========================
-   8) Helpers
+   Helpers
 ========================= */
 function escapeHtml(str){
   return String(str)
