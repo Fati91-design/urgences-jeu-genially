@@ -460,6 +460,9 @@
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
+          <!-- ✅ Tentatives -->
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/2</div>
+
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
             <div class="timeText">
@@ -529,6 +532,8 @@
     <div class="modalActions">
       <button class="btnNeo" id="retryBtn">Réessayer</button>
       <button class="btnPrimary" id="nextBtn">Suivant</button>
+      <!-- ✅ Bouton OK pour mission fail -->
+      <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
     </div>
   </div>
 </div>
@@ -631,10 +636,18 @@ setScore(score);
 setStress(stress);
 
 /* =========================
-   REGLES MISSION
+   TENTATIVES HUD
 ========================= */
 let attemptsForCurrentQuestion = 0;
+const hudAttempts = document.getElementById("hudAttempts");
+function setAttemptsUI(){
+  hudAttempts.textContent = String(attemptsForCurrentQuestion);
+}
+setAttemptsUI();
 
+/* =========================
+   ETAT JEU
+========================= */
 let idx = 0;
 let locked = true;
 let timeLeft = cfg.time;
@@ -651,6 +664,7 @@ function resetMission({showStart=true} = {}){
 
   idx = 0;
   attemptsForCurrentQuestion = 0;
+  setAttemptsUI();
 
   setScore(0);
   setStress(0);
@@ -816,7 +830,6 @@ function startTimer(){
     if(timeLeft <= 0){
       clearInterval(timerId);
       sfxAlarmLong();
-
       showOverlay("bad",
         "⏱️ Temps écoulé ! Mission échouée. Retour au départ… (score remis à zéro)",
         { allowRetry:false, allowNext:false, missionFail:true }
@@ -840,6 +853,7 @@ const badgeState = document.getElementById("badgeState");
 const modalText = document.getElementById("modalText");
 const retryBtn = document.getElementById("retryBtn");
 const nextBtn = document.getElementById("nextBtn");
+const okBtn = document.getElementById("okBtn");
 const frame = document.getElementById("frame");
 const modalBox = document.getElementById("modalBox");
 
@@ -853,7 +867,6 @@ function clearActions(){
   resetBtn.onclick = null;
 }
 
-/* ✅ IMPORTANT: resetAttempts param */
 function setQuestion(i, resetAttempts = true){
   locked = false;
   clearInterval(timerId);
@@ -863,6 +876,7 @@ function setQuestion(i, resetAttempts = true){
   hideOverlay();
 
   if(resetAttempts) attemptsForCurrentQuestion = 0;
+  setAttemptsUI();
 
   const q = questions[i];
   hudQnum.textContent = String(i+1);
@@ -948,6 +962,8 @@ function setQuestion(i, resetAttempts = true){
 ========================= */
 function registerFailureAndCheck(){
   attemptsForCurrentQuestion++;
+  setAttemptsUI();
+
   if(attemptsForCurrentQuestion >= 2){
     showOverlay("bad",
       "❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)",
@@ -970,7 +986,7 @@ function handleSingle(opt){
 
   if(opt.kind === "ok"){
     addScore(opt.pts || roleScore(cfg.scoreOk));
-    showOverlay("good", opt.fb || "✅ Correct.", { allowRetry:false, allowNext:true });
+    showOverlay("good", opt.fb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
     sfxCorrect();
     motion("good");
     return;
@@ -996,8 +1012,9 @@ function handleSingle(opt){
   if(registerFailureAndCheck()) return;
 
   const msg = opt.fb || "❌ Incorrect.";
-  showOverlay(opt.kind === "critical" ? "bad" : "warn", msg + ` (Tentative ${attemptsForCurrentQuestion}/2)`,
-    { allowRetry:true, allowNext:false }
+  showOverlay(opt.kind === "critical" ? "bad" : "warn",
+    msg + ` (Tentative ${attemptsForCurrentQuestion}/2)`,
+    { allowRetry:true, allowNext:false, missionFail:false }
   );
 }
 
@@ -1012,7 +1029,7 @@ function handleMulti(q){
 
   if(ok){
     addScore(q.okPts || roleScore(cfg.scoreOk));
-    showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true });
+    showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
     sfxCorrect();
     motion("good");
     return;
@@ -1026,7 +1043,7 @@ function handleMulti(q){
 
   showOverlay("warn",
     (q.badFb || "❌ Certaines réponses sont incorrectes.") + ` (Tentative ${attemptsForCurrentQuestion}/2)`,
-    { allowRetry:true, allowNext:false }
+    { allowRetry:true, allowNext:false, missionFail:false }
   );
 }
 
@@ -1040,7 +1057,7 @@ function handleSequence(q){
 
   if(ok){
     addScore(q.okPts || roleScore(cfg.scoreOk));
-    showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true });
+    showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
     sfxCorrect();
     motion("good");
     return;
@@ -1054,7 +1071,7 @@ function handleSequence(q){
 
   showOverlay("warn",
     (q.badFb || "❌ Ordre incorrect.") + ` (Tentative ${attemptsForCurrentQuestion}/2)`,
-    { allowRetry:true, allowNext:false }
+    { allowRetry:true, allowNext:false, missionFail:false }
   );
 }
 
@@ -1071,13 +1088,16 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   overlay.style.display = "flex";
 
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
+  nextBtn.style.display  = allowNext ? "inline-block" : "none";
   nextBtn.classList.toggle("show", !!allowNext);
-  nextBtn.style.display = allowNext ? "inline-block" : "none";
 
-  /* ✅ IMPORTANT: retry DOES NOT reset attempts */
+  // ✅ OK caché par défaut
+  okBtn.style.display = "none";
+  okBtn.onclick = null;
+
   retryBtn.onclick = ()=>{
     hideOverlay();
-    setQuestion(idx, false);
+    setQuestion(idx, false); // ✅ garder tentatives
   };
 
   nextBtn.onclick = ()=>{
@@ -1087,10 +1107,17 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
     else endScenario();
   };
 
+  // ✅ Mission fail => bouton OK, puis resetMission au clic
   if(missionFail){
     retryBtn.style.display = "none";
     nextBtn.style.display = "none";
-    setTimeout(()=> resetMission({showStart:true}), 850);
+
+    okBtn.style.display = "inline-block";
+    okBtn.classList.add("show");
+    okBtn.onclick = ()=>{
+      hideOverlay();
+      resetMission({showStart:true});
+    };
   }
 }
 
@@ -1157,6 +1184,7 @@ startBtn.addEventListener("click", ()=>{
   startOverlay.style.display = "none";
   idx = 0;
   attemptsForCurrentQuestion = 0;
+  setAttemptsUI();
   setQuestion(0, true);
 });
 
