@@ -1,201 +1,1085 @@
-<!-- ============================= -->
-<!--  SCENARIO ETOUFFEMENT FINAL  -->
-<!-- ============================= -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scénario – Étouffement</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scénario — Étouffement</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-/* === (STYLE IDENTIQUE À TA VERSION ACTUELLE) === */
-/* AUCUN CHANGEMENT VISUEL ICI */
-/* (pour ne pas surcharger la réponse, le style reste inchangé) */
-</style>
+  <style>
+    :root{
+      --glass: rgba(25, 27, 31, .72);
+      --glass2: rgba(15, 17, 20, .55);
+
+      --text: rgba(255,255,255,.93);
+      --muted: rgba(255,255,255,.70);
+
+      --gold: rgba(255,200,80,1);
+      --red: rgba(255,70,70,1);
+      --green: rgba(45,200,120,1);
+      --blue: rgba(80,170,255,1);
+      --ember: rgba(255,150,70,1);
+      --ember2: rgba(255,120,50,1);
+    }
+
+    html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
+    .wrap{ width: min(1120px, 100%); }
+
+    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+
+    .hudbox{
+      background: var(--glass);
+      border: 1px solid rgba(255, 200, 150, .22);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      position: relative;
+      overflow:hidden;
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+    }
+    .hudbox::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      pointer-events:none;
+      background:
+        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
+    }
+
+    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+
+    .avatarFrame{
+      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
+      background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
+      box-shadow: 0 18px 42px rgba(0,0,0,.45);
+      flex: 0 0 auto;
+    }
+    .avatar{
+      width:100%; height:100%;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      object-fit: cover;
+      object-position: 50% 6%;
+      transform: scale(1.35);
+      transform-origin: 50% 12%;
+      background: rgba(255,255,255,.06);
+    }
+
+    .ptext{ min-width:0; }
+    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+
+    .chip{
+      background: rgba(255,150,70,.14);
+      border: 1px solid rgba(255,150,70,.20);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+      position: relative;
+      z-index:2;
+    }
+
+    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 12px; flex-wrap: wrap; position: relative; z-index:2; }
+
+    .pill{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+
+    .ring{
+      width: 40px; height: 40px; border-radius: 999px;
+      background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
+      display:grid; place-items:center;
+      box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
+      transition: box-shadow .2s ease;
+    }
+    .ringInner{
+      width: 28px; height: 28px; border-radius: 999px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      display:grid; place-items:center;
+      color: rgba(255,255,255,.9);
+      font-size: 14px; font-weight: 950;
+    }
+
+    .timeText{ display:flex; align-items:center; gap: 8px; }
+    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 16px; font-weight: 950; }
+
+    .timerWarn .ring{
+      background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
+      box-shadow: 0 0 0 5px rgba(255,200,80,.18), 0 0 32px rgba(255,200,80,.14);
+    }
+    .timerDanger .ring{
+      background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.14) 0);
+      box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
+    }
+
+    .stressWrap{
+      width: 240px; height: 12px; border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .stressBar{
+      height:100%; width:0%;
+      background: linear-gradient(90deg, rgba(45,200,120,.95), rgba(255,200,80,.95), rgba(255,70,70,.95));
+      transition: width .25s ease;
+    }
+
+    .frame{
+      background: var(--glass2);
+      border: 1px solid rgba(255, 200, 150, .22);
+      border-radius: 18px;
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      box-shadow: 0 18px 70px rgba(0,0,0,.50);
+      backdrop-filter: blur(12px);
+    }
+    .frame::after{
+      content:"";
+      position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(800px 260px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
+        radial-gradient(760px 260px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
+    }
+
+    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+
+    .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
+
+    .opt{
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, filter .12s ease, background .12s ease;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
+      box-shadow: 0 10px 28px rgba(0,0,0,.20);
+    }
+    .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
+    .opt:active{ transform: translateY(0px); filter: brightness(.98); }
+
+    .opt.sel{
+      background: linear-gradient(180deg, rgba(255,150,70,.30), rgba(255,120,50,.18));
+      border-color: rgba(255,150,70,.30);
+      box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
+    }
+
+    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+    .btnNeo{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: rgba(255,255,255,.90);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
+
+    .btnPrimary{
+      border: none;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color: rgba(10,12,18,.96);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      display:none;
+    }
+    .btnPrimary.show{ display:inline-block; }
+    .btnPrimary:disabled{
+      opacity:.45;
+      filter: grayscale(.2);
+      cursor: not-allowed;
+    }
+
+    .overlay{
+      position: fixed; inset: 0;
+      display:none; align-items:center; justify-content:center;
+      z-index: 50;
+      background: rgba(0,0,0,.48);
+      backdrop-filter: blur(8px);
+    }
+
+    .modalBox{
+      width: min(760px, 92%);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(8,10,14,.82);
+      box-shadow: 0 26px 90px rgba(0,0,0,.62);
+      overflow:hidden;
+      position: relative;
+    }
+
+    .modalTop{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    }
+
+    .badgeState{
+      font-weight: 950;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+    .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
+    .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
+    .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
+
+    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalActions{
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+    }
+
+    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
+    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
+    .startBtn{
+      border:none; border-radius: 14px; padding: 12px 16px;
+      font-weight: 950; letter-spacing: .3px;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color: rgba(10,12,18,.96);
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+
+    .shake{ animation: shake .24s linear 1; }
+    @keyframes shake{
+      0% { transform: translateX(0px); }
+      20%{ transform: translateX(-6px); }
+      40%{ transform: translateX(6px); }
+      60%{ transform: translateX(-4px); }
+      80%{ transform: translateX(4px); }
+      100%{ transform: translateX(0px); }
+    }
+    .pulseGood{ animation: pulseGood .32s ease 1; }
+    @keyframes pulseGood{
+      from{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
+      50%{ box-shadow: 0 0 0 7px rgba(45,200,120,.18); }
+      to{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
+    }
+    .flashBad{ animation: flashBad .30s ease 1; }
+    @keyframes flashBad{
+      from{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
+      50%{ box-shadow: 0 0 0 7px rgba(255,70,70,.22); }
+      to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
+    }
+
+    @media (max-width: 860px){
+      .hud{ grid-template-columns: 1fr; }
+      .stressWrap{ width: 190px; }
+    }
+  </style>
 </head>
 
 <body>
-<!-- ================= HUD + INTERFACE ================= -->
-<!-- (IDENTIQUE À TA VERSION ACTUELLE) -->
+<div class="stage">
+  <div class="wrap">
+
+    <div class="hud">
+      <div class="hudbox">
+        <div class="profile">
+          <div class="avatarFrame">
+            <img class="avatar" id="hudAvatar" alt="Avatar">
+          </div>
+          <div class="ptext">
+            <div class="pname" id="hudName">Joueur</div>
+            <div class="prole" id="hudRole">Rôle: —</div>
+          </div>
+        </div>
+        <div class="chip" id="difficultyChip">MODE: NORMAL</div>
+      </div>
+
+      <div class="hudbox">
+        <div class="stats">
+          <div class="pill">⭐ <span id="hudScore">0</span></div>
+          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/2</div>
+
+          <div class="pill timerPill" id="timerPill">
+            <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
+            <div class="timeText">
+              <div class="label">Temps</div>
+              <div class="sec"><span id="hudTime">12</span>s</div>
+            </div>
+          </div>
+
+          <div class="stressWrap" title="Stress">
+            <div class="stressBar" id="stressBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame" id="frame">
+      <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
+      <div class="qtitle" id="qTitle">…</div>
+      <div class="qdesc" id="qDesc">…</div>
+
+      <div class="options" id="options"></div>
+
+      <div class="actions">
+        <button class="btnPrimary show" id="validateBtn" disabled>Valider</button>
+        <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- START overlay -->
+<div class="overlay" id="startOverlay" style="display:flex;">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">🎮 Prêt ?</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Mission • Étouffement
+      </div>
+    </div>
+    <div class="modalBody">
+      <div class="startTitle">Tu as une mission.</div>
+      <div class="startText">
+        Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
+        <br><br>
+        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <br>
+        Es-tu prêt à commencer ?
+      </div>
+    </div>
+    <div class="modalActions">
+      <button class="startBtn" id="startBtn">DÉMARRER</button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback overlay -->
+<div class="overlay" id="overlay">
+  <div class="modalBox" id="modalBox">
+    <div class="modalTop">
+      <div class="badgeState" id="badgeState">—</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
+      </div>
+    </div>
+    <div class="modalBody" id="modalText">…</div>
+    <div class="modalActions">
+      <button class="btnNeo" id="retryBtn">Réessayer</button>
+      <button class="btnPrimary" id="nextBtn">Suivant</button>
+      <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
+    </div>
+  </div>
+</div>
 
 <script>
-/* =====================================================
-   VARIABLES GLOBALES
-===================================================== */
+/* =========================
+   AUDIO (simple)
+========================= */
+let audioCtx = null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+function tone(freq, dur=0.08, type="sine", gain=0.05){
+  ensureAudio();
+  const t0 = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  g.gain.value = gain;
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0 + dur);
+}
+function sfxClick(){ tone(520,0.04,"triangle",0.035); }
+function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
+function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
+function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
+function sfxAlarmLong(){
+  ensureAudio();
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(520, now);
+  osc.frequency.linearRampToValueAtTime(380, now + 0.35);
+  osc.frequency.linearRampToValueAtTime(520, now + 0.70);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + 1.25);
+}
+
+/* =========================
+   DOM
+========================= */
+const el = (id)=>document.getElementById(id);
+
+const hudName = el("hudName");
+const hudRole = el("hudRole");
+const hudAvatar = el("hudAvatar");
+const difficultyChip = el("difficultyChip");
+
+const hudScore = el("hudScore");
+const hudQnum = el("hudQnum");
+const hudQtotal = el("hudQtotal");
+const hudAttempts = el("hudAttempts");
+const hudTime = el("hudTime");
+const ring = el("ring");
+const timerPill = el("timerPill");
+const stressBar = el("stressBar");
+
+const qMeta = el("qMeta");
+const qTitle = el("qTitle");
+const qDesc  = el("qDesc");
+const optionsEl = el("options");
+
+const validateBtn = el("validateBtn");
+const clearBtn = el("clearBtn");
+
+const startOverlay = el("startOverlay");
+const startBtn = el("startBtn");
+
+const overlay = el("overlay");
+const modalBox = el("modalBox");
+const badgeState = el("badgeState");
+const modalText = el("modalText");
+const modalScore = el("modalScore");
+const modalStress = el("modalStress");
+const retryBtn = el("retryBtn");
+const nextBtn = el("nextBtn");
+const okBtn = el("okBtn");
+const frame = el("frame");
+
+/* =========================
+   PLAYER CONTEXT
+========================= */
+const role = (localStorage.getItem("role") || "infirmier").toLowerCase();
+const playerName = localStorage.getItem("playerName") || "Joueur";
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
+const difficulty = (localStorage.getItem("difficulty") || "normal").toLowerCase();
+
+const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
+hudName.textContent = playerName;
+hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
+hudAvatar.src = "assets/avatars/" + avatarFile;
+
+const difficultyConfig = {
+  easy:         { time: 15, stressWrong: 4,  stressCritical: 14, scoreOk: 10 },
+  normal:       { time: 12, stressWrong: 6,  stressCritical: 18, scoreOk: 10 },
+  intermediate: { time: 10, stressWrong: 8,  stressCritical: 22, scoreOk: 10 },
+  expert:       { time: 8,  stressWrong: 10, stressCritical: 26, scoreOk: 10 }
+};
+const cfg = difficultyConfig[difficulty] || difficultyConfig.normal;
+difficultyChip.textContent = "MODE: " + difficulty.toUpperCase();
+
+const roleMods = {
+  medecin:   { stressMul: 1.15, scoreMul: 1.00 },
+  infirmier: { stressMul: 1.00, scoreMul: 1.00 },
+  pompier:   { stressMul: 1.08, scoreMul: 1.00 }
+};
+const rm = roleMods[role] || roleMods.infirmier;
+const roleStress = (v)=> Math.round(v * rm.stressMul);
+const roleScore  = (v)=> Math.round(v * rm.scoreMul);
+
+/* =========================
+   STATE
+========================= */
+let score = parseInt(localStorage.getItem("score") || "0", 10);
+let stress = parseInt(localStorage.getItem("stress") || "0", 10);
+if(isNaN(score)) score = 0;
+if(isNaN(stress)) stress = 0;
+
 let idx = 0;
-let locked = true;
-let selectedOption = null;
 let attemptsForCurrentQuestion = 0;
+
+let locked = true;
 let timerId = null;
-let timeLeft = 12;
+let timeLeft = cfg.time;
 
-/* =====================================================
-   TIMER
-===================================================== */
-function startTimer(){
-  clearInterval(timerId);
-  timeLeft = 12;
-  updateTimerUI();
+let selectedSingle = null;     // index
+let multiSelected = new Set(); // indices
+let seqOrder = [];             // step ids
 
-  timerId = setInterval(()=>{
-    if(locked) return;
+const TOTAL = 10;
+hudQtotal.textContent = String(TOTAL);
 
-    timeLeft--;
-    updateTimerUI();
+/* =========================
+   HELPERS UI
+========================= */
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
-    if(timeLeft <= 0){
-      clearInterval(timerId);
-      missionFail("⏱ Temps écoulé ! Mission échouée.");
-    }
-  },1000);
+function setScore(v){
+  score = v;
+  localStorage.setItem("score", String(score));
+  hudScore.textContent = String(score);
+  modalScore.textContent = String(score);
+}
+function addScore(d){ setScore(score + d); }
+
+function setStress(v){
+  stress = clamp(v, 0, 100);
+  localStorage.setItem("stress", String(stress));
+  stressBar.style.width = stress + "%";
+  modalStress.textContent = String(stress);
+}
+function addStress(d){ setStress(stress + d); }
+
+function setAttemptsUI(){ hudAttempts.textContent = String(attemptsForCurrentQuestion); }
+
+setScore(score);
+setStress(stress);
+setAttemptsUI();
+
+function setRingProgress(){
+  const p = clamp(Math.round((timeLeft / cfg.time) * 100), 0, 100);
+  ring.style.setProperty("--p", p + "%");
+  timerPill.classList.remove("timerWarn","timerDanger");
+  if(timeLeft <= 4) timerPill.classList.add("timerDanger");
+  else if(timeLeft <= 7) timerPill.classList.add("timerWarn");
 }
 
 function stopTimer(){
   clearInterval(timerId);
+  timerId = null;
 }
 
-function updateTimerUI(){
-  document.getElementById("hudTime").textContent = timeLeft;
+function startTimer(){
+  stopTimer();
+  timeLeft = cfg.time;
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
+
+  timerId = setInterval(()=>{
+    if(locked) return;
+    timeLeft--;
+    hudTime.textContent = String(timeLeft);
+    setRingProgress();
+
+    if(timeLeft <= 0){
+      stopTimer();
+      sfxAlarmLong();
+      missionFail("⏱️ Temps écoulé ! Mission échouée. Retour au départ… (score remis à zéro)");
+    }
+  }, 1000);
 }
 
-/* =====================================================
-   QUESTIONS (EXEMPLE STRUCTURE)
-===================================================== */
+/* =========================
+   QUESTIONS
+========================= */
 const questions = [
   {
-    title:"Reconnaître l’étouffement",
-    desc:"La victime ne peut pas parler et tousse faiblement.",
+    type:"single",
+    title:"Reconnaître l’obstruction sévère",
+    desc:"La victime ne peut pas parler et sa toux est faible. Quelle conclusion ?",
     options:[
-      {text:"Obstruction légère", kind:"wrong"},
-      {text:"Obstruction sévère", kind:"ok"},
-      {text:"Crise d’angoisse", kind:"wrong"}
-    ],
-    feedback:{
-      ok:"✅ Correct : obstruction sévère.",
-      wrong:"❌ Mauvaise analyse."
+      {text:"Obstruction légère (encourager la toux)", kind:"wrong", fb:"❌ Toux faible/inefficace + impossibilité de parler = obstruction sévère."},
+      {text:"Obstruction sévère des voies aériennes", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Correct : obstruction sévère (étouffement grave)."},
+      {text:"Crise d’angoisse uniquement", kind:"wrong", fb:"❌ Les signes orientent d’abord vers l’obstruction."}
+    ]
+  },
+  {
+    type:"tf",
+    title:"Toux efficace",
+    desc:"Vrai ou faux : si la victime tousse fort et parle, on fait Heimlich immédiatement.",
+    tf:{
+      trueOpt: {kind:"wrong", fb:"❌ Faux : si la toux est efficace, on encourage la toux et on surveille."},
+      falseOpt:{kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Vrai : on encourage la toux et on surveille."}
     }
+  },
+  {
+    type:"single",
+    title:"Séquence recommandée (adulte conscient)",
+    desc:"Obstruction sévère chez adulte conscient : que fais-tu ?",
+    options:[
+      {text:"5 claques dorsales puis 5 compressions abdominales (en cycles)", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Correct : alterner 5 claques + 5 compressions."},
+      {text:"Uniquement compressions abdominales", kind:"partial", pts: roleScore(5), fb:"🟡 Partiel : tu as sauté les claques dorsales. L’alternance améliore l’efficacité."},
+      {text:"Insufflations (bouche-à-bouche) directement", kind:"wrong", fb:"❌ Non : priorité à la désobstruction chez une victime consciente."}
+    ]
+  },
+  {
+    type:"sequence",
+    title:"Ordre des actions",
+    desc:"Choisis l’ordre logique des 3 actions (tape dans l’ordre), puis Valider.",
+    steps:[
+      {id:"eval", label:"Évaluer : parler / tousser / respirer"},
+      {id:"act",  label:"Appliquer le geste adapté (claques/pressions)"},
+      {id:"call", label:"Alerter / demander de l’aide"}
+    ],
+    okPts: roleScore(cfg.scoreOk),
+    okFb:"✅ Bon ordre : évaluer → agir → alerter (et poursuivre les gestes si besoin).",
+    badFb:"❌ L’ordre est important : évaluer d’abord, puis agir, alerter rapidement si sévère."
+  },
+  {
+    type:"multi",
+    title:"Signes d’étouffement sévère",
+    desc:"Sélectionne TOUTES les réponses correctes, puis Valider.",
+    options:[
+      {text:"Impossible de parler", correct:true},
+      {text:"Toux inefficace / faible", correct:true},
+      {text:"Respiration normale et confortable", correct:false},
+      {text:"Mains à la gorge / détresse", correct:true}
+    ],
+    okPts: roleScore(cfg.scoreOk),
+    okFb:"✅ Exact : incapacité à parler + toux inefficace + détresse = sévère.",
+    badFb:"❌ Revois : “respiration normale” n’est pas un signe de sévère."
+  },
+  {
+    type:"single",
+    title:"Position pour les claques dorsales",
+    desc:"Pour des claques dorsales efficaces, la victime doit être…",
+    options:[
+      {text:"Penchée en avant", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : gravité + efficacité."},
+      {text:"Tête en arrière", kind:"wrong", fb:"❌ Non : cela ne favorise pas l’expulsion."},
+      {text:"Allongée sur le dos", kind:"wrong", fb:"❌ Non (sauf inconscience / RCP)."}
+    ]
+  },
+  {
+    type:"single",
+    title:"Erreur critique",
+    desc:"Quel geste est dangereux ?",
+    options:[
+      {text:"Balayage du doigt à l’aveugle", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : tu peux enfoncer l’objet plus loin."},
+      {text:"Retirer un objet clairement visible", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui, seulement si visible et accessible."},
+      {text:"Encourager la toux si elle est efficace", kind:"ok", pts: roleScore(5), fb:"🟡 Correct (si toux efficace)."}
+    ]
+  },
+  {
+    type:"single",
+    title:"Femme enceinte / personne corpulente",
+    desc:"Si les claques échouent, tu fais…",
+    options:[
+      {text:"Compressions thoraciques", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Correct : thoraciques à la place des abdominales."},
+      {text:"Compressions abdominales", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : risque de blessure (grossesse)."},
+      {text:"Donner de l’eau", kind:"wrong", fb:"❌ Non : risque d’inhalation."}
+    ]
+  },
+  {
+    type:"single",
+    title:"Victime inconsciente",
+    desc:"La victime perd connaissance. Que fais-tu en priorité ?",
+    options:[
+      {text:"Allonger au sol + RCP (compressions)", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : inconsciente → au sol, RCP si respiration anormale."},
+      {text:"La relever et la faire marcher", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : perte de temps vital."},
+      {text:"Attendre sans rien faire", kind:"critical", pts:-10, fb:"🚨 ERREUR CRITIQUE : inaction = risque vital."}
+    ]
+  },
+  {
+    type:"single",
+    title:"Après expulsion de l’objet",
+    desc:"L’objet sort, la victime respire mais tousse encore. Que fais-tu ?",
+    options:[
+      {text:"Surveiller + avis médical si symptômes persistent", kind:"ok", pts: roleScore(cfg.scoreOk), fb:"✅ Oui : surveillance et avis si douleur/toux persistante."},
+      {text:"Je pars, tout est fini", kind:"partial", pts: roleScore(5), fb:"🟡 Partiel : l’urgence est passée, mais la surveillance reste importante."},
+      {text:"Recommencer Heimlich “pour être sûr”", kind:"wrong", fb:"❌ Non : si respiration OK, on ne recommence pas."}
+    ]
   }
-  // (les autres questions restent inchangées)
 ];
 
-/* =====================================================
-   AFFICHAGE QUESTION
-===================================================== */
-function setQuestion(i, resetAttempts=true){
+/* =========================
+   RENDER QUESTION
+========================= */
+function clearSelectionUI(){
+  selectedSingle = null;
+  multiSelected.clear();
+  seqOrder = [];
+  validateBtn.disabled = true;
+}
+
+function renderQuestion(i, resetAttempts=true){
   locked = false;
-  selectedOption = null;
-  clearInterval(timerId);
+  stopTimer();
+  hideOverlay();
 
   if(resetAttempts){
     attemptsForCurrentQuestion = 0;
-    updateAttemptsUI();
+    setAttemptsUI();
   }
 
+  clearSelectionUI();
+
   const q = questions[i];
-  document.getElementById("qTitle").textContent = q.title;
-  document.getElementById("qDesc").textContent = q.desc;
+  qMeta.textContent = "Scénario 1 — Étouffement";
+  qTitle.textContent = q.title;
+  qDesc.innerHTML = q.desc;
 
-  const optionsEl = document.getElementById("options");
   optionsEl.innerHTML = "";
+  clearBtn.style.display = "none";
 
-  q.options.forEach((opt)=>{
-    const div = document.createElement("div");
-    div.className = "opt";
-    div.textContent = opt.text;
+  if(q.type === "single"){
+    q.options.forEach((opt, oi)=>{
+      const d = document.createElement("div");
+      d.className = "opt";
+      d.textContent = opt.text;
+      d.onclick = ()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle = oi;
+        validateBtn.disabled = false;
+      };
+      optionsEl.appendChild(d);
+    });
+  }
 
-    div.onclick = ()=>{
-      document.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
-      div.classList.add("sel");
-      selectedOption = opt;
-    };
+  if(q.type === "tf"){
+    const opts = [
+      {label:"Vrai", data:q.tf.trueOpt},
+      {label:"Faux", data:q.tf.falseOpt}
+    ];
+    opts.forEach((o, oi)=>{
+      const d = document.createElement("div");
+      d.className = "opt";
+      d.textContent = o.label;
+      d.onclick = ()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        // stocke "selectedSingle" comme 0/1 puis on évaluera via tf map
+        selectedSingle = oi;
+        validateBtn.disabled = false;
+      };
+      optionsEl.appendChild(d);
+    });
+  }
 
-    optionsEl.appendChild(div);
-  });
+  if(q.type === "multi"){
+    clearBtn.style.display = "inline-block";
+    q.options.forEach((opt, oi)=>{
+      const d = document.createElement("div");
+      d.className = "opt";
+      d.textContent = opt.text;
+      d.onclick = ()=>{
+        sfxClick();
+        if(multiSelected.has(oi)){
+          multiSelected.delete(oi);
+          d.classList.remove("sel");
+        }else{
+          multiSelected.add(oi);
+          d.classList.add("sel");
+        }
+        validateBtn.disabled = (multiSelected.size === 0);
+      };
+      optionsEl.appendChild(d);
+    });
+  }
 
-  document.getElementById("submitBtn").style.display = "inline-block";
+  if(q.type === "sequence"){
+    clearBtn.style.display = "inline-block";
+    q.steps.forEach((step)=>{
+      const d = document.createElement("div");
+      d.className = "opt";
+      d.textContent = step.label;
+      d.onclick = ()=>{
+        sfxClick();
+        if(seqOrder.includes(step.id)) return;
+        seqOrder.push(step.id);
+        d.classList.add("sel");
+        d.textContent = `${seqOrder.length}. ${step.label}`;
+        validateBtn.disabled = (seqOrder.length !== q.steps.length);
+      };
+      optionsEl.appendChild(d);
+    });
+  }
+
+  hudQnum.textContent = String(i+1);
   startTimer();
 }
 
-/* =====================================================
-   VALIDATION
-===================================================== */
-document.getElementById("submitBtn").onclick = ()=>{
-  if(!selectedOption) return;
+clearBtn.onclick = ()=>{
+  sfxClick();
+  clearSelectionUI();
+  [...optionsEl.children].forEach(x=>{
+    x.classList.remove("sel");
+    // remettre label pour sequence
+  });
+  // re-render propre pour sequence (restaurer les labels numérotés)
+  renderQuestion(idx, false);
+};
 
-  stopTimer(); // ✅ chrono s’arrête ici
+/* =========================
+   VALIDATE LOGIC
+   ✅ NOUVELLE REGLE:
+   - chrono s'arrête quand on clique Valider
+   (bonne OU mauvaise tentative)
+========================= */
+validateBtn.onclick = ()=>{
+  if(locked) return;
+
+  // stop timer dès validation (tentative)
+  stopTimer();
   locked = true;
 
-  if(selectedOption.kind === "ok"){
-    showFeedback(true);
-  } else {
-    attemptsForCurrentQuestion++;
-    updateAttemptsUI();
+  const q = questions[idx];
 
-    if(attemptsForCurrentQuestion >= 2){
-      missionFail("❌ Deux tentatives ratées. Mission échouée.");
-    } else {
-      showFeedback(false);
+  if(q.type === "single"){
+    if(selectedSingle === null){ locked = false; startTimer(); return; }
+    evaluateOption(q.options[selectedSingle]);
+    return;
+  }
+
+  if(q.type === "tf"){
+    if(selectedSingle === null){ locked = false; startTimer(); return; }
+    const opt = (selectedSingle === 0) ? q.tf.trueOpt : q.tf.falseOpt;
+    evaluateOption(opt);
+    return;
+  }
+
+  if(q.type === "multi"){
+    const chosen = [...multiSelected].sort((a,b)=>a-b);
+    const correctIdx = q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+    const ok = chosen.length === correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
+
+    if(ok){
+      addScore(q.okPts || roleScore(cfg.scoreOk));
+      showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
+      sfxCorrect(); motion("good");
+    }else{
+      addStress(roleStress(cfg.stressWrong));
+      sfxWrong(); motion("wrong");
+      handleFailedAttempt(q.badFb || "❌ Certaines réponses sont incorrectes.");
     }
+    return;
+  }
+
+  if(q.type === "sequence"){
+    const expected = ["eval","act","call"];
+    const ok = seqOrder.length === expected.length && expected.every((v,i)=>seqOrder[i]===v);
+
+    if(ok){
+      addScore(q.okPts || roleScore(cfg.scoreOk));
+      showOverlay("good", q.okFb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
+      sfxCorrect(); motion("good");
+    }else{
+      addStress(roleStress(cfg.stressWrong));
+      sfxWrong(); motion("wrong");
+      handleFailedAttempt(q.badFb || "❌ Ordre incorrect.");
+    }
+    return;
   }
 };
 
-/* =====================================================
-   FEEDBACK
-===================================================== */
-function showFeedback(isCorrect){
-  const overlay = document.getElementById("overlay");
+function evaluateOption(opt){
+  if(opt.kind === "ok"){
+    addScore(opt.pts || roleScore(cfg.scoreOk));
+    showOverlay("good", opt.fb || "✅ Correct.", { allowRetry:false, allowNext:true, missionFail:false });
+    sfxCorrect(); motion("good");
+    return;
+  }
+
+  if(opt.kind === "critical"){
+    addScore(opt.pts || -10);
+    addStress(roleStress(cfg.stressCritical));
+    sfxCritical(); motion("critical");
+    try{ window.parent.postMessage({type:"CRITICAL_ERROR", q: idx+1}, "*"); }catch(e){}
+    handleFailedAttempt(opt.fb || "🚨 Erreur critique.");
+    return;
+  }
+
+  if(opt.kind === "partial"){
+    addScore(opt.pts || roleScore(5));
+    addStress(roleStress(cfg.stressWrong));
+    sfxWrong(); motion("wrong");
+    handleFailedAttempt(opt.fb || "🟡 Partiel.");
+    return;
+  }
+
+  addStress(roleStress(cfg.stressWrong));
+  sfxWrong(); motion("wrong");
+  handleFailedAttempt(opt.fb || "❌ Incorrect.");
+}
+
+function handleFailedAttempt(baseMsg){
+  attemptsForCurrentQuestion++;
+  setAttemptsUI();
+
+  if(attemptsForCurrentQuestion >= 2){
+    sfxAlarmLong();
+    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
+    return;
+  }
+
+  showOverlay("warn",
+    `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/2)`,
+    { allowRetry:true, allowNext:false, missionFail:false }
+  );
+}
+
+/* =========================
+   OVERLAYS
+========================= */
+function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
+  badgeState.className = "badgeState";
+  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
+  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
+  if(kind==="bad"){  badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+
+  modalText.textContent = text;
   overlay.style.display = "flex";
 
-  document.getElementById("modalText").textContent =
-    isCorrect ? questions[idx].feedback.ok : questions[idx].feedback.wrong;
+  retryBtn.style.display = allowRetry ? "inline-block" : "none";
+  nextBtn.style.display  = allowNext ? "inline-block" : "none";
+  nextBtn.classList.toggle("show", !!allowNext);
 
-  document.getElementById("retryBtn").style.display = isCorrect ? "none" : "inline-block";
-  document.getElementById("nextBtn").style.display  = isCorrect ? "inline-block" : "none";
+  okBtn.style.display = "none";
+  okBtn.onclick = null;
+
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    // ✅ après une tentative ratée, le timer repart quand on réessaie
+    locked = false;
+    startTimer();
+  };
+
+  nextBtn.onclick = ()=>{
+    hideOverlay();
+    idx++;
+    if(idx < TOTAL) renderQuestion(idx, true);
+    else endScenario();
+  };
+
+  if(missionFail){
+    retryBtn.style.display = "none";
+    nextBtn.style.display = "none";
+    okBtn.style.display = "inline-block";
+    okBtn.classList.add("show");
+    okBtn.onclick = ()=>{
+      hideOverlay();
+      resetMission(true);
+    };
+  }
 }
 
-/* =====================================================
-   RETRY / NEXT
-===================================================== */
-document.getElementById("retryBtn").onclick = ()=>{
-  document.getElementById("overlay").style.display = "none";
-  setQuestion(idx,false); // ❌ pas reset tentatives
-};
+function hideOverlay(){ overlay.style.display = "none"; }
 
-document.getElementById("nextBtn").onclick = ()=>{
-  document.getElementById("overlay").style.display = "none";
-  idx++;
-  if(idx < questions.length) setQuestion(idx,true);
-};
-
-/* =====================================================
-   MISSION FAIL
-===================================================== */
-function missionFail(msg){
-  clearInterval(timerId);
-  document.getElementById("modalText").textContent = msg;
-  document.getElementById("retryBtn").style.display = "none";
-  document.getElementById("nextBtn").style.display = "none";
-  document.getElementById("okBtn").style.display = "inline-block";
-  document.getElementById("overlay").style.display = "flex";
+/* =========================
+   FAIL / RESET
+========================= */
+function missionFail(message){
+  stopTimer();
+  showOverlay("bad", message, { allowRetry:false, allowNext:false, missionFail:true });
+  motion("critical");
 }
 
-/* =====================================================
-   START
-===================================================== */
-document.getElementById("startBtn").onclick = ()=>{
+function resetMission(showStart=true){
+  stopTimer();
   idx = 0;
   attemptsForCurrentQuestion = 0;
-  updateAttemptsUI();
-  document.getElementById("startOverlay").style.display = "none";
-  setQuestion(0,true);
-};
+  setAttemptsUI();
+  setScore(0);
+  setStress(0);
+  locked = true;
 
-function updateAttemptsUI(){
-  document.getElementById("hudAttempts").textContent = attemptsForCurrentQuestion;
+  // remettre l'écran de départ
+  if(showStart){
+    startOverlay.style.display = "flex";
+  }
 }
+
+/* =========================
+   END
+========================= */
+function escapeHtml(str){
+  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+
+function endScenario(){
+  stopTimer();
+  hideOverlay();
+  optionsEl.innerHTML = "";
+  validateBtn.disabled = true;
+  clearBtn.style.display = "none";
+
+  const result = score >= 80 ? "🟢 Intervention maîtrisée"
+               : score >= 60 ? "🟡 Bon niveau — à renforcer"
+               : "🔴 Révisions conseillées";
+
+  qMeta.textContent = "Debrief";
+  qTitle.textContent = "Fin du scénario — Étouffement";
+  qDesc.innerHTML = `
+    <div style="margin-top:8px; color: rgba(255,255,255,.86);">
+      <div style="font-weight:950; font-size:16px;">Résultat : ${escapeHtml(result)}</div>
+      <div style="margin-top:6px;">⭐ Score final : <b>${score}</b></div>
+      <div>😰 Stress : <b>${stress}%</b></div>
+      <div style="margin-top:10px; color: rgba(255,255,255,.75); font-size:13px;">
+        Tu peux maintenant cliquer sur <b>Suivant</b> dans Genially pour continuer.
+      </div>
+    </div>
+  `;
+}
+
+/* =========================
+   MOTIONS
+========================= */
+function motion(type){
+  frame.classList.remove("shake","pulseGood","flashBad");
+  modalBox.classList.remove("shake","pulseGood","flashBad");
+
+  if(type==="good"){
+    frame.classList.add("pulseGood");
+  } else if(type==="wrong"){
+    modalBox.classList.add("shake");
+  } else if(type==="critical"){
+    modalBox.classList.add("shake");
+    frame.classList.add("flashBad");
+  }
+}
+
+/* =========================
+   START
+========================= */
+startBtn.addEventListener("click", ()=>{
+  ensureAudio();
+  sfxClick();
+  startOverlay.style.display = "none";
+  idx = 0;
+  attemptsForCurrentQuestion = 0;
+  setAttemptsUI();
+  renderQuestion(0, true);
+});
+
+/* Preview */
+(function init(){
+  locked = true;
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = "Clique sur <b>DÉMARRER</b> pour lancer la mission.";
+  optionsEl.innerHTML = "";
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(cfg.time);
+  ring.style.setProperty("--p", "100%");
+  setRingProgress();
+})();
 </script>
 </body>
 </html>
