@@ -194,7 +194,21 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items:center; }
+    .hintPick{
+      margin-right:auto;
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(255,255,255,.78);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .18s ease, transform .18s ease;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,.18);
+      background: rgba(0,0,0,.12);
+    }
+    .hintPick.show{ opacity:1; transform: translateY(0); }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
@@ -265,7 +279,35 @@
       padding: 14px 16px;
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+      align-items:center;
     }
+
+    .pauseChip{
+      margin-right:auto;
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(255,255,255,.85);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.16);
+      padding: 7px 10px;
+      border-radius: 999px;
+      display:none;
+    }
+    .pauseChip.show{ display:inline-flex; align-items:center; gap: 8px; }
+
+    .countdownChip{
+      margin-right:auto;
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(10,12,18,.95);
+      background: linear-gradient(180deg, rgba(255,200,80,1), rgba(255,150,70,1));
+      border: none;
+      padding: 7px 10px;
+      border-radius: 999px;
+      display:none;
+      box-shadow: 0 14px 36px rgba(0,0,0,.35);
+    }
+    .countdownChip.show{ display:inline-flex; align-items:center; gap: 8px; }
 
     .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
     .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
@@ -353,6 +395,7 @@
       <div class="options" id="options"></div>
 
       <div class="actions">
+        <div class="hintPick" id="pickHint">👆 Choisis une réponse avant de valider</div>
         <button class="btnPrimary show" id="validateBtn" disabled>Valider</button>
         <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
       </div>
@@ -397,6 +440,9 @@
     </div>
     <div class="modalBody" id="modalText">…</div>
     <div class="modalActions">
+      <div class="pauseChip" id="pauseChip">⏸️ Chrono en pause</div>
+      <div class="countdownChip" id="countdownChip">⏳ Reprise dans <span id="cdNum">3</span>…</div>
+
       <button class="btnNeo" id="retryBtn">Réessayer</button>
       <button class="btnPrimary" id="nextBtn">Suivant</button>
       <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
@@ -467,6 +513,7 @@ const optionsEl = el("options");
 
 const validateBtn = el("validateBtn");
 const clearBtn = el("clearBtn");
+const pickHint = el("pickHint");
 
 const startOverlay = el("startOverlay");
 const startBtn = el("startBtn");
@@ -481,6 +528,10 @@ const retryBtn = el("retryBtn");
 const nextBtn = el("nextBtn");
 const okBtn = el("okBtn");
 const frame = el("frame");
+
+const pauseChip = el("pauseChip");
+const countdownChip = el("countdownChip");
+const cdNum = el("cdNum");
 
 /* =========================
    PLAYER CONTEXT
@@ -533,6 +584,9 @@ let selectedSingle = null;
 let multiSelected = new Set();
 let seqOrder = [];
 
+let countdownRunning = false;
+let countdownId = null;
+
 const TOTAL = 10;
 hudQtotal.textContent = String(TOTAL);
 
@@ -572,11 +626,12 @@ function setRingProgress(){
   else if(timeLeft <= 7) timerPill.classList.add("timerWarn");
 }
 
+function setPickHint(show){
+  pickHint.classList.toggle("show", !!show);
+}
+
 /* =========================
    TIMER (pause + reprise au même temps)
-   - Nouveau : startTimer({reset:true/false})
-   - reset:true  => repart à cfg.time (nouvelle question)
-   - reset:false => reprend à timeLeft (tentative ratée)
 ========================= */
 function stopTimer(){
   timerPaused = true;
@@ -589,14 +644,12 @@ function stopTimer(){
 }
 
 function startTimer({ reset } = { reset:true }){
-  // stop propre
   stopTimer();
   timerPaused = false;
 
   if(reset){
-    timeLeft = cfg.time;              // ✅ nouvelle question => reset
+    timeLeft = cfg.time;
   }else{
-    // ✅ reprise => on garde timeLeft tel quel
     timeLeft = Math.max(timeLeft, 0);
   }
 
@@ -738,6 +791,12 @@ function clearSelectionState(){
   multiSelected.clear();
   seqOrder = [];
   validateBtn.disabled = true;
+  setPickHint(true); // ✅ affichage hint tant que rien n'est choisi
+}
+
+function allowValidateNow(){
+  validateBtn.disabled = false;
+  setPickHint(false);
 }
 
 function renderQuestion(i, resetAttempts=true){
@@ -770,7 +829,7 @@ function renderQuestion(i, resetAttempts=true){
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
         selectedSingle = oi;
-        validateBtn.disabled = false;
+        allowValidateNow();
       };
       optionsEl.appendChild(d);
     });
@@ -790,7 +849,7 @@ function renderQuestion(i, resetAttempts=true){
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
         selectedSingle = oi;
-        validateBtn.disabled = false;
+        allowValidateNow();
       };
       optionsEl.appendChild(d);
     });
@@ -811,7 +870,12 @@ function renderQuestion(i, resetAttempts=true){
           multiSelected.add(oi);
           d.classList.add("sel");
         }
-        validateBtn.disabled = (multiSelected.size === 0);
+        if(multiSelected.size === 0){
+          validateBtn.disabled = true;
+          setPickHint(true);
+        }else{
+          allowValidateNow();
+        }
       };
       optionsEl.appendChild(d);
     });
@@ -829,7 +893,12 @@ function renderQuestion(i, resetAttempts=true){
         seqOrder.push(step.id);
         d.classList.add("sel");
         d.textContent = `${seqOrder.length}. ${step.label}`;
-        validateBtn.disabled = (seqOrder.length !== q.steps.length);
+        if(seqOrder.length === q.steps.length){
+          allowValidateNow();
+        }else{
+          validateBtn.disabled = true;
+          setPickHint(true);
+        }
       };
       optionsEl.appendChild(d);
     });
@@ -837,7 +906,7 @@ function renderQuestion(i, resetAttempts=true){
 
   hudQnum.textContent = String(i+1);
 
-  // ✅ Nouvelle question => on repart au temps complet
+  // ✅ Nouvelle question => reset du timer
   startTimer({ reset:true });
 }
 
@@ -848,12 +917,17 @@ clearBtn.onclick = ()=>{
 
 /* =========================
    VALIDATION
-   - Au clic "Valider" : on stoppe le chrono
-   - En cas de tentative ratée : quand l’utilisateur clique "Réessayer",
-     le chrono reprend À PARTIR DU TEMPS RESTANT (sans reset)
 ========================= */
 validateBtn.onclick = ()=>{
   if(locked) return;
+
+  // Si aucune réponse -> montrer hint visuellement
+  if(validateBtn.disabled){
+    setPickHint(true);
+    frame.classList.add("shake");
+    setTimeout(()=>frame.classList.remove("shake"), 220);
+    return;
+  }
 
   stopTimer();     // stoppe à la valeur actuelle
   locked = true;
@@ -954,8 +1028,46 @@ function handleFailedAttempt(baseMsg){
 }
 
 /* =========================
-   OVERLAYS
+   OVERLAYS + PAUSE CHIP + COUNTDOWN
 ========================= */
+function setPauseUI(showPause, showCountdown){
+  pauseChip.classList.toggle("show", !!showPause);
+  countdownChip.classList.toggle("show", !!showCountdown);
+}
+
+function clearCountdown(){
+  countdownRunning = false;
+  if(countdownId){
+    clearInterval(countdownId);
+    countdownId = null;
+  }
+  setPauseUI(false, false);
+}
+
+function startResumeCountdown(onDone){
+  clearCountdown();
+  countdownRunning = true;
+
+  setPauseUI(false, true);
+  let n = 3;
+  cdNum.textContent = String(n);
+
+  // petit "tic"
+  tone(440,0.05,"sine",0.03);
+
+  countdownId = setInterval(()=>{
+    n--;
+    if(n <= 0){
+      clearCountdown();
+      tone(660,0.07,"sine",0.05);
+      onDone();
+      return;
+    }
+    cdNum.textContent = String(n);
+    tone(440,0.05,"sine",0.03);
+  }, 700);
+}
+
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   badgeState.className = "badgeState";
   if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
@@ -965,6 +1077,9 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   modalText.textContent = text;
   overlay.style.display = "flex";
 
+  // ✅ pendant overlay => chrono en pause
+  setPauseUI(true, false);
+
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
   nextBtn.style.display  = allowNext ? "inline-block" : "none";
   nextBtn.classList.toggle("show", !!allowNext);
@@ -973,14 +1088,23 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   okBtn.onclick = null;
 
   retryBtn.onclick = ()=>{
-    hideOverlay();
-    locked = false;
+    // ✅ au clic => on passe en countdown, puis reprise du chrono AU TEMPS RESTANT
+    retryBtn.disabled = true;
+    nextBtn.disabled = true;
 
-    // ✅ IMPORTANT : on reprend le chrono à partir de timeLeft (pas de reset)
-    startTimer({ reset:false });
+    startResumeCountdown(()=>{
+      hideOverlay();
+      locked = false;
+      retryBtn.disabled = false;
+      nextBtn.disabled = false;
+
+      // reprise sans reset
+      startTimer({ reset:false });
+    });
   };
 
   nextBtn.onclick = ()=>{
+    clearCountdown();
     hideOverlay();
     idx++;
     if(idx < TOTAL) renderQuestion(idx, true);
@@ -992,14 +1116,22 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
     nextBtn.style.display = "none";
     okBtn.style.display = "inline-block";
     okBtn.classList.add("show");
+
+    // ✅ pas de countdown ici
+    setPauseUI(true, false);
+
     okBtn.onclick = ()=>{
+      clearCountdown();
       hideOverlay();
       resetMission(true);
     };
   }
 }
 
-function hideOverlay(){ overlay.style.display = "none"; }
+function hideOverlay(){
+  overlay.style.display = "none";
+  clearCountdown();
+}
 
 /* =========================
    FAIL / RESET
@@ -1019,7 +1151,6 @@ function resetMission(showStart=true){
   setStress(0);
   locked = true;
 
-  // ✅ reset du temps au début de mission
   timeLeft = cfg.time;
   hudTime.textContent = String(timeLeft);
   setRingProgress();
@@ -1042,6 +1173,7 @@ function endScenario(){
   optionsEl.innerHTML = "";
   validateBtn.disabled = true;
   clearBtn.style.display = "none";
+  setPickHint(false);
 
   const result = score >= 80 ? "🟢 Intervention maîtrisée"
                : score >= 60 ? "🟡 Bon niveau — à renforcer"
@@ -1085,11 +1217,11 @@ startBtn.addEventListener("click", ()=>{
   ensureAudio();
   sfxClick();
   startOverlay.style.display = "none";
+
   idx = 0;
   attemptsForCurrentQuestion = 0;
   setAttemptsUI();
 
-  // ✅ au démarrage d'une mission => reset timer
   timeLeft = cfg.time;
   hudTime.textContent = String(timeLeft);
   setRingProgress();
@@ -1108,6 +1240,7 @@ startBtn.addEventListener("click", ()=>{
   hudTime.textContent = String(timeLeft);
   ring.style.setProperty("--p", "100%");
   setRingProgress();
+  setPickHint(false);
 })();
 </script>
 </body>
