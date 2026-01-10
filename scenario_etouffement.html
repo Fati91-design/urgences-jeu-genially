@@ -525,16 +525,13 @@ let idx = 0;
 let attemptsForCurrentQuestion = 0;
 
 let locked = true;
-
-/* ✅ Timer robuste par timestamp */
 let timerId = null;
-let endAt = 0;            // timestamp de fin
-let frozenTime = null;    // nombre de secondes gelées (affichage)
-let timerRunning = false;
+let timeLeft = cfg.time;
+let timerPaused = false;
 
-let selectedSingle = null;     // index
-let multiSelected = new Set(); // indices
-let seqOrder = [];             // step ids
+let selectedSingle = null;
+let multiSelected = new Set();
+let seqOrder = [];
 
 const TOTAL = 10;
 hudQtotal.textContent = String(TOTAL);
@@ -566,69 +563,59 @@ setScore(score);
 setStress(stress);
 setAttemptsUI();
 
-/* ✅ Calcul du temps restant basé sur endAt */
-function getRemainingSeconds(){
-  if(frozenTime !== null) return frozenTime;
-  if(!timerRunning) return cfg.time;
-  const ms = endAt - Date.now();
-  return clamp(Math.ceil(ms / 1000), 0, cfg.time);
-}
-
-function setRingProgress(rem){
+function setRingProgress(){
   const denom = Math.max(cfg.time, 1);
-  const p = clamp(Math.round((rem / denom) * 100), 0, 100);
+  const p = clamp(Math.round((timeLeft / denom) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
   timerPill.classList.remove("timerWarn","timerDanger");
-  if(rem <= 4) timerPill.classList.add("timerDanger");
-  else if(rem <= 7) timerPill.classList.add("timerWarn");
+  if(timeLeft <= 4) timerPill.classList.add("timerDanger");
+  else if(timeLeft <= 7) timerPill.classList.add("timerWarn");
 }
 
 /* =========================
-   TIMER (timestamp) — FIX définitif
+   TIMER (pause + reprise au même temps)
+   - Nouveau : startTimer({reset:true/false})
+   - reset:true  => repart à cfg.time (nouvelle question)
+   - reset:false => reprend à timeLeft (tentative ratée)
 ========================= */
 function stopTimer(){
-  // ✅ freeze : on garde le temps actuel affiché, sans qu'il continue
-  frozenTime = getRemainingSeconds();
-  timerRunning = false;
-
+  timerPaused = true;
   if(timerId){
     clearInterval(timerId);
     timerId = null;
   }
-
-  hudTime.textContent = String(frozenTime);
-  setRingProgress(frozenTime);
+  hudTime.textContent = String(Math.max(timeLeft, 0));
+  setRingProgress();
 }
 
-function startTimer(){
-  // ✅ relance propre : on repart à cfg.time
-  if(timerId){
-    clearInterval(timerId);
-    timerId = null;
+function startTimer({ reset } = { reset:true }){
+  // stop propre
+  stopTimer();
+  timerPaused = false;
+
+  if(reset){
+    timeLeft = cfg.time;              // ✅ nouvelle question => reset
+  }else{
+    // ✅ reprise => on garde timeLeft tel quel
+    timeLeft = Math.max(timeLeft, 0);
   }
 
-  frozenTime = null;                 // on dégèle
-  timerRunning = true;
-  endAt = Date.now() + (cfg.time * 1000);
-
-  // affichage immédiat
-  const rem0 = getRemainingSeconds();
-  hudTime.textContent = String(rem0);
-  setRingProgress(rem0);
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
 
   timerId = setInterval(()=>{
-    if(locked || !timerRunning) return;
+    if(locked || timerPaused) return;
 
-    const rem = getRemainingSeconds();
-    hudTime.textContent = String(rem);
-    setRingProgress(rem);
+    timeLeft = Math.max(timeLeft - 1, 0);
+    hudTime.textContent = String(timeLeft);
+    setRingProgress();
 
-    if(rem <= 0){
+    if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
       missionFail("⏱️ Temps écoulé ! Mission échouée. Retour au départ… (score remis à zéro)");
     }
-  }, 120); // petit interval (plus fluide) mais calculé par timestamp => stable
+  }, 1000);
 }
 
 /* =========================
@@ -790,7 +777,10 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(q.type === "tf"){
-    const opts = [{label:"Vrai"},{label:"Faux"}];
+    const opts = [
+      {label:"Vrai", data:q.tf.trueOpt},
+      {label:"Faux", data:q.tf.falseOpt}
+    ];
     opts.forEach((o, oi)=>{
       const d = document.createElement("div");
       d.className = "opt";
@@ -846,30 +836,38 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   hudQnum.textContent = String(i+1);
-  startTimer();
+
+  // ✅ Nouvelle question => on repart au temps complet
+  startTimer({ reset:true });
 }
 
-clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
+clearBtn.onclick = ()=>{
+  sfxClick();
+  renderQuestion(idx, false);
+};
 
 /* =========================
    VALIDATION
+   - Au clic "Valider" : on stoppe le chrono
+   - En cas de tentative ratée : quand l’utilisateur clique "Réessayer",
+     le chrono reprend À PARTIR DU TEMPS RESTANT (sans reset)
 ========================= */
 validateBtn.onclick = ()=>{
   if(locked) return;
 
-  stopTimer();     // ✅ gèle le chrono à la valeur courante (ne peut plus tomber à 0)
+  stopTimer();     // stoppe à la valeur actuelle
   locked = true;
 
   const q = questions[idx];
 
   if(q.type === "single"){
-    if(selectedSingle === null){ locked = false; startTimer(); return; }
+    if(selectedSingle === null){ locked = false; startTimer({reset:false}); return; }
     evaluateOption(q.options[selectedSingle]);
     return;
   }
 
   if(q.type === "tf"){
-    if(selectedSingle === null){ locked = false; startTimer(); return; }
+    if(selectedSingle === null){ locked = false; startTimer({reset:false}); return; }
     const opt = (selectedSingle === 0) ? q.tf.trueOpt : q.tf.falseOpt;
     evaluateOption(opt);
     return;
@@ -977,7 +975,9 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   retryBtn.onclick = ()=>{
     hideOverlay();
     locked = false;
-    startTimer(); // ✅ relance propre
+
+    // ✅ IMPORTANT : on reprend le chrono à partir de timeLeft (pas de reset)
+    startTimer({ reset:false });
   };
 
   nextBtn.onclick = ()=>{
@@ -1018,6 +1018,11 @@ function resetMission(showStart=true){
   setScore(0);
   setStress(0);
   locked = true;
+
+  // ✅ reset du temps au début de mission
+  timeLeft = cfg.time;
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
 
   if(showStart){
     startOverlay.style.display = "flex";
@@ -1083,6 +1088,12 @@ startBtn.addEventListener("click", ()=>{
   idx = 0;
   attemptsForCurrentQuestion = 0;
   setAttemptsUI();
+
+  // ✅ au démarrage d'une mission => reset timer
+  timeLeft = cfg.time;
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
+
   renderQuestion(0, true);
 });
 
@@ -1093,11 +1104,10 @@ startBtn.addEventListener("click", ()=>{
   qDesc.innerHTML = "Clique sur <b>DÉMARRER</b> pour lancer la mission.";
   optionsEl.innerHTML = "";
   hudQnum.textContent = "1";
-
-  // affichage initial stable
-  hudTime.textContent = String(cfg.time);
+  timeLeft = cfg.time;
+  hudTime.textContent = String(timeLeft);
   ring.style.setProperty("--p", "100%");
-  setRingProgress(cfg.time);
+  setRingProgress();
 })();
 </script>
 </body>
