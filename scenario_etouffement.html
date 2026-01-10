@@ -406,7 +406,7 @@
 
 <script>
 /* =========================
-   AUDIO (simple)
+   AUDIO
 ========================= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
@@ -528,6 +528,9 @@ let locked = true;
 let timerId = null;
 let timeLeft = cfg.time;
 
+/* ✅ nouveau: pause du timer pour éviter "retour à 0" */
+let timerPaused = false;
+
 let selectedSingle = null;     // index
 let multiSelected = new Set(); // indices
 let seqOrder = [];             // step ids
@@ -563,27 +566,40 @@ setStress(stress);
 setAttemptsUI();
 
 function setRingProgress(){
-  const p = clamp(Math.round((timeLeft / cfg.time) * 100), 0, 100);
+  const denom = Math.max(cfg.time, 1);
+  const p = clamp(Math.round((timeLeft / denom) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
   timerPill.classList.remove("timerWarn","timerDanger");
   if(timeLeft <= 4) timerPill.classList.add("timerDanger");
   else if(timeLeft <= 7) timerPill.classList.add("timerWarn");
 }
 
+/* =========================
+   TIMER (corrigé)
+========================= */
 function stopTimer(){
-  clearInterval(timerId);
-  timerId = null;
+  timerPaused = true; // ✅ freeze immédiat
+  if(timerId){
+    clearInterval(timerId);
+    timerId = null;
+  }
+  hudTime.textContent = String(Math.max(timeLeft, 0));
+  setRingProgress();
 }
 
 function startTimer(){
-  stopTimer();
+  stopTimer();        // nettoie un timer existant
+  timerPaused = false;
+
   timeLeft = cfg.time;
+
   hudTime.textContent = String(timeLeft);
   setRingProgress();
 
   timerId = setInterval(()=>{
-    if(locked) return;
-    timeLeft--;
+    if(locked || timerPaused) return;
+
+    timeLeft = Math.max(timeLeft - 1, 0);
     hudTime.textContent = String(timeLeft);
     setRingProgress();
 
@@ -710,7 +726,7 @@ const questions = [
 /* =========================
    RENDER QUESTION
 ========================= */
-function clearSelectionUI(){
+function clearSelectionState(){
   selectedSingle = null;
   multiSelected.clear();
   seqOrder = [];
@@ -727,7 +743,7 @@ function renderQuestion(i, resetAttempts=true){
     setAttemptsUI();
   }
 
-  clearSelectionUI();
+  clearSelectionState();
 
   const q = questions[i];
   qMeta.textContent = "Scénario 1 — Étouffement";
@@ -766,7 +782,6 @@ function renderQuestion(i, resetAttempts=true){
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
-        // stocke "selectedSingle" comme 0/1 puis on évaluera via tf map
         selectedSingle = oi;
         validateBtn.disabled = false;
       };
@@ -819,26 +834,16 @@ function renderQuestion(i, resetAttempts=true){
 
 clearBtn.onclick = ()=>{
   sfxClick();
-  clearSelectionUI();
-  [...optionsEl.children].forEach(x=>{
-    x.classList.remove("sel");
-    // remettre label pour sequence
-  });
-  // re-render propre pour sequence (restaurer les labels numérotés)
   renderQuestion(idx, false);
 };
 
 /* =========================
-   VALIDATE LOGIC
-   ✅ NOUVELLE REGLE:
-   - chrono s'arrête quand on clique Valider
-   (bonne OU mauvaise tentative)
+   VALIDATION
 ========================= */
 validateBtn.onclick = ()=>{
   if(locked) return;
 
-  // stop timer dès validation (tentative)
-  stopTimer();
+  stopTimer();     // ✅ le chrono s'arrête et NE tombe plus à 0
   locked = true;
 
   const q = questions[idx];
@@ -957,9 +962,8 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
 
   retryBtn.onclick = ()=>{
     hideOverlay();
-    // ✅ après une tentative ratée, le timer repart quand on réessaie
     locked = false;
-    startTimer();
+    startTimer(); // ✅ relance timer après feedback
   };
 
   nextBtn.onclick = ()=>{
@@ -1001,7 +1005,6 @@ function resetMission(showStart=true){
   setStress(0);
   locked = true;
 
-  // remettre l'écran de départ
   if(showStart){
     startOverlay.style.display = "flex";
   }
