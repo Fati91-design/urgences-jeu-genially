@@ -525,11 +525,12 @@ let idx = 0;
 let attemptsForCurrentQuestion = 0;
 
 let locked = true;
-let timerId = null;
-let timeLeft = cfg.time;
 
-/* ✅ nouveau: pause du timer pour éviter "retour à 0" */
-let timerPaused = false;
+/* ✅ Timer robuste par timestamp */
+let timerId = null;
+let endAt = 0;            // timestamp de fin
+let frozenTime = null;    // nombre de secondes gelées (affichage)
+let timerRunning = false;
 
 let selectedSingle = null;     // index
 let multiSelected = new Set(); // indices
@@ -565,50 +566,69 @@ setScore(score);
 setStress(stress);
 setAttemptsUI();
 
-function setRingProgress(){
+/* ✅ Calcul du temps restant basé sur endAt */
+function getRemainingSeconds(){
+  if(frozenTime !== null) return frozenTime;
+  if(!timerRunning) return cfg.time;
+  const ms = endAt - Date.now();
+  return clamp(Math.ceil(ms / 1000), 0, cfg.time);
+}
+
+function setRingProgress(rem){
   const denom = Math.max(cfg.time, 1);
-  const p = clamp(Math.round((timeLeft / denom) * 100), 0, 100);
+  const p = clamp(Math.round((rem / denom) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
   timerPill.classList.remove("timerWarn","timerDanger");
-  if(timeLeft <= 4) timerPill.classList.add("timerDanger");
-  else if(timeLeft <= 7) timerPill.classList.add("timerWarn");
+  if(rem <= 4) timerPill.classList.add("timerDanger");
+  else if(rem <= 7) timerPill.classList.add("timerWarn");
 }
 
 /* =========================
-   TIMER (corrigé)
+   TIMER (timestamp) — FIX définitif
 ========================= */
 function stopTimer(){
-  timerPaused = true; // ✅ freeze immédiat
+  // ✅ freeze : on garde le temps actuel affiché, sans qu'il continue
+  frozenTime = getRemainingSeconds();
+  timerRunning = false;
+
   if(timerId){
     clearInterval(timerId);
     timerId = null;
   }
-  hudTime.textContent = String(Math.max(timeLeft, 0));
-  setRingProgress();
+
+  hudTime.textContent = String(frozenTime);
+  setRingProgress(frozenTime);
 }
 
 function startTimer(){
-  stopTimer();        // nettoie un timer existant
-  timerPaused = false;
+  // ✅ relance propre : on repart à cfg.time
+  if(timerId){
+    clearInterval(timerId);
+    timerId = null;
+  }
 
-  timeLeft = cfg.time;
+  frozenTime = null;                 // on dégèle
+  timerRunning = true;
+  endAt = Date.now() + (cfg.time * 1000);
 
-  hudTime.textContent = String(timeLeft);
-  setRingProgress();
+  // affichage immédiat
+  const rem0 = getRemainingSeconds();
+  hudTime.textContent = String(rem0);
+  setRingProgress(rem0);
 
   timerId = setInterval(()=>{
-    if(locked || timerPaused) return;
+    if(locked || !timerRunning) return;
 
-    timeLeft = Math.max(timeLeft - 1, 0);
-    hudTime.textContent = String(timeLeft);
-    setRingProgress();
+    const rem = getRemainingSeconds();
+    hudTime.textContent = String(rem);
+    setRingProgress(rem);
 
-    if(timeLeft <= 0){
+    if(rem <= 0){
       stopTimer();
       sfxAlarmLong();
       missionFail("⏱️ Temps écoulé ! Mission échouée. Retour au départ… (score remis à zéro)");
     }
-  }, 1000);
+  }, 120); // petit interval (plus fluide) mais calculé par timestamp => stable
 }
 
 /* =========================
@@ -770,10 +790,7 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(q.type === "tf"){
-    const opts = [
-      {label:"Vrai", data:q.tf.trueOpt},
-      {label:"Faux", data:q.tf.falseOpt}
-    ];
+    const opts = [{label:"Vrai"},{label:"Faux"}];
     opts.forEach((o, oi)=>{
       const d = document.createElement("div");
       d.className = "opt";
@@ -832,10 +849,7 @@ function renderQuestion(i, resetAttempts=true){
   startTimer();
 }
 
-clearBtn.onclick = ()=>{
-  sfxClick();
-  renderQuestion(idx, false);
-};
+clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
 
 /* =========================
    VALIDATION
@@ -843,7 +857,7 @@ clearBtn.onclick = ()=>{
 validateBtn.onclick = ()=>{
   if(locked) return;
 
-  stopTimer();     // ✅ le chrono s'arrête et NE tombe plus à 0
+  stopTimer();     // ✅ gèle le chrono à la valeur courante (ne peut plus tomber à 0)
   locked = true;
 
   const q = questions[idx];
@@ -963,7 +977,7 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   retryBtn.onclick = ()=>{
     hideOverlay();
     locked = false;
-    startTimer(); // ✅ relance timer après feedback
+    startTimer(); // ✅ relance propre
   };
 
   nextBtn.onclick = ()=>{
@@ -1079,9 +1093,11 @@ startBtn.addEventListener("click", ()=>{
   qDesc.innerHTML = "Clique sur <b>DÉMARRER</b> pour lancer la mission.";
   optionsEl.innerHTML = "";
   hudQnum.textContent = "1";
+
+  // affichage initial stable
   hudTime.textContent = String(cfg.time);
   ring.style.setProperty("--p", "100%");
-  setRingProgress();
+  setRingProgress(cfg.time);
 })();
 </script>
 </body>
