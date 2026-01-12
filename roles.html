@@ -30,29 +30,32 @@
     transform-origin: center;
   }
 
+  /* ✅ un peu d’air mais plus “plein écran” */
   .page-wrap{
     position:absolute;
     inset:0;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 60px 70px; /* ✅ ajusté pour Genially */
+    padding: 52px 64px; /* ✅ réduit pour agrandir visuellement le contenu */
   }
 
   /* ✅ Titre style image */
   .gameTitleWrap{
     text-align:center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     position: relative;
     isolation: isolate;
   }
+
+  /* ✅ badge un peu plus grand */
   .topBadge{
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    padding: 7px 14px;
+    padding: 9px 18px;          /* ✅ + grand */
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 14px;            /* ✅ + grand */
     letter-spacing: .22em;
     text-transform: uppercase;
     color: rgba(255,255,255,.92);
@@ -63,16 +66,15 @@
     margin-bottom: 12px;
   }
 
-  /* ✅ URGENCES (couleur + taille 90px) */
+  /* ✅ URGENCES (90px comme demandé) */
   .gameTitleBack{
     font-family:'Anton', sans-serif;
     text-transform:uppercase;
     letter-spacing:.06em;
-    font-size: 90px;            /* ✅ demandé */
+    font-size: 90px;           /* ✅ */
     line-height: .9;
     margin: 0;
 
-    /* ✅ couleur façon image */
     background: linear-gradient(180deg, #d7e9ff 0%, #86bfff 40%, #cfe3ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -85,14 +87,14 @@
     z-index: 1;
   }
 
-  /* ✅ AGIR POUR SAUVER (un peu plus petit pour Genially) */
+  /* ✅ Sous-titre aussi à 90px (comme sur ton besoin) */
   .gameSubtitleBig{
     font-family:'Anton', sans-serif;
     text-transform:uppercase;
     letter-spacing:.05em;
-    font-size: 84px;            /* ✅ adapté Genially */
+    font-size: 90px;           /* ✅ */
     line-height: .92;
-    margin: 8px 0 0;
+    margin: 10px 0 0;
     color: rgba(255,255,255,.98);
     text-shadow:
       0 26px 90px rgba(0,0,0,.85),
@@ -104,7 +106,7 @@
   .gameTitleWrap::before{
     content:"";
     position:absolute;
-    inset: -26px -10px -10px -10px;
+    inset: -22px -10px -10px -10px;
     background: radial-gradient(closest-side, rgba(255,255,255,.10), transparent 70%);
     filter: blur(10px);
     opacity: .65;
@@ -114,27 +116,28 @@
 
   /* ✅ “Choisissez votre métier” plus grand */
   .sectionTitle{
-    margin-top: 16px;
+    margin-top: 18px;
     text-align:center;
-    font-size: 26px;            /* ✅ augmenté */
-    letter-spacing: .10em;
+    font-size: 30px;           /* ✅ + grand */
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,.92);
+    color: rgba(255,255,255,.94);
     font-weight: 900;
     text-shadow: 0 18px 60px rgba(0,0,0,.65);
   }
 
-  /* ✅ Cards (inchangé sauf micro-ajustements Genially) */
+  /* ✅ Cards un peu plus grandes */
   .role-card{
     background: rgba(0,0,0,.42);
     border: 1px solid rgba(255,255,255,.14);
     backdrop-filter: blur(12px);
-    border-radius: 22px;
+    border-radius: 26px;       /* ✅ + rond */
     cursor: default;
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, filter .15s ease;
     overflow: hidden;
     position: relative;
     box-shadow: 0 22px 70px rgba(0,0,0,.35);
+    padding: 18px !important;  /* ✅ + padding */
   }
   .role-card::before{
     content:"";
@@ -145,52 +148,59 @@
     pointer-events:none;
   }
   .role-card:hover{
-    transform: translateY(-5px);
-    border-color: rgba(255,165,0,.38);
-    filter: brightness(1.03);
-    box-shadow: 0 30px 100px rgba(0,0,0,.55);
+    transform: translateY(-6px) scale(1.01); /* ✅ effet + visible */
+    border-color: rgba(255,165,0,.40);
+    filter: brightness(1.05);
+    box-shadow: 0 34px 115px rgba(0,0,0,.60);
   }
 
-  /* ✅ Trio un peu réduit pour tenir nickel dans 1080px */
+  /* ✅ Trio agrandi (plus proche de ta capture) */
   .trio{
-    height: 240px;              /* ✅ réduit */
+    height: 300px;             /* ✅ + grand */
     display:flex;
     align-items:flex-end;
     justify-content:center;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
   .trio img{
-    height: 220px;              /* ✅ réduit */
+    height: 280px;             /* ✅ + grand */
     width: auto;
-    filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
+    filter: drop-shadow(0 22px 20px rgba(0,0,0,.48));
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
   }
 
-  .trio .left{ position:absolute; left: 6%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
+  .trio .left{ position:absolute; left: 7%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
   .trio .center{ position:absolute; left: 50%; bottom: 0; transform: translateX(-50%) scale(1.03); z-index: 3; }
-  .trio .right{ position:absolute; right: 6%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
+  .trio .right{ position:absolute; right: 7%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
 
+  /* ✅ Titre card + grand */
   .role-title{
     font-weight: 900;
-    letter-spacing: .14em;
+    letter-spacing: .16em;
     text-transform: uppercase;
     margin: 0;
-    padding: 12px 14px 16px;
+    padding: 14px 14px 18px;
     text-align: center;
+    font-size: 16px;           /* ✅ + grand */
     border-top: 1px solid rgba(255,255,255,.10);
     background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.18));
   }
 
-  /* ✅ Si Genially est plus petit, on garde une bonne compacité */
+  /* ✅ Pour Genially: on évite que bootstrap “container” limite trop la largeur */
+  .container{
+    max-width: 1500px;         /* ✅ + large, les cartes sont plus grandes */
+  }
+
+  /* ✅ Si l'iframe est petite, on compacte (sans casser Genially) */
   @media (max-width: 1400px){
-    .page-wrap{ padding: 46px 46px; }
-    .gameSubtitleBig{ font-size: 72px; }
-    .sectionTitle{ font-size: 22px; }
-    .trio{ height: 220px; }
-    .trio img{ height: 205px; }
+    .page-wrap{ padding: 40px 40px; }
+    .sectionTitle{ font-size: 24px; }
+    .trio{ height: 260px; }
+    .trio img{ height: 245px; }
+    .role-card{ padding: 16px !important; }
   }
 </style>
 </head>
@@ -208,14 +218,14 @@
             <div class="gameSubtitleBig">AGIR POUR SAUVER</div>
           </div>
 
-          <!-- ✅ Titre section (plus grand) -->
+          <!-- ✅ Titre section -->
           <div class="sectionTitle mb-4">Choisissez votre métier</div>
 
           <div class="row g-4 justify-content-center">
 
             <!-- MÉDECIN -->
             <div class="col-12 col-md-4">
-              <div class="role-card p-3">
+              <div class="role-card">
                 <div class="trio">
                   <img class="left" src="assets/avatars/medecin_f.png" alt="Médecin femme">
                   <img class="center" src="assets/avatars/medecin_f_voilee.png" alt="Médecin femme voilée">
@@ -227,7 +237,7 @@
 
             <!-- INFIRMIER -->
             <div class="col-12 col-md-4">
-              <div class="role-card p-3">
+              <div class="role-card">
                 <div class="trio">
                   <img class="left" src="assets/avatars/infirmier_f.png" alt="Infirmier femme">
                   <img class="center" src="assets/avatars/infirmier_f_voilee.png" alt="Infirmier femme voilée">
@@ -239,7 +249,7 @@
 
             <!-- POMPIER -->
             <div class="col-12 col-md-4">
-              <div class="role-card p-3">
+              <div class="role-card">
                 <div class="trio">
                   <img class="left" src="assets/avatars/pompier_f.png" alt="Pompier femme">
                   <img class="center" src="assets/avatars/pompier_f_voilee.png" alt="Pompier femme voilée">
