@@ -1,203 +1,302 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Urgences – Démarrage</title>
+<meta charset="UTF-8">
+<title>Urgences – Métier</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    html, body{
-      height: 100%;
-      margin: 0;
-      background: transparent !important;
-    }
+<!-- Anton (comme la page d'accueil) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 
-    .stage{
-      min-height: 100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 28px 18px;
-    }
+<style>
+  html, body { background: transparent; margin: 0; color: #fff; }
 
-    .glass{
-      width: min(720px, 100%);
-      background: rgba(0,0,0,.44);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(12px);
-      border-radius: 24px;
-      box-shadow: 0 20px 70px rgba(0,0,0,.45);
-      overflow: hidden;
-      position: relative;
-    }
+  .page-wrap{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 18px;
+  }
 
-    .glass::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(560px 240px at 70% 25%, rgba(255,150,70,.26), transparent 60%),
-                  radial-gradient(520px 260px at 20% 85%, rgba(255,110,40,.14), transparent 65%);
-      pointer-events:none;
-    }
+  /* ✅ AJOUT: bloc titre style accueil */
+  .gameTitleWrap{
+    text-align:center;
+    margin-bottom: 18px;
+  }
+  .gameTitle{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-size: 58px;
+    line-height: .92;
+    margin: 0;
+    text-shadow: 0 24px 80px rgba(0,0,0,.85);
+  }
+  .gameSubtitle{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    font-size: 46px;
+    line-height: .92;
+    margin: 6px 0 0;
+    color: rgba(255,255,255,.95);
+    text-shadow: 0 22px 70px rgba(0,0,0,.85);
+  }
 
-    .head{
-      padding: 22px 22px 12px;
-      position: relative;
-      z-index: 2;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
+  .role-card{
+    background: rgba(0,0,0,.45);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(10px);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  .role-card:hover{
+    transform: translateY(-4px);
+    border-color: rgba(255,165,0,.45);
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255,140,60,.14);
-      border: 1px solid rgba(255,140,60,.25);
-      color: rgba(255,255,255,.92);
-      font-size: 12px;
-      letter-spacing: .2px;
-    }
+  /* Container du trio */
+  .trio{
+    height: 260px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    position: relative;
+    margin-bottom: 10px;
+  }
 
-    .title{
-      margin: 12px 0 6px;
-      font-weight: 900;
-      letter-spacing: .2px;
-      font-size: clamp(24px, 2.6vw, 34px);
-      color: rgba(255,255,255,.95);
-      text-shadow: 0 12px 30px rgba(0,0,0,.55);
-    }
+  /* Chaque avatar */
+  .trio img{
+    height: 240px;
+    width: auto;
+    filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
 
-    .subtitle{
-      margin: 0;
-      color: rgba(255,255,255,.75);
-      font-size: 13px;
-      line-height: 1.5;
-    }
+  /* Positions "assemblées" */
+  .trio .left{
+    position:absolute;
+    left: 6%;
+    bottom: 0;
+    transform: scale(.96);
+    opacity: .98;
+    z-index: 1;
+  }
+  .trio .center{
+    position:absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%) scale(1.03);
+    z-index: 3;
+  }
+  .trio .right{
+    position:absolute;
+    right: 6%;
+    bottom: 0;
+    transform: scale(.96);
+    opacity: .98;
+    z-index: 1;
+  }
 
-    .content{
-      padding: 18px 22px 22px;
-      position: relative;
-      z-index: 2;
-    }
+  .role-title{
+    font-weight: 800;
+    letter-spacing: .2px;
+    margin: 0;
+    padding: 12px 14px 16px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,.10);
+    background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.18));
+  }
 
-    .form-label{
-      color: rgba(255,255,255,.86);
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: .2px;
-    }
+  .role-sub{
+    margin-top: -6px;
+    padding-bottom: 12px;
+    text-align:center;
+    font-size: 12px;
+    color: rgba(255,255,255,.75);
+  }
 
-    .form-control{
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.16);
-      color: rgba(255,255,255,.95);
-      border-radius: 16px;
-      padding: 12px 14px;
-    }
-    .form-control::placeholder{ color: rgba(255,255,255,.55); }
-    .form-control:focus{
-      background: rgba(0,0,0,.26);
-      border-color: rgba(255,165,0,.55);
-      box-shadow: 0 0 0 4px rgba(255,165,0,.18);
-      color: rgba(255,255,255,.95);
-    }
+  /* ✅ AJOUT: zone saisie nom + boutons */
+  .nameCard{
+    margin: 10px auto 22px;
+    width: min(760px, 100%);
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 18px;
+    padding: 14px 14px;
+    backdrop-filter: blur(10px);
+  }
+  .nameLabel{
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.75);
+    margin: 0 0 10px;
+    font-weight: 800;
+  }
+  .nameInput{
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.35);
+    color: #fff;
+    padding: 12px 14px;
+    outline: none;
+  }
+  .nameInput::placeholder{ color: rgba(255,255,255,.55); }
 
-    .btn-ember{
-      border: 0;
-      border-radius: 16px;
-      padding: 12px 16px;
-      font-weight: 900;
-      letter-spacing: .2px;
-      background: linear-gradient(180deg, rgba(255, 176, 90, 1), rgba(255, 120, 50, 1));
-      color: rgba(10,12,18,.96);
-      box-shadow: 0 18px 38px rgba(255, 120, 50, .20);
-      transition: transform .12s ease, filter .12s ease;
-    }
-    .btn-ember:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+  .actionRow{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .btnGlass{
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.20);
+    background: rgba(0,0,0,.35);
+    color: #fff;
+    padding: 10px 16px;
+    font-weight: 900;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    font-size: 12px;
+    box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+  }
+  .btnGlass:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 24px 80px rgba(0,0,0,.45);
+  }
+  .btnGlass:disabled{
+    opacity: .45;
+    cursor: not-allowed;
+  }
 
-    .hint{
-      margin-top: 10px;
-      color: rgba(255,255,255,.70);
-      font-size: 12px;
-    }
+  /* Responsive */
+  @media (max-width: 576px){
+    .trio{ height: 220px; }
+    .trio img{ height: 200px; }
+    .trio .left{ left: 2%; }
+    .trio .right{ right: 2%; }
 
-    .error{
-      display:none;
-      margin-top: 10px;
-    }
-  </style>
+    .gameTitle{ font-size: 44px; }
+    .gameSubtitle{ font-size: 36px; }
+  }
+</style>
 </head>
 
 <body>
-  <main class="stage">
-    <section class="glass">
-      <div class="head">
-        <div class="chip">🚑 SIMULATION • URGENCES</div>
-        <div class="title">Entrer dans la mission</div>
-        <p class="subtitle">Saisis ton prénom pour commencer. Il sera affiché dans le HUD tout au long du jeu.</p>
+  <div class="page-wrap">
+    <div class="container">
+
+      <!-- ✅ AJOUT: nom du jeu au milieu (style accueil) -->
+      <div class="gameTitleWrap">
+        <h1 class="gameTitle">URGENCES</h1>
+        <div class="gameSubtitle">AGIR POUR SAUVER</div>
       </div>
 
-      <div class="content">
-        <label class="form-label" for="name">Votre prénom</label>
-        <input id="name" class="form-control mt-2" placeholder="Ex : Fatima" autocomplete="off" />
-
-        <div class="alert alert-danger error" id="errBox">
-          Veuillez entrer un prénom valide.
-        </div>
-
-        <button class="btn btn-ember w-100 mt-3" id="startBtn">Continuer</button>
-
-        <div class="hint">
-          Astuce : si l’apprenant recharge la page, le prénom restera enregistré.
+      <!-- ✅ AJOUT: saisie nom + enregistrer + continuer -->
+      <div class="nameCard">
+        <p class="nameLabel">Votre nom</p>
+        <input id="playerName" class="nameInput" type="text" placeholder="Entrez votre nom…" autocomplete="off" />
+        <div class="actionRow">
+          <button id="saveBtn" class="btnGlass" type="button">ENREGISTRER</button>
+          <button id="continueBtn" class="btnGlass" type="button" style="display:none;">CONTINUER</button>
         </div>
       </div>
-    </section>
-  </main>
+
+      <h3 class="text-center mb-4">Choisissez votre métier</h3>
+
+      <div class="row g-4 justify-content-center">
+
+        <!-- MÉDECIN -->
+        <div class="col-12 col-md-4" onclick="selectRole('medecin')">
+          <div class="role-card p-3">
+            <div class="trio">
+              <img class="left"   src="assets/avatars/medecin_f.png" alt="Médecin femme">
+              <img class="center" src="assets/avatars/medecin_f_voilee.png" alt="Médecin femme voilée">
+              <img class="right"  src="assets/avatars/medecin_h.png" alt="Médecin homme">
+            </div>
+            <p class="role-title">Médecins</p>
+          </div>
+        </div>
+
+        <!-- INFIRMIER -->
+        <div class="col-12 col-md-4" onclick="selectRole('infirmier')">
+          <div class="role-card p-3">
+            <div class="trio">
+              <img class="left"   src="assets/avatars/infirmier_f.png" alt="Infirmier femme">
+              <img class="center" src="assets/avatars/infirmier_f_voilee.png" alt="Infirmier femme voilée">
+              <img class="right"  src="assets/avatars/infirmier_h.png" alt="Infirmier homme">
+            </div>
+            <p class="role-title">Infirmiers</p>
+          </div>
+        </div>
+
+        <!-- POMPIER -->
+        <div class="col-12 col-md-4" onclick="selectRole('pompier')">
+          <div class="role-card p-3">
+            <div class="trio">
+              <img class="left"   src="assets/avatars/pompier_f.png" alt="Pompier femme">
+              <img class="center" src="assets/avatars/pompier_f_voilee.png" alt="Pompier femme voilée">
+              <img class="right"  src="assets/avatars/pompier_h.png" alt="Pompier homme">
+            </div>
+            <p class="role-title">Pompiers</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 <script>
-  const nameEl = document.getElementById("name");
-  const errBox = document.getElementById("errBox");
-  const startBtn = document.getElementById("startBtn");
+  // ✅ AJOUT: gestion du nom
+  const playerName = document.getElementById("playerName");
+  const saveBtn = document.getElementById("saveBtn");
+  const continueBtn = document.getElementById("continueBtn");
 
-  // Pré-remplissage si existant
-  const saved = localStorage.getItem("playerName");
-  if (saved) nameEl.value = saved;
-
-  function isValidName(s){
-    // accepte lettres, espaces, tirets, apostrophes
-    const v = (s || "").trim();
-    if (v.length < 2) return false;
-    return /^[A-Za-zÀ-ÿ' -]+$/.test(v);
+  // Pré-remplir si déjà enregistré
+  const savedName = localStorage.getItem("player_name");
+  if (savedName) {
+    playerName.value = savedName;
+    continueBtn.style.display = "inline-block";
   }
 
-  function goNext(){
-    const name = nameEl.value.trim();
-
-    if (!isValidName(name)) {
-      errBox.style.display = "block";
-      nameEl.focus();
+  saveBtn.addEventListener("click", () => {
+    const name = (playerName.value || "").trim();
+    if (!name) {
+      playerName.focus();
       return;
     }
+    localStorage.setItem("player_name", name);
 
-    errBox.style.display = "none";
-
-    // Stockage + initialisation
-    localStorage.setItem("playerName", name);
-    localStorage.setItem("score", localStorage.getItem("score") || "0");
-    localStorage.setItem("criticalError", "false");
-
-    // On passe au choix métier
-    window.location.href = "roles.html";
-  }
-
-  startBtn.addEventListener("click", goNext);
-  nameEl.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") goNext();
+    // Afficher "Continuer" après l'enregistrement
+    continueBtn.style.display = "inline-block";
   });
+
+  // ✅ "Continuer" ne pointe sur rien (aucune redirection)
+  continueBtn.addEventListener("click", () => {
+    // Rien ici volontairement
+  });
+
+  // Rôle -> page avatars (inchangé)
+  function selectRole(role) {
+    localStorage.setItem("role", role);
+    window.location.href = "avatars.html";
+  }
 </script>
+
 </body>
 </html>
