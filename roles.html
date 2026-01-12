@@ -14,18 +14,35 @@
 <style>
   html, body { background: transparent; margin: 0; color: #fff; }
 
-  .page-wrap{
-    min-height: 100vh;
+  /* ✅ Genially: scène fixe 16:9 + scale auto (compatible iframe) */
+  .genially-stage{
+    width: 100vw;
+    height: 100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 32px 18px;
+    overflow:hidden;
+  }
+  .genially-page{
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    transform-origin: center;
   }
 
-  /* ✅ Titre style image (badge + URGENCES en arrière-plan + AGIR POUR SAUVER devant) */
+  .page-wrap{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 60px 70px; /* ✅ ajusté pour Genially */
+  }
+
+  /* ✅ Titre style image */
   .gameTitleWrap{
     text-align:center;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
     position: relative;
     isolation: isolate;
   }
@@ -43,38 +60,51 @@
     border: 1px solid rgba(255,255,255,.16);
     backdrop-filter: blur(10px);
     box-shadow: 0 22px 60px rgba(0,0,0,.35);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
+
+  /* ✅ URGENCES (couleur + taille 90px) */
   .gameTitleBack{
     font-family:'Anton', sans-serif;
     text-transform:uppercase;
     letter-spacing:.06em;
-    font-size: 90px;
+    font-size: 90px;            /* ✅ demandé */
     line-height: .9;
     margin: 0;
-    color: rgba(210, 220, 230, .28);
-    text-shadow: 0 28px 90px rgba(0,0,0,.85);
+
+    /* ✅ couleur façon image */
+    background: linear-gradient(180deg, #d7e9ff 0%, #86bfff 40%, #cfe3ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+      0 18px 70px rgba(0,0,0,.75),
+      0 0 45px rgba(120,190,255,.22);
     position: relative;
     z-index: 1;
   }
+
+  /* ✅ AGIR POUR SAUVER (un peu plus petit pour Genially) */
   .gameSubtitleBig{
     font-family:'Anton', sans-serif;
     text-transform:uppercase;
     letter-spacing:.05em;
-    font-size: 90px;
-    line-height: .9;
-    margin: 10px 0 0;
+    font-size: 84px;            /* ✅ adapté Genially */
+    line-height: .92;
+    margin: 8px 0 0;
     color: rgba(255,255,255,.98);
     text-shadow:
-      0 30px 100px rgba(0,0,0,.85),
-      0 0 32px rgba(255,255,255,.08);
+      0 26px 90px rgba(0,0,0,.85),
+      0 0 28px rgba(255,255,255,.08);
     position: relative;
     z-index: 2;
   }
+
   .gameTitleWrap::before{
     content:"";
     position:absolute;
-    inset: -30px -12px -10px -12px;
+    inset: -26px -10px -10px -10px;
     background: radial-gradient(closest-side, rgba(255,255,255,.10), transparent 70%);
     filter: blur(10px);
     opacity: .65;
@@ -82,18 +112,19 @@
     pointer-events:none;
   }
 
-  /* ✅ petit sous-titre de section */
+  /* ✅ “Choisissez votre métier” plus grand */
   .sectionTitle{
-    margin-top: 18px;
+    margin-top: 16px;
     text-align:center;
-    font-size: 12px;
-    letter-spacing: .22em;
+    font-size: 26px;            /* ✅ augmenté */
+    letter-spacing: .10em;
     text-transform: uppercase;
-    color: rgba(255,255,255,.78);
+    color: rgba(255,255,255,.92);
     font-weight: 900;
+    text-shadow: 0 18px 60px rgba(0,0,0,.65);
   }
 
-  /* ✅ Cards améliorées (glow + contour + shine) */
+  /* ✅ Cards (inchangé sauf micro-ajustements Genially) */
   .role-card{
     background: rgba(0,0,0,.42);
     border: 1px solid rgba(255,255,255,.14);
@@ -120,18 +151,17 @@
     box-shadow: 0 30px 100px rgba(0,0,0,.55);
   }
 
-  /* Container du trio */
+  /* ✅ Trio un peu réduit pour tenir nickel dans 1080px */
   .trio{
-    height: 260px;
+    height: 240px;              /* ✅ réduit */
     display:flex;
     align-items:flex-end;
     justify-content:center;
     position: relative;
     margin-bottom: 10px;
   }
-
   .trio img{
-    height: 240px;
+    height: 220px;              /* ✅ réduit */
     width: auto;
     filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
     user-select: none;
@@ -139,29 +169,9 @@
     pointer-events: none;
   }
 
-  .trio .left{
-    position:absolute;
-    left: 6%;
-    bottom: 0;
-    transform: scale(.96);
-    opacity: .98;
-    z-index: 1;
-  }
-  .trio .center{
-    position:absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%) scale(1.03);
-    z-index: 3;
-  }
-  .trio .right{
-    position:absolute;
-    right: 6%;
-    bottom: 0;
-    transform: scale(.96);
-    opacity: .98;
-    z-index: 1;
-  }
+  .trio .left{ position:absolute; left: 6%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
+  .trio .center{ position:absolute; left: 50%; bottom: 0; transform: translateX(-50%) scale(1.03); z-index: 3; }
+  .trio .right{ position:absolute; right: 6%; bottom: 0; transform: scale(.96); opacity: .98; z-index: 1; }
 
   .role-title{
     font-weight: 900;
@@ -174,68 +184,92 @@
     background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.18));
   }
 
-  @media (max-width: 576px){
+  /* ✅ Si Genially est plus petit, on garde une bonne compacité */
+  @media (max-width: 1400px){
+    .page-wrap{ padding: 46px 46px; }
+    .gameSubtitleBig{ font-size: 72px; }
+    .sectionTitle{ font-size: 22px; }
     .trio{ height: 220px; }
-    .trio img{ height: 200px; }
+    .trio img{ height: 205px; }
   }
 </style>
 </head>
 
 <body>
-  <div class="page-wrap">
-    <div class="container">
+  <div class="genially-stage">
+    <div class="genially-page" id="geniallyPage">
+      <div class="page-wrap">
+        <div class="container">
 
-      <!-- ✅ Titre style image -->
-      <div class="gameTitleWrap">
-        <div class="topBadge">MISSION • PREMIERS SECOURS</div>
-        <h1 class="gameTitleBack">URGENCES</h1>
-        <div class="gameSubtitleBig">AGIR POUR SAUVER</div>
-      </div>
-
-      <!-- ✅ Titre section -->
-      <div class="sectionTitle mb-4">Choisissez votre métier</div>
-
-      <div class="row g-4 justify-content-center">
-
-        <!-- MÉDECIN -->
-        <div class="col-12 col-md-4">
-          <div class="role-card p-3">
-            <div class="trio">
-              <img class="left" src="assets/avatars/medecin_f.png" alt="Médecin femme">
-              <img class="center" src="assets/avatars/medecin_f_voilee.png" alt="Médecin femme voilée">
-              <img class="right" src="assets/avatars/medecin_h.png" alt="Médecin homme">
-            </div>
-            <p class="role-title">Médecins</p>
+          <!-- ✅ Titre style image -->
+          <div class="gameTitleWrap">
+            <div class="topBadge">MISSION • PREMIERS SECOURS</div>
+            <h1 class="gameTitleBack">URGENCES</h1>
+            <div class="gameSubtitleBig">AGIR POUR SAUVER</div>
           </div>
-        </div>
 
-        <!-- INFIRMIER -->
-        <div class="col-12 col-md-4">
-          <div class="role-card p-3">
-            <div class="trio">
-              <img class="left" src="assets/avatars/infirmier_f.png" alt="Infirmier femme">
-              <img class="center" src="assets/avatars/infirmier_f_voilee.png" alt="Infirmier femme voilée">
-              <img class="right" src="assets/avatars/infirmier_h.png" alt="Infirmier homme">
+          <!-- ✅ Titre section (plus grand) -->
+          <div class="sectionTitle mb-4">Choisissez votre métier</div>
+
+          <div class="row g-4 justify-content-center">
+
+            <!-- MÉDECIN -->
+            <div class="col-12 col-md-4">
+              <div class="role-card p-3">
+                <div class="trio">
+                  <img class="left" src="assets/avatars/medecin_f.png" alt="Médecin femme">
+                  <img class="center" src="assets/avatars/medecin_f_voilee.png" alt="Médecin femme voilée">
+                  <img class="right" src="assets/avatars/medecin_h.png" alt="Médecin homme">
+                </div>
+                <p class="role-title">Médecins</p>
+              </div>
             </div>
-            <p class="role-title">Infirmiers</p>
-          </div>
-        </div>
 
-        <!-- POMPIER -->
-        <div class="col-12 col-md-4">
-          <div class="role-card p-3">
-            <div class="trio">
-              <img class="left" src="assets/avatars/pompier_f.png" alt="Pompier femme">
-              <img class="center" src="assets/avatars/pompier_f_voilee.png" alt="Pompier femme voilée">
-              <img class="right" src="assets/avatars/pompier_h.png" alt="Pompier homme">
+            <!-- INFIRMIER -->
+            <div class="col-12 col-md-4">
+              <div class="role-card p-3">
+                <div class="trio">
+                  <img class="left" src="assets/avatars/infirmier_f.png" alt="Infirmier femme">
+                  <img class="center" src="assets/avatars/infirmier_f_voilee.png" alt="Infirmier femme voilée">
+                  <img class="right" src="assets/avatars/infirmier_h.png" alt="Infirmier homme">
+                </div>
+                <p class="role-title">Infirmiers</p>
+              </div>
             </div>
-            <p class="role-title">Pompiers</p>
-          </div>
-        </div>
 
+            <!-- POMPIER -->
+            <div class="col-12 col-md-4">
+              <div class="role-card p-3">
+                <div class="trio">
+                  <img class="left" src="assets/avatars/pompier_f.png" alt="Pompier femme">
+                  <img class="center" src="assets/avatars/pompier_f_voilee.png" alt="Pompier femme voilée">
+                  <img class="right" src="assets/avatars/pompier_h.png" alt="Pompier homme">
+                </div>
+                <p class="role-title">Pompiers</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
+
+<script>
+  /* ✅ Scale auto pour tenir dans l’iframe Genially */
+  (function scaleGeniallyPage(){
+    const page = document.getElementById('geniallyPage');
+    function apply(){
+      const sw = window.innerWidth / 1920;
+      const sh = window.innerHeight / 1080;
+      const s = Math.min(sw, sh);
+      page.style.transform = `scale(${s})`;
+    }
+    window.addEventListener('resize', apply);
+    apply();
+  })();
+</script>
+
 </body>
 </html>
-
