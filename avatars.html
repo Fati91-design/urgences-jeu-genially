@@ -30,216 +30,174 @@
       position: relative;
     }
 
-    /* Particles overlay */
-    #fx {
+    #fx{
       position:absolute;
-      inset: 0;
+      inset:0;
       width:100%;
       height:100%;
       pointer-events:none;
-      opacity: .85;
-      mix-blend-mode: screen;
-      z-index: 1;
+      opacity:.85;
+      mix-blend-mode:screen;
+      z-index:1;
     }
 
     .header{
-      padding: 18px 18px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      position: relative;
-      z-index: 2;
+      padding:18px 18px 12px;
+      border-bottom:1px solid rgba(255,255,255,.1);
+      position:relative;
+      z-index:2;
     }
 
-    /* ✅ prénom plus grand + effet */
     .hello{
-      margin: 0 0 10px;
-      font-weight: 900;
-      letter-spacing: .2px;
-      line-height: 1.1;
-      font-size: clamp(22px, 2.4vw, 34px);
-      text-shadow: 0 12px 30px rgba(0,0,0,.55);
+      margin:0 0 10px;
+      font-weight:900;
+      font-size:clamp(22px,2.4vw,34px);
+      text-shadow:0 12px 30px rgba(0,0,0,.55);
     }
+
     .hello .name{
-      color: rgba(255, 190, 110, 1);
-      text-shadow:
-        0 0 18px rgba(255,165,0,.35),
-        0 12px 30px rgba(0,0,0,.6);
+      color:rgba(255,190,110,1);
+      text-shadow:0 0 18px rgba(255,165,0,.35);
     }
 
     .subtitle{
-      margin: 0;
-      color: rgba(255,255,255,.72);
-      font-size: 13px;
+      margin:0;
+      font-size:13px;
+      color:rgba(255,255,255,.72);
     }
 
     .trio-wrap{
-      padding: 18px;
+      padding:18px;
       display:flex;
       justify-content:center;
-      position: relative;
-      z-index: 2;
+      z-index:2;
+      position:relative;
     }
 
     .trio{
-      width: min(760px, 100%);
-      height: 360px;
-      position: relative;
+      width:min(760px,100%);
+      height:360px;
+      position:relative;
       display:flex;
       justify-content:center;
       align-items:flex-end;
     }
 
-    /* ✅ Mouvement stable via variables (plus de saut) */
     .avatar-pick{
       position:absolute;
-      bottom: 0;
-      height: 330px;
-      width: auto;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-drag: none;
-
-      /* base transform via CSS variables */
-      --tx: 0px;   /* translateX */
-      --sx: 1;     /* scale */
-      --ty: 0px;   /* translateY (animé) */
-
-      transform: translateX(var(--tx)) translateY(var(--ty)) scale(var(--sx));
-      transform-origin: bottom center;
-
-      filter: drop-shadow(0 18px 18px rgba(0,0,0,.45));
-      transition:
-        transform .16s ease,
-        filter .16s ease,
-        opacity .16s ease;
-      outline: none;
-      z-index: 2;
-      opacity: .98;
+      bottom:0;
+      height:330px;
+      cursor:pointer;
+      user-select:none;
+      --tx:0px;
+      --sx:1;
+      --ty:0px;
+      transform:translateX(var(--tx)) translateY(var(--ty)) scale(var(--sx));
+      transform-origin:bottom center;
+      filter:drop-shadow(0 18px 18px rgba(0,0,0,.45));
+      transition:transform .16s ease, filter .16s ease, opacity .16s ease;
+      opacity:.98;
     }
 
-    .left   { left: 6%;  --sx: .96; z-index: 2; }
-    .center { left: 50%; --tx: -50%; --sx: 1.03; z-index: 3; }
-    .right  { right: 6%; --sx: .96; z-index: 2; }
+    .left{left:6%;--sx:.96}
+    .center{left:50%;--tx:-50%;--sx:1.03;z-index:3}
+    .right{right:6%;--sx:.96}
 
-    .avatar-pick:hover{
-      --ty: -6px;
-      filter: drop-shadow(0 22px 22px rgba(0,0,0,.55));
-    }
+    .avatar-pick:hover{--ty:-6px}
 
     .selected{
-      --ty: -10px;
-      filter:
-        drop-shadow(0 26px 28px rgba(0,0,0,.65))
-        drop-shadow(0 0 18px rgba(255,165,0,.55));
-      z-index: 6 !important;
-      opacity: 1 !important;
+      --ty:-10px;
+      filter:drop-shadow(0 26px 28px rgba(0,0,0,.65))
+             drop-shadow(0 0 18px rgba(255,165,0,.55));
+      z-index:6;
+      opacity:1;
     }
 
-    .dimmed{
-      opacity: .55;
-      --ty: 0px;
-      filter: drop-shadow(0 14px 14px rgba(0,0,0,.35));
-    }
+    .dimmed{opacity:.55}
 
     .footer{
-      padding: 14px 18px 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      padding:14px 18px 18px;
+      border-top:1px solid rgba(255,255,255,.1);
       display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Animated appearance */
-    .pop { animation: popIn .25s ease both; }
-    @keyframes popIn{
-      from{ transform: translateY(8px) scale(.98); opacity: 0; }
-      to  { transform: translateY(0)   scale(1);   opacity: 1; }
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      z-index:2;
+      position:relative;
     }
 
     .badge-ready{
       display:none;
-      background: rgba(25, 135, 84, .22);
-      border: 1px solid rgba(25, 135, 84, .35);
-      color: rgba(255,255,255,.92);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      gap: 8px;
-      align-items:center;
+      background:rgba(25,135,84,.22);
+      border:1px solid rgba(25,135,84,.35);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
     }
 
     .btn-ember{
       display:none;
-      border: 0;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-weight: 900;
-      background: linear-gradient(180deg, rgba(255, 176, 90, 1), rgba(255, 120, 50, 1));
-      color: rgba(10,12,18,.95);
-      box-shadow: 0 16px 35px rgba(255, 120, 50, .22);
-      transition: transform .12s ease, filter .12s ease;
+      border:0;
+      border-radius:14px;
+      padding:10px 14px;
+      font-weight:900;
+      background:linear-gradient(180deg,#ffb05a,#ff7832);
+      color:#0a0c12;
+      box-shadow:0 16px 35px rgba(255,120,50,.22);
     }
-    .btn-ember:hover{ transform: translateY(-1px); filter: brightness(1.03); }
 
     .btn-ghost{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.12);
-      color: rgba(255,255,255,.85);
-      padding: 10px 14px;
-      font-weight: 800;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.12);
+      color:rgba(255,255,255,.85);
+      padding:10px 14px;
+      font-weight:800;
     }
 
-    @media (max-width: 576px){
-      .trio{ height: 270px; }
-      .avatar-pick{ height: 240px; }
-      .left{ left: 1%; }
-      .right{ right: 1%; }
+    @media(max-width:576px){
+      .trio{height:270px}
+      .avatar-pick{height:240px}
     }
   </style>
 </head>
 
 <body>
-  <div class="page-wrap">
-    <div class="glass">
-      <canvas id="fx"></canvas>
+<div class="page-wrap">
+  <div class="glass">
+    <canvas id="fx"></canvas>
 
-      <div class="header">
-        <p class="hello" id="helloLine"></p>
-        <p class="subtitle" id="roleLine"></p>
+    <div class="header">
+      <p class="hello" id="helloLine"></p>
+      <p class="subtitle" id="roleLine"></p>
+    </div>
+
+    <div class="trio-wrap">
+      <div class="trio" id="trio"></div>
+    </div>
+
+    <div class="footer">
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge-ready" id="readyBadge">✅ Avatar sélectionné</span>
+        <span class="text-white-50" style="font-size:12px" id="helpTxt">
+          Clique sur un avatar pour le sélectionner.
+        </span>
       </div>
 
-      <div class="trio-wrap">
-        <div class="trio" id="trio"></div>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn-ghost" id="resetBtn">Réinitialiser</button>
+        <button type="button" class="btn-ember" id="nextBtn">Suivant</button>
       </div>
-
-      <div class="footer">
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-          <span class="badge-ready" id="readyBadge">✅ Avatar sélectionné</span>
-          <span class="text-white-50" style="font-size:12px;" id="helpTxt">
-            Clique sur un avatar pour le sélectionner.
-          </span>
-        </div>
-
-        <div class="d-flex gap-2">
-          <button class="btn-ghost" type="button" id="resetBtn">Réinitialiser</button>
-          <button class="btn-ember" type="button" id="nextBtn">Suivant</button>
-        </div>
-      </div>
-
     </div>
   </div>
+</div>
 
 <script>
-  // ---- Bonjour [Prénom] ----
   const playerName = localStorage.getItem("playerName") || "Joueur";
   document.getElementById("helloLine").innerHTML =
     `Bonjour <span class="name">${escapeHtml(playerName)}</span>, choisis ton avatar.`;
 
-  // ---- Métier ----
   const role = localStorage.getItem("role");
   const roleLine = document.getElementById("roleLine");
 
@@ -249,29 +207,23 @@
     pompier: "Métier choisi : Pompier"
   };
 
-  if (!role || !roleLabels[role]) {
-    roleLine.textContent = "Aucun métier sélectionné. Retournez à l’étape précédente.";
-  } else {
-    roleLine.textContent = roleLabels[role];
-  }
+  roleLine.textContent = roleLabels[role] || "Aucun métier sélectionné.";
 
-  // ---- Avatars par métier ----
-  withholding = null;
   const avatarsByRole = {
     medecin: [
-      {pos:"left",   file:"medecin_f.png"},
-      {pos:"center", file:"medecin_f_voilee.png"},
-      {pos:"right",  file:"medecin_h.png"}
+      {pos:"left",file:"medecin_f.png"},
+      {pos:"center",file:"medecin_f_voilee.png"},
+      {pos:"right",file:"medecin_h.png"}
     ],
     infirmier: [
-      {pos:"left",   file:"infirmier_f.png"},
-      {pos:"center", file:"infirmier_f_voilee.png"},
-      {pos:"right",  file:"infirmier_h.png"}
+      {pos:"left",file:"infirmier_f.png"},
+      {pos:"center",file:"infirmier_f_voilee.png"},
+      {pos:"right",file:"infirmier_h.png"}
     ],
     pompier: [
-      {pos:"left",   file:"pompier_f.png"},
-      {pos:"center", file:"pompier_f_voilee.png"},
-      {pos:"right",  file:"pompier_h.png"}
+      {pos:"left",file:"pompier_f.png"},
+      {pos:"center",file:"pompier_f_voilee.png"},
+      {pos:"right",file:"pompier_h.png"}
     ]
   };
 
@@ -283,155 +235,55 @@
 
   let selectedFile = null;
 
-  function renderTrio() {
-    trio.innerHTML = "";
-    const items = avatarsByRole[role];
-    if (!items) return;
-
-    items.forEach(item => {
-      const img = document.createElement("img");
-      img.className = `avatar-pick ${item.pos}`;
-      img.src = `assets/avatars/${item.file}`;
-      img.alt = item.file;
-      img.dataset.file = item.file;
-      img.addEventListener("click", () => selectAvatar(item.file));
+  function renderTrio(){
+    trio.innerHTML="";
+    (avatarsByRole[role] || []).forEach(item=>{
+      const img=document.createElement("img");
+      img.src=`assets/avatars/${item.file}`;
+      img.className=`avatar-pick ${item.pos}`;
+      img.dataset.file=item.file;
+      img.onclick=()=>selectAvatar(item.file);
       trio.appendChild(img);
     });
-
-    const saved = localStorage.getItem("avatar");
-    if (saved) selectAvatar(saved, true);
   }
 
-  function showReadyUI(silent){
-    readyBadge.style.display = "inline-flex";
-    nextBtn.style.display = "inline-block";
-    if (!readyBadge.classList.contains("pop")) readyBadge.classList.add("pop");
-    if (!nextBtn.classList.contains("pop")) nextBtn.classList.add("pop");
-    helpTxt.textContent = silent ? "Avatar restauré. Clique sur Suivant." : "Parfait. Tu peux continuer.";
-  }
-
-  function selectAvatar(file, silent=false) {
-    selectedFile = file;
-
-    document.querySelectorAll(".avatar-pick").forEach(el => {
-      const isSelected = el.dataset.file === file;
-      el.classList.toggle("selected", isSelected);
-      el.classList.toggle("dimmed", !isSelected);
+  function selectAvatar(file){
+    selectedFile=file;
+    document.querySelectorAll(".avatar-pick").forEach(el=>{
+      el.classList.toggle("selected",el.dataset.file===file);
+      el.classList.toggle("dimmed",el.dataset.file!==file);
     });
-
-    localStorage.setItem("avatar", file);
-    localStorage.setItem("setupDone", "true");
-
-    particles.burst();
-    showReadyUI(silent);
+    localStorage.setItem("avatar",file);
+    readyBadge.style.display="inline-flex";
+    nextBtn.style.display="inline-block";
+    helpTxt.textContent="Avatar enregistré. Tu peux continuer.";
   }
 
-  resetBtn.addEventListener("click", () => {
+  resetBtn.onclick=(e)=>{
+    e.preventDefault();
+    selectedFile=null;
     localStorage.removeItem("avatar");
-    localStorage.removeItem("setupDone");
-    selectedFile = null;
-
-    document.querySelectorAll(".avatar-pick").forEach(el => {
-      el.classList.remove("selected", "dimmed");
+    document.querySelectorAll(".avatar-pick").forEach(el=>{
+      el.classList.remove("selected","dimmed");
     });
+    readyBadge.style.display="none";
+    nextBtn.style.display="none";
+    helpTxt.textContent="Clique sur un avatar pour le sélectionner.";
+  };
 
-    readyBadge.style.display = "none";
-    nextBtn.style.display = "none";
-    helpTxt.textContent = "Clique sur un avatar pour le sélectionner.";
-    readyBadge.classList.remove("pop");
-    nextBtn.classList.remove("pop");
-  });
-
-  nextBtn.addEventListener("click", () => {
-    if (!selectedFile) return;
-    alert("✅ Prêt ! Clique maintenant sur « Suivant » dans Genially pour commencer le jeu.");
-    // Si tu utilises une page HTML pour la suite :
-    // window.location.href = "scene1.html";
-  });
-
-  // ---- Particules (canvas) ----
-  const canvas = document.getElementById("fx");
-  const ctx = canvas.getContext("2d");
-
-  function resize(){
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = Math.floor(rect.width);
-    canvas.height = Math.floor(rect.height);
-  }
-  window.addEventListener("resize", resize);
-
-  const particles = {
-    list: [],
-    last: performance.now(),
-
-    spawn(x, y, count, power){
-      for(let i=0;i<count;i++){
-        const a = Math.random() * Math.PI * 2;
-        const sp = (Math.random() * 0.9 + 0.2) * power;
-        this.list.push({
-          x, y,
-          vx: Math.cos(a) * sp,
-          vy: Math.sin(a) * sp - 0.6,
-          life: 1,
-          size: Math.random()*2.2 + 0.9,
-          hue: 28 + Math.random()*18,
-          alpha: 0.85
-        });
-      }
-    },
-
-    burst(){
-      const x = canvas.width * 0.50;
-      const y = canvas.height * 0.52;
-      this.spawn(x, y, 52, 2.2);
-    },
-
-    tick(now){
-      const dt = Math.min(0.033, (now - this.last) / 1000);
-      this.last = now;
-
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-
-      if (Math.random() < 0.08) {
-        this.spawn(canvas.width*(0.2+Math.random()*0.6), canvas.height*(0.2+Math.random()*0.6), 2, 0.8);
-      }
-
-      this.list = this.list.filter(p => p.life > 0);
-      for(const p of this.list){
-        p.vy += 1.2 * dt;
-        p.vx *= (1 - 0.7*dt);
-        p.vy *= (1 - 0.5*dt);
-
-        p.x += p.vx * 60 * dt;
-        p.y += p.vy * 60 * dt;
-
-        p.life -= 1.25 * dt;
-        const t = Math.max(0, p.life);
-        const a = p.alpha * t;
-
-        ctx.beginPath();
-        ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${a})`;
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-        ctx.fill();
-      }
-
-      requestAnimationFrame(this.tick.bind(this));
-    }
+  nextBtn.onclick=(e)=>{
+    e.preventDefault();
+    if(!selectedFile) return;
+    alert("✅ Avatar enregistré. Continue dans Genially.");
   };
 
   function escapeHtml(str){
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+    return String(str).replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+    }[m]));
   }
 
-  resize();
-  requestAnimationFrame(particles.tick.bind(particles));
   renderTrio();
 </script>
-
 </body>
 </html>
