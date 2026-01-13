@@ -10,17 +10,34 @@
   <style>
     html, body { background: transparent; margin: 0; color: #fff; }
 
-    .page-wrap{
-      min-height: 100vh;
+    /* ✅ Genially: scène fixe 16:9 + scale auto */
+    .genially-stage{
+      width: 100vw;
+      height: 100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 32px 18px;
+      overflow:hidden;
+    }
+    .genially-page{
+      width: 1920px;
+      height: 1080px;
       position: relative;
+      transform-origin: center;
+    }
+
+    .page-wrap{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 44px 52px; /* ✅ ajusté Genially */
     }
 
     .glass{
-      width: min(980px, 100%);
+      width: 1260px;                 /* ✅ fixe pour Genially */
+      max-width: 1260px;
       background: rgba(0,0,0,.42);
       border: 1px solid rgba(255,255,255,.14);
       backdrop-filter: blur(10px);
@@ -42,16 +59,16 @@
     }
 
     .header{
-      padding:18px 18px 12px;
+      padding: 20px 22px 14px;
       border-bottom:1px solid rgba(255,255,255,.1);
       position:relative;
       z-index:2;
     }
 
     .hello{
-      margin:0 0 10px;
+      margin:0 0 8px;
       font-weight:900;
-      font-size:clamp(22px,2.4vw,34px);
+      font-size: 34px;              /* ✅ lisible en 1920 */
       text-shadow:0 12px 30px rgba(0,0,0,.55);
     }
 
@@ -62,22 +79,21 @@
 
     .subtitle{
       margin:0;
-      font-size:13px;
-      color:rgba(255,255,255,.72);
+      font-size:15px;
+      color:rgba(255,255,255,.74);
     }
 
     .trio-wrap{
-      padding:18px;
+      padding: 18px 22px 22px;
       display:flex;
       justify-content:center;
       z-index:2;
       position:relative;
     }
 
-    /* ✅ On garde la zone “trio”, mais on ajoute un bouton sous chaque avatar */
     .trio{
-      width:min(760px,100%);
-      height:420px;
+      width: 1160px;                /* ✅ fixe pour Genially */
+      height: 520px;                /* ✅ plus haut pour loger 2 boutons */
       position:relative;
       display:flex;
       justify-content:center;
@@ -86,31 +102,29 @@
 
     .avatar-block{
       position:absolute;
-      bottom:0;
-      width: 220px;
+      bottom: 0;
+      width: 340px;                 /* ✅ plus large */
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .avatar-pick{
-      height:330px;
+      height: 380px;                /* ✅ plus grand */
       user-select:none;
-      --tx:0px;
-      --sx:1;
-      --ty:0px;
-      transform:translateX(var(--tx)) translateY(var(--ty)) scale(var(--sx));
+      --sx:1; --ty:0px;
+      transform: translateY(var(--ty)) scale(var(--sx));
       transform-origin:bottom center;
       filter:drop-shadow(0 18px 18px rgba(0,0,0,.45));
       transition:transform .16s ease, filter .16s ease, opacity .16s ease;
       opacity:.98;
-      pointer-events:none; /* ✅ sélection via bouton */
+      pointer-events:none; /* sélection via boutons */
     }
 
-    .left{left:2%;--sx:.96}
+    .left{left:0%;--sx:.96}
     .center{left:50%;transform:translateX(-50%);--sx:1.03;z-index:3}
-    .right{right:2%;--sx:.96}
+    .right{right:0%;--sx:.96}
 
     .selected{
       --ty:-10px;
@@ -122,9 +136,8 @@
 
     .dimmed{opacity:.55}
 
-    /* ✅ Footer simplifié (plus de boutons) */
     .footer{
-      padding:14px 18px 18px;
+      padding: 14px 22px 18px;
       border-top:1px solid rgba(255,255,255,.1);
       display:flex;
       justify-content:center;
@@ -135,58 +148,96 @@
     }
 
     .helpTxt{
-      font-size:12px;
+      font-size:14px;
       color:rgba(255,255,255,.72);
     }
 
-    /* ✅ Bouton VALIDER (un par avatar) */
+    /* ✅ Boutons Genially (mêmes dimensions que la page infirmier) */
+    .btn-row{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      justify-content:center;
+    }
+
     .btn-ember{
       border:0;
-      border-radius:14px;
-      padding:10px 18px;
+      border-radius:16px;
+      padding: 12px 20px;
       font-weight:900;
-      letter-spacing:.08em;
+      letter-spacing:.10em;
       text-transform:uppercase;
+      font-size: 14px;
       background:linear-gradient(180deg,#ffb05a,#ff7832);
       color:#0a0c12;
       box-shadow:0 16px 35px rgba(255,120,50,.22);
       transition: transform .15s ease, filter .15s ease;
+      min-width: 160px;
     }
-    .btn-ember:hover{
-      transform: translateY(-2px);
-      filter: brightness(1.06);
-    }
+    .btn-ember:hover{ transform: translateY(-2px); filter: brightness(1.06); }
 
-    @media(max-width:576px){
-      .trio{height:330px}
-      .avatar-pick{height:230px}
-      .avatar-block{width: 160px}
-      .btn-ember{padding:9px 14px; font-size:12px}
+    .btn-next{
+      border-radius:16px;
+      padding: 12px 20px;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      font-size: 14px;
+      border: 1px solid rgba(140,200,255,.55);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.92);
+      box-shadow: 0 16px 35px rgba(0,0,0,.22);
+      transition: transform .15s ease, filter .15s ease;
+      min-width: 160px;
+    }
+    .btn-next:hover{ transform: translateY(-2px); filter: brightness(1.08); }
+    .btn-next:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      filter:none;
     }
   </style>
 </head>
 
 <body>
-<div class="page-wrap">
-  <div class="glass">
-    <canvas id="fx"></canvas>
+<div class="genially-stage">
+  <div class="genially-page" id="geniallyPage">
+    <div class="page-wrap">
+      <div class="glass">
+        <canvas id="fx"></canvas>
 
-    <div class="header">
-      <p class="hello" id="helloLine"></p>
-      <p class="subtitle">Métier : Médecins — valide l’avatar de ton choix.</p>
-    </div>
+        <div class="header">
+          <p class="hello" id="helloLine"></p>
+          <p class="subtitle">Métier : Médecins — enregistre l’avatar puis clique sur “Suivant”.</p>
+        </div>
 
-    <div class="trio-wrap">
-      <div class="trio" id="trio"></div>
-    </div>
+        <div class="trio-wrap">
+          <div class="trio" id="trio"></div>
+        </div>
 
-    <div class="footer">
-      <div class="helpTxt" id="helpTxt">Choisis un avatar en cliquant sur “VALIDER”.</div>
+        <div class="footer">
+          <div class="helpTxt" id="helpTxt">Choisis un avatar, puis clique sur “Enregistrer”.</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  /* ✅ Scale auto pour Genially */
+  (function scaleGeniallyPage(){
+    const page = document.getElementById('geniallyPage');
+    function apply(){
+      const sw = window.innerWidth / 1920;
+      const sh = window.innerHeight / 1080;
+      const s = Math.min(sw, sh);
+      page.style.transform = `scale(${s})`;
+    }
+    window.addEventListener('resize', apply);
+    apply();
+  })();
+
   const ROLE = "medecin";
 
   const playerName = localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur";
@@ -202,6 +253,8 @@
   const trio = document.getElementById("trio");
   const helpTxt = document.getElementById("helpTxt");
 
+  let selectedFile = null;
+
   function render(){
     trio.innerHTML = "";
     avatars.forEach(a=>{
@@ -214,34 +267,63 @@
       img.className = `avatar-pick`;
       img.alt = a.label;
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "btn-ember";
-      btn.textContent = "VALIDER";
-      btn.onclick = ()=>validate(a.file, wrap);
+      /* ✅ 2 boutons sous chaque avatar (comme infirmier) */
+      const btnRow = document.createElement("div");
+      btnRow.className = "btn-row";
+
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "btn-ember";
+      saveBtn.textContent = "ENREGISTRER";
+      saveBtn.onclick = (e)=>{ e.stopPropagation(); saveAvatar(a.file); };
+
+      const nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.className = "btn-next";
+      nextBtn.textContent = "SUIVANT";
+      nextBtn.disabled = true;
+      nextBtn.onclick = (e)=>{ e.stopPropagation(); goNext(); };
+
+      btnRow.appendChild(saveBtn);
+      btnRow.appendChild(nextBtn);
 
       wrap.appendChild(img);
-      wrap.appendChild(btn);
+      wrap.appendChild(btnRow);
       trio.appendChild(wrap);
     });
+
+    if (selectedFile) markSelected(selectedFile);
   }
 
-  function validate(file, wrap){
-    // visuel sélection
+  function markSelected(file){
+    selectedFile = file;
+
     document.querySelectorAll(".avatar-block").forEach(b=>{
       const isSel = b.dataset.file === file;
+
       b.classList.toggle("selected", isSel);
       b.classList.toggle("dimmed", !isSel);
+
       const img = b.querySelector(".avatar-pick");
       img.classList.toggle("selected", isSel);
       img.classList.toggle("dimmed", !isSel);
-    });
 
-    // stockage
+      const nextBtn = b.querySelector(".btn-next");
+      if (nextBtn) nextBtn.disabled = !isSel;
+    });
+  }
+
+  function saveAvatar(file){
+    markSelected(file);
     localStorage.setItem("role", ROLE);
     localStorage.setItem("avatar", file);
+    helpTxt.textContent = "✅ Avatar enregistré. Le bouton “Suivant” est activé.";
+  }
 
-    helpTxt.textContent = "✅ Avatar enregistré. Tu peux continuer dans Genially.";
+  function goNext(){
+    if(!selectedFile) return;
+    // volontairement vide (pas de redirection)
+    helpTxt.textContent = "➡️ Prêt ! Continue dans Genially.";
   }
 
   function escapeHtml(str){
