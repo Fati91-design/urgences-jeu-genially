@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Urgences – Choix du niveau</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+<style>
+  html, body { background: transparent; margin: 0; color: #fff; }
+
+  /* ✅ Genially: scène fixe 16:9 + scale auto */
+  .genially-stage{
+    width: 100vw;
+    height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .genially-page{
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    transform-origin: center;
+  }
+
+  .page-wrap{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 42px 52px; /* ✅ ajusté */
+  }
+
+  .container{ max-width: 1400px; }
+
+  .glass{
+    width: min(1200px, 100%);
+    background: rgba(0,0,0,.42);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.45);
+    overflow: hidden;
+  }
+
+  .header{
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+  }
+
+  .hello{
+    margin:0 0 4px;
+    font-weight: 900;
+    font-size: 30px; /* ✅ ajusté */
+    text-shadow: 0 12px 30px rgba(0,0,0,.55);
+  }
+  .hello .name{
+    color: rgba(255,190,110,1);
+    text-shadow: 0 0 14px rgba(255,165,0,.35);
+  }
+
+  .subtitle{
+    margin:0;
+    font-size: 14px;
+    color: rgba(255,255,255,.75);
+  }
+
+  .body{
+    padding: 18px 20px 22px;
+  }
+
+  .sectionTitle{
+    text-align:center;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-size: 22px; /* ✅ ajusté */
+    margin: 6px 0 16px;
+    color: rgba(255,255,255,.92);
+  }
+
+  /* ✅ Cartes niveaux */
+  .levelCard{
+    background: rgba(0,0,0,.36);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 22px;
+    padding: 16px 16px 14px; /* ✅ ajusté */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 55px rgba(0,0,0,.35);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    cursor: pointer;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .levelCard::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background: linear-gradient(120deg, rgba(255,255,255,.10), transparent 35%, rgba(255,255,255,.08));
+    opacity:.18;
+    pointer-events:none;
+  }
+
+  .levelCard:hover{
+    transform: translateY(-4px);
+    border-color: rgba(255,165,0,.40);
+    box-shadow: 0 26px 85px rgba(0,0,0,.55);
+  }
+
+  .is-selected{
+    border-color: rgba(255,165,0,.55) !important;
+    box-shadow:
+      0 30px 110px rgba(0,0,0,.65),
+      0 0 20px rgba(255,165,0,.22);
+  }
+
+  .levelHead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+
+  .levelName{
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 36px; /* ✅ ajusté */
+    margin: 0;
+    line-height: 1;
+  }
+
+  .pill{
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.25);
+    color: rgba(255,255,255,.88);
+    white-space: nowrap;
+  }
+
+  .levelDesc{
+    margin: 0 0 14px;
+    font-size: 15px; /* ✅ ajusté */
+    line-height: 1.45;
+    color: rgba(255,255,255,.78);
+  }
+
+  /* ✅ Boutons côte à côte */
+  .actionRow{
+    display:flex;
+    gap: 10px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap: nowrap;
+  }
+
+  .btn-ember{
+    border:0;
+    border-radius:14px;
+    padding:10px 16px; /* ✅ ajusté */
+    font-weight:900;
+    font-size: 13px;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    background: linear-gradient(180deg,#ffb05a,#ff7832);
+    color:#0a0c12;
+    box-shadow:0 14px 30px rgba(255,120,50,.22);
+    transition: transform .15s ease, filter .15s ease;
+    white-space: nowrap;
+  }
+  .btn-ember:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+  }
+
+  /* ✅ COMMENCER visible dès le départ mais désactivé */
+  .btn-start{
+    border-radius:14px;
+    padding:10px 16px;
+    font-weight:900;
+    font-size: 13px;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    border: 1px solid rgba(140,200,255,.55);
+    background: rgba(0,0,0,.28);
+    color: rgba(255,255,255,.92);
+    box-shadow: 0 16px 50px rgba(0,0,0,.30);
+    transition: transform .15s ease, filter .15s ease;
+    white-space: nowrap;
+  }
+  .btn-start:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+  .btn-start:disabled{
+    opacity: .45;
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
+  }
+
+  .footer{
+    padding: 14px 18px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    text-align:center;
+    font-size: 13px;
+    color: rgba(255,255,255,.72);
+  }
+
+  @media (max-width: 576px){
+    .actionRow{ flex-wrap: wrap; }
+  }
+</style>
+</head>
+
+<body>
+<div class="genially-stage">
+  <div class="genially-page" id="geniallyPage">
+    <div class="page-wrap">
+      <div class="container">
+
+        <div class="glass">
+          <div class="header">
+            <p class="hello" id="helloLine"></p>
+            <p class="subtitle">Clique sur un niveau pour activer “Commencer”, puis enregistre ton choix.</p>
+          </div>
+
+          <div class="body">
+            <div class="sectionTitle">Choisissez votre niveau</div>
+
+            <div class="row g-4">
+              <!-- DÉBUTANT -->
+              <div class="col-12 col-md-4">
+                <div class="levelCard" id="card-debutant" data-level="debutant">
+                  <div class="levelHead">
+                    <h3 class="levelName">Débutant</h3>
+                    <span class="pill">Facile</span>
+                  </div>
+                  <p class="levelDesc">
+                    Idéal si tu débutes : consignes guidées, rythme progressif, et aides fréquentes.
+                  </p>
+
+                  <div class="actionRow">
+                    <button type="button" class="btn-ember" data-save="debutant">ENREGISTRER</button>
+                    <button type="button" class="btn-start" data-start="debutant" disabled>COMMENCER</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- INTERMÉDIAIRE -->
+              <div class="col-12 col-md-4">
+                <div class="levelCard" id="card-intermediaire" data-level="intermediaire">
+                  <div class="levelHead">
+                    <h3 class="levelName">Intermédiaire</h3>
+                    <span class="pill">Moyen</span>
+                  </div>
+                  <p class="levelDesc">
+                    Pour avancer plus vite : moins d’indices, situations variées, décisions plus rapides.
+                  </p>
+
+                  <div class="actionRow">
+                    <button type="button" class="btn-ember" data-save="intermediaire">ENREGISTRER</button>
+                    <button type="button" class="btn-start" data-start="intermediaire" disabled>COMMENCER</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EXPERT -->
+              <div class="col-12 col-md-4">
+                <div class="levelCard" id="card-expert" data-level="expert">
+                  <div class="levelHead">
+                    <h3 class="levelName">Expert</h3>
+                    <span class="pill">Difficile</span>
+                  </div>
+                  <p class="levelDesc">
+                    Pour les plus solides : peu d’aides, scénarios exigeants, et temps de réaction serré.
+                  </p>
+
+                  <div class="actionRow">
+                    <button type="button" class="btn-ember" data-save="expert">ENREGISTRER</button>
+                    <button type="button" class="btn-start" data-start="expert" disabled>COMMENCER</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer" id="helpTxt">
+            Clique sur une carte pour activer “Commencer”. Ensuite, clique sur “Enregistrer”.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ✅ Scale auto pour Genially */
+  (function scaleGeniallyPage(){
+    const page = document.getElementById('geniallyPage');
+    function apply(){
+      const sw = window.innerWidth / 1920;
+      const sh = window.innerHeight / 1080;
+      const s = Math.min(sw, sh);
+      page.style.transform = `scale(${s})`;
+    }
+    window.addEventListener('resize', apply);
+    apply();
+  })();
+
+  /* ✅ Bonjour "nom utilisateur" compatible avec tes pages */
+  const playerName =
+    localStorage.getItem("player_name") ||
+    localStorage.getItem("playerName") ||
+    "Joueur";
+
+  document.getElementById("helloLine").innerHTML =
+    `Bonjour <span class="name">${escapeHtml(playerName)}</span>, choisis ton niveau.`;
+
+  const helpTxt = document.getElementById("helpTxt");
+  let activeLevel = null;
+
+  function setActive(level){
+    activeLevel = level;
+
+    document.querySelectorAll(".levelCard").forEach(card=>{
+      const isSel = card.dataset.level === level;
+      card.classList.toggle("is-selected", isSel);
+
+      const startBtn = card.querySelector("[data-start]");
+      if (startBtn) startBtn.disabled = !isSel;
+    });
+
+    helpTxt.textContent = "✅ Niveau activé. Tu peux cliquer sur COMMENCER (et/ou ENREGISTRER).";
+  }
+
+  /* ✅ Cliquer sur la carte active le niveau (sans déclencher si clic bouton) */
+  document.querySelectorAll(".levelCard").forEach(card=>{
+    card.addEventListener("click", (e)=>{
+      if (e.target.closest("button")) return;
+      setActive(card.dataset.level);
+    });
+  });
+
+  /* ✅ ENREGISTRER */
+  document.querySelectorAll("[data-save]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const level = btn.getAttribute("data-save");
+      localStorage.setItem("niveau", level);
+      setActive(level);
+      helpTxt.textContent = "✅ Niveau enregistré. Clique sur COMMENCER pour continuer dans Genially.";
+    });
+  });
+
+  /* ✅ COMMENCER (visible mais désactivé tant que pas sélectionné) */
+  document.querySelectorAll("[data-start]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if (btn.disabled) return;
+      // volontairement vide (pas de redirection)
+      helpTxt.textContent = "🚀 Prêt ! Continue dans Genially.";
+    });
+  });
+
+  /* ✅ Si déjà enregistré, activer au chargement */
+  const savedLevel = localStorage.getItem("niveau");
+  if (savedLevel) {
+    setActive(savedLevel);
+    helpTxt.textContent = "✅ Niveau déjà enregistré. Tu peux cliquer sur COMMENCER.";
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+    }[m]));
+  }
+</script>
+</body>
+</html>
