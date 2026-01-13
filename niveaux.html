@@ -35,10 +35,74 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 42px 52px; /* ✅ ajusté */
+    padding: 42px 52px;
   }
 
   .container{ max-width: 1400px; }
+
+  /* ✅ Titre du jeu (comme tes pages précédentes) */
+  .gameTitleWrap{
+    text-align:center;
+    margin: 0 0 14px;
+    position: relative;
+    isolation: isolate;
+  }
+  .topBadge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.92);
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.16);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 22px 60px rgba(0,0,0,.35);
+    margin-bottom: 10px;
+  }
+  .gameTitleBack{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-size: 74px;  /* ✅ ajusté pour tenir au-dessus du glass */
+    line-height: .92;
+    margin: 0;
+
+    /* ✅ URGENCES change de couleur */
+    background: linear-gradient(180deg, #d7e9ff 0%, #86bfff 40%, #cfe3ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+      0 18px 70px rgba(0,0,0,.75),
+      0 0 45px rgba(120,190,255,.22);
+  }
+  .gameSubtitleBig{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-size: 64px;  /* ✅ ajusté */
+    line-height: .92;
+    margin: 6px 0 0;
+    color: rgba(255,255,255,.98);
+    text-shadow:
+      0 26px 90px rgba(0,0,0,.75),
+      0 0 28px rgba(255,255,255,.08);
+  }
+  .gameTitleWrap::before{
+    content:"";
+    position:absolute;
+    inset: -22px -10px -10px -10px;
+    background: radial-gradient(closest-side, rgba(255,255,255,.10), transparent 70%);
+    filter: blur(10px);
+    opacity: .60;
+    z-index: 0;
+    pointer-events:none;
+  }
 
   .glass{
     width: min(1200px, 100%);
@@ -58,7 +122,7 @@
   .hello{
     margin:0 0 4px;
     font-weight: 900;
-    font-size: 30px; /* ✅ ajusté */
+    font-size: 30px;
     text-shadow: 0 12px 30px rgba(0,0,0,.55);
   }
   .hello .name{
@@ -81,17 +145,16 @@
     font-weight: 900;
     letter-spacing: .12em;
     text-transform: uppercase;
-    font-size: 22px; /* ✅ ajusté */
+    font-size: 22px;
     margin: 6px 0 16px;
     color: rgba(255,255,255,.92);
   }
 
-  /* ✅ Cartes niveaux */
   .levelCard{
     background: rgba(0,0,0,.36);
     border: 1px solid rgba(255,255,255,.14);
     border-radius: 22px;
-    padding: 16px 16px 14px; /* ✅ ajusté */
+    padding: 16px 16px 14px;
     backdrop-filter: blur(12px);
     box-shadow: 0 16px 55px rgba(0,0,0,.35);
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
@@ -135,7 +198,7 @@
     font-family: 'Anton', sans-serif;
     text-transform: uppercase;
     letter-spacing: .08em;
-    font-size: 36px; /* ✅ ajusté */
+    font-size: 36px;
     margin: 0;
     line-height: 1;
   }
@@ -155,12 +218,11 @@
 
   .levelDesc{
     margin: 0 0 14px;
-    font-size: 15px; /* ✅ ajusté */
+    font-size: 15px;
     line-height: 1.45;
     color: rgba(255,255,255,.78);
   }
 
-  /* ✅ Boutons côte à côte */
   .actionRow{
     display:flex;
     gap: 10px;
@@ -172,7 +234,7 @@
   .btn-ember{
     border:0;
     border-radius:14px;
-    padding:10px 16px; /* ✅ ajusté */
+    padding:10px 16px;
     font-weight:900;
     font-size: 13px;
     letter-spacing:.10em;
@@ -188,7 +250,6 @@
     filter: brightness(1.06);
   }
 
-  /* ✅ COMMENCER visible dès le départ mais désactivé */
   .btn-start{
     border-radius:14px;
     padding:10px 16px;
@@ -224,6 +285,8 @@
 
   @media (max-width: 576px){
     .actionRow{ flex-wrap: wrap; }
+    .gameTitleBack{ font-size: 56px; }
+    .gameSubtitleBig{ font-size: 48px; }
   }
 </style>
 </head>
@@ -233,6 +296,13 @@
   <div class="genially-page" id="geniallyPage">
     <div class="page-wrap">
       <div class="container">
+
+        <!-- ✅ Titre du jeu (ajouté) -->
+        <div class="gameTitleWrap">
+          <div class="topBadge">MISSION • PREMIERS SECOURS</div>
+          <h1 class="gameTitleBack">URGENCES</h1>
+          <div class="gameSubtitleBig">AGIR POUR SAUVER</div>
+        </div>
 
         <div class="glass">
           <div class="header">
