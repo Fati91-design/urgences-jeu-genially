@@ -5,9 +5,10 @@
      - Boutons Précédent/Suivant à DROITE
      - Son UNIQUEMENT sur approbation (arrivée à la fin)
      - "Commencer la mission" en bas : désactivé jusqu’au dernier step
-     - Au clic : écran noir + progress bar -> lance assets/intro2.mp4
+     - Au clic : écran noir + progress bar -> lance assets/intro2.mp4 (16:9)
      - Fin vidéo : écran noir "Prêt(e)..." + bouton "Commencer l'aventure" (sans lien)
      - (Bouton recommencer supprimé)
+     ✅ FIX VIDEO: on affiche le conteneur 16:9 (#videoStage) (sinon son OK mais image invisible)
 ========================= -->
 <!DOCTYPE html>
 <html lang="fr">
@@ -407,9 +408,6 @@
 
   /* ======================
      ✅ CINEMATIC FLOW (mission)
-     - stage noir fullscreen + progress
-     - video intro
-     - end screen prêt(e) + bouton
   ====================== */
   .missionOverlay{
     position:absolute;
@@ -571,54 +569,47 @@
     filter: brightness(1.08);
     border-color: rgba(140,200,255,.45);
   }
-/* L’overlay mission doit être au-dessus du reste */
-#missionOverlay{
-  position: fixed;
-  inset: 0;
-  z-index: 999999; /* ✅ très haut */
-}
 
-/* ✅ Vidéo en 16:9 visible au-dessus */
-.videoStage{
-  position:absolute;
-  inset:0;
-  display:none;              /* on l’affiche en JS */
-  place-items:center;
-  background:#000;
-  padding: 40px;
-  z-index: 5;                /* ✅ au-dessus du loading */
-}
+  /* ======================
+     ✅ FIX VIDEO VISIBILITY (NECESSARY ONLY)
+  ====================== */
+  #missionOverlay{
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+  }
 
-.videoFrame{
-  width: min(1600px, 92%);
-  aspect-ratio: 16 / 9;
-  background:#000;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.14);
-  box-shadow: 0 30px 140px rgba(0,0,0,.75);
-  overflow:hidden;
-  position:relative;
-  z-index: 6;
-}
+  .videoStage{
+    position:absolute;
+    inset:0;
+    display:none;
+    place-items:center;
+    background:#000;
+    padding: 40px;
+    z-index: 5;
+  }
 
-.introVideo{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit: contain;
-  background:#000;
-  position:relative;
-  z-index: 7;
-}
+  .videoFrame{
+    width: min(1600px, 92%);
+    aspect-ratio: 16 / 9;
+    background:#000;
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 30px 140px rgba(0,0,0,.75);
+    overflow:hidden;
+    position:relative;
+    z-index: 6;
+  }
 
-/* ✅ Le bloc loading doit être en dessous de la vidéo */
-#loadingStage{
-  position:absolute;
-  inset:0;
-  z-index: 2;
-}
-
-
+  .introVideo{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit: contain;
+    background:#000;
+    position:relative;
+    z-index: 7;
+  }
 </style>
 </head>
 
@@ -928,15 +919,14 @@
         </div>
       </div>
 
-<!-- Video screen (✅ 16:9) -->
-<div class="videoStage" id="videoStage">
-  <div class="videoFrame">
-    <video id="introVideo" class="introVideo" playsinline preload="auto">
-      <source src="assets/intro2.mp4" type="video/mp4">
-    </video>
-  </div>
-</div>
-
+      <!-- Video screen (✅ 16:9) -->
+      <div class="videoStage" id="videoStage">
+        <div class="videoFrame">
+          <video id="introVideo" class="introVideo" playsinline preload="auto">
+            <source src="assets/intro2.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
 
       <!-- Ready screen -->
       <div class="missionCenter" id="readyScreen" style="display:none;">
@@ -994,6 +984,9 @@
   const introVideo = document.getElementById("introVideo");
   const readyScreen = document.getElementById("readyScreen");
 
+  /* ✅ FIX VIDEO VISIBILITY (NECESSARY ONLY) */
+  const videoStage = document.getElementById("videoStage");
+
   let current = 0;
 
   function progressPercent(){
@@ -1049,7 +1042,7 @@
   /* =========================
      ✅ Commencer la mission :
      1) écran noir + loading bar
-     2) lecture intro2.mp4
+     2) lecture intro2.mp4 (16:9)
      3) fin vidéo -> écran noir "Prêt(e)" + bouton
   ========================= */
   startMissionBtn.addEventListener("click", async ()=>{
@@ -1058,7 +1051,11 @@
     // 1) show overlay loading
     missionOverlay.classList.add("on");
     loadScreen.style.display = "flex";
+
+    /* ✅ FIX VIDEO VISIBILITY (NECESSARY ONLY) */
+    videoStage.style.display = "none";
     introVideo.style.display = "none";
+
     readyScreen.style.display = "none";
 
     // Loading animation (fake but smooth + pro)
@@ -1066,7 +1063,11 @@
 
     // 2) Play video
     loadScreen.style.display = "none";
+
+    /* ✅ FIX VIDEO VISIBILITY (NECESSARY ONLY) */
+    videoStage.style.display = "grid";   // IMPORTANT: sinon parent caché -> son ok mais image invisible
     introVideo.style.display = "block";
+
     try { introVideo.currentTime = 0; } catch(e){}
     try {
       await introVideo.play();
@@ -1078,7 +1079,10 @@
 
   introVideo.addEventListener("ended", ()=>{
     // 3) Ready screen
+    /* ✅ FIX VIDEO VISIBILITY (NECESSARY ONLY) */
+    videoStage.style.display = "none";
     introVideo.style.display = "none";
+
     readyScreen.style.display = "flex";
   });
 
