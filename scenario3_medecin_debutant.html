@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 3 — Chute du 2e étage — Niveau avancé — Médecin</title>
+  <title>Scénario 3 — Chute du 2e étage — Niveau intermédiaire — Médecin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -397,14 +397,14 @@
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
-        <div class="chip" id="difficultyChip">MODE: AVANCÉ</div>
+        <div class="chip" id="difficultyChip">MODE: DÉBUTANT</div>
       </div>
 
       <div class="hudbox">
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/2</div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/3</div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
@@ -451,7 +451,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <b>Si le temps s’écoule ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -559,14 +559,14 @@ const SCENARIO = {
   id: 1,
   label: "Scénario 3 — Chute du 2e étage",
   mission: "Chute du 2e étage",
-  level: "Niveau avancé"
+  level: "Niveau débutant"
 };
 
 // Lien "Suivant" (à remplacer par ton lien Genially)
 const NEXT_GENIALLY_URL = "#";
 
-// Timer 30 sec (exigé)
-const TIMER_SECONDS = 30;
+// Timer selon niveau
+const TIMER_SECONDS = 60;
 
 // Stress (exigé)
 const STRESS_RULES = {
@@ -578,12 +578,12 @@ const STRESS_RULES = {
 const role = "medecin";
 const playerName = localStorage.getItem("playerName") || "Joueur";
 const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
-const difficulty = "avance";
+const difficulty = "DÉBUTANT";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 hudName.textContent = playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
-difficultyChip.textContent = "MODE: AVANCÉ";
+difficultyChip.textContent = "MODE: DÉBUTANT";
 
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
@@ -596,7 +596,7 @@ let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
 
-const questions = [{"type": "multi", "title": "Menaces vitales", "desc": "Coche les menaces vitales immédiates :", "options": [{"text": "Altération brutale de conscience", "correct": true}, {"text": "Hémorragie massive", "correct": true}, {"text": "Respiration absente/anormale", "correct": true}, {"text": "Douleur localisée sans signe vital", "correct": false}], "okFb": "✅ ABC + hémorragie massive.", "badFb": "❌ Incorrect."}, {"type": "single", "title": "Priorité 1", "desc": "Première priorité :", "options": [{"text": "Airway + protection cervicale", "kind": "ok", "fb": "✅ A + rachis."}, {"text": "Analgésie", "kind": "wrong", "fb": "❌ Après stabilisation."}, {"text": "Examen complet", "kind": "wrong", "fb": "❌ Après stabilisation."}, {"text": "Boisson", "kind": "wrong", "fb": "❌ Interdit."}]}, {"type": "cloze", "title": "RCP", "desc": "Saisis 2 valeurs :", "template": "RCP adulte : <b>{blank1}</b> compressions / <b>{blank2}</b> insufflations.", "blanks": [{"key": "blank1", "answer": "30"}, {"key": "blank2", "answer": "2"}], "okFb": "✅ 30:2.", "badFb": "❌ 30 et 2."}, {"type": "image_single", "title": "Décision médicale immédiate", "desc": "Choisis l’image qui correspond à la conduite la plus adaptée immédiatement après la chute :", "options": [{"label": "A", "imgSrc": "assets/chute_q4_a.png", "caption": "Immobilisation axe tête-cou-tronc", "kind": "wrong", "fb": "🟡 Bien, mais en avancé on attend aussi l’évaluation/alerte/O₂."}, {"label": "B", "imgSrc": "assets/chute_q4_b.png", "caption": "Victime assise / mobilisée", "kind": "wrong", "fb": "❌ Non : mobilisation dangereuse."}, {"label": "C", "imgSrc": "assets/chute_q4_c.png", "caption": "Maintien tête-cou + évaluation respiration + alerte/O₂", "kind": "ok", "fb": "✅ Correct : conduite la plus sûre après chute de hauteur."}]}, {"type": "multi", "title": "Airway (anticipation)", "desc": "Coche les situations où tu anticipes une sécurisation des VA :", "options": [{"text": "GCS ≤ 8", "correct": true}, {"text": "Hypoxie malgré O₂", "correct": true}, {"text": "Vomissements + altération conscience", "correct": true}, {"text": "Douleur isolée sans détresse", "correct": false}], "okFb": "✅ Bon raisonnement airway.", "badFb": "❌ Revois critères."}, {"type": "drag_order", "title": "Trauma sequence", "desc": "Mets l’ordre :", "items": [{"id": "safe", "text": "Sécuriser + EPI + renfort"}, {"id": "bleed", "text": "Contrôle hémorragie massive"}, {"id": "a", "text": "A: Airway + immobilisation cervicale"}, {"id": "b", "text": "B: Breathing (O₂/ventilation)"}, {"id": "c", "text": "C: Circulation (choc)"}], "expected": ["safe", "bleed", "a", "b", "c"], "okFb": "✅ Excellent.", "badFb": "❌ Sécuriser → hémorragie → A → B → C."}, {"type": "single", "title": "Erreur critique", "desc": "Quelle est l’erreur critique à ne pas commettre ?", "options": [{"text": "Retirer un casque sans indication", "kind": "ok", "fb": "🚨 Correct : retirer un casque sans indication met en danger le rachis."}, {"text": "Compression d’une hémorragie", "kind": "wrong", "fb": "✅ Geste approprié."}, {"text": "Administrer de l’oxygène", "kind": "wrong", "fb": "✅ Approprié en détresse respiratoire."}, {"text": "Immobilisation manuelle", "kind": "wrong", "fb": "✅ C’est la bonne conduite."}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone critique", "desc": "", "imgSrc": "scenario_3_hotspot.png", "hotspots": [{"label": "ok", "x": 30, "y": 28, "w": 18, "h": 40, "kind": "ok", "fb": "✅ Correct : rachis/colonne (ne pas mobiliser).", "pts": 10}, {"label": "ko", "x": 8, "y": 22, "w": 18, "h": 22, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}, {"label": "ko", "x": 68, "y": 70, "w": 20, "h": 20, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}]}, {"type": "multi", "title": "Choc hémorragique", "desc": "Coche les signes compatibles :", "options": [{"text": "Tachycardie", "correct": true}, {"text": "Peau froide/moite", "correct": true}, {"text": "Altération conscience", "correct": true}, {"text": "Bradycardie + chaleur", "correct": false}], "okFb": "✅ Compatible choc.", "badFb": "❌ Incorrect."}, {"type": "short", "title": "Transmission médicale", "desc": "Réponse en 1 mot", "prompt": "Quel acronyme utilise-t-on pour une transmission rapide : Mechanism, Injuries, Signs, Treatment ?", "answers": ["mist", "m.i.s.t", "m i s t"], "okFb": "✅ Correct : MIST.", "badFb": "❌ Attendu : MIST."}, {"type": "multi", "title": "À éviter", "desc": "Coche ce qu’il faut éviter :", "options": [{"text": "Donner à boire/manger", "correct": true}, {"text": "Mobiliser pour confort", "correct": true}, {"text": "Surveillance neuro", "correct": false}, {"text": "Couvrir / prévenir hypothermie", "correct": false}], "okFb": "✅ Exact.", "badFb": "❌ Incorrect."}, {"type": "single", "title": "Analgésie", "desc": "Conduite antalgique (terrain) :", "options": [{"text": "Après stabilisation vitale + surveillance", "kind": "ok", "fb": "✅ Oui."}, {"text": "Avant ABCDE", "kind": "wrong", "fb": "❌ Non."}, {"text": "Sédation sans surveillance", "kind": "wrong", "fb": "❌ Non."}, {"text": "Jamais d’antalgie", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "short", "title": "GCS max", "desc": "GCS maximal (1 nombre)", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ 15."}, {"type": "short", "title": "Urgence", "desc": "Numéro médical (1 nombre)", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ 15."}, {"type": "short", "title": "Mot-clé", "desc": "Structure à protéger (1 mot)", "answers": ["rachis", "colonne"], "okFb": "✅ rachis.", "badFb": "❌ rachis."}];
+const questions = [{"type": "single", "title": "Sécurisation", "desc": "Avant de toucher la victime, la priorité immédiate est :", "options": [{"text": "Commencer l’examen neurologique", "kind": "wrong", "fb": "❌ Non : d’abord sécurité."}, {"text": "Sécuriser la zone avant l’examen", "kind": "ok", "fb": "✅ Oui : sécurité d’abord."}, {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non."}, {"text": "Faire lever la victime", "kind": "wrong", "fb": "❌ Non : risque rachis."}]}, {"type": "tf", "title": "Immobilisation", "desc": "Vrai/Faux : après une chute de hauteur, on évite de mobiliser la victime avant l’évaluation/immobilisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "short", "title": "A de l’ABCDE", "desc": "Première priorité de l’ABCDE (2 mots) :", "answers": ["voies aériennes", "airway"], "okFb": "✅ Voies aériennes.", "badFb": "❌ Réponse attendue : voies aériennes."}, {"type": "image_single", "title": "Décision immédiate", "desc": "Choisis l’image correspondant à la meilleure conduite immédiate :", "options": [{"label": "A", "imgSrc": "assets/chute_q4_b.png", "caption": "Victime assise / on la fait se lever", "kind": "wrong", "fb": "❌ Non : mobilisation dangereuse."}, {"label": "B", "imgSrc": "assets/chute_q4_a.png", "caption": "Immobilisation axe tête-cou-tronc", "kind": "ok", "fb": "✅ Correct : immobilisation stricte."}, {"label": "C", "imgSrc": "assets/chute_q4_c.png", "caption": "On la redresse pour la “mettre à l’aise”", "kind": "wrong", "fb": "❌ Non : risque rachis/aggravation."}]}, {"type": "single", "title": "Alerte neuro", "desc": "Quel signe est le plus inquiétant après la chute ?", "options": [{"text": "Douleur localisée sans autre signe", "kind": "wrong", "fb": "❌ Moins prioritaire."}, {"text": "Petit hématome superficiel", "kind": "wrong", "fb": "❌ Pas le plus inquiétant."}, {"text": "Somnolence / confusion", "kind": "ok", "fb": "✅ Oui : signe neuro inquiétant."}, {"text": "Gratouillement au bras", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "short", "title": "Glasgow", "desc": "Score maximal du Glasgow (1 nombre) :", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ Réponse : 15."}, {"type": "multi", "title": "Tri vital", "desc": "Coche les 3 priorités vitales immédiates :", "options": [{"text": "Conscience", "correct": true}, {"text": "Respiration", "correct": true}, {"text": "Hémorragie", "correct": true}, {"text": "Température exacte", "correct": false}, {"text": "Antécédents complets", "correct": false}], "okFb": "✅ Bon tri vital.", "badFb": "❌ Attendu : conscience + respiration + hémorragie."}, {"type": "drag_order", "title": "Ordre d’action", "desc": "Remets l’ordre logique :", "items": [{"id": "s", "text": "Sécuriser"}, {"id": "a", "text": "ABC"}, {"id": "i", "text": "Immobiliser"}, {"id": "l", "text": "Alerter"}, {"id": "v", "text": "Surveiller"}], "expected": ["s", "a", "i", "l", "v"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre attendu : Sécuriser → ABC → Immobiliser → Alerter → Surveiller."}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone à protéger", "desc": "Clique la zone où il faut surtout éviter la mobilisation.", "imgSrc": "scenario_3_hotspot.png", "hotspots": [{"label": "ok", "x": 30, "y": 28, "w": 18, "h": 40, "kind": "ok", "fb": "✅ Correct : colonne vertébrale (rachis).", "pts": 10}, {"label": "ko", "x": 8, "y": 22, "w": 18, "h": 22, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}, {"label": "ko", "x": 68, "y": 70, "w": 20, "h": 20, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}]}, {"type": "cloze", "title": "Organisation", "desc": "Complète 2 valeurs :", "template": "Idéalement, <b>{blank1}</b> sauveteurs ; victime <b>{blank2}</b>.", "blanks": [{"key": "blank1", "answer": "2"}, {"key": "blank2", "answer": "consciente"}], "okFb": "✅ OK.", "badFb": "❌ Réponses : 2 ; consciente."}, {"type": "tf", "title": "Alerte", "desc": "Vrai/Faux : on alerte rapidement avec mécanisme, hauteur, état, localisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "single", "title": "À éviter", "desc": "Quel geste est à éviter absolument ?", "options": [{"text": "Surveiller la respiration", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Couvrir contre l’hypothermie", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Redresser la victime", "kind": "ok", "fb": "✅ Correct : à éviter (rachis)."}, {"text": "Maintenir l’axe tête-cou-tronc", "kind": "wrong", "fb": "❌ À faire."}]}, {"type": "short", "title": "Terme", "desc": "Un mot : la colonne vertébrale =", "answers": ["rachis"], "okFb": "✅ Rachis.", "badFb": "❌ Réponse : rachis."}, {"type": "tf", "title": "Mécanisme", "desc": "Vrai/Faux : une chute de hauteur impose de suspecter un traumatisme grave même si la douleur est modérée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "multi", "title": "Transmission", "desc": "Pour le bilan au SAMU, coche les infos essentielles :", "options": [{"text": "Hauteur", "correct": true}, {"text": "Mécanisme de chute", "correct": true}, {"text": "Couleur des vêtements", "correct": false}, {"text": "Marque du téléphone", "correct": false}], "okFb": "✅ Parfait.", "badFb": "❌ Essentiel : hauteur + mécanisme de chute."}];
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
@@ -640,10 +640,10 @@ function startTimer(){
       attemptsForCurrentQuestion++;
       setAttemptsUI();
       // 2 essais max comme ton design initial
-      if(attemptsForCurrentQuestion >= 3){
+      if(attemptsForCurrentQuestion >= 4){
         missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score remis à zéro)");
       }else{
-        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/2)", {allowRetry:true, allowNext:false, missionFail:false});
+        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/3)", {allowRetry:true, allowNext:false, missionFail:false});
       }
     }
   }, 1000);
@@ -883,7 +883,7 @@ function renderQuestion(i, resetAttempts=true){
       const over = e.target.closest("[draggable='true']");
       if(!over || !dragSrc || over===dragSrc) return;
       const rect = over.getBoundingClientRect();
-      const before = (e.clientY - rect.top) < rect.height/2;
+      const before = (e.clientY - rect.top) < rect.height/3;
       list.insertBefore(dragSrc, before ? over : over.nextSibling);
     });
     list.addEventListener("drop",(e)=>{
@@ -899,7 +899,7 @@ function renderQuestion(i, resetAttempts=true){
     const html = q.template
       .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
       .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+    box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris un chiffre (ex: 10) et un mot.</div>`;
     optionsEl.appendChild(box);
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
@@ -1085,12 +1085,12 @@ function evaluateOption(opt){
 
 function failedAttempt(baseMsg){
   attemptsForCurrentQuestion++; setAttemptsUI();
-  if(attemptsForCurrentQuestion >= 3){
+  if(attemptsForCurrentQuestion >= 4){
     sfxAlarmLong();
     missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
     return;
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/2)`, {allowRetry:true, allowNext:false, missionFail:false});
+  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`, {allowRetry:true, allowNext:false, missionFail:false});
 }
 
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
@@ -1160,8 +1160,8 @@ function endScenario(){
   stopTimer(); hideOverlay();
   optionsEl.innerHTML=""; validateBtn.disabled=false; clearBtn.style.display="none";
 
-  const badgeName = "🥇 Badge Or — Chute (Infirmier avancé)";
-  const badgeDesc = "Traumatologie lourde : ABCDE, choc, neuro, pression temporelle.";
+  const badgeName = "🥈 Badge Argent — Chute (Infirmier intermédiaire)";
+  const badgeDesc = "Évaluation + priorisation : neurologique, choc, communication structurée.";
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
 
   qMeta.textContent = "Fin — Badge obtenu";
@@ -1215,7 +1215,7 @@ startBtn.addEventListener("click", ()=>{
   locked=true;
   qMeta.textContent = SCENARIO.label;
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML="Tu as <b>30 secondes</b> par question. Clique sur <b>DÉMARRER</b>.";
+  qDesc.innerHTML="Tu as <b>45 secondes</b> par question. Clique sur <b>DÉMARRER</b>.";
   optionsEl.innerHTML="";
   hudQnum.textContent="1";
   hudTime.textContent=String(TIMER_SECONDS);
