@@ -510,5 +510,28 @@
     // Sinon : laisse Genially gérer le "slide suivant" via un hotspot au-dessus
   });
 </script>
+
+  <script>
+  // À mettre sur la toute première page (Accueil) du jeu
+  (function resetGameIfNewRun(){
+    // ✅ liste des clés que TU utilises
+    const keys = [
+      "player_name",
+      "playerName",
+      "role",
+      "avatar",
+      "niveau",
+      "score",
+      "tentatives",
+      "badges"
+    ];
+
+    // ✅ reset à chaque fois qu'on revient au début du jeu
+    keys.forEach(k => localStorage.removeItem(k));
+    // si tu utilises sessionStorage aussi :
+    keys.forEach(k => sessionStorage.removeItem(k));
+  })();
+</script>
+
 </body>
 </html>
