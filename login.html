@@ -6,7 +6,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Anton (comme la page d'accueil) -->
+<!-- Anton -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
@@ -14,51 +14,49 @@
 <style>
   html, body { background: transparent; margin: 0; color: #fff; }
 
-  /* ✅ Genially: scène fixe 16:9 + scale auto (compatible iframe) */
+  /* ✅ Genially: scène fixe 16:9 + scale auto */
   .genially-stage{
-    width: 100vw;
-    height: 100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    width: 100vw; height: 100vh;
+    display:flex; align-items:center; justify-content:center;
     overflow:hidden;
   }
   .genially-page{
-    width: 1920px;
-    height: 1080px;
+    width: 1920px; height: 1080px;
     position: relative;
     transform-origin: center;
   }
 
-  /* ✅ Ajout: overlay léger (comme l’ambiance des images) */
+  /* ✅ Ambiance */
   .fx-overlay{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
+    position:absolute; inset:0; pointer-events:none;
     background:
-      radial-gradient(1200px 520px at 50% 18%, rgba(255,255,255,.12), transparent 55%),
-      radial-gradient(900px 520px at 18% 82%, rgba(255,120,80,.09), transparent 60%),
-      radial-gradient(900px 520px at 82% 82%, rgba(90,150,255,.11), transparent 60%),
-      radial-gradient(1200px 900px at 50% 50%, transparent 60%, rgba(0,0,0,.38) 100%);
+      radial-gradient(1200px 520px at 50% 16%, rgba(255,255,255,.14), transparent 58%),
+      radial-gradient(1000px 620px at 16% 86%, rgba(255,120,80,.10), transparent 62%),
+      radial-gradient(1000px 620px at 84% 86%, rgba(90,150,255,.14), transparent 62%),
+      radial-gradient(1200px 900px at 50% 58%, transparent 55%, rgba(0,0,0,.46) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.18));
     filter: blur(.2px);
   }
 
-  /* ✅ Ajustement Genially: padding réduit => contenu + grand */
+  /* ✅ Grain léger */
+  .fx-grain{
+    position:absolute; inset:0; pointer-events:none;
+    opacity:.22; mix-blend-mode: overlay;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 4px);
+  }
+
   .page-wrap{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding: 52px 64px; /* ✅ réduit */
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    padding: 50px 64px;
   }
+  .container{ max-width: 1320px; }
 
-  /* ✅ Pour éviter que Bootstrap "container" rétrécisse trop dans Genially */
-  .container{
-    max-width: 1300px; /* ✅ plus large */
-  }
-
-  /* ✅ Titre */
+  /* =========================
+     ✅ TITRE
+     ========================= */
   .gameTitleWrap{
     text-align:center;
     margin-bottom: 22px;
@@ -66,159 +64,759 @@
     isolation: isolate;
   }
 
-  /* ✅ Badge un peu plus grand + effet */
   .titlePill{
     display:inline-flex;
     align-items:center;
     gap: 10px;
-    padding: 14px 26px;                /* ✅ agrandi */
+    padding: 14px 26px;
     border-radius: 999px;
-    background: rgba(0,0,0,.42);
-    border: 1px solid rgba(255,255,255,.16);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 22px 75px rgba(0,0,0,.40);
-    letter-spacing: .20em;
+    background: rgba(0,0,0,.44);
+    border: 1px solid rgba(255,255,255,.18);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 26px 90px rgba(0,0,0,.48);
+    letter-spacing: .22em;
     text-transform: uppercase;
     font-weight: 900;
-    font-size: 18px;                   /* ✅ agrandi */
-    color: rgba(255,255,255,.90);
+    font-size: 18px;
+    color: rgba(255,255,255,.92);
     margin-bottom: 14px;
+    position: relative;
+    overflow:hidden;
   }
 
-  /* ✅ Fixé: titre et sous-titre à 90px */
-  .gameTitle,
-  .gameSubtitle{
+  .pillIcon{
+    width: 32px; height: 32px;
+    border-radius: 12px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.14);
+    display:grid; place-items:center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    font-size: 18px;
+  }
+
+  .titlePill::after{
+    content:"";
+    position:absolute;
+    top:-50%; left:-40%;
+    width: 40%; height: 220%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+    transform: rotate(18deg);
+    animation: shimmer 3.2s linear infinite;
+    opacity:.65;
+    pointer-events:none;
+  }
+  @keyframes shimmer{
+    0%{ transform: translateX(-120%) rotate(18deg); }
+    100%{ transform: translateX(340%) rotate(18deg); }
+  }
+
+  .gameTitle, .gameSubtitle{
     font-family:'Anton', sans-serif;
     text-transform:uppercase;
-    font-size: 90px;                   /* ✅ demandé */
+    font-size: 90px;
     line-height: .90;
     margin: 0;
-    letter-spacing:.04em;
+    letter-spacing:.05em;
   }
 
-  /* ✅ URGENCES (couleur + glow renforcé) */
   .gameTitle{
-    background: linear-gradient(180deg, #d7e9ff 0%, #86bfff 40%, #cfe3ff 100%);
+    background: linear-gradient(180deg, #f2f8ff 0%, #9fd0ff 42%, #d7e9ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     text-shadow:
-      0 14px 40px rgba(0,0,0,.60),
-      0 0 65px rgba(120,190,255,.30);
-    filter: drop-shadow(0 24px 75px rgba(0,0,0,.70));
+      0 16px 44px rgba(0,0,0,.62),
+      0 0 70px rgba(120,190,255,.34);
+    filter: drop-shadow(0 26px 85px rgba(0,0,0,.74));
+    position: relative;
   }
 
-  /* ✅ Sous-titre blanc + profondeur (un peu plus marqué) */
+  .gameTitle::after{
+    content:"";
+    position:absolute;
+    top:0; left:-30%;
+    width: 35%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+    transform: skewX(-18deg);
+    animation: titleSweep 4.2s ease-in-out infinite;
+    opacity:.7;
+    pointer-events:none;
+  }
+  @keyframes titleSweep{
+    0%{ transform: translateX(-140%) skewX(-18deg); opacity:0; }
+    18%{ opacity:.75; }
+    55%{ opacity:.65; }
+    72%{ opacity:0; }
+    100%{ transform: translateX(460%) skewX(-18deg); opacity:0; }
+  }
+
   .gameSubtitle{
     margin-top: 10px;
     letter-spacing:.03em;
-    color: rgba(255,255,255,.97);
+    color: rgba(255,255,255,.98);
     text-shadow:
-      0 18px 46px rgba(0,0,0,.70),
-      0 0 60px rgba(255,255,255,.10);
+      0 22px 62px rgba(0,0,0,.78),
+      0 0 64px rgba(255,255,255,.10);
   }
 
-  /* ✅ Halo doux derrière le bloc titre */
-  .gameTitleWrap::before{
+  /* =========================
+     ✅ CARD NOM
+     ========================= */
+  .nameCard{
+    margin: 0 auto;
+    width: min(1000px, 100%);
+    background: rgba(0,0,0,.42);
+    border: 1px solid rgba(255,255,255,.20);
+    border-radius: 26px;
+    padding: 22px;
+    backdrop-filter: blur(14px);
+    box-shadow:
+      0 30px 140px rgba(0,0,0,.50),
+      0 0 60px rgba(120,190,255,.10);
+    position: relative;
+    overflow:hidden;
+  }
+  .nameCard::before{
     content:"";
-    position:absolute;
-    inset: -24px -20px -10px -20px;
-    background: radial-gradient(closest-side, rgba(255,255,255,.12), transparent 72%);
-    filter: blur(12px);
-    opacity: .65;
-    z-index: 0;
+    position:absolute; inset:-2px;
+    background: linear-gradient(120deg, rgba(255,255,255,.10), transparent 36%, rgba(140,200,255,.14));
+    opacity:.16;
     pointer-events:none;
   }
 
-  /* ✅ Carte saisie nom (plus grande + mieux lisible) */
-  .nameCard{
-    margin: 0 auto;
-    width: min(980px, 100%);           /* ✅ agrandi */
-    background: rgba(0,0,0,.40);
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: 24px;               /* ✅ plus rond */
-    padding: 22px 22px;                /* ✅ agrandi */
-    backdrop-filter: blur(12px);
-    box-shadow: 0 26px 110px rgba(0,0,0,.42);
-  }
-
   .nameLabel{
-    font-size: 18px;                   /* ✅ agrandi */
+    font-size: 18px;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: rgba(255,255,255,.82);
+    color: rgba(255,255,255,.84);
     margin: 0 0 12px;
     font-weight: 900;
-    text-shadow: 0 14px 50px rgba(0,0,0,.55);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-shadow: 0 16px 55px rgba(0,0,0,.60);
+  }
+  .labelIcon{
+    width: 30px; height: 30px;
+    border-radius: 12px;
+    background: rgba(0,0,0,.34);
+    border: 1px solid rgba(255,255,255,.14);
+    display:grid; place-items:center;
+    box-shadow: 0 18px 55px rgba(0,0,0,.28);
+  }
+
+  .inputWrap{ position:relative; }
+  .inputGlow{
+    position:absolute; inset:-2px;
+    border-radius: 18px;
+    background: radial-gradient(800px 120px at 50% 0%, rgba(140,200,255,.20), transparent 58%);
+    opacity:.65;
+    pointer-events:none;
+    filter: blur(10px);
   }
 
   .nameInput{
+    position:relative;
     width: 100%;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.20);
+    border: 1px solid rgba(255,255,255,.22);
     background: rgba(0,0,0,.34);
     color: #fff;
-    padding: 16px 18px;                /* ✅ agrandi */
+    padding: 16px 18px;
     outline: none;
-    font-size: 20px;                   /* ✅ agrandi */
+    font-size: 20px;
     box-shadow:
       inset 0 0 0 1px rgba(255,255,255,.06),
       0 18px 60px rgba(0,0,0,.18);
   }
   .nameInput::placeholder{ color: rgba(255,255,255,.58); }
+  .nameInput:focus{
+    border-color: rgba(140,200,255,.62);
+    box-shadow:
+      inset 0 0 0 1px rgba(140,200,255,.18),
+      0 26px 90px rgba(0,0,0,.36);
+  }
 
   .actionRow{
     display:flex;
-    gap: 16px;                         /* ✅ + d’air */
+    gap: 16px;
     flex-wrap: wrap;
     margin-top: 16px;
     justify-content:center;
   }
 
-  /* ✅ Boutons plus grands + un peu plus "premium" */
   .btnGlass{
     border-radius: 999px;
     border: 1px solid rgba(255,255,255,.24);
     background: rgba(0,0,0,.40);
     color: #fff;
-    padding: 16px 26px;                /* ✅ agrandi */
+    padding: 16px 26px;
     font-weight: 900;
     letter-spacing: .12em;
     text-transform: uppercase;
-    font-size: 15px;                   /* ✅ agrandi */
-    box-shadow: 0 22px 85px rgba(0,0,0,.38);
+    font-size: 15px;
+    box-shadow: 0 24px 95px rgba(0,0,0,.42);
     transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, border-color .15s ease;
+    position: relative;
+    overflow:hidden;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
   }
   .btnGlass:hover{
     transform: translateY(-3px);
     filter: brightness(1.10);
     border-color: rgba(140,200,255,.55);
-    box-shadow: 0 34px 120px rgba(0,0,0,.55);
+    box-shadow: 0 36px 140px rgba(0,0,0,.58);
   }
   .btnGlass:disabled{
     opacity: .45;
     cursor: not-allowed;
+    transform:none;
+    filter:none;
   }
 
-  /* ✅ Slogan plus grand */
+  .btnGlass::after{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-40%;
+    width:40%;
+    height:200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+    transform: rotate(18deg);
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events:none;
+  }
+  .btnGlass:hover::after{ opacity:.7; animation: btnSweep 1.15s ease; }
+  @keyframes btnSweep{
+    from{ transform: translateX(-120%) rotate(18deg); }
+    to{ transform: translateX(320%) rotate(18deg); }
+  }
+
+  .btnPrimary{
+    border: 1px solid rgba(255,165,0,.38);
+    background: linear-gradient(180deg, rgba(255,176,90,.18), rgba(0,0,0,.40));
+  }
+
   .bottomTag{
     margin-top: 20px;
     text-align:center;
     font-weight: 900;
     letter-spacing: .12em;
     text-transform: uppercase;
-    font-size: 18px;                   /* ✅ agrandi */
+    font-size: 18px;
     color: rgba(255,255,255,.88);
     text-shadow: 0 18px 70px rgba(0,0,0,.70);
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
   }
 
-  /* ✅ Si iframe Genially petite: compacité sans casser */
-  @media (max-width: 900px){
-    .page-wrap{ padding: 28px 18px; }
-    .titlePill{ font-size: 14px; padding: 10px 18px; }
-    .nameCard{ width: min(820px, 100%); padding: 18px; }
-    .nameLabel{ font-size: 16px; }
-    .bottomTag{ font-size: 15px; }
+  /* ✅ Screens */
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* =====================================
+     ✅ RÈGLES: FULLSCREEN NOIR + style inspiré
+     ===================================== */
+  .rulesFull{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(1200px 520px at 50% 18%, rgba(255,255,255,.10), transparent 55%),
+      radial-gradient(900px 520px at 18% 78%, rgba(255,120,80,.08), transparent 60%),
+      radial-gradient(900px 520px at 82% 78%, rgba(90,150,255,.10), transparent 60%),
+      radial-gradient(1200px 900px at 50% 55%, transparent 55%, rgba(0,0,0,.88) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.98), rgba(0,0,0,.96));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 42px 52px;
+  }
+
+  .rulesContainer{ max-width: 1460px; width:100%; }
+
+  .rulesTitleWrap{
+    text-align:center;
+    margin-bottom: 18px;
+    position: relative;
+    isolation:isolate;
+  }
+
+  .rulesGlass{
+    width: min(1420px, 100%);
+    margin: 0 auto;
+    background: rgba(0,0,0,.42);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(12px);
+    border-radius: 26px;
+    box-shadow: 0 22px 80px rgba(0,0,0,.55);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .rulesHeader{
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .helloRules{
+    margin:0;
+    font-weight: 900;
+    font-size: 28px;
+    text-shadow: 0 12px 30px rgba(0,0,0,.55);
+  }
+  .helloRules .name{
+    color: rgba(255,190,110,1);
+    text-shadow: 0 0 14px rgba(255,165,0,.35);
+  }
+
+  .stepPill{
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.26);
+    color: rgba(255,255,255,.90);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing:.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .stepDot{
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: rgba(140,200,255,.22);
+    border: 1px solid rgba(140,200,255,.55);
+    box-shadow: 0 0 14px rgba(140,200,255,.22);
+  }
+
+  .rulesBody{
+    padding: 18px 20px 18px;
+  }
+
+  .rulesGrid{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .panel{
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 22px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    position: relative;
+    overflow:hidden;
+  }
+  .panel::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background: linear-gradient(120deg, rgba(255,255,255,.10), transparent 40%, rgba(255,255,255,.06));
+    opacity:.16;
+    pointer-events:none;
+  }
+
+  .panelTitle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    margin: 0 0 10px;
+  }
+  .panelTitle h3{
+    margin:0;
+    font-weight: 900;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    font-size: 18px;
+    color: rgba(255,255,255,.92);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .tag{
+    padding: 7px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.22);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.84);
+    white-space: nowrap;
+  }
+
+  .ruleText{
+    margin:0 0 12px;
+    color: rgba(255,255,255,.85);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .bullets{
+    margin: 0;
+    padding-left: 18px;
+    color: rgba(255,255,255,.78);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .bullets li{ margin: 6px 0; }
+
+  /* ✅ Visual “jeu pro” */
+  .visual{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap: 14px;
+    height:100%;
+  }
+
+  .bigStat{
+    position: relative;
+    border-radius: 24px;
+    padding: 18px 18px 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,.24), rgba(0,0,0,.18));
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow:
+      0 22px 80px rgba(0,0,0,.35),
+      inset 0 0 0 1px rgba(255,255,255,.05);
+    overflow:hidden;
+  }
+
+  .bigStat::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background:
+      radial-gradient(900px 320px at 22% 12%, rgba(140,200,255,.18), transparent 55%),
+      radial-gradient(900px 320px at 78% 20%, rgba(255,165,0,.14), transparent 60%),
+      linear-gradient(120deg, rgba(255,255,255,.10), transparent 40%, rgba(255,255,255,.06));
+    opacity:.55;
+    pointer-events:none;
+  }
+
+  .bigStat::after{
+    content:"";
+    position:absolute;
+    top:-40%;
+    left:-10%;
+    width: 70%;
+    height: 220%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+    transform: rotate(18deg);
+    opacity:.25;
+    pointer-events:none;
+    animation: shimmer2 4.8s ease-in-out infinite;
+  }
+  @keyframes shimmer2{
+    0%{ transform: translateX(-18%) rotate(18deg); opacity:.14; }
+    50%{ transform: translateX(22%) rotate(18deg); opacity:.28; }
+    100%{ transform: translateX(-18%) rotate(18deg); opacity:.14; }
+  }
+
+  .statTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    position: relative;
+    z-index:1;
+  }
+
+  .statLabel{
+    font-size: 12px;
+    letter-spacing:.20em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.72);
+    font-weight: 900;
+    margin:0;
+  }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.22);
+    color: rgba(255,255,255,.90);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .chip .dot{
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(140,200,255,.55);
+    background: rgba(140,200,255,.18);
+    box-shadow: 0 0 14px rgba(140,200,255,.25);
+  }
+
+  .statValue{
+    font-family:'Anton', sans-serif;
+    font-size: 74px;
+    letter-spacing:.06em;
+    margin: 10px 0 6px;
+    line-height:1;
+    background: linear-gradient(180deg, #ffd9a0 0%, #ffb05a 55%, #ff7832 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow: 0 18px 60px rgba(0,0,0,.55);
+    filter: drop-shadow(0 12px 35px rgba(0,0,0,.35));
+    position: relative;
+    z-index:1;
+  }
+
+  .statMeter{
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.12);
+    overflow:hidden;
+    position: relative;
+    z-index:1;
+    margin: 6px 0 12px;
+  }
+  .statMeter > span{
+    display:block;
+    height:100%;
+    width: 72%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(140,200,255,.95), rgba(255,165,0,.85));
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    animation: meterPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes meterPulse{
+    0%,100%{ filter: brightness(1); }
+    50%{ filter: brightness(1.18); }
+  }
+
+  .statHint{
+    margin: 0;
+    color: rgba(255,255,255,.82);
+    font-size: 16px;
+    line-height: 1.45;
+    position: relative;
+    z-index:1;
+  }
+
+  .miniRow{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .mini{
+    position: relative;
+    border-radius: 20px;
+    padding: 14px 14px 13px;
+    background: rgba(0,0,0,.20);
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 18px 55px rgba(0,0,0,.30);
+    overflow:hidden;
+  }
+
+  .mini::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background: linear-gradient(120deg, rgba(255,255,255,.10), transparent 40%, rgba(255,255,255,.06));
+    opacity:.18;
+    pointer-events:none;
+  }
+
+  .miniTitle{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    margin:0 0 8px;
+    font-weight: 900;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: rgba(255,255,255,.78);
+  }
+
+  .miniIcon{
+    width: 34px; height: 34px;
+    border-radius: 14px;
+    display:grid;
+    place-items:center;
+    background: rgba(140,200,255,.12);
+    border: 1px solid rgba(140,200,255,.22);
+    box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    flex: 0 0 auto;
+  }
+
+  .miniText{
+    margin:0;
+    color: rgba(255,255,255,.88);
+    font-size: 15px;
+    line-height:1.45;
+  }
+
+  /* ✅ Navigation */
+  .navBar{
+    margin-top: 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .dots{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+  }
+  .dotBtn{
+    width: 12px; height: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.10);
+    box-shadow: 0 10px 30px rgba(0,0,0,.22);
+    cursor:pointer;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .dotBtn:hover{ transform: translateY(-1px); }
+  .dotBtn.active{
+    background: rgba(140,200,255,.28);
+    border-color: rgba(140,200,255,.55);
+    box-shadow: 0 0 16px rgba(140,200,255,.22);
+  }
+
+  .btnRow{ display:flex; gap: 10px; align-items:center; }
+
+  .btn-ghost{
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(0,0,0,.18);
+    color: rgba(255,255,255,.90);
+    padding: 12px 16px;
+    font-weight: 900;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    font-size: 12px;
+    transition: transform .15s ease, filter .15s ease;
+  }
+  .btn-ghost:hover{ transform: translateY(-2px); filter: brightness(1.08); }
+
+  .btn-ember{
+    border:0;
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-weight: 900;
+    letter-spacing:.10em;
+    text-transform: uppercase;
+    font-size: 12px;
+    background: linear-gradient(180deg,#ffb05a,#ff7832);
+    color: #0a0c12;
+    box-shadow: 0 16px 35px rgba(255,120,50,.22);
+    transition: transform .15s ease, filter .15s ease;
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .btn-ember:hover{ transform: translateY(-2px); filter: brightness(1.06); }
+  .btn-ember:disabled{ opacity: .45; cursor: not-allowed; transform:none; filter:none; }
+
+  .btnMission{
+    display:none; /* visible seulement à la fin */
+    border: 1px solid rgba(140,200,255,.40);
+  }
+
+  .footer{
+    padding: 14px 18px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    text-align:center;
+    font-size: 13px;
+    color: rgba(255,255,255,.75);
+  }
+
+  /* ✅ Step show/hide + animation “slide” */
+  .step{ display:none; }
+  .step.active{
+    display:block;
+    animation: stepIn .34s ease;
+  }
+  @keyframes stepIn{
+    from{ opacity:0; transform: translateY(16px) scale(.99); filter: blur(2px); }
+    to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+
+  /* ✅ petite “secousse” quand on clique sur un bouton (classe ajoutée en JS) */
+  .shake{
+    animation: shake .22s ease;
+  }
+  @keyframes shake{
+    0%{ transform: translateX(0); }
+    30%{ transform: translateX(-3px); }
+    60%{ transform: translateX(3px); }
+    100%{ transform: translateX(0); }
+  }
+
+  @media (max-width: 1200px){
+    .rulesGrid{ grid-template-columns: 1fr; }
+    .miniRow{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px){
+    .gameTitle{ font-size: 70px; }
+    .gameSubtitle{ font-size: 64px; }
+    .miniRow{ grid-template-columns: 1fr; }
+  }
+
+  /* ✅ audio toggle */
+  .soundBtn{
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.26);
+    color: rgba(255,255,255,.90);
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing:.12em;
+    text-transform: uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    cursor:pointer;
+    transition: transform .15s ease, filter .15s ease;
+  }
+  .soundBtn:hover{ transform: translateY(-2px); filter: brightness(1.08); }
+
+  .soundDot{
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: rgba(25,135,84,.25);
+    border: 1px solid rgba(25,135,84,.55);
+    box-shadow: 0 0 14px rgba(25,135,84,.22);
+  }
+  .soundOff .soundDot{
+    background: rgba(220,53,69,.20);
+    border-color: rgba(220,53,69,.55);
+    box-shadow: 0 0 14px rgba(220,53,69,.20);
   }
 </style>
 </head>
@@ -227,28 +825,332 @@
   <div class="genially-stage">
     <div class="genially-page" id="geniallyPage">
       <div class="fx-overlay"></div>
+      <div class="fx-grain"></div>
 
       <div class="page-wrap">
         <div class="container">
 
-          <div class="gameTitleWrap">
-            <div class="titlePill">MISSION • PREMIERS SECOURS</div>
-            <h1 class="gameTitle">URGENCES</h1>
-            <div class="gameSubtitle">AGIR POUR SAUVER</div>
+          <!-- ✅ ÉCRAN 1 : ACCUEIL -->
+          <div class="screen active" id="screenHome">
+            <div class="gameTitleWrap">
+              <div class="titlePill">
+                <span>MISSION • PREMIERS SECOURS</span>
+              </div>
+              <h1 class="gameTitle">URGENCES</h1>
+              <div class="gameSubtitle">AGIR POUR SAUVER</div>
+            </div>
+
+            <div class="nameCard">
+              <p class="nameLabel">
+                Votre nom
+              </p>
+
+              <div class="inputWrap">
+                <div class="inputGlow"></div>
+                <input id="playerName" class="nameInput" type="text" placeholder="Entrez votre nom…" autocomplete="off" />
+              </div>
+
+              <div class="actionRow">
+                <button id="saveBtn" class="btnGlass btnPrimary" type="button">ENREGISTRER</button>
+                <button id="nextBtn" class="btnGlass" type="button" disabled>SUIVANT</button>
+                <!-- gardé tel quel (mais caché) -->
+                <button id="continueBtn" class="btnGlass" type="button" style="display:none;">COMMENCER LA MISSION</button>
+              </div>
+            </div>
+
+            <div class="bottomTag">⏱️ Chaque seconde compte — choisis. agis. sauve.</div>
           </div>
 
-          <div class="nameCard">
-            <p class="nameLabel">Votre nom</p>
-            <input id="playerName" class="nameInput" type="text" placeholder="Entrez votre nom…" autocomplete="off" />
-            <div class="actionRow">
-              <button id="saveBtn" class="btnGlass" type="button">ENREGISTRER</button>
-              <button id="continueBtn" class="btnGlass" type="button" style="display:none;">COMMENCER LA MISSION</button>
+          <!-- ✅ ÉCRAN 2 : RÈGLES FULLSCREEN NOIR -->
+          <div class="screen" id="screenRules">
+            <div class="rulesFull">
+
+              <div class="rulesContainer">
+
+                <!-- ✅ Titre du jeu (comme ton code de règles) -->
+                <div class="rulesTitleWrap gameTitleWrap">
+                  <div class="titlePill">GUIDE • RÈGLES DU JEU</div>
+                  <h1 class="gameTitle">URGENCES</h1>
+                  <div class="gameSubtitle">AGIR POUR SAUVER</div>
+                </div>
+
+                <div class="rulesGlass">
+
+                  <div class="rulesHeader">
+                    <p class="helloRules" id="helloLineRules"></p>
+
+                    <div class="d-flex gap-2 align-items-center">
+                      <button id="soundToggle" class="soundBtn" type="button" aria-label="Son">
+                        <span class="soundDot"></span>
+                        <span id="soundLabel">SON ON</span>
+                      </button>
+
+                      <div class="stepPill">
+                        <span class="stepDot"></span>
+                        <span id="stepCounter">Étape 1/5</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="rulesBody">
+
+                    <!-- STEP 1 -->
+                    <div class="step active" data-step="1">
+                      <div class="rulesGrid">
+                        <div class="panel">
+                          <div class="panelTitle">
+                            <h3>🧑‍⚕️ 1) Choix du métier</h3>
+                            <span class="tag">Personnalisation</span>
+                          </div>
+                          <p class="ruleText">
+                            Tu commences par choisir un métier : <b>Médecin</b>, <b>Pompier</b> ou <b>Infirmier</b>.
+                            Ensuite, le parcours et les scénarios s’adaptent automatiquement à ton rôle.
+                          </p>
+                          <ul class="bullets">
+                            <li>Chaque métier propose des situations cohérentes avec ses missions.</li>
+                            <li>Ton choix est mémorisé pour la suite du jeu.</li>
+                            <li>Tu peux recommencer plus tard avec un autre métier.</li>
+                          </ul>
+                        </div>
+
+                        <div class="panel">
+                          <div class="visual">
+                            <div class="bigStat">
+                              <div class="statTop">
+                                <p class="statLabel">RÈGLE CLÉ</p>
+                                <div class="chip"><span class="dot"></span> ADAPTATIF</div>
+                              </div>
+                              <p class="statValue">3</p>
+                              <div class="statMeter"><span style="width:72%"></span></div>
+                              <p class="statHint">3 métiers au choix — ton parcours se personnalise automatiquement.</p>
+                            </div>
+
+                            <div class="miniRow">
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">💡</span> Conseil</p>
+                                <p class="miniText">Choisis le rôle qui te motive : tu seras plus rapide et plus sûr.</p>
+                              </div>
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">💾</span> Sauvegarde</p>
+                                <p class="miniText">Ton métier est mémorisé pour les étapes suivantes.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step" data-step="2">
+                      <div class="rulesGrid">
+                        <div class="panel">
+                          <div class="panelTitle">
+                            <h3>🎚️ 2) Choix du niveau</h3>
+                            <span class="tag">Difficulté</span>
+                          </div>
+                          <p class="ruleText">
+                            Tu choisis ensuite un niveau : <b>Débutant</b>, <b>Intermédiaire</b> ou <b>Expert</b>.
+                            La difficulté (indices, rapidité, exigences) s’ajuste à ton choix.
+                          </p>
+                          <ul class="bullets">
+                            <li><b>Débutant</b> : guidage renforcé et apprentissage progressif.</li>
+                            <li><b>Intermédiaire</b> : moins d’indices, plus d’autonomie.</li>
+                            <li><b>Expert</b> : scénarios exigeants, temps de réaction serré.</li>
+                          </ul>
+                        </div>
+
+                        <div class="panel">
+                          <div class="visual">
+                            <div class="bigStat">
+                              <div class="statTop">
+                                <p class="statLabel">RÈGLE CLÉ</p>
+                                <div class="chip"><span class="dot"></span> NIVEAUX</div>
+                              </div>
+                              <p class="statValue">3</p>
+                              <div class="statMeter"><span style="width:66%"></span></div>
+                              <p class="statHint">Choisis ta difficulté : Débutant, Intermédiaire ou Expert.</p>
+                            </div>
+
+                            <div class="miniRow">
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">🎯</span> Objectif</p>
+                                <p class="miniText">Adapter le challenge à ton rythme d’apprentissage.</p>
+                              </div>
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">⚙️</span> Ajustement</p>
+                                <p class="miniText">Indices, rythme et exigence changent selon le niveau.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step" data-step="3">
+                      <div class="rulesGrid">
+                        <div class="panel">
+                          <div class="panelTitle">
+                            <h3>🏆 3) Système de points</h3>
+                            <span class="tag">Score</span>
+                          </div>
+                          <p class="ruleText">
+                            À chaque réponse correcte, tu gagnes <b>10 points</b>.
+                            Ton score reflète ta progression et encourage la régularité.
+                          </p>
+                          <ul class="bullets">
+                            <li>Bonne réponse = <b>+10</b> points.</li>
+                            <li>Le score peut servir à débloquer des étapes (selon ton scénario Genially).</li>
+                            <li>Reste concentré : chaque choix compte.</li>
+                          </ul>
+                        </div>
+
+                        <div class="panel">
+                          <div class="visual">
+                            <div class="bigStat">
+                              <div class="statTop">
+                                <p class="statLabel">GAIN</p>
+                                <div class="chip"><span class="dot"></span> POINTS</div>
+                              </div>
+                              <p class="statValue">+10</p>
+                              <div class="statMeter"><span style="width:80%"></span></div>
+                              <p class="statHint">Chaque bonne réponse ajoute 10 points à ton score.</p>
+                            </div>
+
+                            <div class="miniRow">
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">📈</span> Progression</p>
+                                <p class="miniText">Plus tu réussis, plus tu avances rapidement.</p>
+                              </div>
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">⏱️</span> Focus</p>
+                                <p class="miniText">La rapidité et la précision font la différence.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step" data-step="4">
+                      <div class="rulesGrid">
+                        <div class="panel">
+                          <div class="panelTitle">
+                            <h3>🔁 4) Tentatives et reprise</h3>
+                            <span class="tag">Rigueur</span>
+                          </div>
+                          <p class="ruleText">
+                            Si tu perds <b>2 tentatives</b>, tu dois reprendre les questions <b>depuis le début</b>.
+                            L’objectif : renforcer la mémorisation et la maîtrise des gestes.
+                          </p>
+                          <ul class="bullets">
+                            <li>2 erreurs = reprise du bloc de questions.</li>
+                            <li>Reste attentif et relis les consignes.</li>
+                            <li>Le jeu récompense la persévérance.</li>
+                          </ul>
+                        </div>
+
+                        <div class="panel">
+                          <div class="visual">
+                            <div class="bigStat">
+                              <div class="statTop">
+                                <p class="statLabel">LIMITE</p>
+                                <div class="chip"><span class="dot"></span> TENTATIVES</div>
+                              </div>
+                              <p class="statValue">2</p>
+                              <div class="statMeter"><span style="width:58%"></span></div>
+                              <p class="statHint">Après 2 échecs : retour au début des questions.</p>
+                            </div>
+
+                            <div class="miniRow">
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">🧠</span> Mémoire</p>
+                                <p class="miniText">Recommencer aide à consolider les bons réflexes.</p>
+                              </div>
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">🛡️</span> Sécurité</p>
+                                <p class="miniText">En urgence, une erreur peut coûter cher : entraînement obligatoire.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step" data-step="5">
+                      <div class="rulesGrid">
+                        <div class="panel">
+                          <div class="panelTitle">
+                            <h3>🎖️ 5) Badges de scénario</h3>
+                            <span class="tag">Récompense</span>
+                          </div>
+                          <p class="ruleText">
+                            Chaque scénario terminé te fait gagner un <b>badge</b>.
+                            C’est une récompense visuelle qui valide tes acquis.
+                          </p>
+                          <ul class="bullets">
+                            <li>1 scénario terminé = <b>1 badge</b>.</li>
+                            <li>Les badges montrent ta progression dans la mission.</li>
+                            <li>Objectif : collectionner tous les badges !</li>
+                          </ul>
+                        </div>
+
+                        <div class="panel">
+                          <div class="visual">
+                            <div class="bigStat">
+                              <div class="statTop">
+                                <p class="statLabel">RÉCOMPENSE</p>
+                                <div class="chip"><span class="dot"></span> BADGES</div>
+                              </div>
+                              <p class="statValue">🏅</p>
+                              <div class="statMeter"><span style="width:74%"></span></div>
+                              <p class="statHint">Terminer un scénario débloque un badge de progression.</p>
+                            </div>
+
+                            <div class="miniRow">
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">✅</span> Validation</p>
+                                <p class="miniText">Chaque badge confirme que tu maîtrises une compétence.</p>
+                              </div>
+                              <div class="mini">
+                                <p class="miniTitle"><span class="miniIcon">🏁</span> Objectif</p>
+                                <p class="miniText">Obtenir tous les badges = mission complète.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- NAV -->
+                    <div class="navBar">
+                      <div class="dots" id="dots"></div>
+
+                      <div class="btnRow">
+                        <button class="btn-ghost" type="button" id="prevBtn">⬅ Précédent</button>
+                        <button class="btn-ember" type="button" id="nextRuleBtn">Suivant ➜</button>
+                        <button class="btn-ember btnMission" type="button" id="startMissionBtn">🚀 Commencer la mission</button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="footer" id="helpTxt">
+                    Utilise “Suivant” pour lire les règles, étape par étape.
+                  </div>
+
+                </div>
+
+              </div>
+
             </div>
           </div>
 
-          <div class="bottomTag">Chaque seconde compte — choisis. agis. sauve.</div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -266,27 +1168,263 @@
     apply();
   })();
 
-  // ✅ Gestion du nom (inchangé)
-  const playerName = document.getElementById("playerName");
+  /* ✅ Nettoyage des variables "d'avant" quand l'utilisateur recommence le jeu
+     - On conserve uniquement player_name (si déjà existant) le temps d'afficher l'accueil.
+     - Pour tout effacer y compris le nom: KEEP_NAME=false
+  */
+  (function resetPreviousRun(){
+    const KEEP_NAME = true;
+    const preservedName = localStorage.getItem("player_name");
+
+    const keysToClear = [
+      "role","avatar","niveau","score","points",
+      "badges","attempts","tentatives","progress",
+      "playerName"
+    ];
+    keysToClear.forEach(k => localStorage.removeItem(k));
+
+    if (KEEP_NAME && preservedName) localStorage.setItem("player_name", preservedName);
+    if (!KEEP_NAME) localStorage.removeItem("player_name");
+  })();
+
+  /* =========================
+     ✅ SFX (sans fichiers externes) : WebAudio
+     - Click: petit "tick"
+     - Next: whoosh + blip
+     - Complete: petite fanfare
+     NOTE: Audio se lance après 1er clic utilisateur (règle navigateur).
+  ========================= */
+  let audioOn = true;
+  let audioReady = false;
+  let AC = null;
+
+  function ensureAudio(){
+    if (audioReady) return;
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    audioReady = true;
+  }
+
+  function playTick(){
+    if (!audioOn) return;
+    ensureAudio();
+    const t = AC.currentTime;
+    const o = AC.createOscillator();
+    const g = AC.createGain();
+    o.type = "square";
+    o.frequency.setValueAtTime(720, t);
+    o.frequency.exponentialRampToValueAtTime(520, t + 0.06);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.10, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+    o.connect(g); g.connect(AC.destination);
+    o.start(t); o.stop(t + 0.09);
+  }
+
+  function playWhoosh(){
+    if (!audioOn) return;
+    ensureAudio();
+    const t = AC.currentTime;
+    const n = AC.createBufferSource();
+    const buffer = AC.createBuffer(1, AC.sampleRate * 0.15, AC.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i=0; i<data.length; i++){
+      data[i] = (Math.random()*2-1) * (1 - i/data.length);
+    }
+    n.buffer = buffer;
+    const f = AC.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(1200, t);
+    f.frequency.exponentialRampToValueAtTime(320, t + 0.12);
+
+    const g = AC.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.16, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+
+    n.connect(f); f.connect(g); g.connect(AC.destination);
+    n.start(t); n.stop(t + 0.15);
+  }
+
+  function playFanfare(){
+    if (!audioOn) return;
+    ensureAudio();
+    const t = AC.currentTime;
+
+    function note(freq, start, dur){
+      const o = AC.createOscillator();
+      const g = AC.createGain();
+      o.type = "triangle";
+      o.frequency.setValueAtTime(freq, start);
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(0.12, start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      o.connect(g); g.connect(AC.destination);
+      o.start(start); o.stop(start + dur + 0.02);
+    }
+    note(523.25, t, 0.12);  // C5
+    note(659.25, t+0.12, 0.12); // E5
+    note(783.99, t+0.24, 0.18); // G5
+  }
+
+  /* =========================
+     ✅ ACCUEIL
+  ========================= */
+  const screenHome = document.getElementById("screenHome");
+  const screenRules = document.getElementById("screenRules");
+
+  const playerNameInput = document.getElementById("playerName");
   const saveBtn = document.getElementById("saveBtn");
-  const continueBtn = document.getElementById("continueBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const continueBtn = document.getElementById("continueBtn"); // gardé tel quel
 
   const savedName = localStorage.getItem("player_name");
   if (savedName) {
-    playerName.value = savedName;
-    continueBtn.style.display = "inline-block";
+    playerNameInput.value = savedName;
+    nextBtn.disabled = false;
+  }
+
+  function pulse(btn){
+    btn.classList.add("shake");
+    setTimeout(()=>btn.classList.remove("shake"), 250);
   }
 
   saveBtn.addEventListener("click", () => {
-    const name = (playerName.value || "").trim();
-    if (!name) { playerName.focus(); return; }
+    playTick();
+    const name = (playerNameInput.value || "").trim();
+    if (!name) { playerNameInput.focus(); pulse(saveBtn); return; }
     localStorage.setItem("player_name", name);
-    continueBtn.style.display = "inline-block";
+    nextBtn.disabled = false;
+    pulse(saveBtn);
   });
 
-  continueBtn.addEventListener("click", () => {
-    // Rien ici volontairement
+  nextBtn.addEventListener("click", () => {
+    if (nextBtn.disabled) { pulse(nextBtn); playTick(); return; }
+    playWhoosh();
+    screenHome.classList.remove("active");
+    screenRules.classList.add("active");
+    initRules();
   });
+
+  continueBtn.addEventListener("click", () => { /* vide */ });
+
+  /* =========================
+     ✅ RÈGLES (style inspiré + sons + animations)
+  ========================= */
+  const helloLineRules = document.getElementById("helloLineRules");
+  const steps = Array.from(document.querySelectorAll(".step"));
+  const dotsWrap = document.getElementById("dots");
+  const stepCounter = document.getElementById("stepCounter");
+  const helpTxt = document.getElementById("helpTxt");
+
+  const prevBtn = document.getElementById("prevBtn");
+  const nextRuleBtn = document.getElementById("nextRuleBtn");
+  const startMissionBtn = document.getElementById("startMissionBtn");
+
+  const soundToggle = document.getElementById("soundToggle");
+  const soundLabel = document.getElementById("soundLabel");
+
+  let current = 0;
+  let rulesInited = false;
+
+  function initRules(){
+    if (rulesInited) return;
+    rulesInited = true;
+
+    const pName = localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur";
+    helloLineRules.innerHTML = `Bonjour <span class="name">${escapeHtml(pName)}</span>, découvre les règles du jeu.`;
+
+    buildDots();
+    goTo(0, false);
+  }
+
+  function buildDots(){
+    dotsWrap.innerHTML = "";
+    steps.forEach((_, i)=>{
+      const d = document.createElement("button");
+      d.type = "button";
+      d.className = "dotBtn";
+      d.setAttribute("aria-label", "Étape " + (i+1));
+      d.addEventListener("click", ()=>{
+        playTick();
+        goTo(i, true);
+      });
+      dotsWrap.appendChild(d);
+    });
+  }
+
+  function goTo(i, playSfx){
+    current = Math.max(0, Math.min(steps.length-1, i));
+    steps.forEach((s, idx)=>s.classList.toggle("active", idx === current));
+    Array.from(dotsWrap.children).forEach((d, idx)=>d.classList.toggle("active", idx === current));
+
+    stepCounter.textContent = `Étape ${current+1}/${steps.length}`;
+
+    prevBtn.disabled = current === 0;
+
+    const isLast = current === steps.length - 1;
+    nextRuleBtn.style.display = isLast ? "none" : "inline-flex";
+    startMissionBtn.style.display = isLast ? "inline-flex" : "none";
+
+    const hints = [
+      "Choisis ton métier : le parcours s’adapte à ton rôle.",
+      "Choisis un niveau : la difficulté s’ajuste.",
+      "Chaque bonne réponse = +10 points.",
+      "Après 2 tentatives perdues : reprise depuis le début des questions.",
+      "Chaque scénario terminé = un badge."
+    ];
+    helpTxt.textContent = hints[current] || "Utilise “Suivant” pour continuer.";
+
+    if (playSfx){
+      playWhoosh();
+      if (isLast) playFanfare();
+    }
+  }
+
+  prevBtn.addEventListener("click", ()=>{
+    playTick();
+    if (prevBtn.disabled) return pulse(prevBtn);
+    goTo(current-1, true);
+  });
+
+  nextRuleBtn.addEventListener("click", ()=>{
+    playTick();
+    if (current >= steps.length-1) return;
+    goTo(current+1, true);
+  });
+
+  startMissionBtn.addEventListener("click", ()=>{
+    playFanfare();
+    pulse(startMissionBtn);
+    helpTxt.textContent = "🚀 Prêt ! Continue dans Genially.";
+    // volontairement vide (pas de redirection)
+  });
+
+  // clavier (optionnel)
+  window.addEventListener("keydown", (e)=>{
+    if (!screenRules.classList.contains("active")) return;
+    if (e.key === "ArrowLeft") { if (!prevBtn.disabled) { playTick(); goTo(current-1, true); } }
+    if (e.key === "ArrowRight") { if (current < steps.length-1) { playTick(); goTo(current+1, true); } }
+  });
+
+  // Toggle son
+  soundToggle.addEventListener("click", ()=>{
+    playTick();
+    audioOn = !audioOn;
+    soundToggle.classList.toggle("soundOff", !audioOn);
+    soundLabel.textContent = audioOn ? "SON ON" : "SON OFF";
+    if (audioOn) playFanfare();
+  });
+
+  // Première interaction: préparer audio (évite blocage)
+  window.addEventListener("pointerdown", ()=>{
+    if (!audioReady) ensureAudio();
+  }, { once:true });
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+    }[m]));
+  }
 </script>
 
 </body>
