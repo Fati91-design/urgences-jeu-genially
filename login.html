@@ -1,8 +1,9 @@
 <!-- =========================
      ✅ ACCUEIL.html (Genially 1980x1020)
-     - ENREGISTRER + SUIVANT (désactivé tant que nom non enregistré)
-     - Transition cinématique vers Regles.html (fade + glow)
-     - (Bouton recommencer supprimé)
+     ✅ MODIFS demandées (sans toucher le reste) :
+     1) Retirer l’arrière-plan derrière “CHARGEMENT…” → rendre transparent
+     2) Faire disparaître le formulaire + titre + autres éléments AVANT l’affichage de “CHARGEMENT…”
+     3) Allonger la durée d’affichage du message (avant redirection)
 ========================= -->
 <!DOCTYPE html>
 <html lang="fr">
@@ -141,13 +142,8 @@
   /* ✅ Transition cinématique */
   .cinematic{
     position:absolute; inset:0; pointer-events:none; opacity:0; z-index:9999;
-
-    /* ✅ MODIF DEMANDÉE : arrière-plan transparent (on retire le voile noir) */
-    background:
-      radial-gradient(1200px 520px at 50% 35%, rgba(140,200,255,.16), transparent 100%),
-      radial-gradient(900px 520px at 65% 70%, rgba(255,165,0,.12), transparent 100%),
-      transparent;
-
+    /* ✅ MODIF: arrière-plan rendu transparent (suppression du voile noir) */
+    background: transparent;
     transition: opacity .55s ease;
   }
   .cinematic.on{ opacity:1; }
@@ -185,6 +181,9 @@
     letter-spacing:.22em; color:rgba(255,255,255,.78);
   }
 
+  /* ✅ MODIF: permet de cacher toute l'UI avant "CHARGEMENT..." */
+  .hideUI{ opacity:0; visibility:hidden; pointer-events:none; transition: opacity .22s ease; }
+
   @media(max-width:900px){
     .page-wrap{ padding:28px 18px; }
     .titlePill{ font-size:14px; padding:10px 18px; }
@@ -201,7 +200,8 @@
     <div class="genially-page" id="geniallyPage">
       <div class="fx-overlay"></div>
 
-      <div class="page-wrap">
+      <!-- ✅ MODIF: wrapper UI à masquer avant chargement -->
+      <div class="page-wrap" id="uiWrap">
         <div class="container">
 
           <div class="gameTitleWrap">
@@ -253,6 +253,9 @@
   const nextBtn = document.getElementById("nextBtn");
   const cinematic = document.getElementById("cinematic");
 
+  /* ✅ MODIF: wrapper UI */
+  const uiWrap = document.getElementById("uiWrap");
+
   const savedName = localStorage.getItem("player_name") || localStorage.getItem("playerName");
   if (savedName) {
     playerName.value = savedName;
@@ -268,10 +271,17 @@
 
   nextBtn.addEventListener("click", () => {
     if (nextBtn.disabled) return;
+
+    /* ✅ MODIF 1: cacher TOUTE l'UI avant d'afficher "CHARGEMENT..." */
+    uiWrap.classList.add("hideUI");
+
+    /* ✅ MODIF 2: afficher le message de chargement (overlay transparent) */
     cinematic.classList.add("on");
+
+    /* ✅ MODIF 3: allonger la durée avant redirection */
     setTimeout(() => {
       window.location.href = "Regles.html";
-    }, 520);
+    }, 1600); // ✅ plus long (au lieu de 520)
   });
 </script>
 </body>
