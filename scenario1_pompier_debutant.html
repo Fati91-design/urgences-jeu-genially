@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 1 — Étouffement</title>
+  <title>Scénario 1 — Étouffement — Pompier</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -23,22 +23,102 @@
       --ember2: rgba(255,120,50,1);
     }
 
-    html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    html,body{
+      margin:0;
+      background: transparent;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      height:100%;
+      overflow:hidden; /* ✅ pas de scroll page (Genially) */
+    }
 
-    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
-    .wrap{ width: min(1120px, 100%); }
+    .stage{
+      height: 100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding: 10px;
+      overflow:hidden;
+    }
+    .wrap{
+      width: min(1120px, 100%);
+      height: 100%;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
 
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    /* ====== TOP LEVEL TAB (niveau) ====== */
+    .topTabs{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      flex: 0 0 auto;
+    }
+    .levelTab{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(80,170,255,.10));
+      box-shadow: 0 16px 44px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      font-weight: 950;
+      letter-spacing: .25px;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+    .levelDot{
+      width: 9px; height: 9px; border-radius: 999px;
+      background: rgba(255,176,90,1);
+      box-shadow: 0 0 0 5px rgba(255,176,90,.18);
+    }
+    .miniHint{
+      font-size: 11px;
+      font-weight: 900;
+      color: rgba(255,255,255,.72);
+      white-space: nowrap;
+    }
+
+    /* Progress bar */
+    .progressShell{
+      flex: 1 1 220px;
+      height: 9px;
+      background: rgba(255,255,255,.10);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      min-width: 220px;
+    }
+    .progressBar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,176,90,1), rgba(80,170,255,1));
+      transition: width .25s ease;
+    }
+
+    .hud{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex: 0 0 auto;
+    }
 
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 10px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap: 12px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
@@ -55,77 +135,103 @@
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+    .profile{ display:flex; align-items:center; gap: 12px; min-width: 0; position: relative; z-index:2; }
 
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
+      width: 72px; height: 72px;
+      border-radius: 18px;
+      padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
-      box-shadow: 0 18px 42px rgba(0,0,0,.45);
+      box-shadow: 0 14px 34px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.35);
+      transform: scale(1.25);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
 
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .pname{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top: 3px;
+      font-weight: 850;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
 
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
+      padding: 7px 10px;
+      font-size: 11px;
       font-weight: 950;
       white-space: nowrap;
       position: relative;
       z-index:2;
     }
 
-    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 12px; flex-wrap: wrap; position: relative; z-index:2; }
+    .stats{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index:2;
+    }
 
     .pill{
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
+      gap: 8px;
+      padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 13px;
+      font-size: 12px;
       white-space: nowrap;
     }
 
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+    .timerPill{ padding: 7px 9px; gap: 9px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
 
     .ring{
-      width: 40px; height: 40px; border-radius: 999px;
+      width: 34px; height: 34px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px;
+      width: 24px; height: 24px; border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 14px; font-weight: 950;
+      font-size: 13px; font-weight: 950;
     }
 
-    .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 16px; font-weight: 950; }
+    .timeText{ display:flex; align-items:center; gap: 7px; }
+    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 14px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -137,7 +243,7 @@
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px;
+      width: 200px; height: 10px; border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -148,15 +254,21 @@
       transition: width .25s ease;
     }
 
+    /* ===== Main frame ===== */
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 12px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
+      flex: 1 1 auto;
+      min-height: 0;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
     }
     .frame::after{
       content:"";
@@ -167,15 +279,53 @@
       opacity:.9;
     }
 
-    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qmeta{
+      position: relative; z-index:2;
+      color: rgba(255,255,255,.70);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+      flex: 0 0 auto;
+    }
+    .qtitle{
+      position: relative; z-index:2;
+      margin-top: 2px;
+      font-weight: 950;
+      font-size: clamp(16px, 2.0vw, 24px);
+      line-height: 1.15;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+      flex: 0 0 auto;
+    }
+    .qdesc{
+      position: relative; z-index:2;
+      margin-top: 4px;
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 980px;
+      flex: 0 0 auto;
+    }
 
-    .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
+    /* ✅ zone options: scroll interne si besoin */
+    .options{
+      position: relative; z-index:2;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 6px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow:auto;
+      padding-right: 4px;
+    }
+    .options::-webkit-scrollbar{ width: 8px; }
+    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius: 999px; }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); border-radius: 999px; }
 
     .opt{
       border-radius: 14px;
-      padding: 13px 14px;
+      padding: 11px 12px;
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
@@ -184,6 +334,7 @@
       border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
+      font-size: 13px;
     }
     .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
@@ -194,64 +345,76 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .actions{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      margin-top: 10px;
+      flex: 0 0 auto;
+      position: relative;
+      z-index: 3;
+    }
+    .actions-left,.actions-right{ display:flex; gap: 10px; }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.90);
       border-radius: 12px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       font-weight: 950;
       letter-spacing: .2px;
+      cursor: pointer;
+      font-size: 12px;
     }
-
     .btnPrimary{
       border: none;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 9px 12px;
       font-weight: 950;
       letter-spacing: .2px;
       display:none;
+      cursor: pointer;
+      font-size: 12px;
     }
     .btnPrimary.show{ display:inline-block; }
-    .btnPrimary:disabled{
-      opacity:.45;
-      filter: grayscale(.2);
-      cursor: not-allowed;
-    }
+    .btnPrimary:disabled{ opacity:.45; filter: grayscale(.2); cursor: not-allowed; }
 
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
       z-index: 50;
-      background: rgba(0,0,0,.48);
-      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(6px);
+      overflow:hidden;
     }
 
     .modalBox{
       width: min(760px, 92%);
+      max-height: 90vh;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
       overflow:hidden;
       position: relative;
+      display:flex;
+      flex-direction:column;
     }
-
     .modalTop{
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      flex: 0 0 auto;
     }
 
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 6px 9px;
+      font-size: 11px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
@@ -260,21 +423,32 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{
+      padding: 14px;
+      color: rgba(255,255,255,.92);
+      line-height: 1.45;
+      font-size: 13px;
+      overflow:auto;
+      max-height: 58vh;
+      white-space: normal;
+      flex: 1 1 auto;
+    }
     .modalActions{
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+      flex: 0 0 auto;
     }
 
-    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
-    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
+    .startTitle{ font-weight: 950; font-size: 18px; margin-bottom: 6px; }
+    .startText{ color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.45; }
     .startBtn{
-      border:none; border-radius: 14px; padding: 12px 16px;
+      border:none; border-radius: 14px; padding: 11px 14px;
       font-weight: 950; letter-spacing: .3px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      cursor: pointer;
     }
 
     .shake{ animation: shake .24s linear 1; }
@@ -301,90 +475,123 @@
 
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; }
+      .stressWrap{ width: 170px; }
+      .progressShell{ min-width: 100%; }
     }
-  
-/* Hotspot zones (cadres clignotants) */
-@keyframes hsPulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
-  70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: rgba(255,255,255,.55); }
-}
-.hotspot-zone{
-  position:absolute;
-  background: transparent !important;
-  border: 2px solid rgba(255,255,255,.65);
-  border-radius: 16px;
-  padding:0;
-  margin:0;
-  cursor:pointer;
-  animation: hsPulse 1.35s infinite;
-}
-.hotspot-zone.sel{
-  border-color: rgba(34,197,94,.95);
-  box-shadow: 0 0 0 6px rgba(34,197,94,.20);
-  animation: none;
-}
 
+    /* Hotspot zones */
+    @keyframes hsPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
+      70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: rgba(255,255,255,.55); }
+    }
+    .hotspot-zone{
+      position:absolute;
+      background: transparent !important;
+      border: 2px solid rgba(255,255,255,.65);
+      border-radius: 16px;
+      padding:0;
+      margin:0;
+      cursor:pointer;
+      animation: hsPulse 1.35s infinite;
+    }
+    .hotspot-zone.sel{
+      border-color: rgba(34,197,94,.95);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.20);
+      animation: none;
+    }
 
-/* ===== Q4 – Design cartes images ===== */
-.imgGrid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:16px;
-  margin-top:12px;
-}
-@media (max-width: 900px){
-  .imgGrid{ grid-template-columns: 1fr; }
-}
-.imgCard{
-  border-radius:18px;
-  overflow:hidden;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);
-  cursor:pointer;
-  transition:.15s ease;
-  box-shadow:0 14px 30px rgba(0,0,0,.25);
-}
-.imgCard:hover{ transform:translateY(-3px); filter:brightness(1.05); }
-.imgCard.sel{
-  outline:3px solid rgba(255,165,0,.4);
-  box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
-}
-.imgHead{
-  padding:12px 16px;
-  font-weight:900;
-  display:flex;
-  justify-content:space-between;
-  background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
-}
-.imgTag{
-  width:36px;
-  height:36px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  background:rgba(0,0,0,.25);
-}
-.imgPic{
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-  display:block;
-}
-.imgCap{
-  padding:14px;
-  text-align:center;
-  font-weight:800;
-}
-</style>
+    /* Q4 images (✅ plus petites) */
+    .imgGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+      margin-top:10px;
+    }
+    @media (max-width: 900px){
+      .imgGrid{ grid-template-columns: 1fr; }
+    }
+    .imgCard{
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      cursor:pointer;
+      transition:.15s ease;
+      box-shadow:0 14px 30px rgba(0,0,0,.25);
+    }
+    .imgCard:hover{ transform:translateY(-2px); filter:brightness(1.05); }
+    .imgCard.sel{
+      outline:3px solid rgba(255,165,0,.4);
+      box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
+    }
+    .imgHead{
+      padding:10px 12px;
+      font-weight:900;
+      display:flex;
+      justify-content:space-between;
+      background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
+      font-size: 12px;
+    }
+    .imgTag{
+      width:30px;
+      height:30px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      background:rgba(0,0,0,.25);
+      font-size: 12px;
+    }
+    .imgPic{
+      width:100%;
+      height: 128px; /* ✅ encore plus petit */
+      object-fit:cover;
+      display:block;
+    }
+    .imgCap{
+      padding:10px;
+      text-align:center;
+      font-weight:800;
+      font-size: 12px;
+      color: rgba(255,255,255,.86);
+    }
+
+    /* Corrigé overlay */
+    .closeX{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      cursor:pointer;
+      font-weight: 950;
+      user-select:none;
+    }
+    .closeX:hover{ filter: brightness(1.08); }
+    .keyBox{ width:min(980px, 95%); }
+  </style>
 </head>
 
 <body>
 <div class="stage">
   <div class="wrap">
+
+    <!-- TOP TAB + PROGRESS -->
+    <div class="topTabs">
+      <div class="levelTab" title="Niveau">
+        <span class="levelDot"></span>
+        <span id="levelTabText">NIVEAU : —</span>
+      </div>
+
+      <div class="progressShell" title="Progression">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+
+      <div class="miniHint" id="miniHint">⏱ —s / question • — tentatives • 💡 — indices</div>
+    </div>
 
     <div class="hud">
       <div class="hudbox">
@@ -393,30 +600,35 @@
             <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
           <div class="ptext">
-            <div class="pname" id="hudName">Joueur</div>
+            <div class="pname" id="hudName">—</div>
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
-        <div class="chip" id="difficultyChip">MODE: DÉBUTANT</div>
+        <div class="chip" id="difficultyChip">MODE: —</div>
       </div>
 
       <div class="hudbox">
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">—</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
             <div class="timeText">
               <div class="label">Temps</div>
-              <div class="sec"><span id="hudTime">12</span>s</div>
+              <div class="sec"><span id="hudTime">0</span>s</div>
             </div>
           </div>
 
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
           </div>
+
+          <!-- Indice -->
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice (0)</button>
+
+          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
     </div>
@@ -429,8 +641,15 @@
       <div class="options" id="options"></div>
 
       <div class="actions">
-        <button class="btnPrimary show" id="validateBtn" type="button">Valider</button>
-        <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+        <div class="actions-left">
+          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+        </div>
+
+        <div class="actions-right">
+          <button class="btnPrimary show" id="validateBtn" type="button" disabled>Valider</button>
+          <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+        </div>
       </div>
     </div>
 
@@ -448,16 +667,26 @@
     </div>
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
-      <div class="startText">
+      <div class="startText" id="startRulesText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <b>Si le temps s’écoule ou après des tentatives ratées, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
     </div>
     <div class="modalActions">
       <button class="startBtn" id="startBtn">DÉMARRER</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="overlay" id="loadingOverlay">
+  <div class="modalBox" style="max-width:520px;">
+    <div class="modalBody" style="text-align:center; padding:22px 14px;">
+      <div style="font-weight:950; font-size:16px;">Chargement…</div>
+      <div style="margin-top:6px; color:rgba(255,255,255,.75); font-size:12px;">Préparation de la prochaine étape</div>
     </div>
   </div>
 </div>
@@ -480,23 +709,24 @@
   </div>
 </div>
 
+<!-- Corrigé overlay -->
+<div class="overlay" id="keyOverlay">
+  <div class="modalBox keyBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">📘 Corrigé</div>
+      <div class="closeX" id="keyCloseBtn" title="Fermer">✕</div>
+    </div>
+    <div class="modalBody" id="keyBody" style="max-height:62vh; overflow:auto;">
+      <!-- injected -->
+    </div>
+    <div class="modalActions">
+      <button class="btnNeo" id="keyCloseBtn2" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ========= SCENARIO ENGINE (Design Genially-like) ========= */
+/* ========= SCENARIO ENGINE ========= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.08, type="sine", gain=0.05){
@@ -511,19 +741,14 @@ function tone(freq, dur=0.08, type="sine", gain=0.05){
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
 function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
-
 function sfxVictory(){
-  // petite mélodie de victoire (1.4s)
   ensureAudio();
   const notes = [
     {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
     {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
   ];
   let t = 0;
-  notes.forEach((n, i)=>{
-    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
-    t += n.d + 0.03;
-  });
+  notes.forEach((n)=>{ setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000); t += n.d + 0.03; });
 }
 function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
 function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
@@ -545,76 +770,220 @@ function sfxAlarmLong(){
 
 const el = (id)=>document.getElementById(id);
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
-const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
+const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts"), hudAttemptsMax = el("hudAttemptsMax");
 const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
 const startOverlay = el("startOverlay"), startBtn = el("startBtn");
+const loadingOverlay = el("loadingOverlay");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
 const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
+const progressBar = el("progressBar");
+const pauseBtn = el("pauseBtn");
+const hintBtn = el("hintBtn");
+const miniHint = el("miniHint");
+const levelTabText = el("levelTabText");
+const startRulesText = el("startRulesText");
+const showKeyBtn = el("showKeyBtn");
+const endBtn = el("endBtn");
+const keyOverlay = el("keyOverlay");
+const keyBody = el("keyBody");
+const keyCloseBtn = el("keyCloseBtn");
+const keyCloseBtn2 = el("keyCloseBtn2");
 
 /* ======= CONFIG ======= */
 const SCENARIO = {
   id: 1,
   label: "Scénario 1 — Étouffement",
-  mission: "Étouffement",
-  level: "Niveau débutant"
+  mission: "Étouffement"
 };
 
-// Lien "Suivant" (à remplacer par ton lien Genially)
-const NEXT_GENIALLY_URL = "#";
+// ✅ URL du scénario suivant
+const NEXT_SCENARIO_URL = "#";
 
-// Timer 30 sec (exigé)
-const TIMER_SECONDS = 60;
-const MAX_ATTEMPTS = 3;
-
-// Stress (exigé)
-const STRESS_RULES = {
-  wrong: 10,
-  timeout: 15,
-  critical: 25
-};
-
+// Role
 const role = "pompier";
-const playerName = localStorage.getItem("playerName") || "Joueur";
-const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
-const difficulty = "debutant";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
-hudName.textContent = playerName;
+
+/* ✅ player_name prioritaire, sinon playerName */
+const rawName =
+  (typeof window.player_name !== "undefined" && String(window.player_name).trim())
+    ? String(window.player_name).trim()
+    : ((typeof window.playerName !== "undefined" && String(window.playerName).trim())
+        ? String(window.playerName).trim()
+        : ((localStorage.getItem("player_name") || localStorage.getItem("playerName") || "").trim() || "Joueur"));
+
+const playerName = rawName;
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
+
+/* ✅ Niveau choisi avant: window.niveau ou localStorage */
+const difficultyRaw = (typeof window.niveau !== "undefined" && window.niveau)
+  ? String(window.niveau)
+  : (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
+
+const difficulty = String(difficultyRaw).toLowerCase();
+
+/* ✅ règles par niveau (comme demandé) */
+const RULES_BY_LEVEL = {
+  "débutant":     { time: 60, attempts: 3, hints: 3 },
+  "debutant":     { time: 60, attempts: 3, hints: 3 },
+  "intermédiaire":{ time: 45, attempts: 2, hints: 2 },
+  "intermediaire":{ time: 45, attempts: 2, hints: 2 },
+  "expert":       { time: 30, attempts: 1, hints: 1 }
+};
+const RULES = RULES_BY_LEVEL[difficulty] || RULES_BY_LEVEL["debutant"];
+
+const TIMER_SECONDS = RULES.time;
+const MAX_ATTEMPTS  = RULES.attempts;
+const HINT_MAX      = RULES.hints;
+
+/* Stress */
+const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
+
+/* UI header */
+hudName.textContent = "Dr. " + playerName; /* ✅ Dr. + nom */
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
-difficultyChip.textContent = "MODE: DÉBUTANT";
 
+difficultyChip.textContent = "MODE: " + difficulty.toUpperCase();
+levelTabText.textContent   = "NIVEAU : " + difficulty.toUpperCase();
+miniHint.textContent       = `⏱ ${TIMER_SECONDS}s / question • ${MAX_ATTEMPTS} tentatives max • 💡 ${HINT_MAX} indices`;
+
+startRulesText.innerHTML = `
+  Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
+  <br><br>
+  <b>${MAX_ATTEMPTS} tentatives max</b> et <b>${TIMER_SECONDS} secondes</b> par question.
+  <br>
+  <b>${HINT_MAX} indices</b> pour l’ensemble du quiz (1 indice max par question).
+  <br><br>
+  <b>Si le temps s’écoule ${MAX_ATTEMPTS} fois ou après ${MAX_ATTEMPTS} tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+  <br>
+  Es-tu prêt à commencer ?
+`;
+
+/* ===== Score / Stress ===== */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
 if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 0;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
 
-const questions = [{"type": "single", "title": "Diagnostic rapide (secours)", "desc": "Victime consciente, ne parle pas, toux inefficace. Diagnostic ?", "options": [{"text": "Crise d’angoisse", "kind": "wrong", "fb": "❌ Non."}, {"text": "Obstruction légère (toux efficace)", "kind": "wrong", "fb": "❌ Non."}, {"text": "Obstruction grave des voies aériennes", "kind": "ok", "fb": "✅ Correct."}, {"text": "Asthme", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "tf", "title": "Sécurité", "desc": "V/F : tu sécurises rapidement la zone et délègues l’alerte.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "multi", "title": "Actions immédiates", "desc": "Coche toutes les actions adaptées.", "options": [{"text": "Victime penchée en avant", "correct": true}, {"text": "5 claques dorsales", "correct": true}, {"text": "Faire boire de l’eau", "correct": false}, {"text": "Déléguer alerte / DAE", "correct": true}], "okFb": "✅ Correct.", "badFb": "❌ L’eau est dangereuse."}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?", "options": [{"label": "A", "caption": "Bouche-à-bouche immédiat", "kind": "wrong", "fb": "❌ Non : victime consciente → désobstruction d’abord.", "imgSrc": "assets/q4_a.png"}, {"label": "B", "caption": "5 claques dorsales", "kind": "ok", "fb": "✅ Oui : commencer par les claques dorsales.", "imgSrc": "assets/q4_b.png"}, {"label": "C", "caption": "Victime allongée sur le dos", "kind": "wrong", "fb": "❌ Non : garder penchée en avant.", "imgSrc": "assets/q4_c.png"}]}, {"type": "drag_order", "title": "Ordonner", "desc": "Mets dans l’ordre.", "items": [{"id": "secure", "text": "Sécuriser"}, {"id": "assess", "text": "Évaluer (parle/tousse/respire)"}, {"id": "back", "text": "5 claques dorsales"}, {"id": "abd", "text": "5 compressions abdominales"}], "expected": ["secure", "assess", "back", "abd"], "okFb": "✅ Bien.", "badFb": "❌ Revois l’ordre."}, {"type": "cloze", "title": "Texte à trous", "desc": "Complète avec **un seul mot**.", "template": "Le geste interdit est le <b>{blank1}</b> du doigt « à l’aveugle ».", "blanks": [{"key": "blank1", "answer": "balayage"}], "okFb": "✅ balayage.", "badFb": "❌ Attendu : balayage."}, {"type": "short", "title": "Réponse courte", "desc": "Si la victime devient inconsciente mais respire : position ? (1 mot)", "answers": ["PLS"], "okFb": "✅ PLS.", "badFb": "❌ Attendu : PLS."}, {"type": "single", "title": "Erreur critique", "desc": "Quel geste est dangereux ?", "options": [{"text": "Balayage du doigt à l’aveugle", "kind": "critical", "fb": "🚨 ERREUR CRITIQUE.", "pts": -10}, {"text": "Retirer un objet visible", "kind": "ok", "fb": "✅ Oui."}, {"text": "Continuer cycles 5/5", "kind": "ok", "fb": "✅ Oui."}, {"text": "Demander de l’aide", "kind": "partial", "fb": "🟡 Utile.", "pts": 3}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone à traiter", "desc": "", "imgSrc": "scenario_1_hotspot.png", "hotspots": [{"label": "ok", "x": 38.29, "y": 45.07, "w": 23.21, "h": 23.98, "kind": "ok", "fb": "✅ Correct : gorge.", "pts": 10}, {"label": "ko", "x": 46.63, "y": 13.35, "w": 22.22, "h": 27.08, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}, {"label": "ko", "x": 55.16, "y": 78.72, "w": 25.79, "h": 19.15, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}]}, {"type": "multi", "title": "Alerte / escalade", "desc": "Quand faut-il alerter immédiatement ?", "options": [{"text": "Inconscience", "correct": true}, {"text": "Respiration anormale", "correct": true}, {"text": "Échec des cycles + aggravation", "correct": true}, {"text": "Toux efficace + parle", "correct": false}], "okFb": "✅ Correct.", "badFb": "❌ Toux efficace = surveillance."}];
+/* ======= QUESTIONS (inchangées) ======= */
+const questions = [{"type":"single","title":"Diagnostic rapide (secours)","desc":"Victime consciente, ne parle pas, toux inefficace. Diagnostic ?","options":[{"text":"Crise d’angoisse","kind":"wrong","fb":"❌ Non."},{"text":"Obstruction légère (toux efficace)","kind":"wrong","fb":"❌ Non."},{"text":"Obstruction grave des voies aériennes","kind":"ok","fb":"✅ Correct."},{"text":"Asthme","kind":"wrong","fb":"❌ Non."}]},{"type":"tf","title":"Sécurité","desc":"V/F : tu sécurises rapidement la zone et délègues l’alerte.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai."},"falseOpt":{"kind":"wrong","fb":"❌ Faux."}}},{"type":"multi","title":"Actions immédiates","desc":"Coche toutes les actions adaptées.","options":[{"text":"Victime penchée en avant","correct":true},{"text":"5 claques dorsales","correct":true},{"text":"Faire boire de l’eau","correct":false},{"text":"Déléguer alerte / DAE","correct":true}],"okFb":"✅ Correct.","badFb":"❌ L’eau est dangereuse."},{"type":"image_single","title":"Choix de l’image","desc":"Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?","options":[{"label":"A","caption":"Bouche-à-bouche immédiat","kind":"wrong","fb":"❌ Non : victime consciente → désobstruction d’abord.","imgSrc":"assets/q4_a.png"},{"label":"B","caption":"5 claques dorsales","kind":"ok","fb":"✅ Oui : commencer par les claques dorsales.","imgSrc":"assets/q4_b.png"},{"label":"C","caption":"Victime allongée sur le dos","kind":"wrong","fb":"❌ Non : garder penchée en avant.","imgSrc":"assets/q4_c.png"}]},{"type":"drag_order","title":"Ordonner","desc":"","items":[{"id":"secure","text":"Sécuriser"},{"id":"assess","text":"Évaluer (parle/tousse/respire)"},{"id":"back","text":"5 claques dorsales"},{"id":"abd","text":"5 compressions abdominales"}],"expected":["secure","assess","back","abd"],"okFb":"✅ Bien.","badFb":"❌ Revois l’ordre."},{"type":"cloze","title":"Texte à trous","desc":"Complète avec **un seul mot**.","template":"Le geste interdit est le <b>{blank1}</b> du doigt « à l’aveugle ».","blanks":[{"key":"blank1","answer":"balayage"}],"okFb":"✅ balayage.","badFb":"❌ Attendu : balayage."},{"type":"short","title":"Réponse courte","desc":"Si la victime devient inconsciente mais respire : position ? (1 mot)","answers":["PLS"],"okFb":"✅ PLS.","badFb":"❌ Attendu : PLS."},{"type":"single","title":"Erreur critique","desc":"Quel geste est dangereux ?","options":[{"text":"Balayage du doigt à l’aveugle","kind":"critical","fb":"🚨 ERREUR CRITIQUE.","pts":-10},{"text":"Retirer un objet visible","kind":"ok","fb":"✅ Oui."},{"text":"Continuer cycles 5/5","kind":"ok","fb":"✅ Oui."},{"text":"Demander de l’aide","kind":"partial","fb":"🟡 Utile.","pts":3}]},{"type":"hotspot","gate":true,"title":"Hotspot — Zone à traiter","desc":"","imgSrc":"scenario_1_hotspot.png","hotspots":[{"label":"ok","x":38.29,"y":45.07,"w":23.21,"h":23.98,"kind":"ok","fb":"✅ Correct : gorge.","pts":10},{"label":"ko","x":46.63,"y":13.35,"w":22.22,"h":27.08,"kind":"wrong","fb":"❌ Faux.","pts":-2},{"label":"ko","x":55.16,"y":78.72,"w":25.79,"h":19.15,"kind":"wrong","fb":"❌ Faux.","pts":-2}]},{"type":"multi","title":"Alerte / escalade","desc":"Quand faut-il alerter immédiatement ?","options":[{"text":"Inconscience","correct":true},{"text":"Respiration anormale","correct":true},{"text":"Échec des cycles + aggravation","correct":true},{"text":"Toux efficace + parle","correct":false}],"okFb":"✅ Correct.","badFb":"❌ Toux efficace = surveillance."}];
+
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
 function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-function setScore(v){ score=v; localStorage.setItem("score", String(score)); hudScore.textContent=String(score); modalScore.textContent=String(score); }
+function setScore(v){
+  score=v;
+  localStorage.setItem("score", String(score));
+  hudScore.textContent=String(score);
+  modalScore.textContent=String(score);
+}
 function addScore(d){ setScore(score + d); }
+
 function setStress(v){
   stress=clamp(v,0,100);
   localStorage.setItem("stress", String(stress));
   stressBar.style.width=stress+"%";
   modalStress.textContent=String(stress);
 }
-function addStress(d){ setStress(stress + d); }
-function setAttemptsUI(){ hudAttempts.textContent = String(attemptsForCurrentQuestion); const m=document.getElementById("hudAttemptsMax"); if(m) m.textContent=String(MAX_ATTEMPTS); }
+function addStress(d){
+  const factor = (stress >= 70) ? 0.7 : 1;
+  setStress(stress + Math.round(d*factor));
+}
 
-setScore(score); setStress(stress); setAttemptsUI();
+function setAttemptsUI(){
+  hudAttempts.textContent = String(attemptsForCurrentQuestion);
+  hudAttemptsMax.textContent = String(MAX_ATTEMPTS);
+}
 
+function updateProgress(){
+  const p = Math.round((idx / TOTAL) * 100);
+  if(progressBar) progressBar.style.width = p + "%";
+}
+
+/* ===== Indices (stockés par scénario+niveau) ===== */
+const HINT_KEY = `hints_left_s${SCENARIO.id}_${difficulty}`;
+let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) ?? String(HINT_MAX), 10);
+if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
+hintsLeft = Math.max(0, Math.min(HINT_MAX, hintsLeft));
+
+function updateHintBtn(){
+  hintBtn.textContent = `💡 Indice (${hintsLeft})`;
+  hintBtn.disabled = (hintsLeft <= 0) || locked;
+  hintBtn.style.opacity = hintBtn.disabled ? ".55" : "1";
+}
+
+function getHintForQuestion(q){
+  if(q.hint) return q.hint;
+  if(q.type==="single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    const words = (ok?.text || "").split(/\s+/).slice(0,6).join(" ");
+    return `Indice : la bonne réponse commence par “${words}…”.`;
+  }
+  if(q.type==="tf"){
+    const ans = (q.tf?.trueOpt?.kind==="ok") ? "Vrai" : "Faux";
+    return `Indice : la bonne réponse est “${ans}”.`;
+  }
+  if(q.type==="multi"){
+    const n = (q.options||[]).filter(o=>o.correct).length;
+    return `Indice : il y a ${n} propositions correctes à sélectionner.`;
+  }
+  if(q.type==="image_single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    return `Indice : observe l’option ${ok?.label || "?"} (geste initial).`;
+  }
+  if(q.type==="drag_order"){
+    const firstId = q.expected?.[0];
+    const firstText = (q.items||[]).find(it=>it.id===firstId)?.text || "Sécuriser";
+    return `Indice : la première étape est : “${firstText}”.`;
+  }
+  if(q.type==="cloze"){
+    const ans = q.blanks?.[0]?.answer || "";
+    return `Indice : le mot attendu commence par “${ans.slice(0,3)}…”.`;
+  }
+  if(q.type==="short"){
+    const ans = String(q.answers?.[0] ?? "");
+    return `Indice : la réponse commence par “${ans.slice(0,1)}…”.`;
+  }
+  if(q.type==="hotspot"){
+    return "Indice : cible la zone de la gorge / voies aériennes.";
+  }
+  return "Indice : relis bien les mots-clés.";
+}
+
+hintBtn.onclick = ()=>{
+  if(locked) return;
+  if(hintsLeft <= 0) return;
+
+  sfxClick();
+  stopTimer();
+  locked = true;
+
+  hintsLeft--;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  updateHintBtn();
+
+  const q = questions[idx];
+  const hint = getHintForQuestion(q);
+
+  showOverlay("warn", "💡 " + hint, {allowRetry:false, allowNext:false, missionFail:false});
+  retryBtn.style.display="none";
+  nextBtn.style.display="none";
+  okBtn.style.display="inline-block"; okBtn.classList.add("show");
+  okBtn.textContent="OK";
+  okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
+};
+
+/* ===== TIMER ===== */
 function setRingProgress(){
   const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
@@ -623,28 +992,32 @@ function setRingProgress(){
   else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
 }
 function stopTimer(){ clearInterval(timerId); timerId=null; }
-function startTimer(){
+
+function startTimer(reset=true){
   stopTimer();
-  timeLeft = TIMER_SECONDS;
+  if(reset) timeLeft = TIMER_SECONDS;
+
   hudTime.textContent = String(timeLeft);
   setRingProgress();
+
   timerId = setInterval(()=>{
     if(locked) return;
     timeLeft--;
     hudTime.textContent = String(timeLeft);
     setRingProgress();
+
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
-      // Timeout = mauvaise réponse + stress
+
       addStress(STRESS_RULES.timeout);
       attemptsForCurrentQuestion++;
       setAttemptsUI();
-      // 2 essais max comme ton design initial
-      if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
-        missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score remis à zéro)");
+
+      if(attemptsForCurrentQuestion >= MAX_ATTEMPTS){
+        missionFail(`⏱️ Temps écoulé (${MAX_ATTEMPTS} fois). Mission échouée. Retour au départ… (score remis à zéro)`);
       }else{
-        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/2)", {allowRetry:true, allowNext:false, missionFail:false});
+        showOverlay("warn", `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${MAX_ATTEMPTS})`, {allowRetry:true, allowNext:false, missionFail:false});
       }
     }
   }, 1000);
@@ -654,16 +1027,14 @@ function startTimer(){
 let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
-let dragOrder = [];        // for drag_order
-let clozeValues = {};      // for cloze
+let clozeValues = {};
 
 function resetState(){
   selectedSingle=null;
   multiSelected.clear();
   inputValue="";
-  dragOrder=[];
   clozeValues={};
-  validateBtn.disabled=false;
+  validateBtn.disabled=true;
 }
 
 function mkOpt(text){
@@ -673,19 +1044,47 @@ function mkOpt(text){
   return d;
 }
 
-function pillHtml(label, valueId){ return `<span class="pill">${label} <b id="${valueId}"></b></span>`; }
+function showLoading(ms=800){ /* ✅ plus rapide */
+  frame.style.visibility = "hidden";
+  loadingOverlay.style.display = "flex";
+  return new Promise(res=>{
+    setTimeout(()=>{
+      loadingOverlay.style.display="none";
+      frame.style.visibility = "visible";
+      res();
+    }, ms);
+  });
+}
 
+/* Safety HTML */
+function escapeHtml(str){
+  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function nl2brSafe(str){
+  return escapeHtml(str).replaceAll("\n","<br>");
+}
+
+/* ===== Render question ===== */
 function renderQuestion(i, resetAttempts=true){
   locked=false;
   stopTimer();
   hideOverlay();
-  if(resetAttempts){ attemptsForCurrentQuestion=1; setAttemptsUI(); }
+
+  if(resetAttempts){ attemptsForCurrentQuestion=0; setAttemptsUI(); }
   resetState();
 
   const q = questions[i];
-  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
+
+  qMeta.textContent = SCENARIO.label + " • " + ("Niveau " + difficulty);
   qTitle.textContent = q.title || "—";
-  qDesc.innerHTML = q.desc || "";
+
+  /* ✅ drag_order: pas de phrase d’instruction en haut (comme demandé) */
+  if(q.type === "drag_order"){
+    qDesc.innerHTML = "";
+  }else{
+    qDesc.innerHTML = q.desc || "";
+  }
+
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
@@ -694,7 +1093,13 @@ function renderQuestion(i, resetAttempts=true){
   if(type==="single"){
     q.options.forEach((opt, oi)=>{
       const d = mkOpt(opt.text);
-      d.onclick=()=>{ sfxClick(); [...optionsEl.children].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); selectedSingle=oi; validateBtn.disabled=false; };
+      d.onclick=()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle=oi;
+        validateBtn.disabled=false;
+      };
       optionsEl.appendChild(d);
     });
   }
@@ -703,7 +1108,13 @@ function renderQuestion(i, resetAttempts=true){
     const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
-      d.onclick=()=>{ sfxClick(); [...optionsEl.children].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); selectedSingle=oi; validateBtn.disabled=false; };
+      d.onclick=()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle=oi;
+        validateBtn.disabled=false;
+      };
       optionsEl.appendChild(d);
     });
   }
@@ -727,7 +1138,10 @@ function renderQuestion(i, resetAttempts=true){
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
     box.innerHTML = `
-      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div><input id="shortInput" class="form-control" type="text" placeholder="Écris ici…" style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" /><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
+      <div style="font-weight:950; margin-bottom:6px;">Ta réponse</div>
+      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" />
+      <div style="margin-top:6px; font-size:11px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
     const inp = box.querySelector("#shortInput");
@@ -744,62 +1158,51 @@ function renderQuestion(i, resetAttempts=true){
     q.options.forEach((opt, oi)=>{
       const card = document.createElement("div");
       card.className = "imgCard";
-
       card.innerHTML = `
         <div class="imgHead">
           <div>Option ${opt.label}</div>
           <div class="imgTag">${opt.label}</div>
         </div>
-
         <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
-
-        <div class="imgCap">
-          ${opt.caption}
-        </div>
+        <div class="imgCap">${opt.caption}</div>
       `;
-
       card.onclick = ()=>{
         sfxClick();
         [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
         card.classList.add("sel");
         selectedSingle = oi;
         validateBtn.disabled = false;
-        validateBtn.removeAttribute("disabled");
       };
-
       grid.appendChild(card);
     });
 
     optionsEl.appendChild(grid);
   }
-  
+
   if(type==="hotspot"){
     clearBtn.style.display="inline-block";
 
-    // Message clair (où cliquer)
     const msg = document.createElement("div");
     msg.className="pill";
-    msg.style.marginBottom="10px";
+    msg.style.marginBottom="8px";
+    msg.style.fontSize="12px";
     msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
     optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="640px";
     wrap.style.margin="0 auto";
-    wrap.style.borderRadius="18px";
+    wrap.style.borderRadius="16px";
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-
     wrap.innerHTML = q.svg
       ? q.svg
       : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
-
     optionsEl.appendChild(wrap);
 
-    // Layer zones cliquables
     const zones = document.createElement("div");
     zones.style.position="absolute";
     zones.style.inset="0";
@@ -807,8 +1210,7 @@ function renderQuestion(i, resetAttempts=true){
     wrap.appendChild(zones);
 
     selectedSingle = null;
-    // Le bouton Valider reste géré par la logique générale, mais on le laisse actif.
-    validateBtn.disabled = false;
+    validateBtn.disabled = true;
 
     (q.hotspots||[]).forEach((h, hi)=>{
       const z = document.createElement("button");
@@ -826,30 +1228,22 @@ function renderQuestion(i, resetAttempts=true){
         [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
         z.classList.add("sel");
         selectedSingle = hi;
-        validateBtn.disabled = false; // ✅ important
+        validateBtn.disabled = false;
       };
       zones.appendChild(z);
     });
   }
 
-
   if(type==="drag_order"){
     clearBtn.style.display="inline-block";
-    // Instructions
-    const note = document.createElement("div");
-    note.className="pill";
-    note.style.marginBottom="10px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-    optionsEl.appendChild(note);
 
+    /* ✅ pas de note en haut + "(glisser)" à droite */
     const list = document.createElement("div");
     list.id="dragList";
     list.style.display="grid";
-    list.style.gap="10px";
+    list.style.gap="8px";
 
-    // shuffle initial display slightly (keep simple)
     const items = [...q.items];
-    // Basic shuffle
     for(let k=items.length-1;k>0;k--){
       const j=Math.floor(Math.random()*(k+1));
       [items[k],items[j]]=[items[j],items[k]];
@@ -860,7 +1254,13 @@ function renderQuestion(i, resetAttempts=true){
       row.className="opt";
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="font-weight:950; min-width:0;">${escapeHtml(it.text)}</div>
+          <div style="flex:0 0 auto; font-size:11px; color: rgba(255,255,255,.68);">(glisser)</div>
+        </div>
+      `;
       list.appendChild(row);
     });
     optionsEl.appendChild(list);
@@ -889,18 +1289,23 @@ function renderQuestion(i, resetAttempts=true){
     });
     list.addEventListener("drop",(e)=>{
       e.preventDefault();
-      validateBtn.disabled=false; // allow validate after any interaction
+      validateBtn.disabled=false;
     });
+
+    /* ✅ si déjà visible, on autorise valider après affichage */
+    validateBtn.disabled = false;
   }
 
   if(type==="cloze"){
     clearBtn.style.display="inline-block";
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
-    const html = q.template
-      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
-      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+    const html = (q.template||"")
+      .replace("{blank1}", `<input data-k="blank1" class="form-control"
+        style="display:inline-block; width:200px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" placeholder="..." />`)
+      .replace("{blank2}", `<input data-k="blank2" class="form-control"
+        style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.7;">${html}</div>`;
     optionsEl.appendChild(box);
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
@@ -913,7 +1318,9 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   hudQnum.textContent = String(i+1);
-  startTimer();
+  updateProgress();
+  updateHintBtn();
+  startTimer(true);
 }
 
 clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
@@ -924,17 +1331,17 @@ validateBtn.onclick = ()=>{
   const q = questions[idx];
   const type = q.type;
 
-  // Si l'utilisateur clique "Valider" sans avoir encore répondu,
-  // on affiche juste un petit rappel sans pénaliser ni arrêter le timer.
   const needSelection = (msg)=>{
     sfxClick();
-    showOverlay("warn", msg, {allowRetry:true, allowNext:false, missionFail:false});
-    // On ferme l'overlay et on reprend le timer (sans compter comme tentative)
+    stopTimer();
+    locked = true;
+
+    showOverlay("warn", msg, {allowRetry:false, allowNext:false, missionFail:false});
     retryBtn.style.display="none";
     nextBtn.style.display="none";
     okBtn.style.display="inline-block"; okBtn.classList.add("show");
     okBtn.textContent="OK";
-    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
+    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
@@ -950,21 +1357,13 @@ validateBtn.onclick = ()=>{
     const filled = q.blanks.every(b => ((clozeValues[b.key]||"").trim().length>0));
     if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
   }
-  if(type==="drag_order"){
-    // On autorise toujours, car l'ordre existe, mais on conseille d'ajuster si besoin
-  }
 
   stopTimer();
   locked=true;
 
-
-  if(type==="single"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="tf"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
     evaluateOption(opt); return;
   }
@@ -1001,14 +1400,11 @@ validateBtn.onclick = ()=>{
     return;
   }
 
-  if(type==="image_single"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
+
   if(type==="hotspot"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     const h = (q.hotspots||[])[selectedSingle];
-    if(!h){ locked=false; startTimer(); return; }
+    if(!h){ locked=false; startTimer(false); return; }
 
     if(h.kind==="ok"){
       addScore(h.pts ?? 10);
@@ -1027,8 +1423,6 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
-
 
   if(type==="drag_order"){
     const list = document.getElementById("dragList");
@@ -1085,13 +1479,16 @@ function evaluateOption(opt){
 }
 
 function failedAttempt(baseMsg){
-  attemptsForCurrentQuestion++; setAttemptsUI();
-  if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
+  attemptsForCurrentQuestion++;
+  setAttemptsUI();
+
+  if(attemptsForCurrentQuestion >= MAX_ATTEMPTS){
     sfxAlarmLong();
-    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
+    missionFail(`❌ ${MAX_ATTEMPTS} tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/2)`, {allowRetry:true, allowNext:false, missionFail:false});
+
+  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${MAX_ATTEMPTS})`, {allowRetry:true, allowNext:false, missionFail:false});
 }
 
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
@@ -1100,7 +1497,7 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
   if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
 
-  modalText.textContent = text;
+  modalText.innerHTML = nl2brSafe(text);
   overlay.style.display="flex";
 
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
@@ -1109,8 +1506,18 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
 
   okBtn.style.display="none"; okBtn.onclick=null;
 
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
-  nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
+  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
+
+  nextBtn.onclick  = async ()=>{
+    hideOverlay();
+    idx++;
+    if(idx < TOTAL){
+      await showLoading(800);
+      renderQuestion(idx,true);
+    }else{
+      endScenario();
+    }
+  };
 
   if(missionFail){
     retryBtn.style.display="none"; nextBtn.style.display="none";
@@ -1118,25 +1525,75 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
     okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
   }
 }
+
 function hideOverlay(){ overlay.style.display="none"; }
-function missionFail(message){ stopTimer(); showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
+function missionFail(message){
+  stopTimer();
+  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
+  motion("critical");
+}
+
 function resetMission(showStart=true){
   stopTimer();
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
-  setScore(0); setStress(0);
+  idx=0;
+  attemptsForCurrentQuestion=0;
+  setAttemptsUI();
+  setScore(0);
+  setStress(0);
+
+  // reset hints
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  updateHintBtn();
+
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+
   locked=true;
+  updateProgress();
+  timeLeft = TIMER_SECONDS;
+  setRingProgress();
+  hudTime.textContent = String(TIMER_SECONDS);
+
   if(showStart) startOverlay.style.display="flex";
 }
 
-function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+/* ===== Badge logic + save badge (bronze/or/argent) ===== */
+function computeBadge(scoreFinal){
+  if(scoreFinal >= 90) return { type:"or", label:"Or", img:"assets/badges/or.png" };
+  if(scoreFinal >= 70) return { type:"argent", label:"Argent", img:"assets/badges/argent.png" };
+  return { type:"bronze", label:"Bronze", img:"assets/badges/bronze.png" };
+}
+function saveBadge(badge){
+  const payload = {
+    scenarioId: SCENARIO.id,
+    mission: SCENARIO.mission,
+    niveau: difficulty,
+    badgeType: badge.type,
+    badgeName: `${badge.label} — ${SCENARIO.mission}`,
+    score: score,
+    dateISO: new Date().toISOString()
+  };
+  const key = `badge_s${SCENARIO.id}_${difficulty}`;
+  localStorage.setItem(key, JSON.stringify(payload));
 
-function buildAnswerKey(){
+  const histKey = "badges_history";
+  const arr = JSON.parse(localStorage.getItem(histKey) || "[]");
+  arr.push(payload);
+  localStorage.setItem(histKey, JSON.stringify(arr));
+}
+
+/* ===== Corrigé modal ===== */
+function buildAnswerKeyHtml(){
   const rows = questions.map((q, i)=>{
     let ans = "";
     if(q.type==="single" || q.type==="image_single"){
       const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? q.options[oi].text || ("Option "+q.options[oi].label) : "—";
-      if(q.type==="image_single") ans = (q.options[oi].label + " — " + q.options[oi].caption);
+      if(q.type==="image_single"){
+        ans = oi>=0 ? (q.options[oi].label + " — " + q.options[oi].caption) : "—";
+      }else{
+        ans = oi>=0 ? (q.options[oi].text || "—") : "—";
+      }
     }else if(q.type==="tf"){
       ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
@@ -1149,47 +1606,118 @@ function buildAnswerKey(){
       ans = q.expected.map(id=>map[id]).join(" → ");
     }else if(q.type==="cloze"){
       ans = q.blanks.map(b=>b.answer).join(" | ");
+    }else if(q.type==="hotspot"){
+      ans = "Zone correcte";
     }else{
       ans = "—";
     }
-    return `<tr><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td></tr>`;
+
+    return `<tr>
+      <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td>
+    </tr>`;
   }).join("");
-  return `<div style="margin-top:14px;"><div style="font-weight:950; font-size:16px; margin-bottom:8px;">📘 Corrigé (bonnes réponses)</div><div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);"><table style="width:100%; border-collapse:collapse; min-width:680px;"><thead><tr><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+
+  return `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+      <span class="pill">📌 Mission : <b>${escapeHtml(SCENARIO.mission)}</b></span>
+      <span class="pill">🎚 Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b></span>
+      <span class="pill">⭐ Score : <b>${escapeHtml(String(score))}</b></span>
+      <span class="pill">😰 Stress : <b>${escapeHtml(String(stress))}%</b></span>
+    </div>
+    <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
+      <table style="width:100%; border-collapse:collapse; min-width:760px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
 }
 
-function endScenario(){
-  stopTimer(); hideOverlay();
-  optionsEl.innerHTML=""; validateBtn.disabled=false; clearBtn.style.display="none";
+function openKey(){
+  if(showKeyBtn.disabled) return;
+  sfxClick();
+  keyBody.innerHTML = buildAnswerKeyHtml();
+  keyOverlay.style.display = "flex";
+}
+function closeKey(){
+  sfxClick();
+  keyOverlay.style.display = "none";
+}
+showKeyBtn.addEventListener("click", openKey);
+keyCloseBtn.addEventListener("click", closeKey);
+keyCloseBtn2.addEventListener("click", closeKey);
+keyOverlay.addEventListener("click", (e)=>{ if(e.target === keyOverlay) closeKey(); });
 
-  const badgeName = "🥉 Bronze — Pompier (Débutant)";
-  const badgeDesc = "Tu sais reconnaître l’obstruction et appliquer les gestes adaptés (claques dorsales / compressions).";
+/* ===== End scenario ===== */
+function endScenario(){
+  stopTimer();
+  hideOverlay();
+  optionsEl.innerHTML="";
+  validateBtn.disabled=true;
+  clearBtn.style.display="none";
+
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
+
+  const badge = computeBadge(score);
+  saveBadge(badge);
 
   qMeta.textContent = "Fin — Badge obtenu";
   qTitle.textContent = "🎉 Félicitations !";
   sfxVictory();
+
   qDesc.innerHTML = `
-    <div style="margin-top:8px; color: rgba(255,255,255,.86);"><div style="font-weight:950; font-size:16px;">🏅 ${escapeHtml(badgeName)}</div><div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">${escapeHtml(badgeDesc)}</div><div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;"><span class="pill">⭐ Score final : <b>${score}</b></span><span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span></div>
+    <div style="margin-top:6px; color: rgba(255,255,255,.86); font-size:13px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <img src="${badge.img}" alt="badge" style="width:64px; height:64px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
+        <div>
+          <div style="font-weight:950; font-size:15px;">🏅 Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
+          <div style="margin-top:3px; color: rgba(255,255,255,.76); font-size:12px;">
+            Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b> • Type : <b>${escapeHtml(badge.type.toUpperCase())}</b>
+          </div>
+        </div>
       </div>
+
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill">⭐ Score final : <b>${score}</b></span>
+        <span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span>
+        <span class="pill">💡 Indices restants : <b>${hintsLeft}</b> / ${HINT_MAX}</span>
+      </div>
+
+      <div style="margin-top:8px; color: rgba(255,255,255,.72); font-size:12px;">
+        ✅ Badge enregistré (nom + type + niveau).
+      </div>
+    </div>
   `;
 
-  // little badge visual using existing "pill" style
   optionsEl.innerHTML = `
-    <div class="opt" style="cursor:default; text-align:center;"><div style="font-size:46px; margin-bottom:4px;">🏅</div><div style="font-weight:950;">${escapeHtml(badgeName)}</div><div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Badge débloqué</div></div>
+    <div class="opt" style="cursor:default; text-align:center;">
+      <div style="display:flex; justify-content:center; margin-bottom:8px;">
+        <img src="${badge.img}" alt="badge" style="width:78px; height:78px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
+      </div>
+      <div style="font-weight:950;">Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
+      <div style="color: rgba(255,255,255,.74); font-size:12px; margin-top:4px;">Niveau : ${escapeHtml(difficulty.toUpperCase())}</div>
+    </div>
   `;
 
-  // actions
-  const showKeyBtn = document.getElementById("showKeyBtn");
-  const nextBtn2 = document.getElementById("nextGeniallyBtn");
-  showKeyBtn.addEventListener("click", ()=>{
-    const wrap = document.getElementById("answerKeyWrap");
-    wrap.innerHTML = wrap.innerHTML ? "" : buildAnswerKey();
-  });
-  nextBtn2.addEventListener("click", ()=>{
-    window.location.href = NEXT_GENIALLY_URL;
-  });
+  if(progressBar) progressBar.style.width = "100%";
+  locked = true;
+  updateHintBtn();
+
+  showKeyBtn.disabled = false;
+
+  endBtn.style.display = "inline-block";
+  endBtn.classList.add("show");
 }
 
+/* Motion */
 function motion(type){
   frame.classList.remove("shake","pulseGood","flashBad");
   modalBox.classList.remove("shake","pulseGood","flashBad");
@@ -1198,30 +1726,81 @@ function motion(type){
   else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
 }
 
+/* Pause */
+let paused = false;
+pauseBtn.onclick = ()=>{
+  sfxClick();
+  paused = !paused;
+  pauseBtn.textContent = paused ? "▶ Reprendre" : "⏸ Pause";
+  locked = paused ? true : false;
+  updateHintBtn();
+
+  if(!paused) startTimer(false);
+  else stopTimer();
+};
+
+/* ✅ Terminer */
+endBtn.addEventListener("click", ()=>{
+  sfxClick();
+  window.location.href = NEXT_SCENARIO_URL;
+});
+
+/* Start */
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // ✅ Réinitialiser le scénario (stress/score commencent toujours à 0)
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress = 0; score = 0;
   setStress(0); setScore(0);
 
+  // reset hints at start
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  updateHintBtn();
+
+  // reset end buttons
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+
   startOverlay.style.display="none";
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
+  idx=0;
+  attemptsForCurrentQuestion=0;
+  setAttemptsUI();
+  updateProgress();
+
+  timeLeft = TIMER_SECONDS;
+  setRingProgress();
+  hudTime.textContent = String(TIMER_SECONDS);
+
   renderQuestion(0, true);
 });
 
+/* Init */
 (function init(){
   locked=true;
-  qMeta.textContent = SCENARIO.label;
+  qMeta.textContent = SCENARIO.label + " • " + ("Niveau " + difficulty);
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML="Tu as <b>30 secondes</b> par question. Clique sur <b>DÉMARRER</b>.";
+  qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
   optionsEl.innerHTML="";
   hudQnum.textContent="1";
+
+  timeLeft = TIMER_SECONDS;
   hudTime.textContent=String(TIMER_SECONDS);
   ring.style.setProperty("--p","100%");
   setRingProgress();
+
+  validateBtn.disabled = true;
+  attemptsForCurrentQuestion = 0;
+  setAttemptsUI();
+  updateProgress();
+
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+
+  setScore(score);
+  setStress(stress);
+  updateHintBtn();
 })();
 </script>
 </body>
