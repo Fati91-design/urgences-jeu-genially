@@ -1610,9 +1610,9 @@ function resetMission(showStart=true){
 
 /* ===== Badge logic + save badge ===== */
 function computeBadge(scoreFinal){
-  if(scoreFinal >= 90) return { type:"or", label:"Or", img:"assets/badges/or.png" };
-  if(scoreFinal >= 70) return { type:"argent", label:"Argent", img:"assets/badges/argent.png" };
-  return { type:"bronze", label:"Bronze", img:"assets/badges/bronze.png" };
+  if(scoreFinal >= 90) return { type:"or", label:"Or", img:"assets/or.png" };
+  if(scoreFinal >= 70) return { type:"argent", label:"Argent", img:"assets/argent.png" };
+  return { type:"bronze", label:"Bronze", img:"assets/bronze.png" };
 }
 function saveBadge(badge){
   const payload = {
