@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Urgences – Intro</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  html, body { margin:0; background: transparent; color:#fff; overflow:hidden; }
+  .genially-stage{ width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#000; }
+  .genially-page{ width:1920px; height:1080px; position:relative; transform-origin:center; }
+
+  .fx-overlay{
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(1200px 520px at 50% 18%, rgba(255,255,255,.12), transparent 55%),
+      radial-gradient(900px 520px at 18% 82%, rgba(255,120,80,.09), transparent 60%),
+      radial-gradient(900px 520px at 82% 82%, rgba(90,150,255,.11), transparent 60%),
+      radial-gradient(1200px 900px at 50% 50%, transparent 60%, rgba(0,0,0,.55) 100%);
+    filter: blur(.2px);
+  }
+  .scanlines{
+    position:absolute; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:overlay;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,.2) 0, rgba(255,255,255,.2) 1px, transparent 3px, transparent 8px);
+  }
+
+  .center{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    padding: 48px 64px;
+    text-align:center;
+  }
+
+  .msg{
+    font-family:'Orbitron', system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    opacity:0;
+    max-width: 1320px;
+    font-size: 44px;
+    line-height:1.35;
+    letter-spacing:.02em;
+    text-shadow: 0 18px 46px rgba(0,0,0,.75), 0 0 55px rgba(120,190,255,.12);
+    animation: cinematic 3.6s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes cinematic{
+    0%   {opacity:0; transform:translateY(26px) scale(1.06); filter:blur(6px);}
+    18%  {opacity:1; transform:translateY(0) scale(1); filter:blur(0);}
+    70%  {opacity:1; }
+    100% {opacity:0; transform:translateY(-20px) scale(.96); filter:blur(5px);}
+  }
+
+  .glitch{ position:relative; display:inline-block; }
+  .glitch::before,.glitch::after{
+    content: attr(data-text);
+    position:absolute; left:0; top:0; width:100%;
+    opacity:.6; pointer-events:none; filter: blur(.1px);
+  }
+  .glitch::before{ transform: translate(1px,0); clip-path: inset(0 0 58% 0); }
+  .glitch::after{ transform: translate(-1px,0); clip-path: inset(48% 0 0 0); }
+  .glitchOn{ animation: glitchJitter .28s steps(2,end) infinite; }
+  @keyframes glitchJitter{
+    0%{transform:translate(0,0)}
+    20%{transform:translate(1px,-1px)}
+    40%{transform:translate(-1px,1px)}
+    60%{transform:translate(1px,0)}
+    80%{transform:translate(-1px,0)}
+    100%{transform:translate(0,0)}
+  }
+
+  .gameTitleWrap{ margin-top:18px; opacity:0; animation: titlePop 2.8s ease forwards; }
+  @keyframes titlePop{
+    0%{opacity:0; transform:translateY(10px) scale(.98); filter:blur(6px);}
+    30%{opacity:1; transform:translateY(0) scale(1); filter:blur(0);}
+    100%{opacity:0; transform:translateY(-8px) scale(.98); filter:blur(4px);}
+  }
+
+  .titlePill{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 22px; border-radius:999px;
+    background:rgba(0,0,0,.42); border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(10px);
+    box-shadow:0 22px 75px rgba(0,0,0,.40);
+    letter-spacing:.20em; text-transform:uppercase; font-weight:900; font-size:16px;
+    color:rgba(255,255,255,.90);
+  }
+
+  .gameTitle,.gameSubtitle{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    font-size: 90px;
+    line-height: .90;
+    margin: 0;
+    letter-spacing:.04em;
+  }
+  .gameTitle{
+    background: linear-gradient(180deg, #d7e9ff 0%, #86bfff 40%, #cfe3ff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 14px 40px rgba(0,0,0,.60),0 0 65px rgba(120,190,255,.30);
+    filter: drop-shadow(0 24px 75px rgba(0,0,0,.70));
+    position: relative;
+  }
+  .gameTitle::after{
+    content:"";
+    position:absolute; left:-20%; top:0; width:35%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+    transform: skewX(-18deg);
+    animation: titleSweep 4.6s ease-in-out infinite;
+    opacity:.65; pointer-events:none;
+  }
+  @keyframes titleSweep{ 0%{left:-20%} 55%{left:120%} 100%{left:120%} }
+
+  /* ✅ Vidéo 16:9 + son autorisé après interaction */
+  #introVideo{
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    width:100%;
+    height:auto;
+    aspect-ratio:16/9;
+    max-height:100%;
+    object-fit:contain;
+    background:#000;
+    display:none;
+  }
+
+  .ready{
+    display:none;
+    font-family:'Anton',sans-serif;
+    font-size:84px;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    background: linear-gradient(180deg,#ffffff 0%,#bcdcff 55%,#ffffff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 18px 60px rgba(0,0,0,.7), 0 0 70px rgba(120,190,255,.18);
+    opacity:0;
+    animation: readyAnim 1.8s ease forwards;
+  }
+  @keyframes readyAnim{
+    0%{opacity:0; transform:scale(1.06); filter:blur(8px);}
+    30%{opacity:1; transform:scale(1); filter:blur(0);}
+    100%{opacity:0; transform:scale(.98); filter:blur(4px);}
+  }
+
+  .readySub{
+    margin-top:10px;
+    opacity:0;
+    font-weight:900;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:18px;
+    color:rgba(255,255,255,.88);
+    text-shadow:0 18px 70px rgba(0,0,0,.70);
+    animation: subPop 1.6s ease forwards;
+  }
+  @keyframes subPop{
+    0%{opacity:0; transform:translateY(10px); filter:blur(6px);}
+    35%{opacity:1; transform:translateY(0); filter:blur(0);}
+    100%{opacity:1;}
+  }
+
+  .startBtn{
+    display:none;
+    margin-top: 22px;
+    padding:16px 34px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.22);
+    background: rgba(0,0,0,.40);
+    backdrop-filter: blur(12px);
+    color:#fff;
+    font-weight:900;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:16px;
+    box-shadow:0 26px 110px rgba(0,0,0,.42);
+    cursor:pointer;
+    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, border-color .15s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .startBtn::after{
+    content:"";
+    position:absolute; top:-40%; left:-35%;
+    width:30%; height:180%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+    transform: skewX(-18deg);
+    opacity:.75;
+    animation: btnShine 3.6s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes btnShine{ 0%{left:-35%} 50%{left:120%} 100%{left:120%} }
+  .startBtn:hover{
+    transform:translateY(-3px) scale(1.02);
+    filter:brightness(1.10);
+    border-color:rgba(140,200,255,.55);
+    box-shadow:0 34px 140px rgba(0,0,0,.55);
+    animation: hoverBuzz .18s linear infinite;
+  }
+  @keyframes hoverBuzz{
+    0%{transform:translateY(-3px) scale(1.02) translateX(0)}
+    25%{transform:translateY(-3px) scale(1.02) translateX(1px)}
+    50%{transform:translateY(-3px) scale(1.02) translateX(0)}
+    75%{transform:translateY(-3px) scale(1.02) translateX(-1px)}
+    100%{transform:translateY(-3px) scale(1.02) translateX(0)}
+  }
+
+  .cinematicFlash{
+    position:absolute; inset:0; pointer-events:none; opacity:0;
+    background: radial-gradient(closest-side, rgba(140,200,255,.18), transparent 68%);
+    filter: blur(18px);
+    transition: opacity .45s ease;
+  }
+  .cinematicFlash.on{ opacity:1; }
+
+  /* ✅ petit hint discret (1 clic pour activer son) */
+  #tapHint{
+    position:absolute; left:50%; bottom:52px; transform:translateX(-50%);
+    font-family:'Orbitron',sans-serif;
+    font-size:14px; letter-spacing:.22em; text-transform:uppercase;
+    color:rgba(255,255,255,.75);
+    padding:12px 18px;
+    border-radius:999px;
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.14);
+    backdrop-filter:blur(10px);
+    box-shadow:0 22px 85px rgba(0,0,0,.38);
+    opacity:0;
+    transition: opacity .35s ease;
+    pointer-events:none;
+  }
+  #tapHint.show{ opacity:1; }
+
+</style>
+</head>
+
+<body>
+  <div class="genially-stage">
+    <div class="genially-page" id="geniallyPage">
+      <div class="fx-overlay"></div>
+      <div class="scanlines"></div>
+      <div class="cinematicFlash" id="flash"></div>
+
+      <!-- ✅ MODIF: on retire "muted" pour permettre le son (après interaction) -->
+      <video id="introVideo" src="intro2.mp4" autoplay playsinline></video>
+
+      <div class="center" id="center"></div>
+
+      <div id="tapHint">CLIQUE POUR ACTIVER LE SON</div>
+
+      <audio id="beep" src="beep.mp3" preload="auto"></audio>
+      <audio id="heartbeat" src="heartbeat.mp3" preload="auto" loop></audio>
+      <audio id="radio" src="radio.mp3" preload="auto"></audio>
+    </div>
+  </div>
+
+<script>
+/* Scale auto 1920x1080 */
+(function scaleGeniallyPage(){
+  const page = document.getElementById('geniallyPage');
+  function apply(){
+    const sw = window.innerWidth / 1920;
+    const sh = window.innerHeight / 1080;
+    const s = Math.min(sw, sh);
+    page.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', apply);
+  apply();
+})();
+
+const center = document.getElementById('center');
+const tapHint = document.getElementById('tapHint');
+const beep = document.getElementById('beep');
+const heartbeat = document.getElementById('heartbeat');
+const radio = document.getElementById('radio');
+const video = document.getElementById('introVideo');
+const flash = document.getElementById('flash');
+
+const messages = [
+  { html: "Bienvenue dans <strong>URGENCES</strong>.", showTitle:true },
+  { html: "Chaque décision peut tout changer.", glitch:true },
+  { html: "Observe. Analyse. Agis." },
+  { html: "Protège. Alerte. Secours.", glitch:true },
+  { html: "Ton sang-froid peut sauver une vie." }
+];
+
+const MSG_ANIM_MS = 3600;
+const GAP_MS = 250;
+let idx = 0;
+
+/* ✅ MODIF: flag audio déverrouillé par interaction */
+let audioUnlocked = false;
+
+function fxFlash(){
+  flash.classList.add('on');
+  setTimeout(()=>flash.classList.remove('on'), 380);
+}
+
+function playAudio(a){
+  try{ a.currentTime = 0; a.play(); }catch(e){}
+}
+
+function ensureHeartbeat(on){
+  try{
+    if(on){
+      heartbeat.volume = 0.22;
+      heartbeat.play();
+    }else{
+      heartbeat.pause();
+      heartbeat.currentTime = 0;
+    }
+  }catch(e){}
+}
+
+/* ✅ MODIF: 1er clic/tap = on déverrouille audio + on autorise son vidéo */
+async function unlockAudioOnce(){
+  if(audioUnlocked) return;
+  audioUnlocked = true;
+
+  tapHint.classList.remove('show');
+
+  // déverrouille les audios
+  try{ await heartbeat.play(); }catch(e){}
+  try{ beep.currentTime=0; await beep.play(); }catch(e){}
+  try{ radio.currentTime=0; await radio.play(); }catch(e){}
+
+  // ✅ autorise le son de la vidéo
+  video.muted = false;
+  video.volume = 1.0;
+}
+window.addEventListener('pointerdown', unlockAudioOnce);
+
+/* Hint: si l’audio n’est pas encore déverrouillé, on affiche le message */
+setTimeout(()=>{
+  if(!audioUnlocked) tapHint.classList.add('show');
+}, 650);
+
+function stripHTML(html){
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || "").trim();
+}
+
+function showMessage(step){
+  center.innerHTML = "";
+
+  const wrap = document.createElement("div");
+  wrap.style.display="flex";
+  wrap.style.flexDirection="column";
+  wrap.style.alignItems="center";
+  wrap.style.justifyContent="center";
+
+  const m = document.createElement("div");
+  m.className = "msg";
+
+  if(step.glitch){
+    const span = document.createElement("span");
+    span.className = "glitch glitchOn";
+    span.setAttribute("data-text", stripHTML(step.html));
+    span.textContent = stripHTML(step.html);
+    m.innerHTML = "";
+    m.appendChild(span);
+  }else{
+    m.innerHTML = step.html;
+  }
+
+  wrap.appendChild(m);
+
+  if(step.showTitle){
+    const t = document.createElement("div");
+    t.className = "gameTitleWrap";
+    t.innerHTML = `
+      <div class="titlePill">MISSION • PREMIERS SECOURS</div>
+      <div class="gameTitle">URGENCES</div>
+      <div class="gameSubtitle">AGIR POUR SAUVER</div>
+    `;
+    wrap.appendChild(t);
+  }
+
+  center.appendChild(wrap);
+  fxFlash();
+  playAudio(beep);
+
+  setTimeout(()=>{
+    idx++;
+    if(idx < messages.length){
+      setTimeout(()=>showMessage(messages[idx]), GAP_MS);
+    }else{
+      setTimeout(playVideoOnce, 520);
+    }
+  }, MSG_ANIM_MS);
+}
+
+function playVideoOnce(){
+  center.innerHTML = "";
+  fxFlash();
+  playAudio(radio);
+
+  video.style.display = "block";
+  video.currentTime = 0;
+
+  // ✅ si pas encore unlock, on garde muet (sinon navigateur bloque)
+  video.muted = !audioUnlocked;
+  video.volume = 1.0;
+
+  try{ heartbeat.volume = 0.14; }catch(e){}
+
+  video.play();
+
+  video.onended = () => {
+    video.onended = null;
+    video.style.display = "none";
+    showReadyThenButton();
+  };
+}
+
+function showReadyThenButton(){
+  center.innerHTML = "";
+  try{ heartbeat.volume = 0.22; }catch(e){}
+
+  const stack = document.createElement("div");
+  stack.style.display="flex";
+  stack.style.flexDirection="column";
+  stack.style.alignItems="center";
+  stack.style.justifyContent="center";
+
+  const r = document.createElement("div");
+  r.className = "ready";
+  r.textContent = "PRÊT";
+  stack.appendChild(r);
+
+  center.appendChild(stack);
+  fxFlash();
+  playAudio(beep);
+
+  setTimeout(()=>{
+    const sub = document.createElement("div");
+    sub.className = "readySub";
+    sub.textContent = "PRÊT POUR SAUVER DES VIES";
+    stack.appendChild(sub);
+
+    const btn = document.createElement("button");
+    btn.className = "startBtn";
+    btn.textContent = "COMMENCER LA MISSION";
+    stack.appendChild(btn);
+    btn.style.display = "inline-flex";
+
+    btn.addEventListener('mouseenter', ()=>playAudio(beep));
+    btn.addEventListener('click', ()=>playAudio(radio));
+  }, 1850);
+}
+
+/* start */
+ensureHeartbeat(true);
+showMessage(messages[0]);
+</script>
+</body>
+</html>
