@@ -23,41 +23,68 @@
       --ember2: rgba(255,120,50,1);
     }
 
-    html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    /* ✅ Genially: supprimer toute barre de défilement */
+    html,body{
+      margin:0;
+      height:100%;
+      overflow:hidden;              /* IMPORTANT */
+      background: transparent;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
-    .wrap{ width: min(1120px, 100%); }
+    /* ✅ Stage: occuper exactement l'écran */
+    .stage{
+      height: 100vh;                /* IMPORTANT */
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+      padding: 10px;                /* plus compact */
+      overflow:hidden;              /* IMPORTANT */
+    }
+
+    /* ✅ Layout: colonne, frame en flex (prend le reste) */
+    .wrap{
+      width: min(1120px, 100%);
+      height: 100%;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      overflow:hidden;              /* IMPORTANT */
+    }
 
     /* ====== TOP LEVEL TAB (niveau) ====== */
     .topTabs{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
-      margin-bottom: 14px;
+      gap:10px;
       flex-wrap: wrap;
+      margin-bottom: 0;             /* compact */
+      flex: 0 0 auto;
     }
     .levelTab{
       display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding: 10px 14px;
+      gap:8px;
+      padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(80,170,255,.10));
-      box-shadow: 0 16px 44px rgba(0,0,0,.35);
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
       backdrop-filter: blur(10px);
       font-weight: 950;
       letter-spacing: .25px;
       white-space: nowrap;
+      font-size: 13px;
     }
     .levelDot{
-      width: 10px; height: 10px; border-radius: 999px;
+      width: 9px; height: 9px; border-radius: 999px;
       background: rgba(255,176,90,1);
-      box-shadow: 0 0 0 5px rgba(255,176,90,.18);
+      box-shadow: 0 0 0 4px rgba(255,176,90,.18);
     }
     .miniHint{
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       color: rgba(255,255,255,.72);
       white-space: nowrap;
@@ -66,12 +93,12 @@
     /* Progress bar */
     .progressShell{
       flex: 1 1 220px;
-      height: 10px;
+      height: 9px;
       background: rgba(255,255,255,.10);
       border-radius: 999px;
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.12);
-      min-width: 220px;
+      min-width: 200px;
     }
     .progressBar{
       height:100%;
@@ -80,21 +107,29 @@
       transition: width .25s ease;
     }
 
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    /* HUD compact */
+    .hud{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 0 0 auto;
+      min-height: 0;
+    }
 
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 10px 12px;          /* compact */
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap: 10px;
       position: relative;
       overflow:hidden;
-      box-shadow: 0 18px 65px rgba(0,0,0,.45);
+      box-shadow: 0 14px 48px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
+      min-height: 84px;            /* stabilité */
     }
     .hudbox::after{
       content:"";
@@ -107,89 +142,133 @@
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+    .profile{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+      position: relative;
+      z-index:2;
+    }
 
+    /* ✅ Avatar réduit pour éviter scroll */
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
+      width: 66px; height: 66px;
+      border-radius: 18px;
+      padding: 3px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
-      box-shadow: 0 18px 42px rgba(0,0,0,.45);
+      box-shadow: 0 14px 32px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius: 15px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.35);
+      transform: scale(1.25);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
 
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    /* ✅ playerName en haut à côté de l’avatar (déjà ici) */
+    .pname{
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top: 3px;
+      font-weight: 850;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
 
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
+      padding: 7px 10px;
+      font-size: 11px;
       font-weight: 950;
       white-space: nowrap;
       position: relative;
       z-index:2;
     }
 
-    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 12px; flex-wrap: wrap; position: relative; z-index:2; }
+    .stats{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index:2;
+    }
 
     .pill{
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
+      gap: 8px;
+      padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 13px;
+      font-size: 12px;
       white-space: nowrap;
     }
 
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+    .timerPill{
+      padding: 7px 9px;
+      gap: 9px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
 
     .ring{
-      width: 40px; height: 40px; border-radius: 999px;
+      width: 34px; height: 34px;
+      border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
-      box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
+      box-shadow: 0 0 0 4px rgba(255,200,80,.14), 0 0 20px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px;
+      width: 24px; height: 24px;
+      border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 14px; font-weight: 950;
+      font-size: 13px;
+      font-weight: 950;
     }
 
-    .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 16px; font-weight: 950; }
+    .timeText{ display:flex; align-items:center; gap: 7px; }
+    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 14px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 5px rgba(255,200,80,.18), 0 0 32px rgba(255,200,80,.14);
+      box-shadow: 0 0 0 4px rgba(255,200,80,.18), 0 0 24px rgba(255,200,80,.14);
     }
     .timerDanger .ring{
       background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
+      box-shadow: 0 0 0 4px rgba(255,70,70,.20), 0 0 28px rgba(255,70,70,.18);
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px;
+      width: 190px; height: 10px;
+      border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -200,15 +279,21 @@
       transition: width .25s ease;
     }
 
+    /* ✅ Frame en flex: prend le reste et reste sans scroll */
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 18px;
+      padding: 12px;               /* compact */
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
+      flex: 1 1 auto;
+      min-height: 0;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
     }
     .frame::after{
       content:"";
@@ -219,15 +304,54 @@
       opacity:.9;
     }
 
-    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qmeta{
+      position: relative; z-index:2;
+      color: rgba(255,255,255,.70);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .30px;
+      text-transform: uppercase;
+      flex: 0 0 auto;
+    }
+    .qtitle{
+      position: relative; z-index:2;
+      margin-top: 2px;
+      font-weight: 950;
+      font-size: clamp(16px, 1.9vw, 22px);
+      line-height: 1.15;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+      flex: 0 0 auto;
+    }
 
-    .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
+    /* ✅ Limiter la description pour tenir sans scroll */
+    .qdesc{
+      position: relative; z-index:2;
+      margin-top: 4px;
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      line-height: 1.35;
+      max-width: 980px;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;       /* IMPORTANT: évite que ça pousse trop */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Options: compact, et ne doit pas créer scroll global */
+    .options{
+      position: relative; z-index:2;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 6px;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow:hidden;             /* IMPORTANT: pas de scroll */
+    }
 
     .opt{
       border-radius: 14px;
-      padding: 13px 14px;
+      padding: 10px 12px;
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
@@ -236,6 +360,7 @@
       border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
+      font-size: 13px;
     }
     .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
@@ -246,28 +371,34 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-.actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 24px;
-}
+    /* Actions compact */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      flex: 0 0 auto;
+      position: relative;
+      z-index:2;
+    }
 
-.actions-left,
-.actions-right {
-  display: flex;
-  gap: 12px;
-}
+    .actions-left,
+    .actions-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.90);
       border-radius: 12px;
-      padding: 10px 12px;
+      padding: 8px 10px;
       font-weight: 950;
       letter-spacing: .2px;
       cursor: pointer;
+      font-size: 12px;
     }
 
     .btnPrimary{
@@ -275,11 +406,12 @@
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       font-weight: 950;
       letter-spacing: .2px;
       display:none;
       cursor: pointer;
+      font-size: 12px;
     }
     .btnPrimary.show{ display:inline-block; }
     .btnPrimary:disabled{
@@ -307,7 +439,7 @@
     }
 
     .modalTop{
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
@@ -315,7 +447,7 @@
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
-      padding: 7px 10px;
+      padding: 6px 9px;
       font-size: 12px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -325,17 +457,17 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{ padding: 14px; color: rgba(255,255,255,.92); line-height: 1.45; font-size: 13px; }
     .modalActions{
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
     }
 
-    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
-    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
+    .startTitle{ font-weight: 950; font-size: 20px; margin-bottom: 6px; }
+    .startText{ color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.4; }
     .startBtn{
-      border:none; border-radius: 14px; padding: 12px 16px;
+      border:none; border-radius: 14px; padding: 10px 14px;
       font-weight: 950; letter-spacing: .3px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
@@ -367,7 +499,7 @@
 
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; }
+      .stressWrap{ width: 170px; }
       .progressShell{ min-width: 100%; }
     }
 
@@ -393,18 +525,18 @@
       animation: none;
     }
 
-    /* Q4 images */
+    /* Q4 images (compact) */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:16px;
-      margin-top:12px;
+      gap:12px;
+      margin-top:8px;
     }
     @media (max-width: 900px){
       .imgGrid{ grid-template-columns: 1fr; }
     }
     .imgCard{
-      border-radius:18px;
+      border-radius:16px;
       overflow:hidden;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.14);
@@ -412,27 +544,29 @@
       transition:.15s ease;
       box-shadow:0 14px 30px rgba(0,0,0,.25);
     }
-    .imgCard:hover{ transform:translateY(-3px); filter:brightness(1.05); }
+    .imgCard:hover{ transform:translateY(-2px); filter:brightness(1.05); }
     .imgCard.sel{
       outline:3px solid rgba(255,165,0,.4);
       box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
     }
     .imgHead{
-      padding:12px 16px;
+      padding:10px 12px;
       font-weight:900;
       display:flex;
       justify-content:space-between;
       background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
+      font-size: 12px;
     }
     .imgTag{
-      width:36px;
-      height:36px;
-      border-radius:12px;
+      width:32px;
+      height:32px;
+      border-radius:10px;
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:900;
       background:rgba(0,0,0,.25);
+      font-size: 12px;
     }
     .imgPic{
       width:100%;
@@ -441,12 +575,13 @@
       display:block;
     }
     .imgCap{
-      padding:14px;
+      padding:10px 12px;
       text-align:center;
       font-weight:800;
+      font-size: 12px;
     }
 
-    /* ===== Answer key modal extra ===== */
+    /* Corrigé */
     .closeX{
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -531,22 +666,19 @@
 
       <div class="options" id="options"></div>
 
-<div class="actions">
-  <!-- Groupe gauche -->
-  <div class="actions-left">
-    <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
-    <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
-  </div>
+      <div class="actions">
+        <!-- Groupe gauche -->
+        <div class="actions-left">
+          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+        </div>
 
-  <!-- Groupe droite -->
-  <div class="actions-right">
-    <button class="btnPrimary show" id="validateBtn" type="button" disabled>Valider</button>
-    <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
-  </div>
-</div>
-
-
-
+        <!-- Groupe droite -->
+        <div class="actions-right">
+          <button class="btnPrimary show" id="validateBtn" type="button" disabled>Valider</button>
+          <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -721,6 +853,7 @@ const difficultyRaw = (typeof window.niveau !== "undefined" && window.niveau)
 const difficulty = String(difficultyRaw).toLowerCase();
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
+/* ✅ Affichage playerName en haut à côté de l’avatar */
 hudName.textContent = playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
@@ -1013,7 +1146,7 @@ function renderQuestion(i, resetAttempts=true){
       <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
       <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
         style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
-      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
+      <div style="margin-top:6px; font-size:11px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
     const inp = box.querySelector("#shortInput");
@@ -1056,14 +1189,14 @@ function renderQuestion(i, resetAttempts=true){
 
     const msg = document.createElement("div");
     msg.className="pill";
-    msg.style.marginBottom="10px";
+    msg.style.marginBottom="8px";
     msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
     optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="680px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
@@ -1110,14 +1243,14 @@ function renderQuestion(i, resetAttempts=true){
 
     const note = document.createElement("div");
     note.className="pill";
-    note.style.marginBottom="10px";
+    note.style.marginBottom="8px";
     note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
     optionsEl.appendChild(note);
 
     const list = document.createElement("div");
     list.id="dragList";
     list.style.display="grid";
-    list.style.gap="10px";
+    list.style.gap="8px";
 
     const items = [...q.items];
     for(let k=items.length-1;k>0;k--){
@@ -1131,7 +1264,7 @@ function renderQuestion(i, resetAttempts=true){
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
       row.innerHTML = `<div style="font-weight:950;">${it.text}</div>
-                       <div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+                       <div style="font-size:11px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
       list.appendChild(row);
     });
     optionsEl.appendChild(list);
@@ -1170,10 +1303,10 @@ function renderQuestion(i, resetAttempts=true){
     box.className="opt"; box.style.cursor="default";
     const html = q.template
       .replace("{blank1}", `<input data-k="blank1" class="form-control"
-        style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+        style="display:inline-block; width:200px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
       .replace("{blank2}", `<input data-k="blank2" class="form-control"
-        style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+        style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.7;">${html}</div>`;
     optionsEl.appendChild(box);
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
@@ -1433,13 +1566,8 @@ function resetMission(showStart=true){
   if(showStart) startOverlay.style.display="flex";
 }
 
-/* ===== Badge logic + save badge =====
-   - Images: bronze.png, argent.png, or.png (dans assets/badges/)
-   - On enregistre: badgeName + badgeType + niveau + scenarioId
-*/
+/* ===== Badge logic + save badge ===== */
 function computeBadge(scoreFinal){
-  // Seuils simples (tu peux les changer)
-  // Max théorique ≈ 10 questions * 10 = 100 (hors pts négatifs)
   if(scoreFinal >= 90) return { type:"or", label:"Or", img:"assets/badges/or.png" };
   if(scoreFinal >= 70) return { type:"argent", label:"Argent", img:"assets/badges/argent.png" };
   return { type:"bronze", label:"Bronze", img:"assets/badges/bronze.png" };
@@ -1449,16 +1577,14 @@ function saveBadge(badge){
     scenarioId: SCENARIO.id,
     mission: SCENARIO.mission,
     niveau: difficulty,
-    badgeType: badge.type,      // bronze / argent / or
+    badgeType: badge.type,
     badgeName: `${badge.label} — ${SCENARIO.mission}`,
     score: score,
     dateISO: new Date().toISOString()
   };
-  // clé unique par scénario + niveau
   const key = `badge_s${SCENARIO.id}_${difficulty}`;
   localStorage.setItem(key, JSON.stringify(payload));
 
-  // optionnel: un historique
   const histKey = "badges_history";
   const arr = JSON.parse(localStorage.getItem(histKey) || "[]");
   arr.push(payload);
@@ -1536,7 +1662,6 @@ function closeKey(){
 showKeyBtn.addEventListener("click", openKey);
 keyCloseBtn.addEventListener("click", closeKey);
 keyCloseBtn2.addEventListener("click", closeKey);
-// clic sur fond pour fermer
 keyOverlay.addEventListener("click", (e)=>{
   if(e.target === keyOverlay) closeKey();
 });
@@ -1551,7 +1676,6 @@ function endScenario(){
 
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
 
-  // ✅ badge (bronze/argent/or) + save
   const badge = computeBadge(score);
   saveBadge(badge);
 
@@ -1560,24 +1684,24 @@ function endScenario(){
   sfxVictory();
 
   qDesc.innerHTML = `
-    <div style="margin-top:8px; color: rgba(255,255,255,.86);">
-      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-        <img src="${badge.img}" alt="badge" style="width:72px; height:72px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
+    <div style="margin-top:6px; color: rgba(255,255,255,.86);">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <img src="${badge.img}" alt="badge" style="width:64px; height:64px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
         <div>
-          <div style="font-weight:950; font-size:16px;">🏅 Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
-          <div style="margin-top:4px; color: rgba(255,255,255,.76); font-size:13px;">
+          <div style="font-weight:950; font-size:15px;">🏅 Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
+          <div style="margin-top:4px; color: rgba(255,255,255,.76); font-size:12px;">
             Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b> • Type : <b>${escapeHtml(badge.type.toUpperCase())}</b>
           </div>
         </div>
       </div>
 
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
         <span class="pill">⭐ Score final : <b>${score}</b></span>
         <span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span>
         <span class="pill">💡 Indices restants : <b>${hintsLeft}</b> / ${HINT_MAX}</span>
       </div>
 
-      <div style="margin-top:10px; color: rgba(255,255,255,.72); font-size:13px;">
+      <div style="margin-top:8px; color: rgba(255,255,255,.72); font-size:12px;">
         ✅ Badge enregistré (nom + type + niveau).
       </div>
     </div>
@@ -1586,10 +1710,10 @@ function endScenario(){
   optionsEl.innerHTML = `
     <div class="opt" style="cursor:default; text-align:center;">
       <div style="display:flex; justify-content:center; margin-bottom:10px;">
-        <img src="${badge.img}" alt="badge" style="width:90px; height:90px; border-radius:20px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
+        <img src="${badge.img}" alt="badge" style="width:78px; height:78px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
       </div>
       <div style="font-weight:950;">Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
-      <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Niveau : ${escapeHtml(difficulty.toUpperCase())}</div>
+      <div style="color: rgba(255,255,255,.74); font-size:12px; margin-top:4px;">Niveau : ${escapeHtml(difficulty.toUpperCase())}</div>
     </div>
   `;
 
@@ -1597,10 +1721,8 @@ function endScenario(){
   locked = true;
   updateHintBtn();
 
-  // ✅ Activer Corrigé uniquement à la fin
   showKeyBtn.disabled = false;
 
-  // ✅ Afficher bouton Terminer (à côté de Corrigé)
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
 }
@@ -1642,12 +1764,10 @@ startBtn.addEventListener("click", ()=>{
   stress = 0; score = 0;
   setStress(0); setScore(0);
 
-  // reset hints at start
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   updateHintBtn();
 
-  // reset end buttons
   showKeyBtn.disabled = true;
   endBtn.style.display = "none";
 
@@ -1683,10 +1803,7 @@ startBtn.addEventListener("click", ()=>{
   setAttemptsUI();
   updateProgress();
 
-  // ✅ Corrigé désactivé jusqu'à la fin
   showKeyBtn.disabled = true;
-
-  // ✅ Terminer caché jusqu'à la fin
   endBtn.style.display = "none";
 
   updateHintBtn();
