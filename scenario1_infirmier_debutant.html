@@ -24,8 +24,9 @@
     }
 
     html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
-    .wrap{ width: min(1120px, 100%); }
+    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 16px 14px; }
+    /* ✅ élargir comme Genially (plus large que 1120px) */
+    .wrap{ width: min(1650px, 100%); }
 
     /* ====== TOP LEVEL TAB (niveau) + PROGRESS ====== */
     .topTabs{
@@ -55,10 +56,11 @@
       background: rgba(255,176,90,1);
       box-shadow: 0 0 0 5px rgba(255,176,90,.18);
     }
+    /* ✅ police plus lisible */
     .miniHint{
-      font-size: 12px;
-      font-weight: 900;
-      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      font-weight: 950;
+      color: rgba(255,255,255,.78);
       white-space: nowrap;
     }
     .progressShell{
@@ -77,7 +79,7 @@
       transition: width .25s ease;
     }
 
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 
     .hudbox{
       background: var(--glass);
@@ -132,7 +134,7 @@
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
       padding: 9px 12px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 950;
       white-space: nowrap;
       position: relative;
@@ -217,8 +219,8 @@
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(19px, 2.35vw, 28px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.85); font-size: 15px; line-height: 1.55; max-width: 1200px; }
 
     .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
 
@@ -243,7 +245,7 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    /* ===== Actions layout (comme ton code médecin) ===== */
+    /* ===== Actions layout ===== */
     .actions{
       display:flex;
       justify-content: space-between;
@@ -296,7 +298,7 @@
       backdrop-filter: blur(6px);
     }
 
-    /* Loading overlay: transparent comme tu voulais */
+    /* Loading overlay: transparent */
     #loadingOverlay{
       background: transparent !important;
       backdrop-filter: none !important;
@@ -331,7 +333,7 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.55; font-size: 15px; }
     .modalActions{
       padding: 14px 16px;
       border-top: 1px solid rgba(255,255,255,.10);
@@ -339,7 +341,7 @@
     }
 
     .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
-    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
+    .startText{ color: rgba(255,255,255,.85); font-size: 15px; line-height: 1.55; }
     .startBtn{
       border:none; border-radius: 14px; padding: 12px 16px;
       font-weight: 950; letter-spacing: .3px;
@@ -371,7 +373,7 @@
       to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
     }
 
-    @media (max-width: 860px){
+    @media (max-width: 980px){
       .hud{ grid-template-columns: 1fr; }
       .stressWrap{ width: 190px; }
       .progressShell{ min-width: 100%; }
@@ -399,14 +401,14 @@
       animation: none;
     }
 
-    /* Q4 images */
+    /* ✅ Q4 images - réduire taille */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:16px;
+      gap:12px;
       margin-top:12px;
     }
-    @media (max-width: 900px){
+    @media (max-width: 980px){
       .imgGrid{ grid-template-columns: 1fr; }
     }
     .imgCard{
@@ -424,35 +426,38 @@
       box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
     }
     .imgHead{
-      padding:12px 16px;
-      font-weight:900;
+      padding:10px 14px;
+      font-weight:950;
       display:flex;
       justify-content:space-between;
       background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
+      font-size: 13px;
     }
     .imgTag{
-      width:36px;
-      height:36px;
+      width:32px;
+      height:32px;
       border-radius:12px;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-weight:900;
+      font-weight:950;
       background:rgba(0,0,0,.25);
+      font-size: 13px;
     }
     .imgPic{
       width:100%;
-      aspect-ratio:4/3;
+      height: 155px;              /* ✅ plus petit */
       object-fit:cover;
       display:block;
     }
     .imgCap{
-      padding:14px;
+      padding:12px;
       text-align:center;
-      font-weight:800;
+      font-weight:850;
+      font-size: 13px;
     }
 
-    /* ===== Corrigé overlay (fenêtre sur la même page) ===== */
+    /* ===== Corrigé overlay ===== */
     .closeX{
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -465,8 +470,122 @@
       user-select:none;
     }
     .closeX:hover{ filter: brightness(1.08); }
+	
 
     .keyBox{ width:min(980px, 95%); }
+	/* ======= FIN / BADGE OBTENU (comme screenshot) ======= */
+.resultWrap{ position:relative; z-index:2; margin-top: 6px; }
+.resultMeta{
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .35px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.72);
+  margin-bottom: 8px;
+}
+.resultTitle{
+  font-weight: 950;
+  font-size: clamp(26px, 3vw, 38px);
+  margin: 0 0 14px 0;
+  text-shadow: 0 18px 40px rgba(0,0,0,.55);
+}
+.resultCard{
+  display:flex;
+  gap: 16px;
+  align-items:center;
+  padding: 14px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+.badgeThumb{
+  width: 74px;
+  height: 74px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  flex: 0 0 auto;
+}
+.badgeThumb img{
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display:block;
+}
+.badgeText{ min-width:0; }
+.badgeLine{
+  font-weight: 950;
+  font-size: 18px;
+  line-height: 1.15;
+}
+.badgeSub{
+  margin-top: 4px;
+  color: rgba(255,255,255,.70);
+  font-weight: 900;
+  font-size: 13px;
+}
+
+.resultPills{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.resultInfo{
+  margin-top: 10px;
+  font-weight: 900;
+  color: rgba(255,255,255,.78);
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+.resultInfo .okDot{
+  width: 10px; height: 10px; border-radius: 999px;
+  background: rgba(45,200,120,.95);
+  box-shadow: 0 0 0 5px rgba(45,200,120,.16);
+}
+
+.resultHero{
+  margin-top: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.10));
+  padding: 26px 16px;
+  text-align:center;
+  box-shadow: 0 18px 70px rgba(0,0,0,.35);
+}
+.heroBadge{
+  width: 92px;
+  height: 92px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  display:grid;
+  place-items:center;
+  margin: 0 auto 12px auto;
+}
+.heroBadge img{
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display:block;
+}
+.heroTitle{
+  font-weight: 950;
+  font-size: 18px;
+  margin: 0;
+}
+.heroSub{
+  margin-top: 4px;
+  font-weight: 900;
+  color: rgba(255,255,255,.72);
+}
+
   </style>
 </head>
 
@@ -474,7 +593,7 @@
 <div class="stage">
   <div class="wrap">
 
-    <!-- TOP TAB + PROGRESS (ajouté) -->
+    <!-- TOP TAB + PROGRESS -->
     <div class="topTabs">
       <div class="levelTab" title="Niveau">
         <span class="levelDot"></span>
@@ -485,7 +604,7 @@
         <div class="progressBar" id="progressBar"></div>
       </div>
 
-      <div class="miniHint" id="miniHint">⏱ 30s / question • 3 tentatives max • 💡 3 indices</div>
+      <div class="miniHint" id="miniHint">⏱ —s / question • — tentatives • 💡 — indices</div>
     </div>
 
     <div class="hud">
@@ -506,7 +625,7 @@
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/3</div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
@@ -520,8 +639,8 @@
             <div class="stressBar" id="stressBar"></div>
           </div>
 
-          <!-- Indice + Pause (ajoutés) -->
-          <button class="btnNeo" id="hintBtn" type="button">💡 Indice (3)</button>
+          <!-- Indice + Pause -->
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
           <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
@@ -534,7 +653,7 @@
 
       <div class="options" id="options"></div>
 
-      <!-- Actions (corrigé + terminer à gauche) (ajouté) -->
+      <!-- Actions (corrigé + terminer à gauche) -->
       <div class="actions">
         <div class="actions-left">
           <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
@@ -562,7 +681,7 @@
     </div>
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
-      <div class="startText">
+      <div class="startText" id="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
         <b>Si le temps s’écoule 3 fois ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
@@ -576,7 +695,7 @@
   </div>
 </div>
 
-<!-- Loading overlay (ajouté) -->
+<!-- Loading overlay -->
 <div class="overlay" id="loadingOverlay">
   <div class="modalBox" style="max-width:520px;">
     <div class="modalBody" style="text-align:center; padding:26px 16px;">
@@ -604,7 +723,7 @@
   </div>
 </div>
 
-<!-- ✅ Corrigé overlay (ajouté) -->
+<!-- ✅ Corrigé overlay -->
 <div class="overlay" id="keyOverlay">
   <div class="modalBox keyBox">
     <div class="modalTop">
@@ -664,10 +783,12 @@ function sfxAlarmLong(){
 const el = (id)=>document.getElementById(id);
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
 const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
+const hudAttemptsMaxEl = el("hudAttemptsMax");
 const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
 const startOverlay = el("startOverlay"), startBtn = el("startBtn");
+const startText = el("startText");
 const loadingOverlay = el("loadingOverlay");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
@@ -679,6 +800,7 @@ const progressBar = el("progressBar");
 const levelTabText = el("levelTabText");
 const showKeyBtn = el("showKeyBtn");
 const endBtn = el("endBtn");
+const miniHint = el("miniHint");
 
 const keyOverlay = el("keyOverlay");
 const keyBody = el("keyBody");
@@ -696,17 +818,15 @@ const SCENARIO = {
 // ✅ URL du scénario suivant (remplace par ton lien)
 const NEXT_SCENARIO_URL = "#";
 
-// ✅ Timer (tu avais 30s dans le design)
-const TIMER_SECONDS = 60; // garde ton choix actuel
-// Si tu veux 30 : mets 30 et tout sera cohérent avec miniHint
-
 const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
 
 const role = "infirmier";
-const playerName = localStorage.getItem("playerName") || "Joueur";
+
+/* ✅ Nom affiché : "Dr. + player_name" */
+const player_name = localStorage.getItem("playerName") || "Joueur";
 const avatarFile = localStorage.getItem("avatar") || "infirmier_f.png";
 
-// ✅ Niveau choisi à l'étape d'avant: variable `niveau` (sinon localStorage)
+/* ✅ Niveau choisi : variable `niveau` (sinon localStorage) */
 const difficultyRaw = (typeof window.niveau !== "undefined" && window.niveau)
   ? String(window.niveau)
   : (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
@@ -714,19 +834,39 @@ const difficultyRaw = (typeof window.niveau !== "undefined" && window.niveau)
 const difficulty = String(difficultyRaw).toLowerCase();
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-hudName.textContent = playerName;
+hudName.textContent = "Dr. " + player_name;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
 
 difficultyChip.textContent = "MODE: " + difficulty.toUpperCase();
 levelTabText.textContent = "NIVEAU : " + difficulty.toUpperCase();
 
-/* ===== Indices (3 pour tout le scénario) ===== */
-const HINT_MAX = 3;
+/* ✅ Règles par niveau (comme ton code précédent) */
+let TIMER_SECONDS = 60;
+let ATTEMPTS_MAX = 3;
+let HINT_MAX = 3;
+
+if(difficulty.includes("inter")){
+  TIMER_SECONDS = 45;
+  ATTEMPTS_MAX = 2;
+  HINT_MAX = 2;
+}
+if(difficulty.includes("expert")){
+  TIMER_SECONDS = 30;
+  ATTEMPTS_MAX = 1;
+  HINT_MAX = 1;
+}
+
+hudAttemptsMaxEl.textContent = String(ATTEMPTS_MAX);
+miniHint.textContent = `⏱ ${TIMER_SECONDS}s / question • ${ATTEMPTS_MAX} tentative${ATTEMPTS_MAX>1?"s":""} • 💡 ${HINT_MAX} indice${HINT_MAX>1?"s":""}`;
+
+/* ✅ Indices : total scénario + 1 seul indice par question */
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) ?? String(HINT_MAX), 10);
 if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 hintsLeft = Math.max(0, Math.min(HINT_MAX, hintsLeft));
+
+let hintUsedThisQuestion = false;
 
 /* ===== Score / Stress ===== */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
@@ -803,10 +943,10 @@ function startTimer(reset=true){
       attemptsForCurrentQuestion++;
       setAttemptsUI();
 
-      if(attemptsForCurrentQuestion >= 3){
-        missionFail("⏱️ Temps écoulé (3 fois). Mission échouée. Retour au départ… (score remis à zéro)");
+      if(attemptsForCurrentQuestion >= ATTEMPTS_MAX){
+        missionFail(`⏱️ Temps écoulé (${ATTEMPTS_MAX} fois). Mission échouée. Retour au départ… (score remis à zéro)`);
       }else{
-        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/3)", {allowRetry:true, allowNext:false, missionFail:false});
+        showOverlay("warn", `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
       }
     }
   }, 1000);
@@ -833,8 +973,8 @@ function mkOpt(text){
   return d;
 }
 
-/* Loading */
-function showLoading(ms=1400){
+/* ✅ Loading (temps de passage réduit) */
+function showLoading(ms=800){
   frame.style.visibility = "hidden";
   loadingOverlay.style.display = "flex";
   return new Promise(res=>{
@@ -854,10 +994,11 @@ function nl2brSafe(str){
   return escapeHtml(str).replaceAll("\n","<br>");
 }
 
-/* ===== INDICE (3 total) ===== */
+/* ===== INDICE (total scénario + 1 par question) ===== */
 function updateHintBtn(){
-  hintBtn.textContent = `💡 Indice (${hintsLeft})`;
-  hintBtn.disabled = (hintsLeft <= 0) || locked;
+  const used = hintUsedThisQuestion ? "✔" : "";
+  hintBtn.textContent = `💡 Indice (${hintsLeft}) ${used}`.trim();
+  hintBtn.disabled = (hintsLeft <= 0) || locked || hintUsedThisQuestion;
   hintBtn.style.opacity = hintBtn.disabled ? ".55" : "1";
 }
 
@@ -902,12 +1043,14 @@ function getHintForQuestion(q){
 hintBtn.onclick = ()=>{
   if(locked) return;
   if(hintsLeft <= 0) return;
+  if(hintUsedThisQuestion) return; // ✅ un indice max par question
 
   sfxClick();
   stopTimer();
   locked = true;
 
   hintsLeft--;
+  hintUsedThisQuestion = true;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   updateHintBtn();
 
@@ -930,13 +1073,21 @@ function renderQuestion(i, resetAttempts=true){
   hideOverlay();
 
   if(resetAttempts){ attemptsForCurrentQuestion=0; setAttemptsUI(); }
+  hintUsedThisQuestion = false; // ✅ reset 1 indice/question
 
   resetState();
 
   const q = questions[i];
   qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
   qTitle.textContent = q.title || "—";
-  qDesc.innerHTML = q.desc || "";
+
+  // ✅ Pour "mettre en ordre": on ne montre pas la phrase "Glisse les étapes..." (sans toucher les questions)
+  if(q.type === "drag_order"){
+    qDesc.innerHTML = "";
+  }else{
+    qDesc.innerHTML = q.desc || "";
+  }
+
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
@@ -992,7 +1143,7 @@ function renderQuestion(i, resetAttempts=true){
     box.innerHTML = `
       <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
       <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
-        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); font-weight:900;" />
       <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
@@ -1043,7 +1194,7 @@ function renderQuestion(i, resetAttempts=true){
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="760px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
@@ -1088,10 +1239,11 @@ function renderQuestion(i, resetAttempts=true){
   if(type==="drag_order"){
     clearBtn.style.display="inline-block";
 
+    // ✅ enlever la phrase et rendre plus discret
     const note = document.createElement("div");
     note.className="pill";
     note.style.marginBottom="10px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
+    note.innerHTML = "🖱️ <b>Mets les cartes dans l’ordre</b>, puis clique sur <b>Valider</b>.";
     optionsEl.appendChild(note);
 
     const list = document.createElement("div");
@@ -1110,8 +1262,14 @@ function renderQuestion(i, resetAttempts=true){
       row.className="opt";
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div>
-                       <div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+
+      // ✅ "(glisser)" déplacé à l'extrémité droite
+      row.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="font-weight:950;">${it.text}</div>
+          <div style="font-size:12px; color: rgba(255,255,255,.72); font-weight:950;">glisser</div>
+        </div>
+      `;
       list.appendChild(row);
     });
     optionsEl.appendChild(list);
@@ -1150,10 +1308,10 @@ function renderQuestion(i, resetAttempts=true){
     box.className="opt"; box.style.cursor="default";
     const html = q.template
       .replace("{blank1}", `<input data-k="blank1" class="form-control"
-        style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+        style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); font-weight:900;" placeholder="..." />`)
       .replace("{blank2}", `<input data-k="blank2" class="form-control"
-        style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+        style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); font-weight:900;" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.9; font-size:15px;">${html}</div>`;
     optionsEl.appendChild(box);
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
@@ -1331,12 +1489,12 @@ function failedAttempt(baseMsg){
   attemptsForCurrentQuestion++;
   setAttemptsUI();
 
-  if(attemptsForCurrentQuestion >= 3){
+  if(attemptsForCurrentQuestion >= ATTEMPTS_MAX){
     sfxAlarmLong();
-    missionFail("❌ 3 tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
+    missionFail(`❌ ${ATTEMPTS_MAX} tentative${ATTEMPTS_MAX>1?"s":""} ratée${ATTEMPTS_MAX>1?"s":""}. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`, {allowRetry:true, allowNext:false, missionFail:false});
+  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
 }
 
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
@@ -1360,7 +1518,7 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
     hideOverlay();
     idx++;
     if(idx < TOTAL){
-      await showLoading(1400);
+      await showLoading(800);
       renderQuestion(idx,true);
     }else{
       endScenario();
@@ -1392,6 +1550,7 @@ function resetMission(showStart=true){
   // reset hints
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
   updateHintBtn();
 
   // reset UI end buttons
@@ -1482,38 +1641,135 @@ keyCloseBtn.addEventListener("click", closeKey);
 keyCloseBtn2.addEventListener("click", closeKey);
 keyOverlay.addEventListener("click", (e)=>{ if(e.target === keyOverlay) closeKey(); });
 
-/* ===== End scenario ===== */
+/* ===== Badge helpers (affichage fin comme screenshot) ===== */
+function normalizeLevelLabel(){
+  // on garde exactement ce que tu affiches en haut: difficulty (débutant/intermédiaire/expert)
+  return String(difficulty || "débutant").toUpperCase();
+}
+
+function computeBadgeTypeFromScore(sc){
+  // logique simple + cohérente avec ton screenshot (100 => OR)
+  if(sc >= 90) return "OR";
+  if(sc >= 70) return "ARGENT";
+  return "BRONZE";
+}
+
+function badgeImageForType(type){
+  // tes images: bronze.png or.png argent.png
+  const t = String(type || "").toUpperCase();
+  if(t === "OR") return "or.png";
+  if(t === "ARGENT") return "argent.png";
+  return "bronze.png";
+}
+
+function saveBadge({scenario, mission, type, level, score}){
+  const payload = {
+    scenario: scenario,
+    name: `${type} — ${mission}`,
+    type: type,
+    niveau: level,
+    score: score,
+    img: badgeImageForType(type),
+    ts: Date.now()
+  };
+  localStorage.setItem(`badge_s${scenario}`, JSON.stringify(payload));
+  return payload;
+}
+
 function endScenario(){
   stopTimer();
   hideOverlay();
-  optionsEl.innerHTML="";
-  validateBtn.disabled=true;
-  clearBtn.style.display="none";
 
-  qMeta.textContent = "Fin";
-  qTitle.textContent = "🎉 Félicitations !";
-  qDesc.innerHTML = `
-    <div style="margin-top:8px; color: rgba(255,255,255,.86);">
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-        <span class="pill">⭐ Score final : <b>${score}</b></span>
-        <span class="pill">😰 Stress : <b>${stress}%</b></span>
-        <span class="pill">💡 Indices restants : <b>${hintsLeft}</b> / ${HINT_MAX}</span>
-      </div>
-    </div>
-  `;
-  sfxVictory();
-
-  if(progressBar) progressBar.style.width = "100%";
+  // Verrouiller l'UI de quiz
+  optionsEl.innerHTML = "";
+  validateBtn.disabled = true;
+  validateBtn.classList.remove("show");
+  validateBtn.style.display = "none";     // ✅ comme screenshot: Valider n’est plus utile
+  clearBtn.style.display = "none";
   locked = true;
-  updateHintBtn();
 
-  // ✅ Activer Corrigé uniquement à la fin
+  // Activer Corrigé uniquement à la fin (comme tu fais déjà)
   showKeyBtn.disabled = false;
 
-  // ✅ Afficher bouton Terminer (à côté de Corrigé)
+  // Afficher bouton Terminer à gauche (comme screenshot)
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
+
+  // ----- Badge (type + image) -----
+  const levelLabel = normalizeLevelLabel();         // ex: DEBUTANT
+  const badgeType  = computeBadgeTypeFromScore(score); // OR/ARGENT/BRONZE
+  const badgeImg   = badgeImageForType(badgeType);
+
+  // Enregistrer (nom + type + niveau) comme tu voulais
+  const saved = saveBadge({
+    scenario: SCENARIO.id,
+    mission: SCENARIO.mission,
+    type: badgeType,
+    level: levelLabel,
+    score
+  });
+
+  // Progress full
+  if(progressBar) progressBar.style.width = "100%";
+
+  // Texte FIN (comme screenshot)
+  qMeta.textContent = "FIN — BADGE OBTENU";
+  qTitle.textContent = "Félicitations !";
+  qDesc.innerHTML = ""; // on remplace par un bloc résultat dans optionsEl
+
+  // Stress label (optionnel: Calme si faible)
+  const stressLabel = (stress <= 25) ? "Calme" : (stress <= 60) ? "Sous tension" : "Critique";
+
+  // Indices restants (affichage)
+  const used = (HINT_MAX - hintsLeft);
+  const hintLeftTxt = `${hintsLeft} / ${HINT_MAX}`;
+
+  // ----- Bloc résultat (identique à ton screenshot) -----
+  optionsEl.innerHTML = `
+    <div class="resultWrap">
+
+      <div class="resultCard">
+        <div class="badgeThumb">
+          <img src="assets/${saved.img}" alt="badge">
+        </div>
+
+        <div class="badgeText">
+          <div class="badgeLine">🏅 Badge ${badgeType} — ${escapeHtml(SCENARIO.mission)}</div>
+          <div class="badgeSub">Niveau : <b>${escapeHtml(levelLabel)}</b> • Type : <b>${escapeHtml(badgeType)}</b></div>
+
+          <div class="resultPills">
+            <span class="pill">⭐ Score final : <b>${score}</b></span>
+            <span class="pill">😰 Stress : <b>${stress}%</b> (<span style="color:rgba(255,255,255,.78);">${stressLabel}</span>)</span>
+            <span class="pill">💡 Indices restants : <b>${hintLeftTxt}</b></span>
+          </div>
+
+          <div class="resultInfo">
+            <span class="okDot"></span>
+            <span>Badge enregistré (nom + type + niveau).</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resultHero">
+        <div class="heroBadge">
+          <img src="assets/${saved.img}" alt="badge">
+        </div>
+        <p class="heroTitle">Badge ${badgeType} — ${escapeHtml(SCENARIO.mission)}</p>
+        <div class="heroSub">Niveau : <b>${escapeHtml(levelLabel)}</b></div>
+      </div>
+
+    </div>
+  `;
+
+  // On désactive Indice/Pause une fois terminé
+  updateHintBtn();
+  hintBtn.disabled = true;
+  pauseBtn.disabled = true;
+
+  // petit son victoire
+  sfxVictory();
 }
+
 
 /* Motion */
 function motion(type){
@@ -1542,6 +1798,7 @@ startBtn.addEventListener("click", ()=>{
   // reset hints at start
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
 
   // reset end buttons
   showKeyBtn.disabled = true;
@@ -1566,7 +1823,7 @@ startBtn.addEventListener("click", ()=>{
   locked=true;
   qMeta.textContent = SCENARIO.label;
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML="Tu as <b>30 secondes</b> par question. Clique sur <b>DÉMARRER</b>.";
+  qDesc.innerHTML = `Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
   optionsEl.innerHTML="";
   hudQnum.textContent="1";
 
@@ -1582,6 +1839,18 @@ startBtn.addEventListener("click", ()=>{
 
   showKeyBtn.disabled = true;
   endBtn.style.display = "none";
+
+  // ✅ Start overlay texte dynamique (mêmes règles)
+  startText.innerHTML = `
+    Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
+    <br><br>
+    <b>Niveau :</b> ${escapeHtml(difficulty.toUpperCase())}<br>
+    ⏱ <b>${TIMER_SECONDS}s</b> par question • 🎯 <b>${ATTEMPTS_MAX}</b> tentative${ATTEMPTS_MAX>1?"s":""} • 💡 <b>${HINT_MAX}</b> indice${HINT_MAX>1?"s":""} (1 par question)
+    <br><br>
+    <b>Si le temps s’écoule ${ATTEMPTS_MAX} fois ou après ${ATTEMPTS_MAX} tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+    <br>
+    Es-tu prêt à commencer ?
+  `;
 
   updateHintBtn();
 })();
