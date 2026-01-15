@@ -23,34 +23,29 @@
       --ember2: rgba(255,120,50,1);
     }
 
-    /* ✅ Genially: supprimer toute barre de défilement */
     html,body{
       margin:0;
-      height:100%;
-      overflow:hidden;              /* IMPORTANT */
       background: transparent;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      height:100%;
+      overflow:hidden; /* ✅ empêche les barres de défilement de la page (Genially) */
     }
 
-    /* ✅ Stage: occuper exactement l'écran */
     .stage{
-      height: 100vh;                /* IMPORTANT */
+      height: 100vh;
       display:flex;
       justify-content:center;
-      align-items:stretch;
-      padding: 10px;                /* plus compact */
-      overflow:hidden;              /* IMPORTANT */
+      align-items:flex-start;
+      padding: 10px; /* ⬇️ réduit */
+      overflow:hidden;
     }
-
-    /* ✅ Layout: colonne, frame en flex (prend le reste) */
     .wrap{
       width: min(1120px, 100%);
       height: 100%;
       display:flex;
       flex-direction:column;
-      gap: 10px;
-      overflow:hidden;              /* IMPORTANT */
+      overflow:hidden;
     }
 
     /* ====== TOP LEVEL TAB (niveau) ====== */
@@ -59,19 +54,19 @@
       justify-content:space-between;
       align-items:center;
       gap:10px;
+      margin-bottom: 10px; /* ⬇️ */
       flex-wrap: wrap;
-      margin-bottom: 0;             /* compact */
       flex: 0 0 auto;
     }
     .levelTab{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding: 8px 12px;
+      gap:9px;
+      padding: 8px 12px; /* ⬇️ */
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(80,170,255,.10));
-      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      box-shadow: 0 16px 44px rgba(0,0,0,.35);
       backdrop-filter: blur(10px);
       font-weight: 950;
       letter-spacing: .25px;
@@ -81,10 +76,10 @@
     .levelDot{
       width: 9px; height: 9px; border-radius: 999px;
       background: rgba(255,176,90,1);
-      box-shadow: 0 0 0 4px rgba(255,176,90,.18);
+      box-shadow: 0 0 0 5px rgba(255,176,90,.18);
     }
     .miniHint{
-      font-size: 11px;
+      font-size: 11px; /* ⬇️ */
       font-weight: 900;
       color: rgba(255,255,255,.72);
       white-space: nowrap;
@@ -93,12 +88,12 @@
     /* Progress bar */
     .progressShell{
       flex: 1 1 220px;
-      height: 9px;
+      height: 9px; /* ⬇️ */
       background: rgba(255,255,255,.10);
       border-radius: 999px;
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.12);
-      min-width: 200px;
+      min-width: 220px;
     }
     .progressBar{
       height:100%;
@@ -107,29 +102,27 @@
       transition: width .25s ease;
     }
 
-    /* HUD compact */
     .hud{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;          /* ⬇️ */
+      margin-bottom: 10px;/* ⬇️ */
       flex: 0 0 auto;
-      min-height: 0;
     }
 
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 16px;
-      padding: 10px 12px;          /* compact */
+      border-radius: 16px; /* ⬇️ */
+      padding: 10px 12px;  /* ⬇️ */
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 10px;
+      gap: 12px;
       position: relative;
       overflow:hidden;
-      box-shadow: 0 14px 48px rgba(0,0,0,.45);
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
-      min-height: 84px;            /* stabilité */
     }
     .hudbox::after{
       content:"";
@@ -142,40 +135,31 @@
       opacity:.9;
     }
 
-    .profile{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      min-width: 0;
-      position: relative;
-      z-index:2;
-    }
+    .profile{ display:flex; align-items:center; gap: 12px; min-width: 0; position: relative; z-index:2; }
 
-    /* ✅ Avatar réduit pour éviter scroll */
     .avatarFrame{
-      width: 66px; height: 66px;
+      width: 72px; height: 72px;  /* ⬇️ */
       border-radius: 18px;
-      padding: 3px;
+      padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
-      box-shadow: 0 14px 32px rgba(0,0,0,.45);
+      box-shadow: 0 14px 34px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 15px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.25);
+      transform: scale(1.25); /* ⬇️ */
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
 
     .ptext{ min-width:0; }
-    /* ✅ playerName en haut à côté de l’avatar (déjà ici) */
     .pname{
       font-weight: 950;
-      font-size: 18px;
+      font-size: 18px; /* ⬇️ */
       line-height: 1.05;
       white-space: nowrap;
       overflow:hidden;
@@ -185,7 +169,7 @@
     .prole{
       margin-top: 3px;
       font-weight: 850;
-      font-size: 12px;
+      font-size: 12px; /* ⬇️ */
       color: var(--muted);
       white-space: nowrap;
       overflow:hidden;
@@ -196,8 +180,8 @@
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 11px;
+      padding: 7px 10px; /* ⬇️ */
+      font-size: 11px;   /* ⬇️ */
       font-weight: 950;
       white-space: nowrap;
       position: relative;
@@ -208,7 +192,7 @@
       display:flex;
       align-items:center;
       justify-content:flex-end;
-      gap: 8px;
+      gap: 10px; /* ⬇️ */
       flex-wrap: wrap;
       position: relative;
       z-index:2;
@@ -218,39 +202,31 @@
       display:flex;
       align-items:center;
       gap: 8px;
-      padding: 8px 10px;
+      padding: 8px 10px; /* ⬇️ */
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 12px;
+      font-size: 12px; /* ⬇️ */
       white-space: nowrap;
     }
 
-    .timerPill{
-      padding: 7px 9px;
-      gap: 9px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-    }
+    .timerPill{ padding: 7px 9px; gap: 9px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
 
     .ring{
-      width: 34px; height: 34px;
-      border-radius: 999px;
+      width: 34px; height: 34px; border-radius: 999px; /* ⬇️ */
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
-      box-shadow: 0 0 0 4px rgba(255,200,80,.14), 0 0 20px rgba(255,200,80,.10);
+      box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 24px; height: 24px;
-      border-radius: 999px;
+      width: 24px; height: 24px; border-radius: 999px; /* ⬇️ */
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 13px;
-      font-weight: 950;
+      font-size: 13px; font-weight: 950;
     }
 
     .timeText{ display:flex; align-items:center; gap: 7px; }
@@ -259,16 +235,15 @@
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 4px rgba(255,200,80,.18), 0 0 24px rgba(255,200,80,.14);
+      box-shadow: 0 0 0 5px rgba(255,200,80,.18), 0 0 32px rgba(255,200,80,.14);
     }
     .timerDanger .ring{
       background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 4px rgba(255,70,70,.20), 0 0 28px rgba(255,70,70,.18);
+      box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
     }
 
     .stressWrap{
-      width: 190px; height: 10px;
-      border-radius: 999px;
+      width: 200px; height: 10px; border-radius: 999px; /* ⬇️ */
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -279,18 +254,18 @@
       transition: width .25s ease;
     }
 
-    /* ✅ Frame en flex: prend le reste et reste sans scroll */
+    /* ===== Main frame ===== */
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 12px;               /* compact */
+      border-radius: 16px;
+      padding: 12px; /* ⬇️ */
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
       flex: 1 1 auto;
-      min-height: 0;
+      min-height: 0; /* ✅ important pour permettre le scroll interne sans scroll page */
       display:flex;
       flex-direction:column;
       gap: 8px;
@@ -307,9 +282,9 @@
     .qmeta{
       position: relative; z-index:2;
       color: rgba(255,255,255,.70);
-      font-size: 11px;
+      font-size: 11px; /* ⬇️ */
       font-weight: 950;
-      letter-spacing: .30px;
+      letter-spacing: .35px;
       text-transform: uppercase;
       flex: 0 0 auto;
     }
@@ -317,41 +292,40 @@
       position: relative; z-index:2;
       margin-top: 2px;
       font-weight: 950;
-      font-size: clamp(16px, 1.9vw, 22px);
+      font-size: clamp(16px, 2.0vw, 24px); /* ⬇️ */
       line-height: 1.15;
       text-shadow: 0 14px 30px rgba(0,0,0,.55);
       flex: 0 0 auto;
     }
-
-    /* ✅ Limiter la description pour tenir sans scroll */
     .qdesc{
       position: relative; z-index:2;
       margin-top: 4px;
       color: rgba(255,255,255,.82);
-      font-size: 13px;
-      line-height: 1.35;
+      font-size: 13px; /* ⬇️ */
+      line-height: 1.45;
       max-width: 980px;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;       /* IMPORTANT: évite que ça pousse trop */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      flex: 0 0 auto;
     }
 
-    /* Options: compact, et ne doit pas créer scroll global */
+    /* ✅ zone options: scroll interne si besoin, mais pas de scroll page */
     .options{
       position: relative; z-index:2;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap: 10px; /* ⬇️ */
       margin-top: 6px;
       flex: 1 1 auto;
       min-height: 0;
-      overflow:hidden;             /* IMPORTANT: pas de scroll */
+      overflow:auto;
+      padding-right: 4px;
     }
+    .options::-webkit-scrollbar{ width: 8px; }
+    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius: 999px; }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); border-radius: 999px; }
 
     .opt{
       border-radius: 14px;
-      padding: 10px 12px;
+      padding: 11px 12px; /* ⬇️ */
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
@@ -360,7 +334,7 @@
       border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
-      font-size: 13px;
+      font-size: 13px; /* ⬇️ */
     }
     .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
@@ -371,34 +345,27 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    /* Actions compact */
-    .actions {
-      display: flex;
+    .actions{
+      display:flex;
       justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
+      align-items:center;
+      margin-top: 10px; /* ⬇️ */
       flex: 0 0 auto;
       position: relative;
-      z-index:2;
+      z-index: 3;
     }
-
-    .actions-left,
-    .actions-right {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .actions-left,.actions-right{ display:flex; gap: 10px; }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.90);
       border-radius: 12px;
-      padding: 8px 10px;
+      padding: 9px 11px; /* ⬇️ */
       font-weight: 950;
       letter-spacing: .2px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 12px; /* ⬇️ */
     }
 
     .btnPrimary{
@@ -406,12 +373,12 @@
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       border-radius: 12px;
-      padding: 8px 12px;
+      padding: 9px 12px; /* ⬇️ */
       font-weight: 950;
       letter-spacing: .2px;
       display:none;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 12px; /* ⬇️ */
     }
     .btnPrimary.show{ display:inline-block; }
     .btnPrimary:disabled{
@@ -426,29 +393,33 @@
       z-index: 50;
       background: rgba(0,0,0,.18);
       backdrop-filter: blur(6px);
+      overflow:hidden;
     }
 
     .modalBox{
       width: min(760px, 92%);
+      max-height: 90vh;              /* ✅ */
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
       overflow:hidden;
       position: relative;
+      display:flex;
+      flex-direction:column;
     }
-
     .modalTop{
-      padding: 12px 14px;
+      padding: 12px 14px; /* ⬇️ */
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      flex: 0 0 auto;
     }
 
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
-      padding: 6px 9px;
-      font-size: 12px;
+      padding: 6px 9px; /* ⬇️ */
+      font-size: 11px;  /* ⬇️ */
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
@@ -457,17 +428,28 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 14px; color: rgba(255,255,255,.92); line-height: 1.45; font-size: 13px; }
+    /* ✅ important: le rappel/suggestion ne doit pas se couper */
+    .modalBody{
+      padding: 14px;
+      color: rgba(255,255,255,.92);
+      line-height: 1.45;
+      font-size: 13px;          /* ⬇️ */
+      overflow:auto;            /* ✅ si long, scroll interne modal */
+      max-height: 58vh;         /* ✅ évite overflow qui "cache" le rappel */
+      white-space: normal;
+      flex: 1 1 auto;
+    }
     .modalActions{
-      padding: 12px 14px;
+      padding: 12px 14px; /* ⬇️ */
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+      flex: 0 0 auto;
     }
 
-    .startTitle{ font-weight: 950; font-size: 20px; margin-bottom: 6px; }
-    .startText{ color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.4; }
+    .startTitle{ font-weight: 950; font-size: 18px; margin-bottom: 6px; } /* ⬇️ */
+    .startText{ color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.45; } /* ⬇️ */
     .startBtn{
-      border:none; border-radius: 14px; padding: 10px 14px;
+      border:none; border-radius: 14px; padding: 11px 14px; /* ⬇️ */
       font-weight: 950; letter-spacing: .3px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
@@ -501,6 +483,7 @@
       .hud{ grid-template-columns: 1fr; }
       .stressWrap{ width: 170px; }
       .progressShell{ min-width: 100%; }
+      .options{ max-height: none; }
     }
 
     /* Hotspot zones */
@@ -525,12 +508,12 @@
       animation: none;
     }
 
-    /* Q4 images (compact) */
+    /* Q4 images (✅ réduire taille) */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-      margin-top:8px;
+      gap:12px; /* ⬇️ */
+      margin-top:10px;
     }
     @media (max-width: 900px){
       .imgGrid{ grid-template-columns: 1fr; }
@@ -550,7 +533,7 @@
       box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
     }
     .imgHead{
-      padding:10px 12px;
+      padding:10px 12px; /* ⬇️ */
       font-weight:900;
       display:flex;
       justify-content:space-between;
@@ -558,8 +541,8 @@
       font-size: 12px;
     }
     .imgTag{
-      width:32px;
-      height:32px;
+      width:30px;
+      height:30px;
       border-radius:10px;
       display:flex;
       align-items:center;
@@ -570,23 +553,24 @@
     }
     .imgPic{
       width:100%;
-      aspect-ratio:4/3;
+      height: 140px;      /* ✅ fixe une hauteur raisonnable */
       object-fit:cover;
       display:block;
     }
     .imgCap{
-      padding:10px 12px;
+      padding:10px;       /* ⬇️ */
       text-align:center;
       font-weight:800;
-      font-size: 12px;
+      font-size: 12px;    /* ⬇️ */
+      color: rgba(255,255,255,.86);
     }
 
-    /* Corrigé */
+    /* ===== Answer key modal extra ===== */
     .closeX{
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.92);
-      width: 36px; height: 36px;
+      width: 34px; height: 34px; /* ⬇️ */
       border-radius: 12px;
       display:grid; place-items:center;
       cursor:pointer;
@@ -595,9 +579,7 @@
     }
     .closeX:hover{ filter: brightness(1.08); }
 
-    .keyBox{
-      width:min(980px, 95%);
-    }
+    .keyBox{ width:min(980px, 95%); }
   </style>
 </head>
 
@@ -626,7 +608,8 @@
             <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
           <div class="ptext">
-            <div class="pname" id="hudName">Joueur</div>
+            <!-- ✅ Nom affiché depuis la variable playerName (pas anonyme) -->
+            <div class="pname" id="hudName">—</div>
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
@@ -712,9 +695,9 @@
 <!-- Loading overlay -->
 <div class="overlay" id="loadingOverlay">
   <div class="modalBox" style="max-width:520px;">
-    <div class="modalBody" style="text-align:center; padding:26px 16px;">
-      <div style="font-weight:950; font-size:18px;">Chargement…</div>
-      <div style="margin-top:8px; color:rgba(255,255,255,.75);">Préparation de la prochaine étape</div>
+    <div class="modalBody" style="text-align:center; padding:22px 14px;">
+      <div style="font-weight:950; font-size:16px;">Chargement…</div>
+      <div style="margin-top:6px; color:rgba(255,255,255,.75); font-size:12px;">Préparation de la prochaine étape</div>
     </div>
   </div>
 </div>
@@ -744,7 +727,7 @@
       <div class="badgeState bWarn">📘 Corrigé</div>
       <div class="closeX" id="keyCloseBtn" title="Fermer">✕</div>
     </div>
-    <div class="modalBody" id="keyBody" style="max-height:70vh; overflow:auto;">
+    <div class="modalBody" id="keyBody" style="max-height:62vh; overflow:auto;">
       <!-- injected -->
     </div>
     <div class="modalActions">
@@ -842,7 +825,13 @@ const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
 
 // Role
 const role = "medecin";
-const playerName = localStorage.getItem("playerName") || "Joueur";
+
+/* ✅ playerName: depuis variable si fournie (window.playerName), sinon localStorage */
+const playerName =
+  (typeof window.playerName !== "undefined" && String(window.playerName).trim())
+    ? String(window.playerName).trim()
+    : (localStorage.getItem("playerName") || "").trim() || "Joueur";
+
 const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
 
 // ✅ Niveau choisi à l'étape d'avant: variable `niveau` (obligatoire)
@@ -853,7 +842,7 @@ const difficultyRaw = (typeof window.niveau !== "undefined" && window.niveau)
 const difficulty = String(difficultyRaw).toLowerCase();
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-/* ✅ Affichage playerName en haut à côté de l’avatar */
+/* ✅ affichage du nom près de l'avatar */
 hudName.textContent = playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
@@ -1143,9 +1132,9 @@ function renderQuestion(i, resetAttempts=true){
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
     box.innerHTML = `
-      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
+      <div style="font-weight:950; margin-bottom:6px;">Ta réponse</div>
       <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
-        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" />
       <div style="margin-top:6px; font-size:11px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
@@ -1190,15 +1179,16 @@ function renderQuestion(i, resetAttempts=true){
     const msg = document.createElement("div");
     msg.className="pill";
     msg.style.marginBottom="8px";
+    msg.style.fontSize="12px";
     msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
     optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="680px";
+    wrap.style.maxWidth="640px"; /* ⬇️ pour éviter trop grand */
     wrap.style.margin="0 auto";
-    wrap.style.borderRadius="18px";
+    wrap.style.borderRadius="16px";
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
@@ -1244,6 +1234,7 @@ function renderQuestion(i, resetAttempts=true){
     const note = document.createElement("div");
     note.className="pill";
     note.style.marginBottom="8px";
+    note.style.fontSize="12px";
     note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
     optionsEl.appendChild(note);
 
@@ -1303,9 +1294,9 @@ function renderQuestion(i, resetAttempts=true){
     box.className="opt"; box.style.cursor="default";
     const html = q.template
       .replace("{blank1}", `<input data-k="blank1" class="form-control"
-        style="display:inline-block; width:200px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+        style="display:inline-block; width:200px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" placeholder="..." />`)
       .replace("{blank2}", `<input data-k="blank2" class="form-control"
-        style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+        style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92); padding:8px 10px; font-weight:900; font-size:13px;" placeholder="..." />`);
     box.innerHTML = `<div style="line-height:1.7;">${html}</div>`;
     optionsEl.appendChild(box);
     const inputs = box.querySelectorAll("input[data-k]");
@@ -1501,7 +1492,8 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   const q = questions[idx];
   let extra = "";
   if(kind==="warn" && q && q.reminder){
-    extra = "\n\n" + q.reminder;
+    /* ✅ on rend le rappel bien visible + séparé */
+    extra = "\n\n—\n" + q.reminder;
   }
 
   modalText.innerHTML = nl2brSafe(text + extra);
@@ -1628,7 +1620,7 @@ function buildAnswerKeyHtml(){
   }).join("");
 
   return `
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
       <span class="pill">📌 Mission : <b>${escapeHtml(SCENARIO.mission)}</b></span>
       <span class="pill">🎚 Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b></span>
       <span class="pill">⭐ Score : <b>${escapeHtml(String(score))}</b></span>
@@ -1684,18 +1676,18 @@ function endScenario(){
   sfxVictory();
 
   qDesc.innerHTML = `
-    <div style="margin-top:6px; color: rgba(255,255,255,.86);">
+    <div style="margin-top:6px; color: rgba(255,255,255,.86); font-size:13px;">
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <img src="${badge.img}" alt="badge" style="width:64px; height:64px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
         <div>
           <div style="font-weight:950; font-size:15px;">🏅 Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
-          <div style="margin-top:4px; color: rgba(255,255,255,.76); font-size:12px;">
+          <div style="margin-top:3px; color: rgba(255,255,255,.76); font-size:12px;">
             Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b> • Type : <b>${escapeHtml(badge.type.toUpperCase())}</b>
           </div>
         </div>
       </div>
 
-      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
         <span class="pill">⭐ Score final : <b>${score}</b></span>
         <span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span>
         <span class="pill">💡 Indices restants : <b>${hintsLeft}</b> / ${HINT_MAX}</span>
@@ -1709,7 +1701,7 @@ function endScenario(){
 
   optionsEl.innerHTML = `
     <div class="opt" style="cursor:default; text-align:center;">
-      <div style="display:flex; justify-content:center; margin-bottom:10px;">
+      <div style="display:flex; justify-content:center; margin-bottom:8px;">
         <img src="${badge.img}" alt="badge" style="width:78px; height:78px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
       </div>
       <div style="font-weight:950;">Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
@@ -1764,10 +1756,12 @@ startBtn.addEventListener("click", ()=>{
   stress = 0; score = 0;
   setStress(0); setScore(0);
 
+  // reset hints at start
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   updateHintBtn();
 
+  // reset end buttons
   showKeyBtn.disabled = true;
   endBtn.style.display = "none";
 
