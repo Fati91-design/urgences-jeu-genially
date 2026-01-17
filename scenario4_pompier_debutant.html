@@ -33,16 +33,16 @@
 
     /* ====== LAYOUT: FULL HEIGHT + FIXED FRAME + INTERNAL SCROLL ====== */
     .stage{
-      height: 100vh;
+      min-height: 100vh;
       display:flex;
       justify-content:center;
-      align-items:stretch;
-      padding: 10px;
+      align-items:flex-start;
+      padding: 16px 14px; /* ✅ référence large */
       background: transparent;
       overflow:hidden;
     }
     .wrap{
-      width: min(1120px, 100%); /* ✅ version compacte (référence 1120) */
+      width: min(1650px, 100%); /* ✅ référence large */
       height: 100%;
       display:flex;
       flex-direction:column;
@@ -62,14 +62,19 @@
       overflow:hidden;
       flex: 0 0 auto;
 
-
+      background: var(--glass); /* ✅ manquait : style référence */
+      border: 1px solid rgba(255, 200, 150, .22);
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
     }
     .topTabs::after{
       content:"";
       position:absolute;
       inset:-2px;
       pointer-events:none;
-     
+      background:
+        radial-gradient(520px 200px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(620px 260px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
     }
 
     .levelTab{
@@ -98,7 +103,7 @@
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
-      min-width: 160px;
+      min-width: 220px; /* ✅ référence large */
     }
     .progressBar{
       height: 100%;
@@ -157,8 +162,8 @@
     .profile{ display:flex; align-items:center; gap: 12px; min-width: 0; position: relative; z-index:2; }
 
     .avatarFrame{
-      width: 72px; height: 72px;
-      border-radius: 20px;
+      width: 92px; height: 92px; /* ✅ référence large */
+      border-radius: 24px;
       padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
@@ -166,11 +171,11 @@
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 16px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.25);
+      transform: scale(1.35);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
@@ -178,7 +183,7 @@
     .ptext{ min-width:0; }
     .pname{
       font-weight: 950;
-      font-size: 18px;
+      font-size: 20px;
       line-height: 1.05;
       white-space: nowrap;
       overflow:hidden;
@@ -186,7 +191,7 @@
       text-shadow: 0 14px 30px rgba(0,0,0,.55);
     }
     .prole{
-      margin-top: 4px;
+      margin-top: 6px;
       font-weight: 850;
       font-size: 12px;
       color: var(--muted);
@@ -237,14 +242,14 @@
       background: rgba(0,0,0,.18);
     }
     .ring{
-      width: 40px; height: 40px; border-radius: 999px; /* ✅ référence large (40) */
+      width: 40px; height: 40px; border-radius: 999px; /* ✅ référence */
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px; /* ✅ référence (28) */
+      width: 28px; height: 28px; border-radius: 999px; /* ✅ référence */
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
@@ -265,7 +270,7 @@
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px; /* ✅ référence large (240x12) */
+      width: 240px; height: 12px; border-radius: 999px; /* ✅ référence */
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -367,10 +372,6 @@
       justify-content:space-between;
       gap: 10px;
       padding-top: 10px;
-
-      position: sticky;
-      bottom: 0;
-      margin-top: 6px;
     }
     .actionsLeft, .actionsRight{
       display:flex;
@@ -441,7 +442,7 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; white-space: pre-wrap; }
     .modalActions{
       padding: 14px 16px;
       border-top: 1px solid rgba(255,255,255,.10);
@@ -483,7 +484,8 @@
 
     @media (max-width: 980px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; } /* ✅ proche référence */
+      .progressShell{ min-width: 160px; }
+      .stressWrap{ width: 190px; }
     }
 
     /* Hotspot zones */
@@ -515,7 +517,7 @@
       gap:16px;
       margin-top:4px;
     }
-    @media (max-width: 900px){
+    @media (max-width: 980px){
       .imgGrid{ grid-template-columns: 1fr; }
     }
     .imgCard{
@@ -551,7 +553,7 @@
     }
     .imgPic{
       width:100%;
-      aspect-ratio:4/3;
+      height: 220px; /* ✅ référence */
       object-fit:cover;
       display:block;
     }
@@ -563,7 +565,7 @@
 
     /* Loading overlay (✅ référence: transparent) */
     .loadingOverlay{
-      background: rgba(0,0,0,0) !important; /* ✅ aucun écran noir */
+      background: rgba(0,0,0,0) !important;
       backdrop-filter: blur(8px);
     }
     .loadingBox{
@@ -841,7 +843,7 @@ function normalizeDifficulty(raw){
 }
 
 /* ========= Player data (REFERENCE PRIORITIES) ========= */
-const role = "pompier"; /* ✅ corrige: pompier */
+const role = "pompier";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
 const playerName =
@@ -851,7 +853,6 @@ const playerName =
   localStorage.getItem("playerName") ||
   "Joueur";
 
-/* ✅ corrige fallback pompier */
 const avatarFile = localStorage.getItem("avatar") || "pompier_f.png";
 
 const difficultyRaw =
@@ -1153,7 +1154,7 @@ function setProgress(i){
 }
 
 hudQtotal.textContent = String(TOTAL);
-hudName.textContent = playerName;
+hudName.textContent = "Dr. " + playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
 difficultyChip.textContent = "MODE: " + DIFF.label;
@@ -1191,10 +1192,14 @@ function startTimer(reset=true){
       addStress(STRESS_RULES.timeout);
       attemptsForCurrentQuestion++;
       setAttemptsUI();
+
       if(attemptsForCurrentQuestion >= DIFF.attempts){
-        missionFail("⏱️ Temps écoulé (" + DIFF.attempts + " fois). Mission échouée. Retour au départ… (score remis à zéro)");
+        missionFail(`⏱️ Temps écoulé (${DIFF.attempts} fois). Mission échouée. Retour au départ… (score remis à zéro)`);
       }else{
-        showOverlay("warn", "⏱️ Temps écoulé. (Tentative " + attemptsForCurrentQuestion + "/" + DIFF.attempts + ")", {allowRetry:true, allowNext:false, missionFail:false});
+        showOverlay("warn",
+          `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${DIFF.attempts})`,
+          {allowRetry:true, allowNext:false, missionFail:false, retryResetTimer:true}
+        );
       }
     }
   }, 1000);
@@ -1212,13 +1217,13 @@ let multiSelected = new Set();
 let inputValue = "";
 let clozeValues = {};
 
-function resetState(){
+function resetState({keepHintUsed=false}={}){
   selectedSingle = null;
   multiSelected.clear();
   inputValue = "";
   clozeValues = {};
   validateBtn.disabled = true;
-  hintUsedThisQuestion = false;
+  if(!keepHintUsed) hintUsedThisQuestion = false;
 }
 
 function mkOpt(text){
@@ -1242,7 +1247,8 @@ function renderQuestion(i, resetAttempts=true){
     attemptsForCurrentQuestion = 0;
   }
   setAttemptsUI();
-  resetState();
+
+  resetState({keepHintUsed:false});
 
   const q = questions[i];
   qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
@@ -1271,9 +1277,9 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="tf"){
-    const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
-    opts.forEach((o, oi)=>{
-      const d = mkOpt(o.label);
+    const labels = ["Vrai","Faux"];
+    labels.forEach((lab, oi)=>{
+      const d = mkOpt(lab);
       d.onclick=()=>{
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
@@ -1358,7 +1364,7 @@ function renderQuestion(i, resetAttempts=true){
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="760px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
@@ -1421,8 +1427,44 @@ function renderQuestion(i, resetAttempts=true){
   startTimer(true);
 }
 
-/* ========= Clear ========= */
-clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
+/* ========= Clear (✅ ne doit PAS réinitialiser hintUsedThisQuestion) ========= */
+function clearCurrent(){
+  sfxClick();
+  const q = questions[idx];
+  if(!q) return;
+
+  if(q.type==="multi"){
+    multiSelected.clear();
+    optionsEl.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));
+    validateBtn.disabled = true;
+    return;
+  }
+  if(q.type==="short"){
+    const inp = optionsEl.querySelector("#shortInput");
+    if(inp) inp.value = "";
+    inputValue = "";
+    validateBtn.disabled = true;
+    return;
+  }
+  if(q.type==="cloze"){
+    optionsEl.querySelectorAll("input[data-k]").forEach(inp=>{ inp.value=""; });
+    clozeValues = {};
+    validateBtn.disabled = true;
+    return;
+  }
+  if(q.type==="hotspot"){
+    selectedSingle = null;
+    optionsEl.querySelectorAll(".hotspot-zone").forEach(b=>b.classList.remove("sel"));
+    validateBtn.disabled = true;
+    return;
+  }
+
+  // fallback
+  selectedSingle = null;
+  optionsEl.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));
+  validateBtn.disabled = true;
+}
+clearBtn.onclick = clearCurrent;
 
 /* ========= Validate ========= */
 validateBtn.onclick = ()=>{
@@ -1453,11 +1495,9 @@ validateBtn.onclick = ()=>{
   stopTimer();
   locked = true;
 
+  if(type==="tf"){ evaluateTF(q); return; }
   if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
-  if(type==="tf"){
-    const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
-    evaluateOption(opt); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="multi"){
     const chosen=[...multiSelected].sort((a,b)=>a-b);
@@ -1490,8 +1530,6 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
-  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
@@ -1528,6 +1566,26 @@ validateBtn.onclick = ()=>{
   }
 };
 
+function evaluateTF(q){
+  const correct = !!(q.tf && typeof q.tf.correct === "boolean" ? q.tf.correct : q.correct);
+  const pickedTrue = (selectedSingle === 0);
+  const ok = (pickedTrue === correct);
+
+  // message : priorité au fb si présent
+  const pickedOpt = pickedTrue ? q.tf.trueOpt : q.tf.falseOpt;
+  const msg = (pickedOpt && pickedOpt.fb) ? pickedOpt.fb : (ok ? (q.okFb || "✅ Correct.") : (q.badFb || "❌ Incorrect."));
+
+  if(ok){
+    addScore(10);
+    showOverlay("good", msg, {allowRetry:false, allowNext:true, missionFail:false});
+    sfxCorrect(); motion("good");
+  }else{
+    addStress(STRESS_RULES.wrong);
+    sfxWrong(); motion("wrong");
+    failedAttempt(msg);
+  }
+}
+
 function evaluateOption(opt){
   if(opt.kind==="ok"){
     addScore(opt.pts ?? 10);
@@ -1556,32 +1614,36 @@ function failedAttempt(baseMsg){
   setAttemptsUI();
   if(attemptsForCurrentQuestion >= DIFF.attempts){
     sfxAlarmLong();
-    missionFail("❌ " + DIFF.attempts + " erreurs. Mission échouée. Retour au départ… (score remis à zéro)");
+    missionFail(`❌ ${DIFF.attempts} erreurs. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-  showOverlay("warn", baseMsg + " (Tentative " + attemptsForCurrentQuestion + "/" + DIFF.attempts + ")", {allowRetry:true, allowNext:false, missionFail:false});
+  showOverlay("warn",
+    `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${DIFF.attempts})`,
+    {allowRetry:true, allowNext:false, missionFail:false, retryResetTimer:false}
+  );
 }
 
-/* ========= Overlay ========= */
-function showOverlay(kind, text, {allowRetry, allowNext, missionFail, forceOk=false}){
+/* ========= Overlay (✅ états: good/warn/bad + hint/pause) ========= */
+function showOverlay(kind, text, {allowRetry, allowNext, missionFail, forceOk=false, retryResetTimer=false}){
   badgeState.className="badgeState";
+
   if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
-  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
-  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+  else if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+  else if(kind==="hint"){ badgeState.classList.add("bWarn"); badgeState.textContent="💡 Indice"; }
+  else if(kind==="pause"){ badgeState.classList.add("bWarn"); badgeState.textContent="⏸ Pause"; }
+  else { badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
 
   modalText.textContent = text;
   overlay.style.display="flex";
 
   retryBtn.style.display = (allowRetry && !forceOk) ? "inline-block" : "none";
   nextBtn.style.display  = (allowNext  && !forceOk) ? "inline-block" : "none";
-  nextBtn.classList.toggle("show", !!allowNext);
-
   okBtn.style.display = forceOk ? "inline-block" : "none";
-  okBtn.onclick = null;
 
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
+  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(!!retryResetTimer); };
   nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
 
+  okBtn.onclick = null;
   if(forceOk){
     okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
   }
@@ -1620,40 +1682,48 @@ function resetMission(showStart=true){
 /* ========= Hint (REFERENCE: total scenario + 1 per question) ========= */
 function computeHintForQuestion(q){
   const t = q.type;
+
   if(t==="single" || t==="image_single"){
     const okIdx = (q.options||[]).findIndex(o=>o.kind==="ok");
     if(okIdx>=0){
       const label = (t==="image_single") ? ("Option " + q.options[okIdx].label) : ("la proposition " + (okIdx+1));
-      return `Indice : pense à ${label}.`;
+      return `Pense à ${label}.`;
     }
-    return "Indice : réfléchis à la priorité vitale / sécurité.";
+    return "Réfléchis à la priorité vitale / sécurité.";
   }
+
   if(t==="tf"){
-    const ans = (q.tf && q.tf.trueOpt && q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
-    return `Indice : la bonne réponse est plutôt « ${ans} ».`;
+    const correct = !!(q.tf && typeof q.tf.correct === "boolean" ? q.tf.correct : q.correct);
+    return `La bonne réponse est plutôt « ${correct ? "Vrai" : "Faux"} ».`;
   }
+
   if(t==="multi"){
     const good = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
-    return good.length ? `Indice : sélectionne ces éléments clés : ${good.join(" • ")}.` : "Indice : il y a plusieurs réponses correctes.";
+    return good.length ? `Sélectionne ces éléments clés : ${good.join(" • ")}.` : "Il y a plusieurs réponses correctes.";
   }
+
   if(t==="short"){
-    return `Indice : c’est un numéro court (ex : 15 / 112).`;
+    return "C’est un numéro court (ex : 15 / 112).";
   }
+
   if(t==="cloze"){
-    return `Indice : la 1ère case décrit le mécanisme, la 2ème le nombre de victimes.`;
+    return "1ère case = mécanisme ; 2ème = nombre de victimes.";
   }
+
   if(t==="hotspot"){
     const ok = (q.hotspots||[]).find(h=>h.kind==="ok");
-    return ok ? `Indice : la zone correcte est liée à « ${ok.label} ».` : "Indice : vise la zone prioritaire (A/B/C...).";
+    return ok ? `Vise la zone liée à « ${ok.label} ».` : "Vise la zone prioritaire (A/B/C...).";
   }
-  return "Indice : relis la consigne et vise la priorité vitale.";
+
+  return "Relis la consigne et vise la priorité vitale.";
 }
 
 hintBtn.addEventListener("click", ()=>{
   if(locked) return;
   if(hintsLeft<=0) return;
+
   if(hintUsedThisQuestion){
-    showOverlay("warn","💡 Tu as déjà utilisé un indice pour cette question.", {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
+    showOverlay("hint","Tu as déjà utilisé un indice pour cette question.", {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
     return;
   }
 
@@ -1668,7 +1738,7 @@ hintBtn.addEventListener("click", ()=>{
   setAttemptsUI();
 
   const hintText = computeHintForQuestion(questions[idx]);
-  showOverlay("warn", "💡 " + hintText, {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
+  showOverlay("hint", hintText, {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
 });
 
 /* ========= Pause (REFERENCE) ========= */
@@ -1682,7 +1752,8 @@ pauseBtn.addEventListener("click", ()=>{
     locked = true;
     stopTimer();
     pauseBtn.textContent = "▶ Reprendre";
-    showOverlay("warn", "⏸ Pause. Clique sur OK pour reprendre.", {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
+
+    showOverlay("pause", "Pause activée. Clique sur OK pour reprendre.", {allowRetry:false, allowNext:false, missionFail:false, forceOk:true});
     okBtn.onclick = ()=>{
       hideOverlay();
       paused = false;
@@ -1719,7 +1790,8 @@ function buildAnswerKey(){
       const oi = (q.options||[]).findIndex(o=>o.kind==="ok");
       ans = oi>=0 ? (q.options[oi].label + " — " + (q.options[oi].caption||"")) : "—";
     }else if(q.type==="tf"){
-      ans = (q.tf && q.tf.trueOpt && q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
+      const correct = !!(q.tf && typeof q.tf.correct === "boolean" ? q.tf.correct : q.correct);
+      ans = correct ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
       ans = (q.options||[]).filter(o=>o.correct).map(o=>o.text).join(" ; ");
     }else if(q.type==="short"){
@@ -1776,7 +1848,6 @@ function computeBadge(scoreValue){
   const maxScore = TOTAL * 10;
   const pct = maxScore > 0 ? (scoreValue / maxScore) : 0;
 
-  /* ✅ référence: OR >= 90%, ARGENT >= 70%, sinon BRONZE */
   if(pct >= 0.90) return { type:"OR",     img:"assets/or.png",     name:"Badge Or" };
   if(pct >= 0.70) return { type:"ARGENT", img:"assets/argent.png", name:"Badge Argent" };
   return              { type:"BRONZE", img:"assets/bronze.png", name:"Badge Bronze" };
@@ -1896,7 +1967,7 @@ startBtn.addEventListener("click", ()=>{
       <li><b>1 indice maximum</b> par question</li>
     </ul>
     <div style="margin-top:10px; color: rgba(255,255,255,.78);">
-      Si tu épuises tes tentatives ou si le temps s’écoule trop souvent, la mission redémarre (score remis à zéro).
+      Si tu épuises tes tentatives ou si le temps s’écoule, la mission redémarre (score remis à zéro).
     </div>
   `;
 
