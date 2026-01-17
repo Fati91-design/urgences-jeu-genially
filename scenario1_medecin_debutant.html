@@ -772,48 +772,6 @@
 </div>
 
 <script>
-  /* =========================================
-   ✅ BLOC BADGE — À AJOUTER DANS CHAQUE QUIZ
-   - Enregistre un badge compatible avec la page Badges (badgesGrid)
-   - Conserve aussi ton format historique si tu veux
-========================================= */
-
-function saveBadgeForBadgesPage({
-  scenarioId,
-  scenarioLabel,
-  mission,
-  difficultyLabel,   // "DÉBUTANT" / "INTERMÉDIAIRE" / "EXPERT"
-  badgeLevel,        // "OR" / "ARGENT" / "BRONZE"
-  badgeImage,        // "assets/or.png" / "assets/argent.png" / "assets/bronze.png" (conseillé)
-  score
-}){
-  // ✅ Format compatible page badgesGrid
-  const badgePayload = {
-    scenarioId: scenarioId,
-    scenarioLabel: scenarioLabel,
-    mission: mission,
-    difficulty: difficultyLabel,
-    badgeLevel: badgeLevel,
-    badgeImage: badgeImage,
-    score: score,
-    ts: Date.now()
-  };
-
-  // ✅ Clé attendue par la page badgesGrid
-  const keyB = `badge_s${scenarioId}_${difficultyLabel}`;
-  localStorage.setItem(keyB, JSON.stringify(badgePayload));
-
-  // ✅ Utile pour l’animation “dernier badge” en plein écran sur la page Badges
-  localStorage.setItem("last_badge_key", keyB);
-
-  // ✅ (Optionnel) Historique “unifié” pour tous niveaux/scénarios
-  const histKey = "badges_history";
-  const hist = JSON.parse(localStorage.getItem(histKey) || "[]");
-  hist.push(badgePayload);
-  localStorage.setItem(histKey, JSON.stringify(hist));
-
-  return { key: keyB, payload: badgePayload };
-}
 
 /* ========= SCENARIO ENGINE ========= */
 let audioCtx = null;
@@ -1753,6 +1711,41 @@ keyOverlay.addEventListener("click", (e)=>{
 
 /* ===== End scenario ===== */
 function endScenario(){
+
+  // ===== ENREGISTREMENT DU BADGE =====
+
+// Détermination du badge selon le score
+let badgeLevel = "BRONZE";
+let badgeImage = "assets/bronze.png";
+
+if(score >= 90){
+  badgeLevel = "OR";
+  badgeImage = "assets/or.png";
+}else if(score >= 70){
+  badgeLevel = "ARGENT";
+  badgeImage = "assets/argent.png";
+}
+
+// Création de l’objet badge
+const badgeData = {
+  scenarioId: SCENARIO.id,                 // ex: 4
+  scenarioLabel: SCENARIO.label,           // ex: "Scénario 4 — AVP"
+  difficulty: DIFF.label,                  // ex: "DÉBUTANT"
+  badgeLevel: badgeLevel,                  // OR / ARGENT / BRONZE
+  badgeImage: badgeImage,                  // image du badge
+  score: score,                            // score final
+  date: Date.now()
+};
+
+// Clé de stockage (TRÈS IMPORTANT)
+const badgeKey = `badge_s${SCENARIO.id}_${DIFF.label}`;
+
+// Sauvegarde dans le navigateur
+localStorage.setItem(badgeKey, JSON.stringify(badgeData));
+
+// Sauvegarde du dernier badge gagné (animation)
+localStorage.setItem("last_badge_key", badgeKey);
+
   stopTimer();
   hideOverlay();
   optionsEl.innerHTML="";
@@ -1810,6 +1803,8 @@ function endScenario(){
 
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
+
+  
 }
 
 /* Motion */
