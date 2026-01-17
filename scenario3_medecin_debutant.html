@@ -50,7 +50,7 @@
       gap:12px;
     }
 
-    /* ====== TOP TABS (référence: levelTab + progressShell + miniHint) ====== */
+    /* ====== TOP TABS ====== */
     .topTabs{
       display:flex; align-items:center; gap:12px;
       flex-wrap:wrap;
@@ -138,7 +138,6 @@
       position: relative; z-index:2;
     }
 
-    /* avatarFrame 72px (référence) */
     .avatarFrame{
       width:72px; height:72px;
       border-radius: 22px;
@@ -285,7 +284,6 @@
     .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(20px, 2.2vw, 32px); line-height: 1.15; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
     .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
-    /* options = scroll interne (référence) */
     .options{
       position: relative; z-index:2;
       display:flex; flex-direction:column;
@@ -293,8 +291,6 @@
       margin-top: 14px;
       overflow:auto;
       padding-right:6px;
-
-      /* évite scroll body (Genially) */
       max-height: 44vh;
     }
     .options.dragCompact{
@@ -419,7 +415,6 @@
       pointer-events:auto;
     }
 
-    /* Loading overlay transparent */
     .loadingOverlay{
       background: rgba(0,0,0,0) !important;
       backdrop-filter: none !important;
@@ -435,7 +430,6 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
 
-    /* Key overlay */
     .keyHeader{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
       padding: 14px 16px;
@@ -452,7 +446,6 @@
     }
     .keyBody{ padding: 16px; }
 
-    /* Hotspot */
     @keyframes hsPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
       70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
@@ -474,7 +467,6 @@
       animation: none;
     }
 
-    /* Image grid */
     .imgGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-top:12px; }
     @media (max-width: 900px){ .imgGrid{ grid-template-columns: 1fr; } }
     .imgCard{
@@ -506,7 +498,6 @@
     .imgPic{ width:100%; height:220px; aspect-ratio:4/3; object-fit:cover; display:block; }
     .imgCap{ padding:14px; text-align:center; font-weight:800; }
 
-    /* Drag order */
     .dragRow{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
@@ -520,14 +511,12 @@
       white-space: nowrap;
     }
 
-    /* Responsive (référence HUD 1 colonne) */
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
       .stressWrap{ width: 170px; }
       .options{ max-height: 42vh; }
     }
 
-    /* Animations feedback */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -556,14 +545,12 @@
   <div class="stage">
     <div class="wrap">
 
-      <!-- TOP BAR (référence) -->
       <div class="topTabs">
         <div class="levelTab"><span class="levelDot"></span> NIVEAU : <span id="levelTabText">—</span></div>
         <div class="progressShell" aria-label="progress"><div class="progressBar" id="progressBar"></div></div>
         <div class="miniHint" id="miniHint">—</div>
       </div>
 
-      <!-- HUD -->
       <div class="hud">
         <div class="hudbox">
           <div class="profile">
@@ -602,7 +589,6 @@
         </div>
       </div>
 
-      <!-- FRAME -->
       <div class="frame" id="frame">
         <div class="qmeta" id="qMeta">—</div>
         <div class="qtitle" id="qTitle">…</div>
@@ -626,7 +612,6 @@
     </div>
   </div>
 
-  <!-- START overlay -->
   <div class="overlay" id="startOverlay" style="display:flex;">
     <div class="modalBox">
       <div class="modalTop">
@@ -645,12 +630,10 @@
     </div>
   </div>
 
-  <!-- LOADING overlay -->
   <div class="overlay loadingOverlay" id="loadingOverlay">
     <div class="loadingBox">CHARGEMENT…</div>
   </div>
 
-  <!-- Feedback overlay -->
   <div class="overlay" id="overlay">
     <div class="modalBox" id="modalBox">
       <div class="modalTop">
@@ -668,7 +651,6 @@
     </div>
   </div>
 
-  <!-- Corrigé overlay -->
   <div class="overlay" id="keyOverlay">
     <div class="modalBox">
       <div class="keyHeader">
@@ -734,18 +716,12 @@ const levelTabText = el("levelTabText");
 const miniHint = el("miniHint");
 
 /* ======= CONFIG ======= */
-const SCENARIO = {
-  id: 3,
-  label: "Scénario 3 — Chute du 2e étage",
-  mission: "Chute du 2e étage",
-};
-
-const NEXT_GENIALLY_URL = "#"; // mets ton lien Genially ici
+const SCENARIO = { id: 3, label: "Scénario 3 — Chute du 2e étage", mission: "Chute du 2e étage" };
+const NEXT_GENIALLY_URL = "#";
 
 const role = "medecin";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-/* ======= difficulty (niveau) dynamique ======= */
 function normalizeNiveau(v){
   const s = String(v||"").trim().toLowerCase()
     .replaceAll("é","e").replaceAll("è","e").replaceAll("ê","e")
@@ -770,13 +746,9 @@ const TIMER_SECONDS = RULES[difficulty].timer;
 const MAX_ATTEMPTS  = RULES[difficulty].attempts;
 const MAX_HINTS     = RULES[difficulty].hints;
 
-/* Indices persistants par scénario */
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
-
-/* Stress */
 const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
 
-/* ======= joueur / avatar ======= */
 function readPlayerName(){
   return (window.player_name || window.playerName ||
     localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur");
@@ -818,7 +790,7 @@ localStorage.setItem(HINT_KEY, String(hintsLeft));
 let hintUsedThisQuestion = false;
 
 /* ======= QUESTIONS (INCHANGÉES) ======= */
-const questions = [{"type": "single", "title": "Sécurisation", "desc": "Avant de toucher la victime, la priorité immédiate est :", "options": [{"text": "Commencer l’examen neurologique", "kind": "wrong", "fb": "❌ Non : d’abord sécurité."}, {"text": "Sécuriser la zone avant l’examen", "kind": "ok", "fb": "✅ Oui : sécurité d’abord."}, {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non."}, {"text": "Faire lever la victime", "kind": "wrong", "fb": "❌ Non : risque rachis."}]}, {"type": "tf", "title": "Immobilisation", "desc": "Vrai/Faux : après une chute de hauteur, on évite de mobiliser la victime avant l’évaluation/immobilisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "short", "title": "A de l’ABCDE", "desc": "Première priorité de l’ABCDE (2 mots) :", "answers": ["voies aériennes", "airway"], "okFb": "✅ Voies aériennes.", "badFb": "❌ Réponse attendue : voies aériennes."}, {"type": "image_single", "title": "Décision immédiate", "desc": "Choisis l’image correspondant à la meilleure conduite immédiate :", "options": [{"label": "A", "imgSrc": "assets/chute_q4_b.png", "caption": "Victime assise / on la fait se lever", "kind": "wrong", "fb": "❌ Non : mobilisation dangereuse."}, {"label": "B", "imgSrc": "assets/chute_q4_a.png", "caption": "Immobilisation axe tête-cou-tronc", "kind": "ok", "fb": "✅ Correct : immobilisation stricte."}, {"label": "C", "imgSrc": "assets/chute_q4_c.png", "caption": "On la redresse pour la “mettre à l’aise”", "kind": "wrong", "fb": "❌ Non : risque rachis/aggravation."}]}, {"type": "single", "title": "Alerte neuro", "desc": "Quel signe est le plus inquiétant après la chute ?", "options": [{"text": "Douleur localisée sans autre signe", "kind": "wrong", "fb": "❌ Moins prioritaire."}, {"text": "Petit hématome superficiel", "kind": "wrong", "fb": "❌ Pas le plus inquiétant."}, {"text": "Somnolence / confusion", "kind": "ok", "fb": "✅ Oui : signe neuro inquiétant."}, {"text": "Gratouillement au bras", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "short", "title": "Glasgow", "desc": "Score maximal du Glasgow (1 nombre) :", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ Réponse : 15."}, {"type": "multi", "title": "Tri vital", "desc": "Coche les 3 priorités vitales immédiates :", "options": [{"text": "Conscience", "correct": true}, {"text": "Respiration", "correct": true}, {"text": "Hémorragie", "correct": true}, {"text": "Température exacte", "correct": false}, {"text": "Antécédents complets", "correct": false}], "okFb": "✅ Bon tri vital.", "badFb": "❌ Attendu : conscience + respiration + hémorragie."}, {"type": "drag_order", "title": "Ordre d’action", "desc": "Remets l’ordre logique :", "items": [{"id": "s", "text": "Sécuriser"}, {"id": "a", "text": "ABC"}, {"id": "i", "text": "Immobiliser"}, {"id": "l", "text": "Alerter"}, {"id": "v", "text": "Surveiller"}], "expected": ["s", "a", "i", "l", "v"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre attendu : Sécuriser → ABC → Immobiliser → Alerter → Surveiller."}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone à protéger", "desc": "Clique la zone où il faut surtout éviter la mobilisation.", "imgSrc": "scenario_3_hotspot.png", "hotspots": [{"label": "ok", "x": 30, "y": 28, "w": 18, "h": 40, "kind": "ok", "fb": "✅ Correct : colonne vertébrale (rachis).", "pts": 10}, {"label": "ko", "x": 8, "y": 22, "w": 18, "h": 22, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}, {"label": "ko", "x": 68, "y": 70, "w": 20, "h": 20, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}]}, {"type": "cloze", "title": "Organisation", "desc": "Complète 2 valeurs :", "template": "Idéalement, <b>{blank1}</b> sauveteurs ; victime <b>{blank2}</b>.", "blanks": [{"key": "blank1", "answer": "2"}, {"key": "blank2", "answer": "consciente"}], "okFb": "✅ OK.", "badFb": "❌ Réponses : 2 ; consciente."}, {"type": "tf", "title": "Alerte", "desc": "Vrai/Faux : on alerte rapidement avec mécanisme, hauteur, état, localisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "single", "title": "À éviter", "desc": "Quel geste est à éviter absolument ?", "options": [{"text": "Surveiller la respiration", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Couvrir contre l’hypothermie", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Redresser la victime", "kind": "ok", "fb": "✅ Correct : à éviter (rachis)."}, {"text": "Maintenir l’axe tête-cou-tronc", "kind": "wrong", "fb": "❌ À faire."}]}, {"type": "short", "title": "Terme", "desc": "Un mot : la colonne vertébrale =", "answers": ["rachis"], "okFb": "✅ Rachis.", "badFb": "❌ Réponse : rachis."}, {"type": "tf", "title": "Mécanisme", "desc": "Vrai/Faux : une chute de hauteur impose de suspecter un traumatisme grave même si la douleur est modérée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "multi", "title": "Transmission", "desc": "Pour le bilan au SAMU, coche les infos essentielles :", "options": [{"text": "Hauteur", "correct": true}, {"text": "Mécanisme de chute", "correct": true}, {"text": "Couleur des vêtements", "correct": false}, {"text": "Marque du téléphone", "correct": false}], "okFb": "✅ Parfait.", "badFb": "❌ Essentiel : hauteur + mécanisme de chute."}];
+const questions = [{"type":"single","title":"Sécurisation","desc":"Avant de toucher la victime, la priorité immédiate est :","options":[{"text":"Commencer l’examen neurologique","kind":"wrong","fb":"❌ Non : d’abord sécurité."},{"text":"Sécuriser la zone avant l’examen","kind":"ok","fb":"✅ Oui : sécurité d’abord."},{"text":"Donner à boire","kind":"wrong","fb":"❌ Non."},{"text":"Faire lever la victime","kind":"wrong","fb":"❌ Non : risque rachis."}]},{"type":"tf","title":"Immobilisation","desc":"Vrai/Faux : après une chute de hauteur, on évite de mobiliser la victime avant l’évaluation/immobilisation.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai."},"falseOpt":{"kind":"wrong","fb":"❌ Faux."}}},{"type":"short","title":"A de l’ABCDE","desc":"Première priorité de l’ABCDE (2 mots) :","answers":["voies aériennes","airway"],"okFb":"✅ Voies aériennes.","badFb":"❌ Réponse attendue : voies aériennes."},{"type":"image_single","title":"Décision immédiate","desc":"Choisis l’image correspondant à la meilleure conduite immédiate :","options":[{"label":"A","imgSrc":"assets/chute_q4_b.png","caption":"Victime assise / on la fait se lever","kind":"wrong","fb":"❌ Non : mobilisation dangereuse."},{"label":"B","imgSrc":"assets/chute_q4_a.png","caption":"Immobilisation axe tête-cou-tronc","kind":"ok","fb":"✅ Correct : immobilisation stricte."},{"label":"C","imgSrc":"assets/chute_q4_c.png","caption":"On la redresse pour la “mettre à l’aise”","kind":"wrong","fb":"❌ Non : risque rachis/aggravation."}]},{"type":"single","title":"Alerte neuro","desc":"Quel signe est le plus inquiétant après la chute ?","options":[{"text":"Douleur localisée sans autre signe","kind":"wrong","fb":"❌ Moins prioritaire."},{"text":"Petit hématome superficiel","kind":"wrong","fb":"❌ Pas le plus inquiétant."},{"text":"Somnolence / confusion","kind":"ok","fb":"✅ Oui : signe neuro inquiétant."},{"text":"Gratouillement au bras","kind":"wrong","fb":"❌ Non."}]},{"type":"short","title":"Glasgow","desc":"Score maximal du Glasgow (1 nombre) :","answers":["15"],"okFb":"✅ 15.","badFb":"❌ Réponse : 15."},{"type":"multi","title":"Tri vital","desc":"Coche les 3 priorités vitales immédiates :","options":[{"text":"Conscience","correct":true},{"text":"Respiration","correct":true},{"text":"Hémorragie","correct":true},{"text":"Température exacte","correct":false},{"text":"Antécédents complets","correct":false}],"okFb":"✅ Bon tri vital.","badFb":"❌ Attendu : conscience + respiration + hémorragie."},{"type":"drag_order","title":"Ordre d’action","desc":"Remets l’ordre logique :","items":[{"id":"s","text":"Sécuriser"},{"id":"a","text":"ABC"},{"id":"i","text":"Immobiliser"},{"id":"l","text":"Alerter"},{"id":"v","text":"Surveiller"}],"expected":["s","a","i","l","v"],"okFb":"✅ Ordre correct.","badFb":"❌ Ordre attendu : Sécuriser → ABC → Immobiliser → Alerter → Surveiller."},{"type":"hotspot","gate":true,"title":"Hotspot — Zone à protéger","desc":"Clique la zone où il faut surtout éviter la mobilisation.","imgSrc":"scenario_3_hotspot.png","hotspots":[{"label":"ok","x":30,"y":28,"w":18,"h":40,"kind":"ok","fb":"✅ Correct : colonne vertébrale (rachis).","pts":10},{"label":"ko","x":8,"y":22,"w":18,"h":22,"kind":"wrong","fb":"❌ Non : pas la priorité traumatique ici.","pts":-2},{"label":"ko","x":68,"y":70,"w":20,"h":20,"kind":"wrong","fb":"❌ Non : pas la priorité traumatique ici.","pts":-2}]},{"type":"cloze","title":"Organisation","desc":"Complète 2 valeurs :","template":"Idéalement, <b>{blank1}</b> sauveteurs ; victime <b>{blank2}</b>.","blanks":[{"key":"blank1","answer":"2"},{"key":"blank2","answer":"consciente"}],"okFb":"✅ OK.","badFb":"❌ Réponses : 2 ; consciente."},{"type":"tf","title":"Alerte","desc":"Vrai/Faux : on alerte rapidement avec mécanisme, hauteur, état, localisation.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai."},"falseOpt":{"kind":"wrong","fb":"❌ Faux."}}},{"type":"single","title":"À éviter","desc":"Quel geste est à éviter absolument ?","options":[{"text":"Surveiller la respiration","kind":"wrong","fb":"❌ À faire."},{"text":"Couvrir contre l’hypothermie","kind":"wrong","fb":"❌ À faire."},{"text":"Redresser la victime","kind":"ok","fb":"✅ Correct : à éviter (rachis)."},{"text":"Maintenir l’axe tête-cou-tronc","kind":"wrong","fb":"❌ À faire."}]},{"type":"short","title":"Terme","desc":"Un mot : la colonne vertébrale =","answers":["rachis"],"okFb":"✅ Rachis.","badFb":"❌ Réponse : rachis."},{"type":"tf","title":"Mécanisme","desc":"Vrai/Faux : une chute de hauteur impose de suspecter un traumatisme grave même si la douleur est modérée.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai."},"falseOpt":{"kind":"wrong","fb":"❌ Faux."}}},{"type":"multi","title":"Transmission","desc":"Pour le bilan au SAMU, coche les infos essentielles :","options":[{"text":"Hauteur","correct":true},{"text":"Mécanisme de chute","correct":true},{"text":"Couleur des vêtements","correct":false},{"text":"Marque du téléphone","correct":false}],"okFb":"✅ Parfait.","badFb":"❌ Essentiel : hauteur + mécanisme de chute."}];
 
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
@@ -879,17 +851,35 @@ function setRingProgress(){
   if(timeLeft <= 5) timerPill.classList.add("timerDanger");
   else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
 }
-function stopTimer(){ clearInterval(timerId); timerId=null; }
-function startTimer(){
+
+function stopTimer(){
+  clearInterval(timerId);
+  timerId = null;
+}
+
+// ✅ reset=true => repart à TIMER_SECONDS
+// ✅ reset=false => reprend à timeLeft (donc ne revient PAS à 60)
+function startTimer(reset = true){
   stopTimer();
-  timeLeft = TIMER_SECONDS;
+
+  if(reset){
+    timeLeft = TIMER_SECONDS;
+  }else{
+    // sécurité (si timeLeft est invalide)
+    if(!Number.isFinite(timeLeft) || timeLeft <= 0 || timeLeft > TIMER_SECONDS){
+      timeLeft = TIMER_SECONDS;
+    }
+  }
+
   hudTime.textContent = String(timeLeft);
   setRingProgress();
+
   timerId = setInterval(()=>{
     if(locked || paused) return;
     timeLeft--;
     hudTime.textContent = String(timeLeft);
     setRingProgress();
+
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
@@ -914,30 +904,20 @@ function getHintForQuestion(q){
     const ok = (q.options||[]).find(o=>o.kind==="ok");
     if(ok) return `Indice : la meilleure action est celle qui correspond à : « ${ok.text.slice(0, Math.min(28, ok.text.length))}${ok.text.length>28 ? "…" : ""} »`;
   }
-  if(t==="tf"){
-    return `Indice : pense à la règle traumatique : immobilisation/évaluation avant toute mobilisation.`;
-  }
+  if(t==="tf") return `Indice : pense à la règle traumatique : immobilisation/évaluation avant toute mobilisation.`;
   if(t==="multi"){
     const good = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
     return `Indice : il y a ${good.length} réponses correctes. Une des priorités est : « ${good[0]||"—"} ».`;
   }
-  if(t==="short"){
-    return `Indice : réponse très courte, sans phrase (1–2 mots / un nombre).`;
-  }
-  if(t==="image_single"){
-    return `Indice : cherche l’image où l’on respecte l’axe tête-cou-tronc (immobilisation).`;
-  }
+  if(t==="short") return `Indice : réponse très courte, sans phrase (1–2 mots / un nombre).`;
+  if(t==="image_single") return `Indice : cherche l’image où l’on respecte l’axe tête-cou-tronc (immobilisation).`;
   if(t==="drag_order"){
     const first = (q.expected||[])[0];
     const map = Object.fromEntries((q.items||[]).map(it=>[it.id,it.text]));
     return `Indice : la première étape est : « ${map[first]||"Sécuriser"} ».`;
   }
-  if(t==="hotspot"){
-    return `Indice : la zone la plus critique à protéger ici, c’est le rachis (colonne vertébrale).`;
-  }
-  if(t==="cloze"){
-    return `Indice : respecte exactement les deux valeurs demandées (nombre + état).`;
-  }
+  if(t==="hotspot") return `Indice : la zone la plus critique à protéger ici, c’est le rachis (colonne vertébrale).`;
+  if(t==="cloze") return `Indice : respecte exactement les deux valeurs demandées (nombre + état).`;
   return `Indice : choisis l’action la plus sûre et prioritaire.`;
 }
 
@@ -951,7 +931,6 @@ hintBtn.addEventListener("click", ()=>{
 
   const q = questions[idx];
   const hint = getHintForQuestion(q);
-
   showOverlay("warn", "💡 " + hint, { allowRetry:false, allowNext:false, allowOk:true });
 });
 
@@ -976,7 +955,7 @@ function mkOpt(text){
   return d;
 }
 
-async function renderQuestion(i){
+async function renderQuestion(i, keepTime = false){
   locked = true;
   paused = false;
   pauseBtn.textContent = "⏸ Pause";
@@ -1222,7 +1201,8 @@ async function renderQuestion(i){
 
   locked = false;
   setHintsUI();
-  startTimer();
+  startTimer(!keepTime); // keepTime=true => reprend sans reset
+
 }
 
 /* ======= Clear ======= */
@@ -1263,26 +1243,18 @@ validateBtn.onclick = ()=>{
   locked=true;
   setHintsUI();
 
-  if(type==="single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
-
-  if(type==="tf"){
-    const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
-    evaluateOption(opt); return;
-  }
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
+  if(type==="tf"){ evaluateOption((selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt); return; }
 
   if(type==="multi"){
     const chosen=[...multiSelected].sort((a,b)=>a-b);
     const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
     const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
     if(ok){
-      addScore(10);
-      sfxCorrect(); motion("good");
+      addScore(10); sfxCorrect(); motion("good");
       showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
-      addStress(STRESS_RULES.wrong);
-      sfxWrong(); motion("wrong");
+      addStress(STRESS_RULES.wrong); sfxWrong(); motion("wrong");
       registerFailure(q.badFb || "❌ Incorrect.");
     }
     return;
@@ -1293,37 +1265,30 @@ validateBtn.onclick = ()=>{
     const accepted=(q.answers||[]).map(a=>String(a).trim().toLowerCase());
     const ok = accepted.includes(norm);
     if(ok){
-      addScore(10);
-      sfxCorrect(); motion("good");
+      addScore(10); sfxCorrect(); motion("good");
       showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
-      addStress(STRESS_RULES.wrong);
-      sfxWrong(); motion("wrong");
+      addStress(STRESS_RULES.wrong); sfxWrong(); motion("wrong");
       registerFailure(q.badFb || "❌ Réponse incorrecte.");
     }
     return;
   }
 
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
     if(!h){ locked=false; setHintsUI(); startTimer(); return; }
 
     if(h.kind==="ok"){
-      addScore(h.pts ?? 10);
-      sfxCorrect(); motion("good");
+      addScore(h.pts ?? 10); sfxCorrect(); motion("good");
       showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else if(h.kind==="critical"){
-      addStress(STRESS_RULES.critical);
-      addScore(h.pts ?? -10);
+      addStress(STRESS_RULES.critical); addScore(h.pts ?? -10);
       sfxCritical(); motion("critical");
-      registerFailure(h.fb || "🚨 Erreur critique.", true);
+      registerFailure(h.fb || "🚨 Erreur critique.");
     }else{
-      addStress(STRESS_RULES.wrong);
-      addScore(h.pts ?? 0);
+      addStress(STRESS_RULES.wrong); addScore(h.pts ?? 0);
       sfxWrong(); motion("wrong");
       registerFailure(h.fb || "❌ Incorrect.");
     }
@@ -1335,12 +1300,10 @@ validateBtn.onclick = ()=>{
     const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
     const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
     if(ok){
-      addScore(10);
-      sfxCorrect(); motion("good");
+      addScore(10); sfxCorrect(); motion("good");
       showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
-      addStress(STRESS_RULES.wrong);
-      sfxWrong(); motion("wrong");
+      addStress(STRESS_RULES.wrong); sfxWrong(); motion("wrong");
       registerFailure(q.badFb || "❌ Ordre incorrect.");
     }
     return;
@@ -1349,12 +1312,10 @@ validateBtn.onclick = ()=>{
   if(type==="cloze"){
     const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
     if(ok){
-      addScore(10);
-      sfxCorrect(); motion("good");
+      addScore(10); sfxCorrect(); motion("good");
       showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
-      addStress(STRESS_RULES.wrong);
-      sfxWrong(); motion("wrong");
+      addStress(STRESS_RULES.wrong); sfxWrong(); motion("wrong");
       registerFailure(q.badFb || "❌ Texte incorrect.");
     }
     return;
@@ -1373,7 +1334,7 @@ function evaluateOption(opt){
     addStress(STRESS_RULES.critical);
     addScore(opt.pts ?? -10);
     sfxCritical(); motion("critical");
-    registerFailure(opt.fb || "🚨 Erreur critique.", true);
+    registerFailure(opt.fb || "🚨 Erreur critique.");
     return;
   }
   if(opt.kind==="partial"){
@@ -1401,6 +1362,8 @@ function registerFailure(baseMsg){
 
   const left = MAX_ATTEMPTS - attemptsUsed;
   const txt = `${baseMsg} (Tentatives ${attemptsUsed}/${MAX_ATTEMPTS} — reste ${left})`;
+
+  // chrono déjà arrêté (stopTimer) lors de la validation / timeout
   showOverlay("warn", txt, {allowRetry:true, allowNext:false, allowOk:false});
 }
 
@@ -1418,9 +1381,35 @@ function showOverlay(kind, text, {allowRetry, allowNext, allowOk}){
   nextBtn.style.display  = allowNext  ? "inline-block" : "none";
   okBtn.style.display    = allowOk    ? "inline-block" : "none";
 
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; setHintsUI(); paused=false; startTimer(); };
-  nextBtn.onclick  = async ()=>{ hideOverlay(); idx++; if(idx < TOTAL) await renderQuestion(idx); else endScenario(); };
-  okBtn.onclick    = ()=>{ hideOverlay(); locked=false; setHintsUI(); paused=false; startTimer(); };
+  // ✅ MODIF ICI:
+  // - En cas d’erreur, le chrono reste arrêté pendant l’overlay
+  // - Il ne redémarre QUE quand on clique sur "Réessayer"
+retryBtn.onclick = async ()=>{
+  sfxClick();
+  hideOverlay();
+
+  // ✅ On re-render la même question mais on garde le temps restant
+  await renderQuestion(idx, true);
+};
+
+
+  nextBtn.onclick  = async ()=>{
+    sfxClick();
+    hideOverlay();
+    idx++;
+    if(idx < TOTAL) await renderQuestion(idx);
+    else endScenario();
+  };
+
+  okBtn.onclick    = ()=>{
+    sfxClick();
+    hideOverlay();
+    locked=false;
+    setHintsUI();
+    paused=false;
+    // OK sert surtout pour Indice / messages => on relance (reset) comme avant
+    startTimer();
+  };
 }
 function hideOverlay(){ overlay.style.display="none"; }
 
@@ -1430,7 +1419,7 @@ function missionFail(message){
   setHintsUI();
   showOverlay("bad", message, {allowRetry:false, allowNext:false, allowOk:true});
   motion("critical");
-  okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
+  okBtn.onclick = ()=>{ sfxClick(); hideOverlay(); resetMission(true); };
 }
 
 function resetMission(showStart=true){
@@ -1518,7 +1507,7 @@ closeKeyBtn.addEventListener("click", ()=>{
 });
 
 /* ======= Badges ======= */
-const BADGE_BASE = "assets/"; // badges: assets/or.png / assets/argent.png / assets/bronze.png
+const BADGE_BASE = "assets/";
 function computeBadge(score){
   if(score >= 90) return { level: "OR", img: "or.png" };
   if(score >= 70) return { level: "ARGENT", img: "argent.png" };
@@ -1589,7 +1578,6 @@ function endScenario(){
   progressBar.style.width = "100%";
 }
 
-/* Terminer */
 endBtn.addEventListener("click", ()=>{
   sfxClick();
   window.location.href = NEXT_GENIALLY_URL;
