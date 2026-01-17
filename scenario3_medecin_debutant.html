@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 3 — Chute du 2e étage — Niveau intermédiaire — Médecin</title>
+  <title>Scénario 3 — Chute du 2e étage — Niveau débutant — Médecin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -19,20 +19,71 @@
       --red: rgba(255,70,70,1);
       --green: rgba(45,200,120,1);
       --blue: rgba(80,170,255,1);
-      --ember: rgba(255,150,70,1);
-      --ember2: rgba(255,120,50,1);
+
+      --border: rgba(255, 200, 150, .22);
+      --shadow: 0 18px 70px rgba(0,0,0,.50);
     }
 
-    html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    html,body{
+      margin:0; background: transparent; color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
-    .wrap{ width: min(1120px, 100%); }
+    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 16px 18px; }
+    .wrap{ width: min(1400px, 100%); }
 
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    /* ===== Top bar (comme le screenshot) ===== */
+    .topTabs{
+      display:flex; align-items:center; gap:14px;
+      margin-bottom: 14px;
+    }
+    .levelPill{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      letter-spacing: .3px;
+      white-space: nowrap;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,176,90,1);
+      box-shadow: 0 0 0 6px rgba(255,176,90,.14);
+      flex: 0 0 auto;
+    }
+    .topProgress{
+      flex:1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .topProgress > div{
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      transition: width .25s ease;
+    }
+    .miniRules{
+      display:flex; align-items:center; gap:10px;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
 
+    /* ===== HUD (2 cartes) ===== */
+    .hud{
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
     .hudbox{
       background: var(--glass);
-      border: 1px solid rgba(255, 200, 150, .22);
+      border: 1px solid var(--border);
       border-radius: 18px;
       padding: 14px 16px;
       display:flex;
@@ -46,8 +97,7 @@
     }
     .hudbox::after{
       content:"";
-      position:absolute;
-      inset:-2px;
+      position:absolute; inset:-2px;
       pointer-events:none;
       background:
         radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
@@ -56,28 +106,32 @@
     }
 
     .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
-
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
-      background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
+      width: 78px; height: 78px; border-radius: 22px; padding: 4px;
+      background: linear-gradient(180deg, rgba(255,150,70,.32), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
-      object-position: 50% 6%;
-      transform: scale(1.35);
-      transform-origin: 50% 12%;
+      object-position: 50% 10%;
       background: rgba(255,255,255,.06);
     }
-
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
-
+    .pname{
+      font-weight: 950; font-size: 22px; line-height: 1.05;
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top: 4px;
+      font-weight: 850; font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+    }
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
@@ -86,16 +140,16 @@
       font-size: 12px;
       font-weight: 950;
       white-space: nowrap;
-      position: relative;
-      z-index:2;
+      position: relative; z-index:2;
     }
 
-    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 12px; flex-wrap: wrap; position: relative; z-index:2; }
-
+    .stats{
+      display:flex; align-items:center; justify-content:flex-end;
+      gap: 10px; flex-wrap: wrap;
+      position: relative; z-index:2;
+    }
     .pill{
-      display:flex;
-      align-items:center;
-      gap: 10px;
+      display:flex; align-items:center; gap: 10px;
       padding: 10px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
@@ -105,8 +159,11 @@
       white-space: nowrap;
     }
 
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
-
+    .timerPill{
+      padding: 8px 10px; gap: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
     .ring{
       width: 40px; height: 40px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -122,7 +179,6 @@
       color: rgba(255,255,255,.9);
       font-size: 14px; font-weight: 950;
     }
-
     .timeText{ display:flex; align-items:center; gap: 8px; }
     .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
     .timeText .sec{ font-size: 16px; font-weight: 950; }
@@ -137,7 +193,7 @@
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px;
+      width: 210px; height: 10px; border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -148,14 +204,27 @@
       transition: width .25s ease;
     }
 
+    .btnSmall{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: rgba(255,255,255,.90);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 950;
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+    .btnSmall:disabled{ opacity:.45; cursor:not-allowed; }
+
+    /* ===== Frame question ===== */
     .frame{
       background: var(--glass2);
-      border: 1px solid rgba(255, 200, 150, .22);
+      border: 1px solid var(--border);
       border-radius: 18px;
       padding: 18px;
       position: relative;
       overflow:hidden;
-      box-shadow: 0 18px 70px rgba(0,0,0,.50);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
     }
     .frame::after{
@@ -168,33 +237,38 @@
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
     .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
     .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
 
+    /* Options style (barres longues comme screenshot) */
     .opt{
       border-radius: 14px;
-      padding: 13px 14px;
+      padding: 14px 16px;
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
       user-select:none;
       transition: transform .12s ease, filter .12s ease, background .12s ease;
       border: 1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
+      background: linear-gradient(180deg, rgba(120,180,255,.18), rgba(120,180,255,.10));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
     }
-    .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
-    .opt:active{ transform: translateY(0px); filter: brightness(.98); }
-
+    .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(120,180,255,.08)); }
     .opt.sel{
-      background: linear-gradient(180deg, rgba(255,150,70,.30), rgba(255,120,50,.18));
+      background: linear-gradient(180deg, rgba(255,150,70,.26), rgba(255,120,50,.14));
       border-color: rgba(255,150,70,.30);
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    /* Actions bas : gauche (Corrigé/Terminer) + droite (Valider/Effacer) */
+    .actions{
+      position: relative; z-index:2;
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 10px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .leftActions, .rightActions{ display:flex; gap:10px; flex-wrap:wrap; }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
@@ -205,7 +279,6 @@
       font-weight: 950;
       letter-spacing: .2px;
     }
-
     .btnPrimary{
       border: none;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
@@ -214,15 +287,14 @@
       padding: 10px 14px;
       font-weight: 950;
       letter-spacing: .2px;
-      display:none;
     }
-    .btnPrimary.show{ display:inline-block; }
     .btnPrimary:disabled{
       opacity:.45;
       filter: grayscale(.2);
       cursor: not-allowed;
     }
 
+    /* ===== Overlays ===== */
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
@@ -230,9 +302,8 @@
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
     }
-
     .modalBox{
-      width: min(760px, 92%);
+      width: min(820px, 92%);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
@@ -240,13 +311,11 @@
       overflow:hidden;
       position: relative;
     }
-
     .modalTop{
       padding: 14px 16px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
-
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
@@ -266,7 +335,6 @@
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
     }
-
     .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
     .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
     .startBtn{
@@ -277,6 +345,98 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
 
+    /* ===== Key overlay (corrigé popup avec X) ===== */
+    .keyHeader{
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .closeX{
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.92);
+      font-weight: 950;
+    }
+    .keyBody{ padding: 16px; }
+
+    /* ===== Hotspot zones ===== */
+    @keyframes hsPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
+      70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: rgba(255,255,255,.55); }
+    }
+    .hotspot-zone{
+      position:absolute;
+      background: transparent !important;
+      border: 2px solid rgba(255,255,255,.65);
+      border-radius: 16px;
+      padding:0;
+      margin:0;
+      cursor:pointer;
+      animation: hsPulse 1.35s infinite;
+    }
+    .hotspot-zone.sel{
+      border-color: rgba(34,197,94,.95);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.20);
+      animation: none;
+    }
+
+    /* ===== Q4 images ===== */
+    .imgGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-top:12px; }
+    @media (max-width: 900px){ .imgGrid{ grid-template-columns: 1fr; } }
+    .imgCard{
+      border-radius:18px; overflow:hidden;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      cursor:pointer;
+      transition:.15s ease;
+      box-shadow:0 14px 30px rgba(0,0,0,.25);
+    }
+    .imgCard:hover{ transform:translateY(-3px); filter:brightness(1.05); }
+    .imgCard.sel{
+      outline:3px solid rgba(255,165,0,.4);
+      box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
+    }
+    .imgHead{
+      padding:12px 16px;
+      font-weight:900;
+      display:flex;
+      justify-content:space-between;
+      background:linear-gradient(180deg, rgba(120,180,255,.22), rgba(120,180,255,.10));
+    }
+    .imgTag{
+      width:36px; height:36px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900;
+      background:rgba(0,0,0,.25);
+    }
+    .imgPic{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+    .imgCap{ padding:14px; text-align:center; font-weight:800; }
+
+    /* Drag order : pas de scroll, tag (glisser) à droite */
+    .dragRow{
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    }
+    .dragTag{
+      font-size:12px; font-weight:950;
+      color: rgba(255,255,255,.70);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 980px){
+      .hud{ grid-template-columns: 1fr; }
+      .stressWrap{ width: 180px; }
+      .topTabs{ flex-wrap: wrap; }
+      .miniRules{ order: 3; width:100%; justify-content:flex-end; }
+    }
+
+    /* petites animations */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -298,94 +458,21 @@
       50%{ box-shadow: 0 0 0 7px rgba(255,70,70,.22); }
       to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
     }
-
-    @media (max-width: 860px){
-      .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; }
-    }
-  
-/* Hotspot zones (cadres clignotants) */
-@keyframes hsPulse {
-  0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
-  70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
-  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: rgba(255,255,255,.55); }
-}
-.hotspot-zone{
-  position:absolute;
-  background: transparent !important;
-  border: 2px solid rgba(255,255,255,.65);
-  border-radius: 16px;
-  padding:0;
-  margin:0;
-  cursor:pointer;
-  animation: hsPulse 1.35s infinite;
-}
-.hotspot-zone.sel{
-  border-color: rgba(34,197,94,.95);
-  box-shadow: 0 0 0 6px rgba(34,197,94,.20);
-  animation: none;
-}
-
-
-/* ===== Q4 – Design cartes images ===== */
-.imgGrid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:16px;
-  margin-top:12px;
-}
-@media (max-width: 900px){
-  .imgGrid{ grid-template-columns: 1fr; }
-}
-.imgCard{
-  border-radius:18px;
-  overflow:hidden;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);
-  cursor:pointer;
-  transition:.15s ease;
-  box-shadow:0 14px 30px rgba(0,0,0,.25);
-}
-.imgCard:hover{ transform:translateY(-3px); filter:brightness(1.05); }
-.imgCard.sel{
-  outline:3px solid rgba(255,165,0,.4);
-  box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
-}
-.imgHead{
-  padding:12px 16px;
-  font-weight:900;
-  display:flex;
-  justify-content:space-between;
-  background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
-}
-.imgTag{
-  width:36px;
-  height:36px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-  background:rgba(0,0,0,.25);
-}
-.imgPic{
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-  display:block;
-}
-.imgCap{
-  padding:14px;
-  text-align:center;
-  font-weight:800;
-}
-</style>
+  </style>
 </head>
 
 <body>
 <div class="stage">
   <div class="wrap">
 
+    <!-- TOP BAR -->
+    <div class="topTabs">
+      <div class="levelPill"><span class="dot"></span> NIVEAU : <span id="levelTabText">DÉBUTANT</span></div>
+      <div class="topProgress" aria-label="progress"><div id="progressBar"></div></div>
+      <div class="miniRules" id="miniRules">⏱ 60s / question • 🎯 3 tentatives max • 💡 3 indices</div>
+    </div>
+
+    <!-- HUD -->
     <div class="hud">
       <div class="hudbox">
         <div class="profile">
@@ -393,7 +480,7 @@
             <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
           <div class="ptext">
-            <div class="pname" id="hudName">Joueur</div>
+            <div class="pname" id="hudName">Dr. Joueur</div>
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
@@ -410,9 +497,12 @@
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
             <div class="timeText">
               <div class="label">Temps</div>
-              <div class="sec"><span id="hudTime">12</span>s</div>
+              <div class="sec"><span id="hudTime">60</span>s</div>
             </div>
           </div>
+
+          <button class="btnSmall" id="hintBtn" type="button">💡 Indice (<span id="hudHints">3</span>)</button>
+          <button class="btnSmall" id="pauseBtn" type="button">⏸ Pause</button>
 
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
@@ -421,16 +511,25 @@
       </div>
     </div>
 
+    <!-- FRAME -->
     <div class="frame" id="frame">
-      <div class="qmeta" id="qMeta">Scénario 3 — Chute du 2e étage</div>
+      <div class="qmeta" id="qMeta">Scénario 3 — Chute du 2e étage • Niveau débutant</div>
       <div class="qtitle" id="qTitle">…</div>
       <div class="qdesc" id="qDesc">…</div>
 
       <div class="options" id="options"></div>
 
+      <!-- Bottom actions: left (Corrigé/Terminer), right (Valider/Effacer) -->
       <div class="actions">
-        <button class="btnPrimary show" id="validateBtn" type="button">Valider</button>
-        <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+        <div class="leftActions">
+          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+        </div>
+
+        <div class="rightActions">
+          <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+          <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+        </div>
       </div>
     </div>
 
@@ -449,10 +548,12 @@
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
       <div class="startText">
-        Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
+        Tu interviens en situation d’urgence.
         <br><br>
-        <b>Si le temps s’écoule ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <b>Tu as 60 secondes par question et 3 tentatives maximum.</b>
         <br>
+        <b>Tu as 3 indices pour tout le scénario (1 seul par question).</b>
+        <br><br>
         Es-tu prêt à commencer ?
       </div>
     </div>
@@ -480,23 +581,19 @@
   </div>
 </div>
 
+<!-- Corrigé overlay (popup sur la même page) -->
+<div class="overlay" id="keyOverlay">
+  <div class="modalBox">
+    <div class="keyHeader">
+      <div class="badgeState bWarn">📘 Corrigé</div>
+      <button class="closeX" id="closeKeyBtn" type="button">✕</button>
+    </div>
+    <div class="keyBody" id="answerKeyWrap"></div>
+  </div>
+</div>
+
 <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ========= SCENARIO ENGINE (Design Genially-like) ========= */
+/* ========= SFX (inchangé / léger) ========= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.08, type="sine", gain=0.05){
@@ -511,20 +608,6 @@ function tone(freq, dur=0.08, type="sine", gain=0.05){
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
 function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
-
-function sfxVictory(){
-  // petite mélodie de victoire (1.4s)
-  ensureAudio();
-  const notes = [
-    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
-    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
-  ];
-  let t = 0;
-  notes.forEach((n, i)=>{
-    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
-    t += n.d + 0.03;
-  });
-}
 function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
 function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
 function sfxAlarmLong(){
@@ -543,6 +626,7 @@ function sfxAlarmLong(){
   osc.start(now); osc.stop(now + 1.25);
 }
 
+/* ========= Helpers ========= */
 const el = (id)=>document.getElementById(id);
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
 const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
@@ -553,56 +637,83 @@ const startOverlay = el("startOverlay"), startBtn = el("startBtn");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
 const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
+const progressBar = el("progressBar");
+const hintBtn = el("hintBtn"), hudHints = el("hudHints"), pauseBtn = el("pauseBtn");
+const showKeyBtn = el("showKeyBtn"), endBtn = el("endBtn");
+const keyOverlay = el("keyOverlay"), closeKeyBtn = el("closeKeyBtn"), answerKeyWrap = el("answerKeyWrap");
 
-/* ======= CONFIG ======= */
+/* ======= CONFIG FIXE (conforme screenshot) ======= */
 const SCENARIO = {
-  id: 1,
+  id: 3,
   label: "Scénario 3 — Chute du 2e étage",
   mission: "Chute du 2e étage",
   level: "Niveau débutant"
 };
 
-// Lien "Suivant" (à remplacer par ton lien Genially)
+// Lien Genially (Terminer)
 const NEXT_GENIALLY_URL = "#";
 
-// Timer selon niveau
+// STRUCTURE demandée
 const TIMER_SECONDS = 60;
+const MAX_ATTEMPTS = 3;
 
-// Stress (exigé)
-const STRESS_RULES = {
-  wrong: 10,
-  timeout: 15,
-  critical: 25
-};
+// Indices : 3 sur tout le scénario, 1 max par question
+const MAX_HINTS = 3;
+const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 
+// Stress (inchangé)
+const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
+
+// Rôle + joueur
 const role = "medecin";
-const playerName = localStorage.getItem("playerName") || "Joueur";
-const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
-const difficulty = "DÉBUTANT";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
-hudName.textContent = playerName;
+
+// ✅ player_name + "Dr."
+const player_name = localStorage.getItem("playerName") || "Joueur";
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
+hudName.textContent = "Dr. " + player_name;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
 difficultyChip.textContent = "MODE: DÉBUTANT";
+el("levelTabText").textContent = "DÉBUTANT";
+el("miniRules").textContent = `⏱ ${TIMER_SECONDS}s / question • 🎯 ${MAX_ATTEMPTS} tentatives max • 💡 ${MAX_HINTS} indices`;
 
+/* ======= STATE ======= */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
 if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsUsed = 0;                 // 0..3 (affichage comme screenshot)
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
 
+let paused = false;
+
+let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || "", 10);
+if(isNaN(hintsLeft)) hintsLeft = MAX_HINTS;
+localStorage.setItem(HINT_KEY, String(hintsLeft));
+
+let hintUsedThisQuestion = false;
+
+/* ======= QUESTIONS (INCHANGÉES ✅) ======= */
 const questions = [{"type": "single", "title": "Sécurisation", "desc": "Avant de toucher la victime, la priorité immédiate est :", "options": [{"text": "Commencer l’examen neurologique", "kind": "wrong", "fb": "❌ Non : d’abord sécurité."}, {"text": "Sécuriser la zone avant l’examen", "kind": "ok", "fb": "✅ Oui : sécurité d’abord."}, {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non."}, {"text": "Faire lever la victime", "kind": "wrong", "fb": "❌ Non : risque rachis."}]}, {"type": "tf", "title": "Immobilisation", "desc": "Vrai/Faux : après une chute de hauteur, on évite de mobiliser la victime avant l’évaluation/immobilisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "short", "title": "A de l’ABCDE", "desc": "Première priorité de l’ABCDE (2 mots) :", "answers": ["voies aériennes", "airway"], "okFb": "✅ Voies aériennes.", "badFb": "❌ Réponse attendue : voies aériennes."}, {"type": "image_single", "title": "Décision immédiate", "desc": "Choisis l’image correspondant à la meilleure conduite immédiate :", "options": [{"label": "A", "imgSrc": "assets/chute_q4_b.png", "caption": "Victime assise / on la fait se lever", "kind": "wrong", "fb": "❌ Non : mobilisation dangereuse."}, {"label": "B", "imgSrc": "assets/chute_q4_a.png", "caption": "Immobilisation axe tête-cou-tronc", "kind": "ok", "fb": "✅ Correct : immobilisation stricte."}, {"label": "C", "imgSrc": "assets/chute_q4_c.png", "caption": "On la redresse pour la “mettre à l’aise”", "kind": "wrong", "fb": "❌ Non : risque rachis/aggravation."}]}, {"type": "single", "title": "Alerte neuro", "desc": "Quel signe est le plus inquiétant après la chute ?", "options": [{"text": "Douleur localisée sans autre signe", "kind": "wrong", "fb": "❌ Moins prioritaire."}, {"text": "Petit hématome superficiel", "kind": "wrong", "fb": "❌ Pas le plus inquiétant."}, {"text": "Somnolence / confusion", "kind": "ok", "fb": "✅ Oui : signe neuro inquiétant."}, {"text": "Gratouillement au bras", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "short", "title": "Glasgow", "desc": "Score maximal du Glasgow (1 nombre) :", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ Réponse : 15."}, {"type": "multi", "title": "Tri vital", "desc": "Coche les 3 priorités vitales immédiates :", "options": [{"text": "Conscience", "correct": true}, {"text": "Respiration", "correct": true}, {"text": "Hémorragie", "correct": true}, {"text": "Température exacte", "correct": false}, {"text": "Antécédents complets", "correct": false}], "okFb": "✅ Bon tri vital.", "badFb": "❌ Attendu : conscience + respiration + hémorragie."}, {"type": "drag_order", "title": "Ordre d’action", "desc": "Remets l’ordre logique :", "items": [{"id": "s", "text": "Sécuriser"}, {"id": "a", "text": "ABC"}, {"id": "i", "text": "Immobiliser"}, {"id": "l", "text": "Alerter"}, {"id": "v", "text": "Surveiller"}], "expected": ["s", "a", "i", "l", "v"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre attendu : Sécuriser → ABC → Immobiliser → Alerter → Surveiller."}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone à protéger", "desc": "Clique la zone où il faut surtout éviter la mobilisation.", "imgSrc": "scenario_3_hotspot.png", "hotspots": [{"label": "ok", "x": 30, "y": 28, "w": 18, "h": 40, "kind": "ok", "fb": "✅ Correct : colonne vertébrale (rachis).", "pts": 10}, {"label": "ko", "x": 8, "y": 22, "w": 18, "h": 22, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}, {"label": "ko", "x": 68, "y": 70, "w": 20, "h": 20, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}]}, {"type": "cloze", "title": "Organisation", "desc": "Complète 2 valeurs :", "template": "Idéalement, <b>{blank1}</b> sauveteurs ; victime <b>{blank2}</b>.", "blanks": [{"key": "blank1", "answer": "2"}, {"key": "blank2", "answer": "consciente"}], "okFb": "✅ OK.", "badFb": "❌ Réponses : 2 ; consciente."}, {"type": "tf", "title": "Alerte", "desc": "Vrai/Faux : on alerte rapidement avec mécanisme, hauteur, état, localisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "single", "title": "À éviter", "desc": "Quel geste est à éviter absolument ?", "options": [{"text": "Surveiller la respiration", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Couvrir contre l’hypothermie", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Redresser la victime", "kind": "ok", "fb": "✅ Correct : à éviter (rachis)."}, {"text": "Maintenir l’axe tête-cou-tronc", "kind": "wrong", "fb": "❌ À faire."}]}, {"type": "short", "title": "Terme", "desc": "Un mot : la colonne vertébrale =", "answers": ["rachis"], "okFb": "✅ Rachis.", "badFb": "❌ Réponse : rachis."}, {"type": "tf", "title": "Mécanisme", "desc": "Vrai/Faux : une chute de hauteur impose de suspecter un traumatisme grave même si la douleur est modérée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "multi", "title": "Transmission", "desc": "Pour le bilan au SAMU, coche les infos essentielles :", "options": [{"text": "Hauteur", "correct": true}, {"text": "Mécanisme de chute", "correct": true}, {"text": "Couleur des vêtements", "correct": false}, {"text": "Marque du téléphone", "correct": false}], "okFb": "✅ Parfait.", "badFb": "❌ Essentiel : hauteur + mécanisme de chute."}];
+
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
+/* ======= UI setters ======= */
 function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-function setScore(v){ score=v; localStorage.setItem("score", String(score)); hudScore.textContent=String(score); modalScore.textContent=String(score); }
+function setScore(v){
+  score=v;
+  localStorage.setItem("score", String(score));
+  hudScore.textContent=String(score);
+  modalScore.textContent=String(score);
+}
 function addScore(d){ setScore(score + d); }
+
 function setStress(v){
   stress=clamp(v,0,100);
   localStorage.setItem("stress", String(stress));
@@ -610,10 +721,26 @@ function setStress(v){
   modalStress.textContent=String(stress);
 }
 function addStress(d){ setStress(stress + d); }
-function setAttemptsUI(){ hudAttempts.textContent = String(attemptsForCurrentQuestion); }
 
-setScore(score); setStress(stress); setAttemptsUI();
+function setAttemptsUI(){ hudAttempts.textContent = String(attemptsUsed); }
 
+function setHintsUI(){
+  hudHints.textContent = String(hintsLeft);
+  hintBtn.disabled = (hintsLeft<=0 || hintUsedThisQuestion);
+}
+
+function setProgressUI(){
+  const pct = Math.round(((idx) / TOTAL) * 100);
+  progressBar.style.width = pct + "%";
+}
+
+setScore(score);
+setStress(stress);
+setAttemptsUI();
+setHintsUI();
+setProgressUI();
+
+/* ======= Timer ======= */
 function setRingProgress(){
   const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
@@ -628,41 +755,52 @@ function startTimer(){
   hudTime.textContent = String(timeLeft);
   setRingProgress();
   timerId = setInterval(()=>{
-    if(locked) return;
+    if(locked || paused) return;
     timeLeft--;
     hudTime.textContent = String(timeLeft);
     setRingProgress();
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
-      // Timeout = mauvaise réponse + stress
-      addStress(STRESS_RULES.timeout);
-      attemptsForCurrentQuestion++;
-      setAttemptsUI();
-      // 2 essais max comme ton design initial
-      if(attemptsForCurrentQuestion >= 4){
-        missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score remis à zéro)");
-      }else{
-        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/3)", {allowRetry:true, allowNext:false, missionFail:false});
-      }
+      registerFailure("⏱️ Temps écoulé.");
     }
   }, 1000);
 }
 
-/* ======= SELECTION STATE ======= */
+/* ======= Pause ======= */
+pauseBtn.addEventListener("click", ()=>{
+  sfxClick();
+  paused = !paused;
+  pauseBtn.textContent = paused ? "▶ Reprendre" : "⏸ Pause";
+});
+
+/* ======= Hints (1 par question) ======= */
+hintBtn.addEventListener("click", ()=>{
+  if(hintsLeft<=0 || hintUsedThisQuestion) return;
+  sfxClick();
+  hintsLeft--;
+  hintUsedThisQuestion = true;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  setHintsUI();
+
+  // Indice simple : on affiche une piste non intrusive (sans toucher aux questions)
+  showOverlay("warn", "💡 Indice : relis bien les mots clés de la consigne et choisis l’action la plus sûre et prioritaire.", {
+    allowRetry:false, allowNext:false, allowOk:true
+  });
+});
+
+/* ======= Selection State ======= */
 let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
-let dragOrder = [];        // for drag_order
-let clozeValues = {};      // for cloze
+let clozeValues = {};
 
 function resetState(){
   selectedSingle=null;
   multiSelected.clear();
   inputValue="";
-  dragOrder=[];
   clozeValues={};
-  validateBtn.disabled=false;
+  validateBtn.disabled=true;
 }
 
 function mkOpt(text){
@@ -672,13 +810,16 @@ function mkOpt(text){
   return d;
 }
 
-function pillHtml(label, valueId){ return `<span class="pill">${label} <b id="${valueId}"></b></span>`; }
-
-function renderQuestion(i, resetAttempts=true){
+function renderQuestion(i){
   locked=false;
+  paused=false;
+  pauseBtn.textContent="⏸ Pause";
   stopTimer();
   hideOverlay();
-  if(resetAttempts){ attemptsForCurrentQuestion=1; setAttemptsUI(); }
+
+  hintUsedThisQuestion = false;
+  setHintsUI();
+
   resetState();
 
   const q = questions[i];
@@ -688,12 +829,21 @@ function renderQuestion(i, resetAttempts=true){
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
+  hudQnum.textContent = String(i+1);
+  setProgressUI();
+
   const type = q.type;
 
   if(type==="single"){
     q.options.forEach((opt, oi)=>{
       const d = mkOpt(opt.text);
-      d.onclick=()=>{ sfxClick(); [...optionsEl.children].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); selectedSingle=oi; validateBtn.disabled=false; };
+      d.onclick=()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle=oi;
+        validateBtn.disabled=false;
+      };
       optionsEl.appendChild(d);
     });
   }
@@ -702,7 +852,13 @@ function renderQuestion(i, resetAttempts=true){
     const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
-      d.onclick=()=>{ sfxClick(); [...optionsEl.children].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); selectedSingle=oi; validateBtn.disabled=false; };
+      d.onclick=()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle=oi;
+        validateBtn.disabled=false;
+      };
       optionsEl.appendChild(d);
     });
   }
@@ -726,7 +882,10 @@ function renderQuestion(i, resetAttempts=true){
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
     box.innerHTML = `
-      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div><input id="shortInput" class="form-control" type="text" placeholder="Écris ici…" style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" /><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
+      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
+      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
     const inp = box.querySelector("#shortInput");
@@ -743,62 +902,43 @@ function renderQuestion(i, resetAttempts=true){
     q.options.forEach((opt, oi)=>{
       const card = document.createElement("div");
       card.className = "imgCard";
-
       card.innerHTML = `
         <div class="imgHead">
           <div>Option ${opt.label}</div>
           <div class="imgTag">${opt.label}</div>
         </div>
-
         <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
-
-        <div class="imgCap">
-          ${opt.caption}
-        </div>
+        <div class="imgCap">${opt.caption}</div>
       `;
-
       card.onclick = ()=>{
         sfxClick();
         [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
         card.classList.add("sel");
         selectedSingle = oi;
         validateBtn.disabled = false;
-        validateBtn.removeAttribute("disabled");
       };
-
       grid.appendChild(card);
     });
 
     optionsEl.appendChild(grid);
   }
-  
+
   if(type==="hotspot"){
     clearBtn.style.display="inline-block";
-
-    // Message clair (où cliquer)
-    const msg = document.createElement("div");
-    msg.className="pill";
-    msg.style.marginBottom="10px";
-    msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
-    optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="820px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
 
-    wrap.innerHTML = q.svg
-      ? q.svg
-      : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
-
+    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
     optionsEl.appendChild(wrap);
 
-    // Layer zones cliquables
     const zones = document.createElement("div");
     zones.style.position="absolute";
     zones.style.inset="0";
@@ -806,8 +946,6 @@ function renderQuestion(i, resetAttempts=true){
     wrap.appendChild(zones);
 
     selectedSingle = null;
-    // Le bouton Valider reste géré par la logique générale, mais on le laisse actif.
-    validateBtn.disabled = false;
 
     (q.hotspots||[]).forEach((h, hi)=>{
       const z = document.createElement("button");
@@ -817,7 +955,6 @@ function renderQuestion(i, resetAttempts=true){
       z.style.top  = h.y + "%";
       z.style.width = h.w + "%";
       z.style.height= h.h + "%";
-      z.style.borderRadius = (h.r||16) + "px";
       z.style.pointerEvents="auto";
 
       z.onclick=()=>{
@@ -825,30 +962,21 @@ function renderQuestion(i, resetAttempts=true){
         [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
         z.classList.add("sel");
         selectedSingle = hi;
-        validateBtn.disabled = false; // ✅ important
+        validateBtn.disabled = false;
       };
       zones.appendChild(z);
     });
   }
 
-
   if(type==="drag_order"){
     clearBtn.style.display="inline-block";
-    // Instructions
-    const note = document.createElement("div");
-    note.className="pill";
-    note.style.marginBottom="10px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-    optionsEl.appendChild(note);
 
     const list = document.createElement("div");
     list.id="dragList";
     list.style.display="grid";
     list.style.gap="10px";
 
-    // shuffle initial display slightly (keep simple)
     const items = [...q.items];
-    // Basic shuffle
     for(let k=items.length-1;k>0;k--){
       const j=Math.floor(Math.random()*(k+1));
       [items[k],items[j]]=[items[j],items[k]];
@@ -859,9 +987,15 @@ function renderQuestion(i, resetAttempts=true){
       row.className="opt";
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+      row.innerHTML = `
+        <div class="dragRow">
+          <div style="font-weight:950;">${it.text}</div>
+          <div class="dragTag">glisser</div>
+        </div>
+      `;
       list.appendChild(row);
     });
+
     optionsEl.appendChild(list);
 
     let dragSrc = null;
@@ -879,28 +1013,30 @@ function renderQuestion(i, resetAttempts=true){
     });
     list.addEventListener("dragover",(e)=>{
       e.preventDefault();
-      e.dataTransfer.dropEffect="move";
       const over = e.target.closest("[draggable='true']");
       if(!over || !dragSrc || over===dragSrc) return;
       const rect = over.getBoundingClientRect();
-      const before = (e.clientY - rect.top) < rect.height/3;
+      const before = (e.clientY - rect.top) < rect.height/2;
       list.insertBefore(dragSrc, before ? over : over.nextSibling);
     });
     list.addEventListener("drop",(e)=>{
       e.preventDefault();
-      validateBtn.disabled=false; // allow validate after any interaction
+      validateBtn.disabled=false;
     });
+
+    validateBtn.disabled=false; // ordre existe toujours
   }
 
   if(type==="cloze"){
     clearBtn.style.display="inline-block";
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
-    const html = q.template
-      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
-      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris un chiffre (ex: 10) et un mot.</div>`;
+    const html = (q.template||"")
+      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
     optionsEl.appendChild(box);
+
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
       inp.addEventListener("input", ()=>{
@@ -911,59 +1047,50 @@ function renderQuestion(i, resetAttempts=true){
     });
   }
 
-  hudQnum.textContent = String(i+1);
   startTimer();
 }
 
-clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
+/* ======= Clear ======= */
+clearBtn.onclick = ()=>{
+  sfxClick();
+  renderQuestion(idx);
+};
 
+/* ======= Validation ======= */
 validateBtn.onclick = ()=>{
-  if(locked) return;
+  if(locked || paused) return;
 
   const q = questions[idx];
   const type = q.type;
 
-  // Si l'utilisateur clique "Valider" sans avoir encore répondu,
-  // on affiche juste un petit rappel sans pénaliser ni arrêter le timer.
   const needSelection = (msg)=>{
     sfxClick();
-    showOverlay("warn", msg, {allowRetry:true, allowNext:false, missionFail:false});
-    // On ferme l'overlay et on reprend le timer (sans compter comme tentative)
-    retryBtn.style.display="none";
-    nextBtn.style.display="none";
-    okBtn.style.display="inline-block"; okBtn.classList.add("show");
-    okBtn.textContent="OK";
-    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
+    showOverlay("warn", msg, {allowRetry:false, allowNext:false, allowOk:true});
+    return true;
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
-    if(selectedSingle===null){ needSelection("Choisis une réponse avant de valider."); return; }
+    if(selectedSingle===null) return needSelection("Choisis une réponse avant de valider.");
   }
   if(type==="multi"){
-    if(multiSelected.size===0){ needSelection("Sélectionne au moins une proposition avant de valider."); return; }
+    if(multiSelected.size===0) return needSelection("Sélectionne au moins une proposition avant de valider.");
   }
   if(type==="short"){
-    if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
+    if((inputValue||"").trim().length===0) return needSelection("Écris une réponse avant de valider.");
   }
   if(type==="cloze"){
     const filled = q.blanks.every(b => ((clozeValues[b.key]||"").trim().length>0));
-    if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
-  }
-  if(type==="drag_order"){
-    // On autorise toujours, car l'ordre existe, mais on conseille d'ajuster si besoin
+    if(!filled) return needSelection("Complète tous les trous avant de valider.");
   }
 
   stopTimer();
   locked=true;
 
-
   if(type==="single"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     evaluateOption(q.options[selectedSingle]); return;
   }
 
   if(type==="tf"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
     evaluateOption(opt); return;
   }
@@ -974,12 +1101,12 @@ validateBtn.onclick = ()=>{
     const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
-      failedAttempt(q.badFb || "❌ Incorrect.");
+      registerFailure(q.badFb || "❌ Incorrect.");
     }
     return;
   }
@@ -990,44 +1117,41 @@ validateBtn.onclick = ()=>{
     const ok = accepted.includes(norm);
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
-      failedAttempt(q.badFb || "❌ Réponse incorrecte.");
+      registerFailure(q.badFb || "❌ Réponse incorrecte.");
     }
     return;
   }
 
   if(type==="image_single"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     evaluateOption(q.options[selectedSingle]); return;
   }
+
   if(type==="hotspot"){
-    if(selectedSingle===null){ locked=false; startTimer(); return; }
     const h = (q.hotspots||[])[selectedSingle];
     if(!h){ locked=false; startTimer(); return; }
 
     if(h.kind==="ok"){
       addScore(h.pts ?? 10);
-      showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else if(h.kind==="critical"){
       addStress(STRESS_RULES.critical);
       addScore(h.pts ?? -10);
       sfxCritical(); motion("critical");
-      failedAttempt(h.fb || "🚨 Erreur critique.");
+      registerFailure(h.fb || "🚨 Erreur critique.", true);
     }else{
       addStress(STRESS_RULES.wrong);
       addScore(h.pts ?? 0);
       sfxWrong(); motion("wrong");
-      failedAttempt(h.fb || "❌ Incorrect.");
+      registerFailure(h.fb || "❌ Incorrect.");
     }
     return;
   }
-
-
 
   if(type==="drag_order"){
     const list = document.getElementById("dragList");
@@ -1035,12 +1159,12 @@ validateBtn.onclick = ()=>{
     const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
-      failedAttempt(q.badFb || "❌ Ordre incorrect.");
+      registerFailure(q.badFb || "❌ Ordre incorrect.");
     }
     return;
   }
@@ -1049,51 +1173,62 @@ validateBtn.onclick = ()=>{
     const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
-      failedAttempt(q.badFb || "❌ Texte incorrect.");
+      registerFailure(q.badFb || "❌ Texte incorrect.");
     }
     return;
   }
 };
 
+/* ======= Evaluation ======= */
 function evaluateOption(opt){
   if(opt.kind==="ok"){
     addScore(opt.pts ?? 10);
-    showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-    sfxCorrect(); motion("good"); return;
+    sfxCorrect(); motion("good");
+    showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, allowOk:false});
+    return;
   }
   if(opt.kind==="critical"){
     addStress(STRESS_RULES.critical);
     addScore(opt.pts ?? -10);
     sfxCritical(); motion("critical");
-    failedAttempt(opt.fb || "🚨 Erreur critique."); return;
+    registerFailure(opt.fb || "🚨 Erreur critique.", true);
+    return;
   }
   if(opt.kind==="partial"){
     addStress(STRESS_RULES.wrong);
     addScore(opt.pts ?? 3);
     sfxWrong(); motion("wrong");
-    failedAttempt(opt.fb || "🟡 Partiel."); return;
+    registerFailure(opt.fb || "🟡 Partiel.");
+    return;
   }
   addStress(STRESS_RULES.wrong);
   sfxWrong(); motion("wrong");
-  failedAttempt(opt.fb || "❌ Incorrect.");
+  registerFailure(opt.fb || "❌ Incorrect.");
 }
 
-function failedAttempt(baseMsg){
-  attemptsForCurrentQuestion++; setAttemptsUI();
-  if(attemptsForCurrentQuestion >= 4){
+/* ======= Tentatives (structure demandée : 3 max) ======= */
+function registerFailure(baseMsg, isCritical=false){
+  attemptsUsed++;
+  setAttemptsUI();
+
+  if(attemptsUsed >= MAX_ATTEMPTS){
     sfxAlarmLong();
-    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
+    missionFail(`🚨 ${baseMsg}\n\n❌ 3 tentatives utilisées. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`, {allowRetry:true, allowNext:false, missionFail:false});
+
+  const left = MAX_ATTEMPTS - attemptsUsed;
+  const txt = `${baseMsg} (Tentatives ${attemptsUsed}/${MAX_ATTEMPTS} — reste ${left})`;
+  showOverlay("warn", txt, {allowRetry:true, allowNext:false, allowOk:false});
 }
 
-function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
+/* ======= Overlays ======= */
+function showOverlay(kind, text, {allowRetry, allowNext, allowOk}){
   badgeState.className="badgeState";
   if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
   if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
@@ -1104,43 +1239,61 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
 
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
   nextBtn.style.display  = allowNext  ? "inline-block" : "none";
-  nextBtn.classList.toggle("show", !!allowNext);
 
-  okBtn.style.display="none"; okBtn.onclick=null;
+  okBtn.style.display = allowOk ? "inline-block" : "none";
+  okBtn.classList.toggle("show", allowOk);
 
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
-  nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
-
-  if(missionFail){
-    retryBtn.style.display="none"; nextBtn.style.display="none";
-    okBtn.style.display="inline-block"; okBtn.classList.add("show");
-    okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
-  }
+  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; paused=false; startTimer(); };
+  nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx); else endScenario(); };
+  okBtn.onclick    = ()=>{ hideOverlay(); locked=false; paused=false; startTimer(); };
 }
 function hideOverlay(){ overlay.style.display="none"; }
-function missionFail(message){ stopTimer(); showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
+
+function missionFail(message){
+  stopTimer();
+  locked=true;
+  showOverlay("bad", message, {allowRetry:false, allowNext:false, allowOk:true});
+  motion("critical");
+  okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
+}
+
 function resetMission(showStart=true){
   stopTimer();
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
+  idx=0;
+  attemptsUsed=0; setAttemptsUI();
   setScore(0); setStress(0);
+
+  hintsLeft = MAX_HINTS;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
+  setHintsUI();
+
   locked=true;
+  paused=false;
+  pauseBtn.textContent="⏸ Pause";
+
+  progressBar.style.width="0%";
+
   if(showStart) startOverlay.style.display="flex";
 }
 
-function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-
+/* ======= Corrigé (popup) ======= */
+function escapeHtml(str){
+  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
 function buildAnswerKey(){
   const rows = questions.map((q, i)=>{
     let ans = "";
-    if(q.type==="single" || q.type==="image_single"){
+    if(q.type==="single"){
       const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? q.options[oi].text || ("Option "+q.options[oi].label) : "—";
-      if(q.type==="image_single") ans = (q.options[oi].label + " — " + q.options[oi].caption);
+      ans = oi>=0 ? q.options[oi].text : "—";
+    }else if(q.type==="image_single"){
+      const oi = q.options.findIndex(o=>o.kind==="ok");
+      ans = oi>=0 ? (q.options[oi].label + " — " + q.options[oi].caption) : "—";
     }else if(q.type==="tf"){
       ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
-      const a = q.options.map((o,idx)=>o.correct?o.text:null).filter(Boolean);
-      ans = a.join(" ; ");
+      ans = q.options.filter(o=>o.correct).map(o=>o.text).join(" ; ");
     }else if(q.type==="short"){
       ans = (q.answers||[]).join(" / ");
     }else if(q.type==="drag_order"){
@@ -1148,47 +1301,85 @@ function buildAnswerKey(){
       ans = q.expected.map(id=>map[id]).join(" → ");
     }else if(q.type==="cloze"){
       ans = q.blanks.map(b=>b.answer).join(" | ");
-    }else{
-      ans = "—";
+    }else if(q.type==="hotspot"){
+      ans = "Zone correcte (hotspot)";
     }
-    return `<tr><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td><td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td></tr>`;
+    return `
+      <tr>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:56px; color: rgba(255,255,255,.75);">Q${i+1}</td>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td>
+      </tr>
+    `;
   }).join("");
-  return `<div style="margin-top:14px;"><div style="font-weight:950; font-size:16px; margin-bottom:8px;">📘 Corrigé (bonnes réponses)</div><div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);"><table style="width:100%; border-collapse:collapse; min-width:680px;"><thead><tr><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th><th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+
+  return `
+    <div style="font-weight:950; font-size:16px; margin-bottom:10px;">Bonnes réponses</div>
+    <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
+      <table style="width:100%; border-collapse:collapse; min-width:760px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
 }
 
+showKeyBtn.addEventListener("click", ()=>{
+  if(showKeyBtn.disabled) return;
+  sfxClick();
+  answerKeyWrap.innerHTML = buildAnswerKey();
+  keyOverlay.style.display="flex";
+});
+closeKeyBtn.addEventListener("click", ()=>{
+  sfxClick();
+  keyOverlay.style.display="none";
+});
+
+/* ======= Fin scénario (active Corrigé + Terminer) ======= */
 function endScenario(){
-  stopTimer(); hideOverlay();
-  optionsEl.innerHTML=""; validateBtn.disabled=false; clearBtn.style.display="none";
+  stopTimer();
+  locked=true;
+  paused=false;
+  pauseBtn.textContent="⏸ Pause";
 
-  const badgeName = "🥈 Badge Argent — Chute (Infirmier intermédiaire)";
-  const badgeDesc = "Évaluation + priorisation : neurologique, choc, communication structurée.";
-  const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
-
-  qMeta.textContent = "Fin — Badge obtenu";
-  qTitle.textContent = "🎉 Félicitations !";
-  sfxVictory();
+  // Affichage fin simple (tu peux remplacer par ton écran BADGE si tu veux)
+  qMeta.textContent = "FIN — BADGE OBTENU";
+  qTitle.textContent = "🎉 Mission terminée";
   qDesc.innerHTML = `
-    <div style="margin-top:8px; color: rgba(255,255,255,.86);"><div style="font-weight:950; font-size:16px;">🏅 ${escapeHtml(badgeName)}</div><div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">${escapeHtml(badgeDesc)}</div><div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;"><span class="pill">⭐ Score final : <b>${score}</b></span><span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span></div>
-      </div>
+    <div style="margin-top:6px; color: rgba(255,255,255,.82); line-height:1.55;">
+      Tu as terminé le scénario <b>${escapeHtml(SCENARIO.mission)}</b>.
+      <br>Score final : <b>${score}</b> — Stress : <b>${stress}%</b>
+    </div>
   `;
 
-  // little badge visual using existing "pill" style
   optionsEl.innerHTML = `
-    <div class="opt" style="cursor:default; text-align:center;"><div style="font-size:46px; margin-bottom:4px;">🏅</div><div style="font-weight:950;">${escapeHtml(badgeName)}</div><div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Badge débloqué</div></div>
+    <div class="opt" style="cursor:default; text-align:center;">
+      <div style="font-size:46px; margin-bottom:4px;">🏅</div>
+      <div style="font-weight:950;">FIN — BADGE OBTENU</div>
+      <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Tu peux consulter le corrigé et terminer.</div>
+    </div>
   `;
 
-  // actions
-  const showKeyBtn = document.getElementById("showKeyBtn");
-  const nextBtn2 = document.getElementById("nextGeniallyBtn");
-  showKeyBtn.addEventListener("click", ()=>{
-    const wrap = document.getElementById("answerKeyWrap");
-    wrap.innerHTML = wrap.innerHTML ? "" : buildAnswerKey();
-  });
-  nextBtn2.addEventListener("click", ()=>{
-    window.location.href = NEXT_GENIALLY_URL;
-  });
+  validateBtn.disabled=true;
+  clearBtn.style.display="none";
+
+  showKeyBtn.disabled=false;
+  endBtn.style.display="inline-block";
 }
 
+/* Terminer */
+endBtn.addEventListener("click", ()=>{
+  sfxClick();
+  window.location.href = NEXT_GENIALLY_URL;
+});
+
+/* ======= Motion ======= */
 function motion(type){
   frame.classList.remove("shake","pulseGood","flashBad");
   modalBox.classList.remove("shake","pulseGood","flashBad");
@@ -1197,25 +1388,38 @@ function motion(type){
   else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
 }
 
+/* ======= Start ======= */
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // ✅ Réinitialiser le scénario (stress/score commencent toujours à 0)
+  // reset session stats
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
-  stress = 0; score = 0;
+  stress=0; score=0;
   setStress(0); setScore(0);
 
+  attemptsUsed=0; setAttemptsUI();
+
+  // reset hints for scenario (fresh run)
+  hintsLeft = MAX_HINTS;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion=false;
+  setHintsUI();
+
+  idx=0;
+  progressBar.style.width="0%";
+
   startOverlay.style.display="none";
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
-  renderQuestion(0, true);
+  locked=false;
+  renderQuestion(0);
 });
 
+/* ======= Init ======= */
 (function init(){
   locked=true;
-  qMeta.textContent = SCENARIO.label;
+  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML="Tu as <b>45 secondes</b> par question. Clique sur <b>DÉMARRER</b>.";
+  qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
   optionsEl.innerHTML="";
   hudQnum.textContent="1";
   hudTime.textContent=String(TIMER_SECONDS);
