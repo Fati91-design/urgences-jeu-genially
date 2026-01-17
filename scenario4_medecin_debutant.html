@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 4 — Accident de la voie publique — Niveau débutant — Médecin</title>
+  <title>Scénario 4 — Accident de la voie publique — Médecin</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -23,13 +23,90 @@
       --ember2: rgba(255,120,50,1);
     }
 
-    html,body{ margin:0; background: transparent; color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    html,body{
+      margin:0;
+      background: transparent;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow:hidden; /* ✅ Genially anti-scroll */
+    }
 
-    .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 18px; }
-    .wrap{ width: min(1120px, 100%); }
+    /* ====== GENIALLY STAGE ====== */
+    .stage{
+      height: 100vh;
+      padding: 10px;
+      overflow:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .wrap{
+      width: min(1120px, 100%);
+      height: 100%;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      min-height:0;
+    }
 
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    /* ====== TOP TABS ====== */
+    .topTabs{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .levelTab{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid rgba(255, 200, 150, .22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.38);
+      backdrop-filter: blur(12px);
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
+    .levelDot{
+      width: 12px; height: 12px; border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,200,80,1), rgba(255,120,50,1));
+      box-shadow: 0 0 0 5px rgba(255,200,80,.14);
+    }
+    .progressShell{
+      flex: 1;
+      min-width: 220px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .progressBar{
+      height:100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,200,80,1), rgba(255,120,50,1));
+      box-shadow: 0 10px 28px rgba(0,0,0,.18);
+      transition: width .25s ease;
+    }
+    .miniHint{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      white-space: nowrap;
+    }
 
+    /* ====== HUD ====== */
+    .hud{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
@@ -43,11 +120,11 @@
       overflow:hidden;
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
+      min-height: 96px;
     }
     .hudbox::after{
       content:"";
-      position:absolute;
-      inset:-2px;
+      position:absolute; inset:-2px;
       pointer-events:none;
       background:
         radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
@@ -55,29 +132,39 @@
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
-
+    .profile{
+      display:flex; align-items:center; gap: 14px;
+      min-width: 0;
+      position: relative; z-index:2;
+    }
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
+      width: 72px; height: 72px; border-radius: 22px; padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.35);
+      transform: scale(1.25);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
-
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
-
+    .pname{
+      font-weight: 950; font-size: 18px; line-height: 1.05;
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top: 4px;
+      font-weight: 850; font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+    }
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
@@ -86,46 +173,52 @@
       font-size: 12px;
       font-weight: 950;
       white-space: nowrap;
-      position: relative;
-      z-index:2;
+      position: relative; z-index:2;
     }
 
-    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 12px; flex-wrap: wrap; position: relative; z-index:2; }
-
+    .stats{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative; z-index:2;
+    }
     .pill{
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
+      gap: 8px;
+      padding: 9px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 13px;
+      font-size: 12px;
       white-space: nowrap;
     }
-
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
-
+    .timerPill{
+      padding: 7px 9px; gap: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
     .ring{
-      width: 40px; height: 40px; border-radius: 999px;
+      width: 34px; height: 34px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px;
+      width: 24px; height: 24px; border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 14px; font-weight: 950;
+      font-size: 12px; font-weight: 950;
     }
-
     .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 16px; font-weight: 950; }
+    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 14px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -137,7 +230,7 @@
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px;
+      width: 200px; height: 10px; border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -148,15 +241,27 @@
       transition: width .25s ease;
     }
 
+    /* ====== FRAME QUIZ ====== */
+
     .frame{
+      flex: 1;
+      min-height: 0;
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+	    display:flex;
+  flex-direction:column;
+  height: calc(100vh - 18px - 18px - 18px - 220px); 
+  /* ↑ ajuste selon ton HUD (voir notes) */
+  min-height: 520px;
     }
     .frame::after{
       content:"";
@@ -168,10 +273,24 @@
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qtitle{ position: relative; z-index:2; margin-top: 2px; font-weight: 950; font-size: clamp(18px, 2.2vw, 24px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position: relative; z-index:2; margin-top: 4px; color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.5; max-width: 980px; }
 
-    .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
+    .options{
+      position: relative; z-index:2;
+      display:flex; flex-direction:column;
+      gap: 12px;
+      margin-top: 6px;
+      overflow:auto;
+      padding-right: 6px;
+      min-height: 0;
+	  flex: 1;
+    }
+
+    /* scrollbar */
+    .options::-webkit-scrollbar{ width: 10px; }
+    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.16); border-radius: 999px; }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); border-radius: 999px; }
 
     .opt{
       border-radius: 14px;
@@ -194,7 +313,22 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    .actions{ position: relative; z-index:2; display:flex; justify-content:flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .actions{
+      position: sticky;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      align-items:center;
+	  padding-top: 12px;
+	  margin-top: 14px;
+      bottom: 0;
+    }
+
+    .actionsLeft, .actionsRight{
+      display:flex; gap: 10px; flex-wrap: wrap; align-items:center;
+    }
 
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
@@ -205,6 +339,10 @@
       font-weight: 950;
       letter-spacing: .2px;
     }
+    .btnNeo:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
 
     .btnPrimary{
       border: none;
@@ -214,15 +352,14 @@
       padding: 10px 14px;
       font-weight: 950;
       letter-spacing: .2px;
-      display:none;
     }
-    .btnPrimary.show{ display:inline-block; }
     .btnPrimary:disabled{
       opacity:.45;
       filter: grayscale(.2);
       cursor: not-allowed;
     }
 
+    /* ====== OVERLAYS ====== */
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
@@ -230,9 +367,8 @@
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
     }
-
     .modalBox{
-      width: min(760px, 92%);
+      width: min(780px, 92%);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
@@ -240,13 +376,11 @@
       overflow:hidden;
       position: relative;
     }
-
     .modalTop{
       padding: 14px 16px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
-
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
@@ -277,6 +411,7 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
 
+    /* Anim */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -301,10 +436,11 @@
 
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; }
+      .progressShell{ min-width: 100%; }
+      .stressWrap{ width: 170px; }
     }
 
-    /* Hotspot zones (cadres clignotants) */
+    /* Hotspot */
     @keyframes hsPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
       70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
@@ -326,12 +462,12 @@
       animation: none;
     }
 
-    /* ===== Q4/Q10/Q17 – Design cartes images ===== */
+    /* image_single */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:16px;
-      margin-top:12px;
+      margin-top: 6px;
     }
     @media (max-width: 900px){
       .imgGrid{ grid-template-columns: 1fr; }
@@ -369,7 +505,7 @@
     }
     .imgPic{
       width:100%;
-      aspect-ratio:4/3;
+      height: 220px;
       object-fit:cover;
       display:block;
     }
@@ -378,6 +514,17 @@
       text-align:center;
       font-weight:800;
     }
+
+    /* Key overlay table */
+    .keyClose{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight: 950;
+      cursor:pointer;
+    }
   </style>
 </head>
 
@@ -385,6 +532,23 @@
 <div class="stage">
   <div class="wrap">
 
+    <!-- TOP TABS -->
+    <div class="topTabs">
+      <div class="levelTab">
+        <span class="levelDot"></span>
+        <span id="levelTabText">DÉBUTANT</span>
+      </div>
+
+      <div class="progressShell" aria-label="progression">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+
+      <div class="miniHint" id="miniHint">
+        ⏱ <span id="miniTime">60s</span> • 🎯 <span id="miniAttempts">3</span> • 💡 <span id="miniHints">3</span>
+      </div>
+    </div>
+
+    <!-- HUD -->
     <div class="hud">
       <div class="hudbox">
         <div class="profile">
@@ -392,34 +556,38 @@
             <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
           <div class="ptext">
-            <div class="pname" id="hudName">Joueur</div>
+            <div class="pname" id="hudName">Dr. Joueur</div>
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
-        <div class="chip" id="difficultyChip">MODE: INTERMÉDIAIRE</div>
+        <div class="chip" id="difficultyChip">MODE: DÉBUTANT</div>
       </div>
 
       <div class="hudbox">
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">20</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">3</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
             <div class="timeText">
               <div class="label">Temps</div>
-              <div class="sec"><span id="hudTime">45</span>s</div>
+              <div class="sec"><span id="hudTime">60</span>s</div>
             </div>
           </div>
 
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
           </div>
+
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice (<span id="hintsLeftText">3</span>)</button>
+          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
     </div>
 
+    <!-- FRAME -->
     <div class="frame" id="frame">
       <div class="qmeta" id="qMeta">Scénario 4 — Accident de la voie publique</div>
       <div class="qtitle" id="qTitle">…</div>
@@ -428,8 +596,14 @@
       <div class="options" id="options"></div>
 
       <div class="actions">
-        <button class="btnPrimary show" id="validateBtn" type="button">Valider</button>
-        <button class="btnNeo" id="clearBtn" style="display:none;">Effacer</button>
+        <div class="actionsLeft">
+          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+        </div>
+        <div class="actionsRight">
+          <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+          <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+        </div>
       </div>
     </div>
 
@@ -447,12 +621,8 @@
     </div>
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
-      <div class="startText">
-        Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
-        <br><br>
-        <b>Si le temps s’écoule ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
-        <br>
-        Es-tu prêt à commencer ?
+      <div class="startText" id="startRules">
+        …
       </div>
     </div>
     <div class="modalActions">
@@ -461,7 +631,7 @@
   </div>
 </div>
 
-<!-- Feedback overlay -->
+<!-- FEEDBACK overlay -->
 <div class="overlay" id="overlay">
   <div class="modalBox" id="modalBox">
     <div class="modalTop">
@@ -479,8 +649,43 @@
   </div>
 </div>
 
+<!-- HINT overlay -->
+<div class="overlay" id="hintOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">💡 Indice</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+          Indices restants : <span id="hintOverlayLeft">3</span>
+        </div>
+        <button class="keyClose" id="hintCloseBtn">X</button>
+      </div>
+    </div>
+    <div class="modalBody" id="hintText">…</div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="hintOkBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- KEY overlay -->
+<div class="overlay" id="keyOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bGood">📘 Corrigé</div>
+      <button class="keyClose" id="keyCloseBtn">X</button>
+    </div>
+    <div class="modalBody" id="keyBody">
+      …
+    </div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="keyOkBtn">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ========= SCENARIO ENGINE (Design Genially-like) ========= */
+/* ========= SFX (WebAudio) ========= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.08, type="sine", gain=0.05){
@@ -495,19 +700,6 @@ function tone(freq, dur=0.08, type="sine", gain=0.05){
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
 function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
-
-function sfxVictory(){
-  ensureAudio();
-  const notes = [
-    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
-    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
-  ];
-  let t = 0;
-  notes.forEach((n)=>{
-    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
-    t += n.d + 0.03;
-  });
-}
 function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
 function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
 function sfxAlarmLong(){
@@ -525,61 +717,340 @@ function sfxAlarmLong(){
   osc.connect(g); g.connect(audioCtx.destination);
   osc.start(now); osc.stop(now + 1.25);
 }
+function sfxVictory(){
+  const notes = [
+    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
+    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
+  ];
+  let t = 0;
+  notes.forEach((n)=>{
+    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
+    t += n.d + 0.03;
+  });
+}
 
+/* ========= HELPERS ========= */
 const el = (id)=>document.getElementById(id);
-const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
-const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts"), hudAttemptsMax = el("hudAttemptsMax");
-const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
-const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
-const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
-const startOverlay = el("startOverlay"), startBtn = el("startBtn");
-const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
-const modalScore = el("modalScore"), modalStress = el("modalStress");
-const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
+const clamp = (n,a,b)=> Math.max(a, Math.min(b,n));
+const escapeHtml = (str)=> String(str)
+  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
 
-/* ======= CONFIG ======= */
+/* ========= DOM ========= */
+const levelTabText = el("levelTabText");
+const progressBar = el("progressBar");
+const miniTime = el("miniTime");
+const miniAttempts = el("miniAttempts");
+const miniHints = el("miniHints");
+
+const hudName = el("hudName");
+const hudRole = el("hudRole");
+const hudAvatar = el("hudAvatar");
+const difficultyChip = el("difficultyChip");
+
+const hudScore = el("hudScore");
+const hudQnum = el("hudQnum");
+const hudQtotal = el("hudQtotal");
+const hudAttempts = el("hudAttempts");
+const hudAttemptsMax = el("hudAttemptsMax");
+
+const hudTime = el("hudTime");
+const ring = el("ring");
+const timerPill = el("timerPill");
+const stressBar = el("stressBar");
+
+const hintsLeftText = el("hintsLeftText");
+const hintBtn = el("hintBtn");
+const pauseBtn = el("pauseBtn");
+
+const qMeta = el("qMeta");
+const qTitle = el("qTitle");
+const qDesc  = el("qDesc");
+const optionsEl = el("options");
+
+const validateBtn = el("validateBtn");
+const clearBtn = el("clearBtn");
+const showKeyBtn = el("showKeyBtn");
+const endBtn = el("endBtn");
+
+const startOverlay = el("startOverlay");
+const startBtn = el("startBtn");
+const startRules = el("startRules");
+
+const overlay = el("overlay");
+const modalBox = el("modalBox");
+const badgeState = el("badgeState");
+const modalText = el("modalText");
+const modalScore = el("modalScore");
+const modalStress = el("modalStress");
+const retryBtn = el("retryBtn");
+const nextBtn = el("nextBtn");
+const okBtn = el("okBtn");
+
+const hintOverlay = el("hintOverlay");
+const hintOverlayLeft = el("hintOverlayLeft");
+const hintText = el("hintText");
+const hintOkBtn = el("hintOkBtn");
+const hintCloseBtn = el("hintCloseBtn");
+
+const keyOverlay = el("keyOverlay");
+const keyBody = el("keyBody");
+const keyCloseBtn = el("keyCloseBtn");
+const keyOkBtn = el("keyOkBtn");
+
+const frame = el("frame");
+
+/* ========= CONFIG ========= */
 const SCENARIO = {
   id: 4,
   label: "Scénario 4 — Accident de la voie publique",
-  profile: "Médecin",
-  mission: "AVP multi‑victimes",
-  level: "Niveau débutant"
+  mission: "AVP multi-victimes",
+  level: "—"
 };
 
-// Lien "Suivant" (à remplacer par ton lien Genially)
-const NEXT_GENIALLY_URL = "#";
-
-// Timer 45 sec
-const TIMER_SECONDS = 60;
-const MAX_ATTEMPTS = 3;
-
-// Stress
-const STRESS_RULES = {
-  wrong: 10,
-  timeout: 15,
-  critical: 25
-};
+// ✅ Scénario suivant (Genially) — remplace par ton vrai lien
+const NEXT_SCENARIO_URL = "#";
 
 const role = "medecin";
-const playerName = localStorage.getItem("playerName") || "Joueur";
-const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-hudName.textContent = playerName;
+/* ========= DIFFICULTY RULES ========= */
+function normalizeDifficulty(raw){
+  const v = String(raw||"").trim().toLowerCase();
+  if(v.includes("expert")) return "expert";
+  if(v.includes("inter")) return "intermediaire";
+  if(v.includes("moy")) return "intermediaire";
+  if(v.includes("debut")) return "debutant";
+  if(v.includes("début")) return "debutant";
+  if(v === "1") return "debutant";
+  if(v === "2") return "intermediaire";
+  if(v === "3") return "expert";
+  return "debutant";
+}
+function difficultyLabel(diff){
+  if(diff==="expert") return "EXPERT";
+  if(diff==="intermediaire") return "INTERMÉDIAIRE";
+  return "DÉBUTANT";
+}
+function rulesForDifficulty(diff){
+  if(diff==="expert") return { seconds: 30, attempts: 1, hints: 1 };
+  if(diff==="intermediaire") return { seconds: 45, attempts: 2, hints: 2 };
+  return { seconds: 60, attempts: 3, hints: 3 };
+}
+
+/* ========= INPUTS (player, avatar, difficulty) ========= */
+const playerName =
+  window.player_name ||
+  window.playerName ||
+  localStorage.getItem("player_name") ||
+  localStorage.getItem("playerName") ||
+  localStorage.getItem("playerName".toLowerCase()) ||
+  "Joueur";
+
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
+
+const difficultyRaw =
+  window.niveau ||
+  localStorage.getItem("niveau") ||
+  localStorage.getItem("difficulty") ||
+  "debutant";
+
+const difficulty = normalizeDifficulty(difficultyRaw);
+const RULES = rulesForDifficulty(difficulty);
+
+SCENARIO.level = "Niveau " + difficultyLabel(difficulty).toLowerCase();
+
+levelTabText.textContent = difficultyLabel(difficulty);
+difficultyChip.textContent = "MODE: " + difficultyLabel(difficulty);
+
+miniTime.textContent = RULES.seconds + "s";     // miniHint
+miniAttempts.textContent = String(RULES.attempts);
+miniHints.textContent = String(RULES.hints);
+
+hudName.textContent = "Dr. " + playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
-difficultyChip.textContent = "MODE: DÉBUTANT";
 
+/* ========= STORAGE ========= */
+const HINT_KEY = `hints_left_s${SCENARIO.id}`;
+const BADGE_KEY = `badge_s${SCENARIO.id}_${difficulty}`;
+const HISTORY_KEY = "badges_history";
+
+/* ========= STATE ========= */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
 if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;  // 1 = 1ère tentative, 2 = 2ème tentative
 let locked = true;
+let paused = false;
+
 let timerId = null;
-let timeLeft = TIMER_SECONDS;
+let timeLeft = RULES.seconds;
+
+let attemptsForCurrentQuestion = 1; // affichage (par question)
+let missionErrors = 0;              // global mission
+let missionTimeouts = 0;            // global mission
+
+let hintsLeft = (() => {
+  const v = parseInt(localStorage.getItem(HINT_KEY), 10);
+  if(isNaN(v)) return RULES.hints;
+  return clamp(v, 0, RULES.hints);
+})();
+
+let hintUsedThisQuestion = false;
+
+/* ========= UI SYNC ========= */
+function setScore(v){
+  score = v;
+  localStorage.setItem("score", String(score));
+  hudScore.textContent = String(score);
+  modalScore.textContent = String(score);
+}
+function addScore(d){ setScore(score + d); }
+function setStress(v){
+  stress = clamp(v,0,100);
+  localStorage.setItem("stress", String(stress));
+  stressBar.style.width = stress + "%";
+  modalStress.textContent = String(stress);
+}
+function addStress(d){ setStress(stress + d); }
+
+function setHintsLeft(v){
+  hintsLeft = clamp(v, 0, RULES.hints);
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintsLeftText.textContent = String(hintsLeft);
+  hintOverlayLeft.textContent = String(hintsLeft);
+  miniHints.textContent = String(hintsLeft);
+  hintBtn.disabled = (hintsLeft<=0) || hintUsedThisQuestion || locked || paused || ended;
+}
+
+function setAttemptsUI(){
+  hudAttempts.textContent = String(attemptsForCurrentQuestion);
+  hudAttemptsMax.textContent = String(RULES.attempts);
+  miniAttempts.textContent = String(RULES.attempts);
+}
+
+function setProgress(){
+  const p = Math.round((idx / TOTAL) * 100);
+  progressBar.style.width = clamp(p,0,100) + "%";
+}
+
+function setRingProgress(){
+  const p = clamp(Math.round((timeLeft / RULES.seconds) * 100), 0, 100);
+  ring.style.setProperty("--p", p + "%");
+  timerPill.classList.remove("timerWarn","timerDanger");
+  if(timeLeft <= 5) timerPill.classList.add("timerDanger");
+  else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
+}
+
+function updateButtonsEnabled(){
+  pauseBtn.disabled = locked || ended;
+  hintBtn.disabled = (hintsLeft<=0) || hintUsedThisQuestion || locked || paused || ended;
+  showKeyBtn.disabled = !ended; // ✅ activé seulement à la fin
+}
+
+/* ========= TIMER ========= */
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+function startTimer(){
+  stopTimer();
+  timeLeft = RULES.seconds;
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
+
+  timerId = setInterval(()=>{
+    if(locked || paused || ended) return;
+    timeLeft--;
+    hudTime.textContent = String(timeLeft);
+    setRingProgress();
+    if(timeLeft <= 0){
+      stopTimer();
+      sfxAlarmLong();
+      missionTimeouts++;
+      addStress(STRESS_RULES.timeout);
+
+      attemptsForCurrentQuestion++;
+      setAttemptsUI();
+
+      if(missionTimeouts >= RULES.attempts){
+        missionFail(`⏱️ Temps écoulé trop de fois (${missionTimeouts}/${RULES.attempts}). Mission échouée. Retour au départ… (score remis à zéro)`);
+        return;
+      }
+
+      if(attemptsForCurrentQuestion > RULES.attempts){
+        missionFail(`⏱️ Trop de tentatives sur cette question. Mission échouée. Retour au départ… (score remis à zéro)`);
+        return;
+      }
+
+      showOverlay("warn", `⏱️ Temps écoulé. (Timeout ${missionTimeouts}/${RULES.attempts})`, {allowRetry:true, allowNext:false, missionFail:false});
+    }
+  }, 1000);
+}
+
+/* ========= OVERLAYS ========= */
+function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
+  badgeState.className="badgeState";
+  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
+  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
+  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+
+  modalText.textContent = text;
+  overlay.style.display="flex";
+
+  retryBtn.style.display = allowRetry ? "inline-block" : "none";
+  nextBtn.style.display  = allowNext  ? "inline-block" : "none";
+  okBtn.style.display = "none";
+
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    locked=false;
+    paused=false;
+    startTimer();
+  };
+
+  nextBtn.onclick = ()=>{
+    hideOverlay();
+    idx++;
+    if(idx < TOTAL) renderQuestion(idx, true);
+    else endScenario();
+  };
+
+  if(missionFail){
+    retryBtn.style.display="none";
+    nextBtn.style.display="none";
+    okBtn.style.display="inline-block";
+    okBtn.textContent="OK";
+    okBtn.onclick = ()=>{
+      hideOverlay();
+      resetMission(true);
+    };
+  }
+}
+function hideOverlay(){ overlay.style.display="none"; }
+
+function showHintOverlay(text){
+  hintText.innerHTML = text;
+  hintOverlay.style.display = "flex";
+}
+function hideHintOverlay(){ hintOverlay.style.display="none"; }
+
+function showKeyOverlay(html){
+  keyBody.innerHTML = html;
+  keyOverlay.style.display = "flex";
+}
+function hideKeyOverlay(){ keyOverlay.style.display="none"; }
+
+/* ========= MOTION ========= */
+function motion(type){
+  frame.classList.remove("shake","pulseGood","flashBad");
+  modalBox.classList.remove("shake","pulseGood","flashBad");
+  if(type==="good"){ frame.classList.add("pulseGood"); }
+  else if(type==="wrong"){ modalBox.classList.add("shake"); }
+  else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
+}
+
+/* ========= STRESS ========= */
+const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
 
 /* ========= QUESTIONS ========= */
 const questions = [
@@ -588,26 +1059,10 @@ const questions = [
     "title": "Briefing médecin — arrivée sur AVP",
     "desc": "En tant que médecin, quelle est ta toute première priorité avant tout geste médical ?",
     "options": [
-      {
-        "text": "Commencer immédiatement une intubation sur la première victime",
-        "kind": "wrong",
-        "fb": "❌ Trop tôt : d’abord sécurité de la scène + triage."
-      },
-      {
-        "text": "Sécuriser la scène (risques) puis organiser le triage",
-        "kind": "ok",
-        "fb": "✅ Oui : sécurité + triage avant les gestes spécialisés."
-      },
-      {
-        "text": "Rassembler les témoins pour reconstituer l’accident",
-        "kind": "wrong",
-        "fb": "❌ Utile plus tard, pas en priorité."
-      },
-      {
-        "text": "Donner des antalgiques à tous les blessés",
-        "kind": "wrong",
-        "fb": "❌ Avant tout : triage + menaces vitales."
-      }
+      { "text": "Commencer immédiatement une intubation sur la première victime", "kind": "wrong", "fb": "❌ Trop tôt : d’abord sécurité de la scène + triage." },
+      { "text": "Sécuriser la scène (risques) puis organiser le triage", "kind": "ok", "fb": "✅ Oui : sécurité + triage avant les gestes spécialisés." },
+      { "text": "Rassembler les témoins pour reconstituer l’accident", "kind": "wrong", "fb": "❌ Utile plus tard, pas en priorité." },
+      { "text": "Donner des antalgiques à tous les blessés", "kind": "wrong", "fb": "❌ Avant tout : triage + menaces vitales." }
     ]
   },
   {
@@ -615,22 +1070,10 @@ const questions = [
     "title": "Menaces vitales (ABCDE)",
     "desc": "Sélectionne les menaces vitales immédiates à traiter en priorité :",
     "options": [
-      {
-        "text": "Hémorragie massive",
-        "correct": true
-      },
-      {
-        "text": "Absence/inefficacité respiratoire",
-        "correct": true
-      },
-      {
-        "text": "Douleur isolée sans détresse",
-        "correct": false
-      },
-      {
-        "text": "Altération de conscience",
-        "correct": true
-      }
+      { "text": "Hémorragie massive", "correct": true },
+      { "text": "Absence/inefficacité respiratoire", "correct": true },
+      { "text": "Douleur isolée sans détresse", "correct": false },
+      { "text": "Altération de conscience", "correct": true }
     ],
     "okFb": "✅ Correct : A/B + hémorragie + conscience.",
     "badFb": "❌ Priorité : respiration + hémorragie + conscience."
@@ -640,14 +1083,8 @@ const questions = [
     "title": "Zone dangereuse",
     "desc": "Tu dois sécuriser la zone AVANT d’approcher une victime.",
     "tf": {
-      "trueOpt": {
-        "kind": "ok",
-        "fb": "✅ Oui : sécurité scène prioritaire."
-      },
-      "falseOpt": {
-        "kind": "wrong",
-        "fb": "❌ Non : on sécurise avant d’intervenir."
-      },
+      "trueOpt": { "kind": "ok", "fb": "✅ Oui : sécurité scène prioritaire." },
+      "falseOpt": { "kind": "wrong", "fb": "❌ Non : on sécurise avant d’intervenir." },
       "correct": true
     },
     "okFb": "✅ Correct.",
@@ -658,27 +1095,9 @@ const questions = [
     "title": "Triage START — priorité IMMEDIATE",
     "desc": "Choisis l’image correspondant à une victime en détresse vitale (IMMEDIATE).",
     "options": [
-      {
-        "label": "A",
-        "imgSrc": "assets/avp_q4_b.png",
-        "kind": "ok",
-        "fb": "✅ Détresse respiratoire = IMMEDIATE.",
-        "caption": "Inconscient / respiration anormale"
-      },
-      {
-        "label": "B",
-        "imgSrc": "assets/avp_q4_a.png",
-        "kind": "wrong",
-        "fb": "❌ Non : victime stable pour l’instant.",
-        "caption": "Conscient / respiration normale"
-      },
-      {
-        "label": "C",
-        "imgSrc": "assets/avp_q4_c.png",
-        "kind": "wrong",
-        "fb": "❌ Non : priorité après contrôle simple.",
-        "caption": "Conscient / hémorragie externe contrôlable"
-      }
+      { "label": "A", "imgSrc": "assets/avp_q4_b.png", "kind": "ok", "fb": "✅ Détresse respiratoire = IMMEDIATE.", "caption": "Inconscient / respiration anormale" },
+      { "label": "B", "imgSrc": "assets/avp_q4_a.png", "kind": "wrong", "fb": "❌ Non : victime stable pour l’instant.", "caption": "Conscient / respiration normale" },
+      { "label": "C", "imgSrc": "assets/avp_q4_c.png", "kind": "wrong", "fb": "❌ Non : priorité après contrôle simple.", "caption": "Conscient / hémorragie externe contrôlable" }
     ]
   },
   {
@@ -686,26 +1105,10 @@ const questions = [
     "title": "Hémorragie massive",
     "desc": "Chez une victime qui saigne abondamment, le geste immédiat le plus efficace est :",
     "options": [
-      {
-        "text": "Compression directe forte + pansement compressif",
-        "kind": "ok",
-        "fb": "✅ Oui : stopper le saignement immédiatement."
-      },
-      {
-        "text": "Nettoyer longuement avec antiseptique",
-        "kind": "wrong",
-        "fb": "❌ Perte de temps, priorité au contrôle du saignement."
-      },
-      {
-        "text": "Mettre de la glace sur la plaie",
-        "kind": "wrong",
-        "fb": "❌ Insuffisant en hémorragie massive."
-      },
-      {
-        "text": "Attendre l’arrivée d’une équipe spécialisée",
-        "kind": "wrong",
-        "fb": "❌ Il faut agir tout de suite."
-      }
+      { "text": "Compression directe forte + pansement compressif", "kind": "ok", "fb": "✅ Oui : stopper le saignement immédiatement." },
+      { "text": "Nettoyer longuement avec antiseptique", "kind": "wrong", "fb": "❌ Perte de temps, priorité au contrôle du saignement." },
+      { "text": "Mettre de la glace sur la plaie", "kind": "wrong", "fb": "❌ Insuffisant en hémorragie massive." },
+      { "text": "Attendre l’arrivée d’une équipe spécialisée", "kind": "wrong", "fb": "❌ Il faut agir tout de suite." }
     ]
   },
   {
@@ -713,22 +1116,10 @@ const questions = [
     "title": "Alerte médicale structurée",
     "desc": "Pour une alerte efficace au SAMU/SMUR, tu transmets :",
     "options": [
-      {
-        "text": "Localisation précise + accès",
-        "correct": true
-      },
-      {
-        "text": "Nombre de victimes + gravité (triage)",
-        "correct": true
-      },
-      {
-        "text": "Couleur des véhicules",
-        "correct": false
-      },
-      {
-        "text": "Risques persistants (feu, trafic, électrique)",
-        "correct": true
-      }
+      { "text": "Localisation précise + accès", "correct": true },
+      { "text": "Nombre de victimes + gravité (triage)", "correct": true },
+      { "text": "Couleur des véhicules", "correct": false },
+      { "text": "Risques persistants (feu, trafic, électrique)", "correct": true }
     ],
     "okFb": "✅ Oui : lieu + nb/gravité + risques.",
     "badFb": "❌ Attendu : lieu + nb/gravité + risques."
@@ -739,14 +1130,8 @@ const questions = [
     "desc": "Complète 2 informations essentielles à transmettre :",
     "template": "Mécanisme : <b>{blank1}</b> • Nb victimes : <b>{blank2}</b>.",
     "blanks": [
-      {
-        "key": "blank1",
-        "answer": "haute énergie"
-      },
-      {
-        "key": "blank2",
-        "answer": "3"
-      }
+      { "key": "blank1", "answer": "haute énergie" },
+      { "key": "blank2", "answer": "3" }
     ],
     "okFb": "✅ Parfait : mécanisme + nombre de victimes.",
     "badFb": "❌ Attendu : haute énergie / 3."
@@ -754,16 +1139,10 @@ const questions = [
   {
     "type": "tf",
     "title": "Boisson (piège)",
-    "desc": "Peux‑tu donner à boire à une victime polytraumatisée consciente ?",
+    "desc": "Peux-tu donner à boire à une victime polytraumatisée consciente ?",
     "tf": {
-      "trueOpt": {
-        "kind": "wrong",
-        "fb": "❌ Non : risque d’aspiration et chirurgie/anesthésie possible."
-      },
-      "falseOpt": {
-        "kind": "ok",
-        "fb": "✅ Correct : pas de boisson. Rassurer et surveiller."
-      },
+      "trueOpt": { "kind": "wrong", "fb": "❌ Non : risque d’aspiration et chirurgie/anesthésie possible." },
+      "falseOpt": { "kind": "ok", "fb": "✅ Correct : pas de boisson. Rassurer et surveiller." },
       "correct": false
     },
     "okFb": "✅ Bonne réponse.",
@@ -776,33 +1155,9 @@ const questions = [
     "desc": "Clique la zone associée à la priorité A (voies aériennes / tête-cou).",
     "imgSrc": "scenario_4_hotspot_q_9.png",
     "hotspots": [
-      {
-        "label": "cou/tête",
-        "x": 25,
-        "y": 48,
-        "w": 12,
-        "h": 16,
-        "kind": "ok",
-        "fb": "✅ Oui : tête/cou = A + protection cervicale."
-      },
-      {
-        "label": "jambe",
-        "x": 52,
-        "y": 78,
-        "w": 12,
-        "h": 16,
-        "kind": "wrong",
-        "fb": "❌ Ici, on vise la zone A : tête/cou."
-      },
-      {
-        "label": "bras",
-        "x": 52,
-        "y": 50,
-        "w": 12,
-        "h": 16,
-        "kind": "wrong",
-        "fb": "❌ Ici, on vise la zone A : tête/cou."
-      }
+      { "label": "cou/tête", "x": 25, "y": 48, "w": 12, "h": 16, "kind": "ok", "fb": "✅ Oui : tête/cou = A + protection cervicale." },
+      { "label": "jambe", "x": 52, "y": 78, "w": 12, "h": 16, "kind": "wrong", "fb": "❌ Ici, on vise la zone A : tête/cou." },
+      { "label": "bras", "x": 52, "y": 50, "w": 12, "h": 16, "kind": "wrong", "fb": "❌ Ici, on vise la zone A : tête/cou." }
     ]
   },
   {
@@ -810,27 +1165,9 @@ const questions = [
     "title": "Décision clinique immédiate (médecin)",
     "desc": "Choisis la conduite la plus sûre (polytraumatisé) :",
     "options": [
-      {
-        "label": "A",
-        "imgSrc": "assets/avp_q4_a.png",
-        "kind": "wrong",
-        "fb": "❌ Non : risque d’aggraver une lésion rachidienne.",
-        "caption": "Mobilisation non contrôlée"
-      },
-      {
-        "label": "B",
-        "imgSrc": "assets/avp_q4_c.png",
-        "kind": "ok",
-        "fb": "✅ Maintien axe tête‑cou‑tronc + surveillance + alerte.",
-        "caption": "Maintien axe tête‑cou‑tronc + surveillance + alerte"
-      },
-      {
-        "label": "C",
-        "imgSrc": "assets/avp_q4_b.png",
-        "kind": "wrong",
-        "fb": "❌ Non : priorité aux gestes vitaux/immobilisation, pas de manoeuvre inadaptée.",
-        "caption": "Geste inadapté / non prioritaire"
-      }
+      { "label": "A", "imgSrc": "assets/avp_q4_a.png", "kind": "wrong", "fb": "❌ Non : risque d’aggraver une lésion rachidienne.", "caption": "Mobilisation non contrôlée" },
+      { "label": "B", "imgSrc": "assets/avp_q4_c.png", "kind": "ok", "fb": "✅ Maintien axe tête-cou-tronc + surveillance + alerte.", "caption": "Maintien axe tête-cou-tronc + surveillance + alerte" },
+      { "label": "C", "imgSrc": "assets/avp_q4_b.png", "kind": "wrong", "fb": "❌ Non : priorité aux gestes vitaux/immobilisation, pas de manoeuvre inadaptée.", "caption": "Geste inadapté / non prioritaire" }
     ]
   },
   {
@@ -838,22 +1175,10 @@ const questions = [
     "title": "Surveillance médicale",
     "desc": "Quels paramètres sont prioritaires à surveiller ?",
     "options": [
-      {
-        "text": "Conscience (GCS/AVPU)",
-        "correct": true
-      },
-      {
-        "text": "Respiration (FR/qualité)",
-        "correct": true
-      },
-      {
-        "text": "Perfusion / saignements",
-        "correct": true
-      },
-      {
-        "text": "Couleur des yeux",
-        "correct": false
-      }
+      { "text": "Conscience (GCS/AVPU)", "correct": true },
+      { "text": "Respiration (FR/qualité)", "correct": true },
+      { "text": "Perfusion / saignements", "correct": true },
+      { "text": "Couleur des yeux", "correct": false }
     ],
     "okFb": "✅ Conscience/respiration/perfusion.",
     "badFb": "❌ Attendu : conscience + respiration + perfusion."
@@ -863,26 +1188,10 @@ const questions = [
     "title": "Oxygène",
     "desc": "Tu administres de l’oxygène en priorité si :",
     "options": [
-      {
-        "text": "Victime stable, FR normale",
-        "kind": "wrong",
-        "fb": "❌ Non prioritaire."
-      },
-      {
-        "text": "Détresse respiratoire / SpO₂ basse si mesurée",
-        "kind": "ok",
-        "fb": "✅ Oui : O₂ si détresse/SpO₂ basse."
-      },
-      {
-        "text": "Douleur isolée",
-        "kind": "wrong",
-        "fb": "❌ Pas une indication seule."
-      },
-      {
-        "text": "Sur demande d’un témoin",
-        "kind": "wrong",
-        "fb": "❌ Non."
-      }
+      { "text": "Victime stable, FR normale", "kind": "wrong", "fb": "❌ Non prioritaire." },
+      { "text": "Détresse respiratoire / SpO₂ basse si mesurée", "kind": "ok", "fb": "✅ Oui : O₂ si détresse/SpO₂ basse." },
+      { "text": "Douleur isolée", "kind": "wrong", "fb": "❌ Pas une indication seule." },
+      { "text": "Sur demande d’un témoin", "kind": "wrong", "fb": "❌ Non." }
     ]
   },
   {
@@ -890,14 +1199,8 @@ const questions = [
     "title": "Casque",
     "desc": "On retire un casque systématiquement après AVP.",
     "tf": {
-      "trueOpt": {
-        "kind": "wrong",
-        "fb": "❌ Faux : on évite sans indication (risque rachis)."
-      },
-      "falseOpt": {
-        "kind": "ok",
-        "fb": "✅ Exact : seulement si nécessaire/selon protocole."
-      },
+      "trueOpt": { "kind": "wrong", "fb": "❌ Faux : on évite sans indication (risque rachis)." },
+      "falseOpt": { "kind": "ok", "fb": "✅ Exact : seulement si nécessaire/selon protocole." },
       "correct": false
     },
     "okFb": "✅ Exact.",
@@ -908,22 +1211,10 @@ const questions = [
     "title": "Erreur critique",
     "desc": "Sélectionne l’action dangereuse :",
     "options": [
-      {
-        "text": "Relever une victime sans immobilisation",
-        "correct": true
-      },
-      {
-        "text": "Couvrir et isoler du sol",
-        "correct": false
-      },
-      {
-        "text": "Compression d’hémorragie massive",
-        "correct": false
-      },
-      {
-        "text": "Alerte précoce structurée",
-        "correct": false
-      }
+      { "text": "Relever une victime sans immobilisation", "correct": true },
+      { "text": "Couvrir et isoler du sol", "correct": false },
+      { "text": "Compression d’hémorragie massive", "correct": false },
+      { "text": "Alerte précoce structurée", "correct": false }
     ],
     "okFb": "🚨 Oui : relever sans immobiliser = erreur critique.",
     "badFb": "❌ L’erreur critique est de relever sans immobiliser."
@@ -935,33 +1226,9 @@ const questions = [
     "desc": "Clique la zone à immobiliser en priorité :",
     "imgSrc": "scenario_4_hotspot_q_15.png",
     "hotspots": [
-      {
-        "label": "rachis",
-        "x": 60,
-        "y": 54,
-        "w": 10,
-        "h": 35,
-        "kind": "ok",
-        "fb": "✅ Oui : rachis/colonne vertébrale."
-      },
-      {
-        "label": "genou",
-        "x": 65,
-        "y": 90,
-        "w": 12,
-        "h": 12,
-        "kind": "wrong",
-        "fb": "❌ Zone critique : rachis."
-      },
-      {
-        "label": "épaule",
-        "x": 52,
-        "y": 40,
-        "w": 12,
-        "h": 12,
-        "kind": "wrong",
-        "fb": "❌ Zone critique : rachis."
-      }
+      { "label": "rachis", "x": 60, "y": 54, "w": 10, "h": 35, "kind": "ok", "fb": "✅ Oui : rachis/colonne vertébrale." },
+      { "label": "genou", "x": 65, "y": 90, "w": 12, "h": 12, "kind": "wrong", "fb": "❌ Zone critique : rachis." },
+      { "label": "épaule", "x": 52, "y": 40, "w": 12, "h": 12, "kind": "wrong", "fb": "❌ Zone critique : rachis." }
     ]
   },
   {
@@ -969,26 +1236,10 @@ const questions = [
     "title": "Hypothermie",
     "desc": "Pour limiter le choc, tu dois en priorité :",
     "options": [
-      {
-        "text": "Couvrir et isoler du sol",
-        "kind": "ok",
-        "fb": "✅ Oui : prévenir l’hypothermie."
-      },
-      {
-        "text": "Laisser à l’air",
-        "kind": "wrong",
-        "fb": "❌ Risque d’hypothermie."
-      },
-      {
-        "text": "Mettre debout",
-        "kind": "wrong",
-        "fb": "❌ Dangereux."
-      },
-      {
-        "text": "Donner boisson chaude",
-        "kind": "wrong",
-        "fb": "❌ Interdit en polytrauma."
-      }
+      { "text": "Couvrir et isoler du sol", "kind": "ok", "fb": "✅ Oui : prévenir l’hypothermie." },
+      { "text": "Laisser à l’air", "kind": "wrong", "fb": "❌ Risque d’hypothermie." },
+      { "text": "Mettre debout", "kind": "wrong", "fb": "❌ Dangereux." },
+      { "text": "Donner boisson chaude", "kind": "wrong", "fb": "❌ Interdit en polytrauma." }
     ]
   },
   {
@@ -996,37 +1247,16 @@ const questions = [
     "title": "Geste sûr — prévention hypothermie",
     "desc": "Quelle image montre le meilleur geste :",
     "options": [
-      {
-        "label": "A",
-        "imgSrc": "assets/avp_q17_a.png",
-        "kind": "wrong",
-        "fb": "❌ Non.",
-        "caption": "Victime non protégée"
-      },
-      {
-        "label": "B",
-        "imgSrc": "assets/avp_q17_c.png",
-        "kind": "wrong",
-        "fb": "❌ Non.",
-        "caption": "Exposition au froid"
-      },
-      {
-        "label": "C",
-        "imgSrc": "assets/avp_q17_b.png",
-        "kind": "ok",
-        "fb": "✅ Couvrir/isoler = bon geste.",
-        "caption": "Couvrir / isoler (prévenir hypothermie)"
-      }
+      { "label": "A", "imgSrc": "assets/avp_q17_a.png", "kind": "wrong", "fb": "❌ Non.", "caption": "Victime non protégée" },
+      { "label": "B", "imgSrc": "assets/avp_q17_c.png", "kind": "wrong", "fb": "❌ Non.", "caption": "Exposition au froid" },
+      { "label": "C", "imgSrc": "assets/avp_q17_b.png", "kind": "ok", "fb": "✅ Couvrir/isoler = bon geste.", "caption": "Couvrir / isoler (prévenir hypothermie)" }
     ]
   },
   {
     "type": "short",
     "title": "Numéro médical",
-    "desc": "Quel numéro appelles‑tu pour l’aide médicale urgente ? (1 nombre)",
-    "answer": "15",
-    "answers": [
-      "15"
-    ],
+    "desc": "Quel numéro appelles-tu pour l’aide médicale urgente ? (1 nombre)",
+    "answers": ["15"],
     "okFb": "✅ 15.",
     "badFb": "❌ Attendu : 15."
   },
@@ -1035,14 +1265,8 @@ const questions = [
     "title": "Réévaluation",
     "desc": "En attendant le SAMU, tu réévalues régulièrement l’état des victimes.",
     "tf": {
-      "trueOpt": {
-        "kind": "ok",
-        "fb": "✅ Vrai : réévaluer jusqu’à l’arrivée des secours."
-      },
-      "falseOpt": {
-        "kind": "wrong",
-        "fb": "❌ Faux : surveillance continue obligatoire."
-      },
+      "trueOpt": { "kind": "ok", "fb": "✅ Vrai : réévaluer jusqu’à l’arrivée des secours." },
+      "falseOpt": { "kind": "wrong", "fb": "❌ Faux : surveillance continue obligatoire." },
       "correct": true
     },
     "okFb": "✅ Vrai.",
@@ -1053,127 +1277,84 @@ const questions = [
     "title": "Décision finale",
     "desc": "Avant l’arrivée du SMUR, la priorité médicale la plus pertinente est :",
     "options": [
-      {
-        "text": "Réévaluer ABC + surveiller signes de choc",
-        "kind": "ok",
-        "fb": "✅ Priorité : réévaluation + choc."
-      },
-      {
-        "text": "Soins de confort",
-        "kind": "wrong",
-        "fb": "❌ Secondaire."
-      },
-      {
-        "text": "Déplacer les victimes",
-        "kind": "wrong",
-        "fb": "❌ Dangereux."
-      },
-      {
-        "text": "Attendre sans intervenir",
-        "kind": "wrong",
-        "fb": "❌ Non."
-      }
+      { "text": "Réévaluer ABC + surveiller signes de choc", "kind": "ok", "fb": "✅ Priorité : réévaluation + choc." },
+      { "text": "Soins de confort", "kind": "wrong", "fb": "❌ Secondaire." },
+      { "text": "Déplacer les victimes", "kind": "wrong", "fb": "❌ Dangereux." },
+      { "text": "Attendre sans intervenir", "kind": "wrong", "fb": "❌ Non." }
     ]
   }
 ];
+
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
-function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-function setScore(v){ score=v; localStorage.setItem("score", String(score)); hudScore.textContent=String(score); modalScore.textContent=String(score); }
-function addScore(d){ setScore(score + d); }
-function setStress(v){
-  stress=clamp(v,0,100);
-  localStorage.setItem("stress", String(stress));
-  stressBar.style.width=stress+"%";
-  modalStress.textContent=String(stress);
-}
-function addStress(d){ setStress(stress + d); }
-function setAttemptsUI(){ hudAttempts.textContent = String(attemptsForCurrentQuestion); if(hudAttemptsMax) hudAttemptsMax.textContent = String(MAX_ATTEMPTS); }
-
-setScore(score); setStress(stress); setAttemptsUI();
-
-function setRingProgress(){
-  const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
-  ring.style.setProperty("--p", p + "%");
-  timerPill.classList.remove("timerWarn","timerDanger");
-  if(timeLeft <= 5) timerPill.classList.add("timerDanger");
-  else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
-}
-function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
-function startTimer(){
-  stopTimer();
-  timeLeft = TIMER_SECONDS;
-  hudTime.textContent = String(timeLeft);
-  setRingProgress();
-  timerId = setInterval(()=>{
-    if(locked) return;
-    timeLeft--;
-    hudTime.textContent = String(timeLeft);
-    setRingProgress();
-    if(timeLeft <= 0){
-      stopTimer();
-      sfxAlarmLong();
-      // Timeout = mauvaise réponse + stress
-      addStress(STRESS_RULES.timeout);
-      attemptsForCurrentQuestion++;
-      setAttemptsUI();
-
-      if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
-        missionFail("⏱️ Temps écoulé. Mission échouée. Retour au départ… (score remis à zéro)");
-      }else{
-        showOverlay("warn", `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${MAX_ATTEMPTS})`, {allowRetry:true, allowNext:false, missionFail:false});
-      }
-    }
-  }, 1000);
-}
-
-/* ======= SELECTION STATE ======= */
+/* ========= SELECTION STATE ========= */
 let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
 let clozeValues = {};
+let ended = false;
 
-function resetState(){
-  selectedSingle=null;
+/* ========= RENDER HELPERS ========= */
+function resetSelection(){
+  selectedSingle = null;
   multiSelected.clear();
-  inputValue="";
-  clozeValues={};
-  validateBtn.disabled=false;
+  inputValue = "";
+  clozeValues = {};
+  validateBtn.disabled = true;
+  hintUsedThisQuestion = false;
+  setHintsLeft(hintsLeft);
 }
 
 function mkOpt(text){
   const d = document.createElement("div");
-  d.className="opt";
-  d.textContent=text;
+  d.className = "opt";
+  d.textContent = text;
   return d;
 }
 
 function renderQuestion(i, resetAttempts=true){
-  locked=false;
+  ended = false;
+  locked = false;
+  paused = false;
+
   stopTimer();
   hideOverlay();
-  if(resetAttempts){ attemptsForCurrentQuestion=1; setAttemptsUI(); }
-  resetState();
+  hideHintOverlay();
+  hideKeyOverlay();
+
+  if(resetAttempts){
+    attemptsForCurrentQuestion = 1;
+    setAttemptsUI();
+  }
+
+  resetSelection();
+  updateButtonsEnabled();
 
   const q = questions[i];
-  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
+
+  qMeta.textContent = `${SCENARIO.label} • ${difficultyLabel(difficulty)} • ${roleLabelMap[role] || "—"}`;
   qTitle.textContent = q.title || "—";
   qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
+  setProgress();
+  hudQnum.textContent = String(i+1);
+
+  // Render type
   const type = q.type;
 
   if(type==="single"){
     q.options.forEach((opt, oi)=>{
       const d = mkOpt(opt.text);
-      d.onclick=()=>{
+      d.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
-        selectedSingle=oi;
-        validateBtn.disabled=false;
+        selectedSingle = oi;
+        validateBtn.disabled = false;
       };
       optionsEl.appendChild(d);
     });
@@ -1183,25 +1364,30 @@ function renderQuestion(i, resetAttempts=true){
     const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
-      d.onclick=()=>{
+      d.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
-        selectedSingle=oi;
-        validateBtn.disabled=false;
+        selectedSingle = oi;
+        validateBtn.disabled = false;
       };
       optionsEl.appendChild(d);
     });
   }
 
   if(type==="multi"){
-    clearBtn.style.display="inline-block";
+    clearBtn.style.display = "inline-block";
     q.options.forEach((opt, oi)=>{
-      const d=mkOpt(opt.text);
-      d.onclick=()=>{
+      const d = mkOpt(opt.text);
+      d.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
-        if(multiSelected.has(oi)){ multiSelected.delete(oi); d.classList.remove("sel"); }
-        else { multiSelected.add(oi); d.classList.add("sel"); }
+        if(multiSelected.has(oi)){
+          multiSelected.delete(oi); d.classList.remove("sel");
+        }else{
+          multiSelected.add(oi); d.classList.add("sel");
+        }
         validateBtn.disabled = (multiSelected.size===0);
       };
       optionsEl.appendChild(d);
@@ -1209,9 +1395,10 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="short"){
-    clearBtn.style.display="inline-block";
+    clearBtn.style.display = "inline-block";
     const box = document.createElement("div");
-    box.className="opt"; box.style.cursor="default";
+    box.className = "opt";
+    box.style.cursor = "default";
     box.innerHTML = `
       <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
       <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
@@ -1222,63 +1409,56 @@ function renderQuestion(i, resetAttempts=true){
     const inp = box.querySelector("#shortInput");
     inp.addEventListener("input", ()=>{
       inputValue = inp.value;
-      validateBtn.disabled = (inp.value.trim().length===0);
+      validateBtn.disabled = (inp.value.trim().length===0) || locked || paused;
     });
-    validateBtn.disabled = true;
   }
 
   if(type==="image_single"){
     const grid = document.createElement("div");
     grid.className = "imgGrid";
-
     q.options.forEach((opt, oi)=>{
       const card = document.createElement("div");
       card.className = "imgCard";
-
       card.innerHTML = `
         <div class="imgHead">
-          <div>Option ${opt.label}</div>
-          <div class="imgTag">${opt.label}</div>
+          <div>Option ${escapeHtml(opt.label || String(oi+1))}</div>
+          <div class="imgTag">${escapeHtml(opt.label || String(oi+1))}</div>
         </div>
-        <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
-        <div class="imgCap">${opt.caption || ""}</div>
+        <img class="imgPic" src="${escapeHtml(opt.imgSrc)}" alt="Option ${escapeHtml(opt.label||"")}" />
+        <div class="imgCap">${escapeHtml(opt.caption || "")}</div>
       `;
-
       card.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
         [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
         card.classList.add("sel");
         selectedSingle = oi;
         validateBtn.disabled = false;
       };
-
       grid.appendChild(card);
     });
-
     optionsEl.appendChild(grid);
-    validateBtn.disabled = true;
   }
 
   if(type==="hotspot"){
-    clearBtn.style.display="inline-block";
+    clearBtn.style.display = "inline-block";
 
     const msg = document.createElement("div");
     msg.className="pill";
-    msg.style.marginBottom="10px";
+    msg.style.marginBottom="6px";
     msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
     optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="720px";
+    wrap.style.maxWidth="640px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-
-    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+    wrap.innerHTML = `<img src="${escapeHtml(q.imgSrc||"")}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
     optionsEl.appendChild(wrap);
 
     const zones = document.createElement("div");
@@ -1299,9 +1479,9 @@ function renderQuestion(i, resetAttempts=true){
       z.style.width = h.w + "%";
       z.style.height= h.h + "%";
       z.style.borderRadius = (h.r||16) + "px";
-      z.style.pointerEvents="auto";
 
-      z.onclick=()=>{
+      z.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
         [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
         z.classList.add("sel");
@@ -1315,43 +1495,108 @@ function renderQuestion(i, resetAttempts=true){
   if(type==="cloze"){
     clearBtn.style.display="inline-block";
     const box = document.createElement("div");
-    box.className="opt"; box.style.cursor="default";
-    const html = q.template
+    box.className="opt";
+    box.style.cursor="default";
+
+    const html = (q.template||"")
       .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
       .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-    box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : exemple "10".</div>`;
+
+    box.innerHTML = `<div style="line-height:1.9;">${html}</div>
+      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : exemple "10".</div>`;
     optionsEl.appendChild(box);
+
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
       inp.addEventListener("input", ()=>{
         clozeValues[inp.dataset.k] = inp.value;
-        const filled = q.blanks.every(b => (clozeValues[b.key]||"").trim().length>0);
-        validateBtn.disabled = !filled;
+        const filled = (q.blanks||[]).every(b => (clozeValues[b.key]||"").trim().length>0);
+        validateBtn.disabled = !filled || locked || paused;
       });
     });
-    validateBtn.disabled = true;
   }
 
-  hudQnum.textContent = String(i+1);
+  // reset clear
+  clearBtn.onclick = ()=>{
+    if(locked || paused) return;
+    sfxClick();
+    renderQuestion(idx, false);
+  };
+
+  // buttons enabled
+  updateButtonsEnabled();
+
+  // timer
   startTimer();
 }
 
-clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
+/* ========= EVALUATION ========= */
+function failedAttempt(baseMsg){
+  attemptsForCurrentQuestion++;
+  setAttemptsUI();
+
+  // Global mission error count
+  missionErrors++;
+
+  if(missionErrors >= RULES.attempts){
+    sfxAlarmLong();
+    missionFail(`❌ Trop d’erreurs (${missionErrors}/${RULES.attempts}). Mission échouée. Retour au départ… (score remis à zéro)`);
+    return;
+  }
+
+  if(attemptsForCurrentQuestion > RULES.attempts){
+    sfxAlarmLong();
+    missionFail(`❌ Tentatives épuisées sur cette question. Mission échouée. Retour au départ… (score remis à zéro)`);
+    return;
+  }
+
+  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${RULES.attempts})`, {allowRetry:true, allowNext:false, missionFail:false});
+}
+
+function evaluateOption(opt){
+  if(opt.kind==="ok"){
+    addScore(opt.pts ?? 10);
+    sfxCorrect();
+    motion("good");
+    showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    return;
+  }
+  if(opt.kind==="critical"){
+    addStress(STRESS_RULES.critical);
+    addScore(opt.pts ?? -10);
+    sfxCritical();
+    motion("critical");
+    failedAttempt(opt.fb || "🚨 Erreur critique.");
+    return;
+  }
+  // wrong/partial
+  addStress(STRESS_RULES.wrong);
+  sfxWrong();
+  motion("wrong");
+  failedAttempt(opt.fb || "❌ Incorrect.");
+}
 
 validateBtn.onclick = ()=>{
-  if(locked) return;
+  if(locked || paused || ended) return;
 
   const q = questions[idx];
   const type = q.type;
 
   const needSelection = (msg)=>{
     sfxClick();
+    stopTimer();
+    locked = true;
     showOverlay("warn", msg, {allowRetry:false, allowNext:false, missionFail:false});
     retryBtn.style.display="none";
     nextBtn.style.display="none";
-    okBtn.style.display="inline-block"; okBtn.classList.add("show");
+    okBtn.style.display="inline-block";
     okBtn.textContent="OK";
-    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
+    okBtn.onclick = ()=>{
+      hideOverlay();
+      locked=false;
+      startTimer();
+      updateButtonsEnabled();
+    };
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
@@ -1364,12 +1609,13 @@ validateBtn.onclick = ()=>{
     if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
   }
   if(type==="cloze"){
-    const filled = q.blanks.every(b => ((clozeValues[b.key]||"").trim().length>0));
+    const filled = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().length>0));
     if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
   }
 
   stopTimer();
-  locked=true;
+  locked = true;
+  updateButtonsEnabled();
 
   if(type==="single"){
     evaluateOption(q.options[selectedSingle]); return;
@@ -1380,14 +1626,24 @@ validateBtn.onclick = ()=>{
     evaluateOption(opt); return;
   }
 
+  if(type==="image_single"){
+    evaluateOption(q.options[selectedSingle]); return;
+  }
+
+  if(type==="hotspot"){
+    const h = (q.hotspots||[])[selectedSingle];
+    if(!h){ locked=false; startTimer(); return; }
+    evaluateOption(h); return;
+  }
+
   if(type==="multi"){
     const chosen=[...multiSelected].sort((a,b)=>a-b);
-    const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+    const correctIdx=(q.options||[]).map((o,i)=>o.correct?i:null).filter(v=>v!==null);
     const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
@@ -1402,8 +1658,8 @@ validateBtn.onclick = ()=>{
     const ok = accepted.includes(norm);
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, missionFail:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
@@ -1412,38 +1668,12 @@ validateBtn.onclick = ()=>{
     return;
   }
 
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
-
-  if(type==="hotspot"){
-    const h = (q.hotspots||[])[selectedSingle];
-    if(!h){ locked=false; startTimer(); return; }
-
-    if(h.kind==="ok"){
-      addScore(h.pts ?? 10);
-      showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-      sfxCorrect(); motion("good");
-    }else if(h.kind==="critical"){
-      addStress(STRESS_RULES.critical);
-      addScore(h.pts ?? -10);
-      sfxCritical(); motion("critical");
-      failedAttempt(h.fb || "🚨 Erreur critique.");
-    }else{
-      addStress(STRESS_RULES.wrong);
-      addScore(h.pts ?? 0);
-      sfxWrong(); motion("wrong");
-      failedAttempt(h.fb || "❌ Incorrect.");
-    }
-    return;
-  }
-
   if(type==="cloze"){
-    const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
+    const ok = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === String(b.answer||"").trim().toLowerCase()));
     if(ok){
       addScore(10);
-      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
       sfxCorrect(); motion("good");
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
     }else{
       addStress(STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
@@ -1453,77 +1683,148 @@ validateBtn.onclick = ()=>{
   }
 };
 
-function evaluateOption(opt){
-  if(opt.kind==="ok"){
-    addScore(opt.pts ?? 10);
-    showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-    sfxCorrect(); motion("good"); return;
+/* ========= HINT SYSTEM (1 / question) ========= */
+function computeHintForQuestion(q){
+  // Affiche la BONNE réponse (comme “indice sur la réponse”)
+  if(q.hint) return `🧠 <b>Indice :</b> ${escapeHtml(q.hint)}`;
+
+  if(q.type==="single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    return `🧠 <b>Indice :</b> la bonne réponse est :<br><br>✅ <b>${escapeHtml(ok ? ok.text : "—")}</b>`;
   }
-  if(opt.kind==="critical"){
-    addStress(STRESS_RULES.critical);
-    addScore(opt.pts ?? -10);
-    sfxCritical(); motion("critical");
-    failedAttempt(opt.fb || "🚨 Erreur critique."); return;
+
+  if(q.type==="tf"){
+    const okIsTrue = (q.tf && q.tf.trueOpt && q.tf.trueOpt.kind==="ok");
+    return `🧠 <b>Indice :</b> la bonne réponse est :<br><br>✅ <b>${okIsTrue ? "Vrai" : "Faux"}</b>`;
   }
-  if(opt.kind==="partial"){
-    addStress(STRESS_RULES.wrong);
-    addScore(opt.pts ?? 3);
-    sfxWrong(); motion("wrong");
-    failedAttempt(opt.fb || "🟡 Partiel."); return;
+
+  if(q.type==="multi"){
+    const goods = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
+    return `🧠 <b>Indice :</b> sélectionne :<br><br>✅ <b>${escapeHtml(goods.join(" ; ") || "—")}</b>`;
   }
-  addStress(STRESS_RULES.wrong);
-  sfxWrong(); motion("wrong");
-  failedAttempt(opt.fb || "❌ Incorrect.");
+
+  if(q.type==="short"){
+    const a = (q.answers||[])[0] || "—";
+    return `🧠 <b>Indice :</b> la réponse attendue est : <b>${escapeHtml(a)}</b>`;
+  }
+
+  if(q.type==="cloze"){
+    const a = (q.blanks||[]).map(b=>b.answer).join(" | ");
+    return `🧠 <b>Indice :</b> les mots attendus sont :<br><br>✅ <b>${escapeHtml(a || "—")}</b>`;
+  }
+
+  if(q.type==="image_single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    return `🧠 <b>Indice :</b> choisis :<br><br>✅ <b>Option ${escapeHtml(ok ? ok.label : "—")}</b> — ${escapeHtml(ok ? (ok.caption||"") : "")}`;
+  }
+
+  if(q.type==="hotspot"){
+    const ok = (q.hotspots||[]).find(h=>h.kind==="ok");
+    return `🧠 <b>Indice :</b> clique la zone : <b>${escapeHtml(ok ? ok.label : "—")}</b>`;
+  }
+
+  return `🧠 <b>Indice :</b> réfléchis aux priorités (sécurité, ABCDE, triage).`;
 }
 
-function failedAttempt(baseMsg){
-  attemptsForCurrentQuestion++;
-  setAttemptsUI();
+hintBtn.onclick = ()=>{
+  if(locked || paused || ended) return;
+  if(hintsLeft <= 0) return;
+  if(hintUsedThisQuestion) return;
 
-  if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
-    sfxAlarmLong();
-    missionFail("❌ Tentatives épuisées. Mission échouée. Retour au départ… (score remis à zéro)");
-    return;
+  ensureAudio();
+  sfxClick();
+
+  // consume
+  hintUsedThisQuestion = true;
+  setHintsLeft(hintsLeft - 1);
+
+  // pause timer
+  paused = true;
+  updateButtonsEnabled();
+
+  const q = questions[idx];
+  showHintOverlay(computeHintForQuestion(q));
+};
+
+hintOkBtn.onclick = ()=>{
+  hideHintOverlay();
+  paused = false;
+  updateButtonsEnabled();
+};
+hintCloseBtn.onclick = hintOkBtn.onclick;
+
+/* ========= PAUSE ========= */
+pauseBtn.onclick = ()=>{
+  if(locked || ended) return;
+  ensureAudio(); sfxClick();
+  paused = !paused;
+
+  if(paused){
+    // use overlay feedback style for pause
+    stopTimer();
+    showOverlay("warn", "⏸ Pause. Clique sur OK pour reprendre.", {allowRetry:false, allowNext:false, missionFail:false});
+    retryBtn.style.display="none";
+    nextBtn.style.display="none";
+    okBtn.style.display="inline-block";
+    okBtn.textContent="OK";
+    okBtn.onclick = ()=>{
+      hideOverlay();
+      paused = false;
+      locked = false;
+      startTimer();
+      updateButtonsEnabled();
+    };
+  }else{
+    hideOverlay();
+    locked = false;
+    startTimer();
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${MAX_ATTEMPTS})`, {allowRetry:true, allowNext:false, missionFail:false});
+
+  updateButtonsEnabled();
+};
+
+/* ========= MISSION FAIL / RESET ========= */
+function missionFail(message){
+  stopTimer();
+  locked = true;
+  paused = false;
+  updateButtonsEnabled();
+  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
+  motion("critical");
 }
 
-function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
-  badgeState.className="badgeState";
-  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
-  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
-  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
-
-  modalText.textContent = text;
-  overlay.style.display="flex";
-
-  retryBtn.style.display = allowRetry ? "inline-block" : "none";
-  nextBtn.style.display  = allowNext  ? "inline-block" : "none";
-  nextBtn.classList.toggle("show", !!allowNext);
-
-  okBtn.style.display="none"; okBtn.onclick=null;
-
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
-  nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
-
-  if(missionFail){
-    retryBtn.style.display="none"; nextBtn.style.display="none";
-    okBtn.style.display="inline-block"; okBtn.classList.add("show");
-    okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
-  }
-}
-function hideOverlay(){ overlay.style.display="none"; }
-function missionFail(message){ stopTimer(); showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
 function resetMission(showStart=true){
   stopTimer();
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
-  setScore(0); setStress(0);
-  locked=true;
-  if(showStart) startOverlay.style.display="flex";
+  idx = 0;
+  attemptsForCurrentQuestion = 1;
+  missionErrors = 0;
+  missionTimeouts = 0;
+  hintUsedThisQuestion = false;
+
+  setScore(0);
+  setStress(0);
+  setHintsLeft(RULES.hints);
+
+  locked = true;
+  paused = false;
+  ended = false;
+
+  setProgress();
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(RULES.seconds);
+  ring.style.setProperty("--p","100%");
+  setRingProgress();
+
+  validateBtn.disabled = true;
+  clearBtn.style.display = "none";
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+
+  if(showStart) startOverlay.style.display = "flex";
+  updateButtonsEnabled();
 }
 
-function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-
+/* ========= KEY / ANSWERS ========= */
 function buildAnswerKey(){
   const rows = questions.map((q, i)=>{
     let ans = "";
@@ -1532,12 +1833,12 @@ function buildAnswerKey(){
       if(q.type==="image_single"){
         ans = oi>=0 ? `${q.options[oi].label} — ${q.options[oi].caption || ""}` : "—";
       }else{
-        ans = oi>=0 ? (q.options[oi].text || ("Option "+q.options[oi].label)) : "—";
+        ans = oi>=0 ? (q.options[oi].text || "—") : "—";
       }
     }else if(q.type==="tf"){
-      ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
+      ans = (q.tf && q.tf.trueOpt && q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
-      const a = (q.options||[]).map(o=>o.correct?o.text:null).filter(Boolean);
+      const a = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
       ans = a.join(" ; ");
     }else if(q.type==="short"){
       ans = (q.answers||[]).join(" / ");
@@ -1549,101 +1850,202 @@ function buildAnswerKey(){
     }else{
       ans = "—";
     }
+
     return `<tr>
-      <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td>
+      <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:56px; color: rgba(255,255,255,.75);">Q${i+1}</td>
       <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td>
       <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td>
     </tr>`;
   }).join("");
+
   return `
-    <div style="margin-top:14px;">
-      <div style="font-weight:950; font-size:16px; margin-bottom:8px;">📘 Corrigé (bonnes réponses)</div>
-      <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
-        <table style="width:100%; border-collapse:collapse; min-width:680px;">
-          <thead>
-            <tr>
-              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
-              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
-              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
+    <div style="font-weight:950; font-size:16px; margin-bottom:10px;">📘 Corrigé (bonnes réponses)</div>
+    <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
+      <table style="width:100%; border-collapse:collapse; min-width:720px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
     </div>
   `;
 }
 
+showKeyBtn.onclick = ()=>{
+  if(!ended) return;
+  ensureAudio(); sfxClick();
+  showKeyOverlay(buildAnswerKey());
+};
+keyCloseBtn.onclick = ()=>{ hideKeyOverlay(); };
+keyOkBtn.onclick = ()=>{ hideKeyOverlay(); };
 
+/* ========= BADGE (FIN) ========= */
+function computeBadgeFromScore(score){
+  // score max théorique ≈ 20*10 = 200
+  const pct = clamp(Math.round((score / (TOTAL*10)) * 100), 0, 100);
+  if(pct >= 90) return { type:"OR", img:"assets/or.png", pct };
+  if(pct >= 70) return { type:"ARGENT", img:"assets/argent.png", pct };
+  return { type:"BRONZE", img:"assets/bronze.png", pct };
+}
+function saveBadge(badge){
+  const payload = {
+    scenarioId: SCENARIO.id,
+    mission: SCENARIO.mission,
+    niveau: difficultyLabel(difficulty),
+    badgeType: badge.type,
+    badgeName: `${badge.type} — ${SCENARIO.mission}`,
+    score,
+    img: badge.img,
+    ts: Date.now(),
+    dateISO: new Date().toISOString()
+  };
+
+  localStorage.setItem(BADGE_KEY, JSON.stringify(payload));
+
+  const prev = (() => {
+    try{ return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }
+    catch(e){ return []; }
+  })();
+  prev.push(payload);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(prev));
+}
 
 function endScenario(){
-  stopTimer(); hideOverlay();
-  optionsEl.innerHTML=""; validateBtn.disabled=false; clearBtn.style.display="none";
+  stopTimer();
+  hideOverlay();
+  hideHintOverlay();
 
-  const badgeName = "🥉 Badge Bronze — AVP (Médecin débutant)";
-  const badgeDesc = "Triage médical, décisions ABCDE, coordination et sécurité sur AVP multi‑victimes.";
+  ended = true;
+  locked = true;
+  paused = false;
+
+  // badge
+  const badge = computeBadgeFromScore(score);
+  saveBadge(badge);
+  sfxVictory();
+
+  qMeta.textContent = "FIN — BADGE OBTENU";
+  qTitle.textContent = "🎉 Félicitations !";
+
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
 
-  qMeta.textContent = "Fin — Badge obtenu";
-  qTitle.textContent = "🎉 Félicitations !";
-  sfxVictory();
   qDesc.innerHTML = `
-    <div style="margin-top:8px; color: rgba(255,255,255,.86);"><div style="font-weight:950; font-size:16px;">🏅 ${escapeHtml(badgeName)}</div><div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">${escapeHtml(badgeDesc)}</div><div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;"><span class="pill">⭐ Score final : <b>${score}</b></span><span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span></div>
+    <div style="margin-top:6px; color: rgba(255,255,255,.86);">
+      <div style="font-weight:950; font-size:16px;">🏅 Badge ${escapeHtml(badge.type)} — ${escapeHtml(SCENARIO.mission)}</div>
+      <div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">
+        Niveau : <b>${escapeHtml(difficultyLabel(difficulty))}</b> • Progression : <b>${badge.pct}%</b>
       </div>
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill">⭐ Score final : <b>${score}</b></span>
+        <span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span>
+      </div>
+    </div>
   `;
 
-  // little badge visual using existing "pill" style
   optionsEl.innerHTML = `
-    <div class="opt" style="cursor:default; text-align:center;"><div style="font-size:46px; margin-bottom:4px;">🏅</div><div style="font-weight:950;">${escapeHtml(badgeName)}</div><div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Badge débloqué</div></div>
+    <div class="opt" style="cursor:default; text-align:center;">
+      <div style="display:flex; justify-content:center; margin-bottom:10px;">
+        <img src="${escapeHtml(badge.img)}" alt="badge" style="width:110px; height:110px; object-fit:contain; filter: drop-shadow(0 18px 35px rgba(0,0,0,.55));" />
+      </div>
+      <div style="font-weight:950; font-size:16px;">Badge ${escapeHtml(badge.type)}</div>
+      <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:6px;">
+        Enregistré : <b>${escapeHtml(BADGE_KEY)}</b>
+      </div>
+    </div>
   `;
 
-  // actions
-  const showKeyBtn = document.getElementById("showKeyBtn");
-  const nextBtn2 = document.getElementById("nextGeniallyBtn");
-  showKeyBtn.addEventListener("click", ()=>{
-    const wrap = document.getElementById("answerKeyWrap");
-    wrap.innerHTML = wrap.innerHTML ? "" : buildAnswerKey();
-  });
-  nextBtn2.addEventListener("click", ()=>{
-    window.location.href = NEXT_GENIALLY_URL;
-  });
+  // buttons
+  validateBtn.disabled = true;
+  clearBtn.style.display = "none";
+  hintBtn.disabled = true;
+  pauseBtn.disabled = true;
+
+  showKeyBtn.disabled = false;
+  endBtn.style.display = "inline-block";
+
+  endBtn.onclick = ()=>{
+    ensureAudio(); sfxClick();
+    window.location.href = NEXT_SCENARIO_URL;
+  };
+
+  setProgress();
+  updateButtonsEnabled();
 }
 
-function motion(type){
-  frame.classList.remove("shake","pulseGood","flashBad");
-  modalBox.classList.remove("shake","pulseGood","flashBad");
-  if(type==="good"){ frame.classList.add("pulseGood"); }
-  else if(type==="wrong"){ modalBox.classList.add("shake"); }
-  else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
-}
-
+/* ========= START ========= */
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // ✅ Réinitialiser le scénario (stress/score commencent toujours à 0)
+  // reset always at start
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
-  stress = 0; score = 0;
-  setStress(0); setScore(0);
+  score = 0; stress = 0;
+  setScore(0); setStress(0);
+
+  missionErrors = 0;
+  missionTimeouts = 0;
+
+  // reset hints
+  localStorage.setItem(HINT_KEY, String(RULES.hints));
+  setHintsLeft(RULES.hints);
 
   startOverlay.style.display="none";
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
+  idx = 0;
+  attemptsForCurrentQuestion = 1;
+  setAttemptsUI();
+
   renderQuestion(0, true);
 });
 
+/* ========= INIT ========= */
+function renderStartRules(){
+  startRules.innerHTML = `
+    Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.<br><br>
+    <b>Règles (${escapeHtml(difficultyLabel(difficulty))})</b> :
+    <ul style="margin:10px 0 0 18px;">
+      <li><b>${RULES.seconds}s</b> par question</li>
+      <li><b>${RULES.attempts}</b> tentatives maximum</li>
+      <li><b>${RULES.hints}</b> indices pour tout le scénario</li>
+      <li><b>1 indice maximum par question</b></li>
+      <li><b>Échec mission</b> si <b>${RULES.attempts}</b> erreurs OU <b>${RULES.attempts}</b> timeouts</li>
+    </ul>
+    <div style="margin-top:10px;">
+      Es-tu prêt à commencer ?
+    </div>
+  `;
+}
+
 (function init(){
-  locked=true;
+  locked = true;
+  paused = false;
+  ended = false;
+
+  setScore(score);
+  setStress(stress);
+
+  attemptsForCurrentQuestion = 1;
+  setAttemptsUI();
+
+  setHintsLeft(hintsLeft);
+
   qMeta.textContent = SCENARIO.label;
-  qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
-  optionsEl.innerHTML="";
-  hudQnum.textContent="1";
-  hudTime.textContent=String(TIMER_SECONDS);
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = `Tu as <b>${RULES.seconds} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
+  optionsEl.innerHTML = "";
+
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(RULES.seconds);
   ring.style.setProperty("--p","100%");
   setRingProgress();
+
+  setProgress();
+  renderStartRules();
+  updateButtonsEnabled();
 })();
-
-
 </script>
 </body>
 </html>
