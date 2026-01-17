@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 3 — Chute du 2e étage — Niveau débutant — Médecin</title>
+  <title>Scénario 3 — Chute du 2e étage — Urgences</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -20,6 +20,9 @@
       --green: rgba(45,200,120,1);
       --blue: rgba(80,170,255,1);
 
+      --ember: rgba(255,150,70,1);
+      --ember2: rgba(255,120,50,1);
+
       --border: rgba(255, 200, 150, .22);
       --shadow: 0 18px 70px rgba(0,0,0,.50);
     }
@@ -27,12 +30,13 @@
     html,body{
       margin:0; background: transparent; color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow:hidden; /* important Genially */
     }
 
     .stage{ min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding: 16px 18px; }
-    .wrap{ width: min(1400px, 100%); }
+    .wrap{ width: min(1650px, 100%); }
 
-    /* ===== Top bar (comme le screenshot) ===== */
+    /* ===== Top bar ===== */
     .topTabs{
       display:flex; align-items:center; gap:14px;
       margin-bottom: 14px;
@@ -75,7 +79,7 @@
       white-space: nowrap;
     }
 
-    /* ===== HUD (2 cartes) ===== */
+    /* ===== HUD ===== */
     .hud{
       display:grid; grid-template-columns: 1fr 1fr;
       gap: 18px;
@@ -106,7 +110,7 @@
     }
 
     .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
-  .avatarFrame{
+    .avatarFrame{
       width: 92px; height: 92px; border-radius: 24px; padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
@@ -244,7 +248,6 @@
 
     .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
 
-    /* Options style (barres longues comme screenshot) */
     .opt{
       border-radius: 14px;
       padding: 14px 16px;
@@ -264,7 +267,6 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    /* Actions bas : gauche (Corrigé/Terminer) + droite (Valider/Effacer) */
     .actions{
       position: relative; z-index:2;
       display:flex; align-items:center; justify-content:space-between;
@@ -300,9 +302,10 @@
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
-      z-index: 50;
+      z-index: 2000; /* important */
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
+      pointer-events:auto;
     }
     .modalBox{
       width: min(820px, 92%);
@@ -312,6 +315,7 @@
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
       overflow:hidden;
       position: relative;
+      pointer-events:auto;
     }
     .modalTop{
       padding: 14px 16px;
@@ -345,9 +349,27 @@
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      cursor:pointer;
+      pointer-events:auto;
     }
 
-    /* ===== Key overlay (corrigé popup avec X) ===== */
+    /* Loading overlay : transparent derrière "Chargement..." */
+    .loadingOverlay{
+      background: rgba(0,0,0,0) !important;
+      backdrop-filter: none !important;
+      z-index: 2100;
+    }
+    .loadingBox{
+      border-radius: 999px;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      font-weight: 950;
+      letter-spacing: .3px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+    }
+
+    /* ===== Key overlay ===== */
     .keyHeader{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
       padding: 14px 16px;
@@ -360,6 +382,7 @@
       background: rgba(0,0,0,.18);
       color: rgba(255,255,255,.92);
       font-weight: 950;
+      cursor:pointer;
     }
     .keyBody{ padding: 16px; }
 
@@ -417,7 +440,7 @@
     .imgPic{ width:100%; height:220px; aspect-ratio:4/3; object-fit:cover; display:block; }
     .imgCap{ padding:14px; text-align:center; font-weight:800; }
 
-    /* Drag order : pas de scroll, tag (glisser) à droite */
+    /* Drag order : tag à droite */
     .dragRow{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
@@ -438,7 +461,6 @@
       .miniRules{ order: 3; width:100%; justify-content:flex-end; }
     }
 
-    /* petites animations */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -469,9 +491,9 @@
 
     <!-- TOP BAR -->
     <div class="topTabs">
-      <div class="levelPill"><span class="dot"></span> NIVEAU : <span id="levelTabText">DÉBUTANT</span></div>
+      <div class="levelPill"><span class="dot"></span> NIVEAU : <span id="levelTabText">—</span></div>
       <div class="topProgress" aria-label="progress"><div id="progressBar"></div></div>
-      <div class="miniRules" id="miniRules">⏱ 60s / question • 🎯 3 tentatives max • 💡 3 indices</div>
+      <div class="miniRules" id="miniRules">—</div>
     </div>
 
     <!-- HUD -->
@@ -482,18 +504,18 @@
             <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
           <div class="ptext">
-            <div class="pname" id="hudName">Dr. Joueur</div>
+            <div class="pname" id="hudName">Dr. —</div>
             <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
-        <div class="chip" id="difficultyChip">MODE: DÉBUTANT</div>
+        <div class="chip" id="difficultyChip">MODE: —</div>
       </div>
 
       <div class="hudbox">
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
-          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/3</div>
+          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
@@ -501,12 +523,13 @@
               <div class="label">Temps</div>
               <div class="sec"><span id="hudTime">60</span>s</div>
             </div>
-          </div> 
+          </div>
 
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
           </div>
-		  <button class="btnSmall" id="hintBtn" type="button">💡 Indice (<span id="hudHints">3</span>)</button>
+
+          <button class="btnSmall" id="hintBtn" type="button">💡 Indice (<span id="hudHints">0</span>)</button>
           <button class="btnSmall" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
@@ -514,13 +537,12 @@
 
     <!-- FRAME -->
     <div class="frame" id="frame">
-      <div class="qmeta" id="qMeta">Scénario 3 — Chute du 2e étage • Niveau débutant</div>
+      <div class="qmeta" id="qMeta">—</div>
       <div class="qtitle" id="qTitle">…</div>
       <div class="qdesc" id="qDesc">…</div>
 
       <div class="options" id="options"></div>
 
-      <!-- Bottom actions: left (Corrigé/Terminer), right (Valider/Effacer) -->
       <div class="actions">
         <div class="leftActions">
           <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
@@ -548,20 +570,19 @@
     </div>
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
-      <div class="startText">
-        Tu interviens en situation d’urgence.
-        <br><br>
-        <b>Tu as 60 secondes par question et 3 tentatives maximum.</b>
-        <br>
-        <b>Tu as 3 indices pour tout le scénario (1 seul par question).</b>
-        <br><br>
-        Es-tu prêt à commencer ?
+      <div class="startText" id="startRulesText">
+        —
       </div>
     </div>
     <div class="modalActions">
-      <button class="startBtn" id="startBtn">DÉMARRER</button>
+      <button class="startBtn" id="startBtn" type="button">DÉMARRER</button>
     </div>
   </div>
+</div>
+
+<!-- LOADING overlay -->
+<div class="overlay loadingOverlay" id="loadingOverlay">
+  <div class="loadingBox">CHARGEMENT…</div>
 </div>
 
 <!-- Feedback overlay -->
@@ -575,14 +596,14 @@
     </div>
     <div class="modalBody" id="modalText">…</div>
     <div class="modalActions">
-      <button class="btnNeo" id="retryBtn">Réessayer</button>
-      <button class="btnPrimary" id="nextBtn">Suivant</button>
-      <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
+      <button class="btnNeo" id="retryBtn" type="button">Réessayer</button>
+      <button class="btnPrimary" id="nextBtn" type="button">Suivant</button>
+      <button class="btnPrimary" id="okBtn" type="button" style="display:none;">OK</button>
     </div>
   </div>
 </div>
 
-<!-- Corrigé overlay (popup sur la même page) -->
+<!-- Corrigé overlay -->
 <div class="overlay" id="keyOverlay">
   <div class="modalBox">
     <div class="keyHeader">
@@ -594,7 +615,7 @@
 </div>
 
 <script>
-/* ========= SFX (inchangé / léger) ========= */
+/* ========= SFX ========= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.08, type="sine", gain=0.05){
@@ -630,11 +651,12 @@ function sfxAlarmLong(){
 /* ========= Helpers ========= */
 const el = (id)=>document.getElementById(id);
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
-const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
+const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts"), hudAttemptsMax = el("hudAttemptsMax");
 const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
-const startOverlay = el("startOverlay"), startBtn = el("startBtn");
+const startOverlay = el("startOverlay"), startBtn = el("startBtn"), startRulesText = el("startRulesText");
+const loadingOverlay = el("loadingOverlay");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
 const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
@@ -643,41 +665,70 @@ const hintBtn = el("hintBtn"), hudHints = el("hudHints"), pauseBtn = el("pauseBt
 const showKeyBtn = el("showKeyBtn"), endBtn = el("endBtn");
 const keyOverlay = el("keyOverlay"), closeKeyBtn = el("closeKeyBtn"), answerKeyWrap = el("answerKeyWrap");
 
-/* ======= CONFIG FIXE (conforme screenshot) ======= */
+/* ======= CONFIG ======= */
 const SCENARIO = {
   id: 3,
   label: "Scénario 3 — Chute du 2e étage",
   mission: "Chute du 2e étage",
-  level: "Niveau débutant"
 };
 
-// Lien Genially (Terminer)
-const NEXT_GENIALLY_URL = "#";
+const NEXT_GENIALLY_URL = "#"; // mets ton lien Genially ici
 
-// STRUCTURE demandée
-const TIMER_SECONDS = 60;
-const MAX_ATTEMPTS = 3;
-
-// Indices : 3 sur tout le scénario, 1 max par question
-const MAX_HINTS = 3;
-const HINT_KEY = `hints_left_s${SCENARIO.id}`;
-
-// Stress (inchangé)
-const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
-
-// Rôle + joueur
 const role = "medecin";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-// ✅ player_name + "Dr."
-const player_name = localStorage.getItem("playerName") || "Joueur";
+/* ======= difficulty (niveau) dynamique ======= */
+function normalizeNiveau(v){
+  const s = String(v||"").trim().toLowerCase()
+    .replaceAll("é","e").replaceAll("è","e").replaceAll("ê","e")
+    .replaceAll("à","a").replaceAll("ù","u").replaceAll("ï","i").replaceAll("î","i");
+  if(s.includes("inter")) return "intermediaire";
+  if(s.includes("expert")) return "expert";
+  return "debutant";
+}
+function labelNiveau(d){
+  if(d==="intermediaire") return "INTERMÉDIAIRE";
+  if(d==="expert") return "EXPERT";
+  return "DÉBUTANT";
+}
+const difficulty = normalizeNiveau(window.niveau || localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "debutant");
+
+const RULES = {
+  debutant:      { timer: 60, attempts: 3, hints: 3 },
+  intermediaire: { timer: 45, attempts: 2, hints: 2 },
+  expert:        { timer: 30, attempts: 1, hints: 1 },
+};
+const TIMER_SECONDS = RULES[difficulty].timer;
+const MAX_ATTEMPTS  = RULES[difficulty].attempts;
+const MAX_HINTS     = RULES[difficulty].hints;
+
+/* Indices persistants par scénario */
+const HINT_KEY = `hints_left_s${SCENARIO.id}`;
+
+/* Stress */
+const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
+
+/* ======= joueur / avatar ======= */
+function readPlayerName(){
+  return (window.player_name || window.playerName ||
+    localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur");
+}
+const playerName = readPlayerName();
 const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
-hudName.textContent = "Dr. " + player_name;
+
+hudName.textContent = "Dr. " + playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
-difficultyChip.textContent = "MODE: DÉBUTANT";
-el("levelTabText").textContent = "DÉBUTANT";
+
+difficultyChip.textContent = "MODE: " + labelNiveau(difficulty);
+el("levelTabText").textContent = labelNiveau(difficulty);
 el("miniRules").textContent = `⏱ ${TIMER_SECONDS}s / question • 🎯 ${MAX_ATTEMPTS} tentatives max • 💡 ${MAX_HINTS} indices`;
+startRulesText.innerHTML = `
+  Tu interviens en situation d’urgence.<br><br>
+  <b>Tu as ${TIMER_SECONDS} secondes par question et ${MAX_ATTEMPTS} tentative(s) maximum.</b><br>
+  <b>Tu as ${MAX_HINTS} indice(s) pour tout le scénario (1 seul par question).</b><br><br>
+  Es-tu prêt à commencer ?
+`;
 
 /* ======= STATE ======= */
 let score = parseInt(localStorage.getItem("score") || "0", 10);
@@ -686,24 +737,23 @@ if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsUsed = 0;                 // 0..3 (affichage comme screenshot)
+let attemptsUsed = 0;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
-
 let paused = false;
 
 let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || "", 10);
 if(isNaN(hintsLeft)) hintsLeft = MAX_HINTS;
 localStorage.setItem(HINT_KEY, String(hintsLeft));
-
 let hintUsedThisQuestion = false;
 
-/* ======= QUESTIONS (INCHANGÉES ✅) ======= */
+/* ======= QUESTIONS (INCHANGÉES) ======= */
 const questions = [{"type": "single", "title": "Sécurisation", "desc": "Avant de toucher la victime, la priorité immédiate est :", "options": [{"text": "Commencer l’examen neurologique", "kind": "wrong", "fb": "❌ Non : d’abord sécurité."}, {"text": "Sécuriser la zone avant l’examen", "kind": "ok", "fb": "✅ Oui : sécurité d’abord."}, {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non."}, {"text": "Faire lever la victime", "kind": "wrong", "fb": "❌ Non : risque rachis."}]}, {"type": "tf", "title": "Immobilisation", "desc": "Vrai/Faux : après une chute de hauteur, on évite de mobiliser la victime avant l’évaluation/immobilisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "short", "title": "A de l’ABCDE", "desc": "Première priorité de l’ABCDE (2 mots) :", "answers": ["voies aériennes", "airway"], "okFb": "✅ Voies aériennes.", "badFb": "❌ Réponse attendue : voies aériennes."}, {"type": "image_single", "title": "Décision immédiate", "desc": "Choisis l’image correspondant à la meilleure conduite immédiate :", "options": [{"label": "A", "imgSrc": "assets/chute_q4_b.png", "caption": "Victime assise / on la fait se lever", "kind": "wrong", "fb": "❌ Non : mobilisation dangereuse."}, {"label": "B", "imgSrc": "assets/chute_q4_a.png", "caption": "Immobilisation axe tête-cou-tronc", "kind": "ok", "fb": "✅ Correct : immobilisation stricte."}, {"label": "C", "imgSrc": "assets/chute_q4_c.png", "caption": "On la redresse pour la “mettre à l’aise”", "kind": "wrong", "fb": "❌ Non : risque rachis/aggravation."}]}, {"type": "single", "title": "Alerte neuro", "desc": "Quel signe est le plus inquiétant après la chute ?", "options": [{"text": "Douleur localisée sans autre signe", "kind": "wrong", "fb": "❌ Moins prioritaire."}, {"text": "Petit hématome superficiel", "kind": "wrong", "fb": "❌ Pas le plus inquiétant."}, {"text": "Somnolence / confusion", "kind": "ok", "fb": "✅ Oui : signe neuro inquiétant."}, {"text": "Gratouillement au bras", "kind": "wrong", "fb": "❌ Non."}]}, {"type": "short", "title": "Glasgow", "desc": "Score maximal du Glasgow (1 nombre) :", "answers": ["15"], "okFb": "✅ 15.", "badFb": "❌ Réponse : 15."}, {"type": "multi", "title": "Tri vital", "desc": "Coche les 3 priorités vitales immédiates :", "options": [{"text": "Conscience", "correct": true}, {"text": "Respiration", "correct": true}, {"text": "Hémorragie", "correct": true}, {"text": "Température exacte", "correct": false}, {"text": "Antécédents complets", "correct": false}], "okFb": "✅ Bon tri vital.", "badFb": "❌ Attendu : conscience + respiration + hémorragie."}, {"type": "drag_order", "title": "Ordre d’action", "desc": "Remets l’ordre logique :", "items": [{"id": "s", "text": "Sécuriser"}, {"id": "a", "text": "ABC"}, {"id": "i", "text": "Immobiliser"}, {"id": "l", "text": "Alerter"}, {"id": "v", "text": "Surveiller"}], "expected": ["s", "a", "i", "l", "v"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre attendu : Sécuriser → ABC → Immobiliser → Alerter → Surveiller."}, {"type": "hotspot", "gate": true, "title": "Hotspot — Zone à protéger", "desc": "Clique la zone où il faut surtout éviter la mobilisation.", "imgSrc": "scenario_3_hotspot.png", "hotspots": [{"label": "ok", "x": 30, "y": 28, "w": 18, "h": 40, "kind": "ok", "fb": "✅ Correct : colonne vertébrale (rachis).", "pts": 10}, {"label": "ko", "x": 8, "y": 22, "w": 18, "h": 22, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}, {"label": "ko", "x": 68, "y": 70, "w": 20, "h": 20, "kind": "wrong", "fb": "❌ Non : pas la priorité traumatique ici.", "pts": -2}]}, {"type": "cloze", "title": "Organisation", "desc": "Complète 2 valeurs :", "template": "Idéalement, <b>{blank1}</b> sauveteurs ; victime <b>{blank2}</b>.", "blanks": [{"key": "blank1", "answer": "2"}, {"key": "blank2", "answer": "consciente"}], "okFb": "✅ OK.", "badFb": "❌ Réponses : 2 ; consciente."}, {"type": "tf", "title": "Alerte", "desc": "Vrai/Faux : on alerte rapidement avec mécanisme, hauteur, état, localisation.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "single", "title": "À éviter", "desc": "Quel geste est à éviter absolument ?", "options": [{"text": "Surveiller la respiration", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Couvrir contre l’hypothermie", "kind": "wrong", "fb": "❌ À faire."}, {"text": "Redresser la victime", "kind": "ok", "fb": "✅ Correct : à éviter (rachis)."}, {"text": "Maintenir l’axe tête-cou-tronc", "kind": "wrong", "fb": "❌ À faire."}]}, {"type": "short", "title": "Terme", "desc": "Un mot : la colonne vertébrale =", "answers": ["rachis"], "okFb": "✅ Rachis.", "badFb": "❌ Réponse : rachis."}, {"type": "tf", "title": "Mécanisme", "desc": "Vrai/Faux : une chute de hauteur impose de suspecter un traumatisme grave même si la douleur est modérée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux."}}}, {"type": "multi", "title": "Transmission", "desc": "Pour le bilan au SAMU, coche les infos essentielles :", "options": [{"text": "Hauteur", "correct": true}, {"text": "Mécanisme de chute", "correct": true}, {"text": "Couleur des vêtements", "correct": false}, {"text": "Marque du téléphone", "correct": false}], "okFb": "✅ Parfait.", "badFb": "❌ Essentiel : hauteur + mécanisme de chute."}];
 
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
+hudAttemptsMax.textContent = String(MAX_ATTEMPTS);
 
 /* ======= UI setters ======= */
 function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
@@ -727,7 +777,7 @@ function setAttemptsUI(){ hudAttempts.textContent = String(attemptsUsed); }
 
 function setHintsUI(){
   hudHints.textContent = String(hintsLeft);
-  hintBtn.disabled = (hintsLeft<=0 || hintUsedThisQuestion);
+  hintBtn.disabled = (hintsLeft<=0 || hintUsedThisQuestion || locked);
 }
 
 function setProgressUI(){
@@ -740,6 +790,17 @@ setStress(stress);
 setAttemptsUI();
 setHintsUI();
 setProgressUI();
+
+/* ======= Loading ======= */
+function showLoading(ms=800){
+  loadingOverlay.style.display = "flex";
+  return new Promise(resolve=>{
+    setTimeout(()=>{
+      loadingOverlay.style.display = "none";
+      resolve();
+    }, ms);
+  });
+}
 
 /* ======= Timer ======= */
 function setRingProgress(){
@@ -763,6 +824,7 @@ function startTimer(){
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
+      addStress(STRESS_RULES.timeout);
       registerFailure("⏱️ Temps écoulé.");
     }
   }, 1000);
@@ -770,24 +832,59 @@ function startTimer(){
 
 /* ======= Pause ======= */
 pauseBtn.addEventListener("click", ()=>{
+  if(locked) return;
   sfxClick();
   paused = !paused;
   pauseBtn.textContent = paused ? "▶ Reprendre" : "⏸ Pause";
 });
 
-/* ======= Hints (1 par question) ======= */
+/* ======= Hint “sur la réponse” (sans modifier tes questions) ======= */
+function getHintForQuestion(q){
+  const t = q.type;
+  if(t==="single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    if(ok) return `Indice : la meilleure action est celle qui correspond à : « ${ok.text.slice(0, Math.min(28, ok.text.length))}${ok.text.length>28 ? "…" : ""} »`;
+  }
+  if(t==="tf"){
+    return `Indice : réfléchis à la règle de base en traumatisme (immobilisation/évaluation avant mobilisation).`;
+  }
+  if(t==="multi"){
+    const good = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
+    return `Indice : il y a ${good.length} réponses correctes. Une des priorités est : « ${good[0]||"—"} ».`;
+  }
+  if(t==="short"){
+    return `Indice : réponse très courte, sans phrase (ex : 1–2 mots / un nombre).`;
+  }
+  if(t==="image_single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    if(ok) return `Indice : cherche l’image où l’on respecte l’axe tête-cou-tronc (immobilisation).`;
+  }
+  if(t==="drag_order"){
+    const first = (q.expected||[])[0];
+    const map = Object.fromEntries((q.items||[]).map(it=>[it.id,it.text]));
+    return `Indice : la première étape est : « ${map[first]||"Sécuriser"} ».`;
+  }
+  if(t==="hotspot"){
+    return `Indice : la zone la plus critique à protéger ici, c’est le rachis (colonne vertébrale).`;
+  }
+  if(t==="cloze"){
+    return `Indice : respecte exactement les deux valeurs demandées (nombre + état).`;
+  }
+  return `Indice : relis la consigne et choisis l’action la plus sûre et prioritaire.`;
+}
+
 hintBtn.addEventListener("click", ()=>{
-  if(hintsLeft<=0 || hintUsedThisQuestion) return;
+  if(locked || hintsLeft<=0 || hintUsedThisQuestion) return;
   sfxClick();
   hintsLeft--;
   hintUsedThisQuestion = true;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   setHintsUI();
 
-  // Indice simple : on affiche une piste non intrusive (sans toucher aux questions)
-  showOverlay("warn", "💡 Indice : relis bien les mots clés de la consigne et choisis l’action la plus sûre et prioritaire.", {
-    allowRetry:false, allowNext:false, allowOk:true
-  });
+  const q = questions[idx];
+  const hint = getHintForQuestion(q);
+
+  showOverlay("warn", "💡 " + hint, { allowRetry:false, allowNext:false, allowOk:true });
 });
 
 /* ======= Selection State ======= */
@@ -811,20 +908,22 @@ function mkOpt(text){
   return d;
 }
 
-function renderQuestion(i){
-  locked=false;
-  paused=false;
-  pauseBtn.textContent="⏸ Pause";
+async function renderQuestion(i){
+  locked = true;
+  paused = false;
+  pauseBtn.textContent = "⏸ Pause";
   stopTimer();
   hideOverlay();
+  keyOverlay.style.display="none";
+
+  await showLoading(650);
 
   hintUsedThisQuestion = false;
   setHintsUI();
-
   resetState();
 
   const q = questions[i];
-  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
+  qMeta.textContent = `${SCENARIO.label} • Niveau ${labelNiveau(difficulty).toLowerCase()}`;
   qTitle.textContent = q.title || "—";
   qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
@@ -839,6 +938,7 @@ function renderQuestion(i){
     q.options.forEach((opt, oi)=>{
       const d = mkOpt(opt.text);
       d.onclick=()=>{
+        if(locked) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
@@ -854,6 +954,7 @@ function renderQuestion(i){
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
       d.onclick=()=>{
+        if(locked) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
@@ -869,6 +970,7 @@ function renderQuestion(i){
     q.options.forEach((opt, oi)=>{
       const d=mkOpt(opt.text);
       d.onclick=()=>{
+        if(locked) return;
         sfxClick();
         if(multiSelected.has(oi)){ multiSelected.delete(oi); d.classList.remove("sel"); }
         else { multiSelected.add(oi); d.classList.add("sel"); }
@@ -912,6 +1014,7 @@ function renderQuestion(i){
         <div class="imgCap">${opt.caption}</div>
       `;
       card.onclick = ()=>{
+        if(locked) return;
         sfxClick();
         [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
         card.classList.add("sel");
@@ -936,7 +1039,6 @@ function renderQuestion(i){
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-
     wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
     optionsEl.appendChild(wrap);
 
@@ -957,8 +1059,8 @@ function renderQuestion(i){
       z.style.width = h.w + "%";
       z.style.height= h.h + "%";
       z.style.pointerEvents="auto";
-
       z.onclick=()=>{
+        if(locked) return;
         sfxClick();
         [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
         z.classList.add("sel");
@@ -1025,7 +1127,7 @@ function renderQuestion(i){
       validateBtn.disabled=false;
     });
 
-    validateBtn.disabled=false; // ordre existe toujours
+    validateBtn.disabled=false;
   }
 
   if(type==="cloze"){
@@ -1048,11 +1150,14 @@ function renderQuestion(i){
     });
   }
 
+  locked = false;
+  setHintsUI();
   startTimer();
 }
 
 /* ======= Clear ======= */
 clearBtn.onclick = ()=>{
+  if(locked) return;
   sfxClick();
   renderQuestion(idx);
 };
@@ -1086,6 +1191,7 @@ validateBtn.onclick = ()=>{
 
   stopTimer();
   locked=true;
+  setHintsUI();
 
   if(type==="single"){
     evaluateOption(q.options[selectedSingle]); return;
@@ -1134,7 +1240,7 @@ validateBtn.onclick = ()=>{
 
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
-    if(!h){ locked=false; startTimer(); return; }
+    if(!h){ locked=false; setHintsUI(); startTimer(); return; }
 
     if(h.kind==="ok"){
       addScore(h.pts ?? 10);
@@ -1212,14 +1318,14 @@ function evaluateOption(opt){
   registerFailure(opt.fb || "❌ Incorrect.");
 }
 
-/* ======= Tentatives (structure demandée : 3 max) ======= */
-function registerFailure(baseMsg, isCritical=false){
+/* ======= Tentatives ======= */
+function registerFailure(baseMsg){
   attemptsUsed++;
   setAttemptsUI();
 
   if(attemptsUsed >= MAX_ATTEMPTS){
     sfxAlarmLong();
-    missionFail(`🚨 ${baseMsg}\n\n❌ 3 tentatives utilisées. Mission échouée. Retour au départ… (score remis à zéro)`);
+    missionFail(`🚨 ${baseMsg}\n\n❌ ${MAX_ATTEMPTS} tentative(s) utilisée(s). Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
 
@@ -1240,19 +1346,18 @@ function showOverlay(kind, text, {allowRetry, allowNext, allowOk}){
 
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
   nextBtn.style.display  = allowNext  ? "inline-block" : "none";
+  okBtn.style.display    = allowOk    ? "inline-block" : "none";
 
-  okBtn.style.display = allowOk ? "inline-block" : "none";
-  okBtn.classList.toggle("show", allowOk);
-
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; paused=false; startTimer(); };
-  nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx); else endScenario(); };
-  okBtn.onclick    = ()=>{ hideOverlay(); locked=false; paused=false; startTimer(); };
+  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; setHintsUI(); paused=false; startTimer(); };
+  nextBtn.onclick  = async ()=>{ hideOverlay(); idx++; if(idx < TOTAL) await renderQuestion(idx); else endScenario(); };
+  okBtn.onclick    = ()=>{ hideOverlay(); locked=false; setHintsUI(); paused=false; startTimer(); };
 }
 function hideOverlay(){ overlay.style.display="none"; }
 
 function missionFail(message){
   stopTimer();
   locked=true;
+  setHintsUI();
   showOverlay("bad", message, {allowRetry:false, allowNext:false, allowOk:true});
   motion("critical");
   okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
@@ -1278,7 +1383,7 @@ function resetMission(showStart=true){
   if(showStart) startOverlay.style.display="flex";
 }
 
-/* ======= Corrigé (popup) ======= */
+/* ======= Corrigé ======= */
 function escapeHtml(str){
   return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
 }
@@ -1342,36 +1447,78 @@ closeKeyBtn.addEventListener("click", ()=>{
   keyOverlay.style.display="none";
 });
 
-/* ======= Fin scénario (active Corrigé + Terminer) ======= */
+/* ======= Badges ======= */
+function computeBadge(score){
+  if(score >= 90) return { level: "OR", img: "or.png" };
+  if(score >= 70) return { level: "ARGENT", img: "argent.png" };
+  return { level: "BRONZE", img: "bronze.png" };
+}
+function saveBadge(b){
+  const payload = {
+    name: SCENARIO.label,
+    type: SCENARIO.mission,
+    niveau: labelNiveau(difficulty),
+    difficulty: difficulty,
+    score: score,
+    img: b.img,
+    badge: b.level,
+    ts: Date.now()
+  };
+  const key = `badge_s${SCENARIO.id}_${difficulty}`;
+  localStorage.setItem(key, JSON.stringify(payload));
+
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem("badges_history") || "[]"); }catch(e){ hist = []; }
+  hist.unshift(payload);
+  hist = hist.slice(0, 100);
+  localStorage.setItem("badges_history", JSON.stringify(hist));
+}
+
+/* ======= Fin scénario ======= */
 function endScenario(){
   stopTimer();
   locked=true;
   paused=false;
   pauseBtn.textContent="⏸ Pause";
 
-  // Affichage fin simple (tu peux remplacer par ton écran BADGE si tu veux)
+  // badge + save
+  const b = computeBadge(score);
+  saveBadge(b);
+
   qMeta.textContent = "FIN — BADGE OBTENU";
   qTitle.textContent = "🎉 Mission terminée";
   qDesc.innerHTML = `
     <div style="margin-top:6px; color: rgba(255,255,255,.82); line-height:1.55;">
-      Tu as terminé le scénario <b>${escapeHtml(SCENARIO.mission)}</b>.
-      <br>Score final : <b>${score}</b> — Stress : <b>${stress}%</b>
+      Scénario : <b>${escapeHtml(SCENARIO.mission)}</b> • Niveau : <b>${escapeHtml(labelNiveau(difficulty))}</b><br>
+      Score final : <b>${score}</b> — Stress : <b>${stress}%</b>
     </div>
   `;
 
   optionsEl.innerHTML = `
     <div class="opt" style="cursor:default; text-align:center;">
-      <div style="font-size:46px; margin-bottom:4px;">🏅</div>
-      <div style="font-weight:950;">FIN — BADGE OBTENU</div>
-      <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Tu peux consulter le corrigé et terminer.</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;">
+        <img src="${b.img}" alt="${b.level}" style="width:76px; height:76px; object-fit:contain; filter: drop-shadow(0 12px 22px rgba(0,0,0,.35));">
+        <div>
+          <div style="font-size:13px; color: rgba(255,255,255,.75); font-weight:900; letter-spacing:.28px;">FIN — BADGE OBTENU</div>
+          <div style="font-weight:950; font-size:22px; margin-top:2px;">🏅 Badge ${b.level}</div>
+          <div style="color: rgba(255,255,255,.72); font-size:13px; margin-top:6px;">Corrigé disponible. Tu peux terminer.</div>
+        </div>
+      </div>
     </div>
   `;
 
+  // disable gameplay controls
   validateBtn.disabled=true;
   clearBtn.style.display="none";
+  hintBtn.disabled=true;
+  pauseBtn.disabled=true;
 
+  // activate end actions
   showKeyBtn.disabled=false;
   endBtn.style.display="inline-block";
+
+  // progress full
+  progressBar.style.width = "100%";
 }
 
 /* Terminer */
@@ -1390,7 +1537,7 @@ function motion(type){
 }
 
 /* ======= Start ======= */
-startBtn.addEventListener("click", ()=>{
+startBtn.addEventListener("click", async ()=>{
   ensureAudio(); sfxClick();
 
   // reset session stats
@@ -1401,7 +1548,7 @@ startBtn.addEventListener("click", ()=>{
 
   attemptsUsed=0; setAttemptsUI();
 
-  // reset hints for scenario (fresh run)
+  // reset hints for scenario
   hintsLeft = MAX_HINTS;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   hintUsedThisQuestion=false;
@@ -1411,14 +1558,13 @@ startBtn.addEventListener("click", ()=>{
   progressBar.style.width="0%";
 
   startOverlay.style.display="none";
-  locked=false;
-  renderQuestion(0);
+  await renderQuestion(0);
 });
 
 /* ======= Init ======= */
 (function init(){
   locked=true;
-  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
+  qMeta.textContent = `${SCENARIO.label} • Niveau ${labelNiveau(difficulty).toLowerCase()}`;
   qTitle.textContent="Prépare-toi…";
   qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
   optionsEl.innerHTML="";
