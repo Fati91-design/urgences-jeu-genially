@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FIN — BADGE OBTENU</title>
+
+  <style>
+    :root{
+      --glass: rgba(25, 27, 31, .72);
+      --glass2: rgba(15, 17, 20, .55);
+
+      --text: rgba(255,255,255,.93);
+      --muted: rgba(255,255,255,.70);
+
+      --gold: rgba(255,200,80,1);
+      --ember: rgba(255,150,70,1);
+      --blue: rgba(80,170,255,1);
+
+      --border: rgba(255, 200, 150, .22);
+      --shadow: 0 18px 70px rgba(0,0,0,.50);
+    }
+
+    html,body{
+      margin:0;
+      background: transparent;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+    }
+
+    .stage{
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 16px;
+    }
+
+    .wrap{
+      width: min(1120px, 100%);
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ===== Message de félicitations ===== */
+    .congrats{
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 950;
+      font-size: 18px;
+      letter-spacing: .3px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .congrats span{
+      color: var(--gold);
+    }
+
+    /* ===== Conteneur principal ===== */
+    .panel{
+      background: var(--glass2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: 14px;
+      position: relative;
+      overflow:hidden;
+    }
+    .panel::after{
+      content:"";
+      position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(820px 260px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
+        radial-gradient(760px 260px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
+    }
+
+    .rowMain{
+      position: relative; z-index:2;
+      display:flex;
+      align-items:center;
+      gap: 18px;
+    }
+
+    .avatar{
+      width: min(280px, 34vw);
+      max-height: 64vh;
+      object-fit: contain;
+      filter: drop-shadow(0 26px 38px rgba(0,0,0,.35));
+      flex: 0 0 auto;
+    }
+
+    .content{
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .topline{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badgeSmall{
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.35));
+    }
+
+    .title{
+      font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 950;
+      letter-spacing: .2px;
+      margin: 0;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+
+    .para{
+      margin-top: 10px;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: rgba(255,255,255,.82);
+      max-width: 860px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 900;
+      font-size: 11px;
+      margin: 0 6px 6px 0;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .sep{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin-top: 10px;
+      border-radius: 999px;
+      max-width: 860px;
+    }
+
+    @media (max-width: 980px){
+      .rowMain{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .avatar{
+        width: min(320px, 80vw);
+        max-height: 42vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="stage">
+  <div class="wrap">
+
+    <!-- 🎉 Félicitations -->
+    <div class="congrats">
+      🎉 Félicitations <span id="playerCongrats">Dr. Joueur</span>
+    </div>
+
+    <!-- 🎖 Badge panel -->
+    <div class="panel">
+      <div class="rowMain">
+
+        <img id="avatarImg" class="avatar" alt="Avatar joueur">
+
+        <div class="content">
+          <div class="topline">
+            <img id="badgeImg" class="badgeSmall" alt="Badge">
+            <h1 class="title">FIN — BADGE OBTENU</h1>
+          </div>
+
+          <div id="para" class="para"></div>
+          <div class="sep"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const DEFAULT_SCENARIO = { id: 3, label: "Scénario 3 — Chute du 2e étage" };
+
+  const BADGE_IMAGES = {
+    OR: "or.png",
+    ARGENT: "argent.png",
+    BRONZE: "bronze.png"
+  };
+
+  const BADGE_DATA = {
+    scenarioId: null,
+    scenarioLabel: "",
+    playerName: "",
+    difficulty: "",
+    score: 0,
+    badgeLevel: "",
+    badgeImage: "",
+    timestamp: 0
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function getPlayerName(){
+    return localStorage.getItem("playerName") || "Joueur";
+  }
+  function getDifficulty(){
+    return (localStorage.getItem("niveau") || "DÉBUTANT").toUpperCase();
+  }
+  function getScore(){
+    return parseInt(localStorage.getItem("score") || "0", 10);
+  }
+  function getScenario(){
+    return DEFAULT_SCENARIO;
+  }
+  function getAvatarPath(){
+    return localStorage.getItem("hero_avatar") || "assets/avatars/medecin_f.png";
+  }
+
+  function computeBadgeLevel(score){
+    if(score >= 130) return "OR";
+    if(score >= 95)  return "ARGENT";
+    return "BRONZE";
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])
+    );
+  }
+
+  (function init(){
+    const player = getPlayerName();
+    const score = getScore();
+    const difficulty = getDifficulty();
+    const scenario = getScenario();
+
+    const badgeLevel = computeBadgeLevel(score);
+
+    BADGE_DATA.playerName = player;
+    BADGE_DATA.score = score;
+    BADGE_DATA.difficulty = difficulty;
+    BADGE_DATA.scenarioLabel = scenario.label;
+    BADGE_DATA.badgeLevel = badgeLevel;
+    BADGE_DATA.badgeImage = BADGE_IMAGES[badgeLevel];
+    BADGE_DATA.timestamp = Date.now();
+
+    $("playerCongrats").textContent = "Dr. " + BADGE_DATA.playerName;
+    $("avatarImg").src = getAvatarPath();
+    $("badgeImg").src = BADGE_DATA.badgeImage;
+
+    $("para").innerHTML = `
+      <span class="pill">🎮 ${escapeHtml(BADGE_DATA.scenarioLabel)}</span>
+      <span class="pill">🏅 ${BADGE_DATA.badgeLevel}</span>
+      <span class="pill">⭐ ${BADGE_DATA.score}</span>
+      <span class="pill">🎚 ${escapeHtml(BADGE_DATA.difficulty)}</span>
+      <br>
+      Ce badge a été ajouté à ta collection.
+    `;
+  })();
+</script>
+</body>
+</html>
