@@ -1,0 +1,73 @@
+<div id="badgesGrid">
+/* =========================================
+   ✅ PAGE BADGES — AFFICHAGE DES BADGES
+========================================= */
+const BADGE_IMAGES = {
+  OR: "or.png",
+  ARGENT: "argent.png",
+  BRONZE: "bronze.png",
+  LOCK: "bronze.png" // ou une image lock.png si tu en as
+};
+
+const DIFFICULTY = (localStorage.getItem("niveau")
+  || localStorage.getItem("difficulty")
+  || "DÉBUTANT").toUpperCase();
+
+const SCENARIOS = [
+  { id: 1, label: "Scénario 1" },
+  { id: 2, label: "Scénario 2" },
+  { id: 3, label: "Scénario 3" },
+  { id: 4, label: "Scénario 4" }
+];
+
+function readBadge(scenarioId, difficulty){
+  const key = `badge_s${scenarioId}_${difficulty}`;
+  try{
+    return JSON.parse(localStorage.getItem(key) || "null");
+  }catch(e){
+    return null;
+  }
+}
+
+function escapeHtml(str){
+  return String(str||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function renderBadges(){
+  const host = document.getElementById("badgesGrid");
+  if(!host) return;
+
+  const cards = SCENARIOS.map(sc=>{
+    const b = readBadge(sc.id, DIFFICULTY);
+
+    if(!b){
+      return `
+        <div class="badgeCard locked">
+          <img class="badgeImg" src="${BADGE_IMAGES.LOCK}" alt="locked">
+          <div class="badgeTitle">${escapeHtml(sc.label)}</div>
+          <div class="badgeMeta">🔒 Non obtenu</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="badgeCard">
+        <img class="badgeImg" src="${escapeHtml(b.badgeImage)}" alt="${escapeHtml(b.badgeLevel)}">
+        <div class="badgeTitle">${escapeHtml(b.scenarioLabel || sc.label)}</div>
+        <div class="badgeMeta">🏅 ${escapeHtml(b.badgeLevel)} • ⭐ ${b.score} • 🎚 ${escapeHtml(b.difficulty)}</div>
+      </div>
+    `;
+  }).join("");
+
+  host.innerHTML = cards;
+}
+
+renderBadges();
+
+
+</div>
