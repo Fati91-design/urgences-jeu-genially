@@ -8,96 +8,115 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-   :root{
-  --glass: rgba(25,27,31,.72);
-  --glass2: rgba(15,17,20,.55);
-  --text: rgba(255,255,255,.93);
-  --muted: rgba(255,255,255,.70);
-  --gold: rgba(255,200,80,1);
-  --red: rgba(255,70,70,1);
-  --green: rgba(45,200,120,1);
-  --blue: rgba(80,170,255,1);
-  --ember: rgba(255,150,70,1);
-  --ember2: rgba(255,120,50,1);
-  --border: rgba(255,200,150,.22);
-  --shadow: 0 18px 70px rgba(0,0,0,.50);
-}
-   html,body{
-  margin:0;
-  background:transparent;
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  overflow:hidden;
-}
-    /* === STRUCTURE GENIALLY RÉFÉRENCE === */
-.stage{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:16px 18px;
-}
-.wrap{
-  width:min(1120px,100%);
-}
-    /* ===== Top bar ===== */
-    .topTabs{
-      display:flex; align-items:center; gap:14px;
-      margin-bottom: 14px;
+    :root{
+      --glass: rgba(25,27,31,.72);
+      --glass2: rgba(15,17,20,.55);
+
+      --text: rgba(255,255,255,.93);
+      --muted: rgba(255,255,255,.70);
+
+      --gold: rgba(255,200,80,1);
+      --red: rgba(255,70,70,1);
+      --green: rgba(45,200,120,1);
+      --blue: rgba(80,170,255,1);
+      --ember: rgba(255,150,70,1);
+      --ember2: rgba(255,120,50,1);
+
+      --border: rgba(255,200,150,.22);
+      --shadow: 0 18px 70px rgba(0,0,0,.50);
     }
-    .levelPill{
+
+    html,body{
+      margin:0;
+      background:transparent;
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow:hidden;
+    }
+
+    /* ====== STAGE / WRAP (référence Genially) ====== */
+    .stage{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:10px;
+      overflow:hidden;
+    }
+    .wrap{
+      width:min(1120px,100%);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    /* ====== TOP TABS (référence: levelTab + progressShell + miniHint) ====== */
+    .topTabs{
+      display:flex; align-items:center; gap:12px;
+      flex-wrap:wrap;
+    }
+    .levelTab{
       display:flex; align-items:center; gap:10px;
-      padding: 10px 14px;
-      border-radius: 999px;
+      padding:10px 14px;
+      border-radius:999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
-      font-weight: 950;
-      letter-spacing: .3px;
-      white-space: nowrap;
+      font-weight:950;
+      letter-spacing:.3px;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
     }
-    .dot{
+    .levelDot{
       width:10px; height:10px; border-radius:999px;
       background: rgba(255,176,90,1);
       box-shadow: 0 0 0 6px rgba(255,176,90,.14);
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
-    .topProgress{
+    .progressShell{
       flex:1;
-      height: 10px;
-      border-radius: 999px;
+      min-width: 220px;
+      height:10px;
+      border-radius:999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
+      backdrop-filter: blur(10px);
     }
-    .topProgress > div{
+    .progressBar{
       height:100%;
-      width: 0%;
+      width:0%;
       background: linear-gradient(90deg, rgba(255,176,90,1), rgba(255,120,50,1));
       transition: width .25s ease;
     }
-    .miniRules{
+    .miniHint{
       display:flex; align-items:center; gap:10px;
       color: rgba(255,255,255,.78);
-      font-size: 12px;
-      font-weight: 900;
-      white-space: nowrap;
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+      margin-left:auto;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
     }
 
-    /* ===== HUD ===== */
+    /* ====== HUD ====== */
     .hud{
-      display:grid; grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-bottom: 16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
     .hudbox{
       background: var(--glass);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap: 12px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
@@ -113,40 +132,56 @@
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+    .profile{
+      display:flex; align-items:center; gap: 12px;
+      min-width:0;
+      position: relative; z-index:2;
+    }
+
+    /* avatarFrame 72px (référence) */
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
-      background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
+      width:72px; height:72px;
+      border-radius: 22px;
+      padding:4px;
+      background: linear-gradient(180deg, rgba(255,150,70,.34), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius:18px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.35);
+      transform: scale(1.25);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
+
     .ptext{ min-width:0; }
     .pname{
-      font-weight: 950; font-size: 22px; line-height: 1.05;
-      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.08;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
       text-shadow: 0 14px 30px rgba(0,0,0,.55);
     }
     .prole{
       margin-top: 4px;
-      font-weight: 850; font-size: 13px;
+      font-weight: 850;
+      font-size: 12px;
       color: var(--muted);
-      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 9px 12px;
+      padding: 8px 10px;
       font-size: 12px;
       font-weight: 950;
       white-space: nowrap;
@@ -160,38 +195,38 @@
     }
     .pill{
       display:flex; align-items:center; gap: 10px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 13px;
+      font-size: 12px;
       white-space: nowrap;
     }
 
     .timerPill{
-      padding: 8px 10px; gap: 10px;
+      padding: 7px 9px; gap: 10px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
     }
     .ring{
-      width: 40px; height: 40px; border-radius: 999px;
+      width: 38px; height: 38px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px;
+      width: 26px; height: 26px; border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 14px; font-weight: 950;
+      font-size: 13px; font-weight: 950;
     }
     .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 16px; font-weight: 950; }
+    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 15px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -203,7 +238,7 @@
     }
 
     .stressWrap{
-      width: 210px; height: 10px; border-radius: 999px;
+      width: 200px; height: 10px; border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -219,19 +254,19 @@
       background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.90);
       border-radius: 999px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       font-weight: 950;
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: .2px;
     }
     .btnSmall:disabled{ opacity:.45; cursor:not-allowed; }
 
-    /* ===== Frame question ===== */
+    /* ====== FRAME (question) ====== */
     .frame{
       background: var(--glass2);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px;
       position: relative;
       overflow:hidden;
       box-shadow: var(--shadow);
@@ -247,10 +282,33 @@
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(20px, 2.2vw, 32px); line-height: 1.15; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
     .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
-    .options{ position: relative; z-index:2; display:flex; flex-direction:column; gap: 12px; margin-top: 16px; }
+    /* options = scroll interne (référence) */
+    .options{
+      position: relative; z-index:2;
+      display:flex; flex-direction:column;
+      gap: 12px;
+      margin-top: 14px;
+      overflow:auto;
+      padding-right:6px;
+
+      /* évite scroll body (Genially) */
+      max-height: 44vh;
+    }
+    .options.dragCompact{
+      overflow:visible;
+      max-height:none;
+      padding-right:0;
+    }
+    .options::-webkit-scrollbar{ width:10px; }
+    .options::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.18);
+      border-radius: 999px;
+      border: 2px solid rgba(0,0,0,0);
+      background-clip: padding-box;
+    }
 
     .opt{
       border-radius: 14px;
@@ -264,7 +322,11 @@
       background: linear-gradient(180deg, rgba(120,180,255,.18), rgba(120,180,255,.10));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
     }
-    .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(120,180,255,.08)); }
+    .opt:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.07);
+      background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(120,180,255,.08));
+    }
     .opt.sel{
       background: linear-gradient(180deg, rgba(255,150,70,.26), rgba(255,120,50,.14));
       border-color: rgba(255,150,70,.30);
@@ -274,7 +336,7 @@
     .actions{
       position: relative; z-index:2;
       display:flex; align-items:center; justify-content:space-between;
-      gap: 10px; margin-top: 16px; flex-wrap: wrap;
+      gap: 10px; margin-top: 14px; flex-wrap: wrap;
     }
     .leftActions, .rightActions{ display:flex; gap:10px; flex-wrap:wrap; }
 
@@ -302,11 +364,11 @@
       cursor: not-allowed;
     }
 
-    /* ===== Overlays ===== */
+    /* ====== OVERLAYS ====== */
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
-      z-index: 2000; /* important */
+      z-index: 2000;
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
       pointer-events:auto;
@@ -357,7 +419,7 @@
       pointer-events:auto;
     }
 
-    /* Loading overlay : transparent derrière "Chargement..." */
+    /* Loading overlay transparent */
     .loadingOverlay{
       background: rgba(0,0,0,0) !important;
       backdrop-filter: none !important;
@@ -373,7 +435,7 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
     }
 
-    /* ===== Key overlay ===== */
+    /* Key overlay */
     .keyHeader{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
       padding: 14px 16px;
@@ -390,7 +452,7 @@
     }
     .keyBody{ padding: 16px; }
 
-    /* ===== Hotspot zones ===== */
+    /* Hotspot */
     @keyframes hsPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
       70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
@@ -412,7 +474,7 @@
       animation: none;
     }
 
-    /* ===== Q4 images ===== */
+    /* Image grid */
     .imgGrid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-top:12px; }
     @media (max-width: 900px){ .imgGrid{ grid-template-columns: 1fr; } }
     .imgCard{
@@ -444,7 +506,7 @@
     .imgPic{ width:100%; height:220px; aspect-ratio:4/3; object-fit:cover; display:block; }
     .imgCap{ padding:14px; text-align:center; font-weight:800; }
 
-    /* Drag order : tag à droite */
+    /* Drag order */
     .dragRow{
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
@@ -458,13 +520,14 @@
       white-space: nowrap;
     }
 
-    @media (max-width: 980px){
+    /* Responsive (référence HUD 1 colonne) */
+    @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 180px; }
-      .topTabs{ flex-wrap: wrap; }
-      .miniRules{ order: 3; width:100%; justify-content:flex-end; }
+      .stressWrap{ width: 170px; }
+      .options{ max-height: 42vh; }
     }
 
+    /* Animations feedback */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -490,133 +553,131 @@
 </head>
 
 <body>
-<div class="stage">
-  <div class="wrap">
+  <div class="stage">
+    <div class="wrap">
 
-    <!-- TOP BAR -->
-    <div class="topTabs">
-      <div class="levelPill"><span class="dot"></span> NIVEAU : <span id="levelTabText">—</span></div>
-      <div class="topProgress" aria-label="progress"><div id="progressBar"></div></div>
-      <div class="miniRules" id="miniRules">—</div>
-    </div>
-
-    <!-- HUD -->
-    <div class="hud">
-      <div class="hudbox">
-        <div class="profile">
-          <div class="avatarFrame">
-            <img class="avatar" id="hudAvatar" alt="Avatar">
-          </div>
-          <div class="ptext">
-            <div class="pname" id="hudName">Dr. —</div>
-            <div class="prole" id="hudRole">Rôle: —</div>
-          </div>
-        </div>
-        <div class="chip" id="difficultyChip">MODE: —</div>
+      <!-- TOP BAR (référence) -->
+      <div class="topTabs">
+        <div class="levelTab"><span class="levelDot"></span> NIVEAU : <span id="levelTabText">—</span></div>
+        <div class="progressShell" aria-label="progress"><div class="progressBar" id="progressBar"></div></div>
+        <div class="miniHint" id="miniHint">—</div>
       </div>
 
-      <div class="hudbox">
-        <div class="stats">
-          <div class="pill">⭐ <span id="hudScore">0</span></div>
-          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
-
-          <div class="pill timerPill" id="timerPill">
-            <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
-            <div class="timeText">
-              <div class="label">Temps</div>
-              <div class="sec"><span id="hudTime">60</span>s</div>
+      <!-- HUD -->
+      <div class="hud">
+        <div class="hudbox">
+          <div class="profile">
+            <div class="avatarFrame">
+              <img class="avatar" id="hudAvatar" alt="Avatar">
+            </div>
+            <div class="ptext">
+              <div class="pname" id="hudName">Dr. —</div>
+              <div class="prole" id="hudRole">Rôle: —</div>
             </div>
           </div>
+          <div class="chip" id="difficultyChip">MODE: —</div>
+        </div>
 
-          <div class="stressWrap" title="Stress">
-            <div class="stressBar" id="stressBar"></div>
+        <div class="hudbox">
+          <div class="stats">
+            <div class="pill">⭐ <span id="hudScore">0</span></div>
+            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
+            <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
+
+            <div class="pill timerPill" id="timerPill">
+              <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
+              <div class="timeText">
+                <div class="label">Temps</div>
+                <div class="sec"><span id="hudTime">60</span>s</div>
+              </div>
+            </div>
+
+            <div class="stressWrap" title="Stress">
+              <div class="stressBar" id="stressBar"></div>
+            </div>
+
+            <button class="btnSmall" id="hintBtn" type="button">💡 Indice (<span id="hudHints">0</span>)</button>
+            <button class="btnSmall" id="pauseBtn" type="button">⏸ Pause</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRAME -->
+      <div class="frame" id="frame">
+        <div class="qmeta" id="qMeta">—</div>
+        <div class="qtitle" id="qTitle">…</div>
+        <div class="qdesc" id="qDesc">…</div>
+
+        <div class="options" id="options"></div>
+
+        <div class="actions">
+          <div class="leftActions">
+            <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+            <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
           </div>
 
-          <button class="btnSmall" id="hintBtn" type="button">💡 Indice (<span id="hudHints">0</span>)</button>
-          <button class="btnSmall" id="pauseBtn" type="button">⏸ Pause</button>
+          <div class="rightActions">
+            <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+            <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+          </div>
         </div>
       </div>
+
     </div>
+  </div>
 
-    <!-- FRAME -->
-    <div class="frame" id="frame">
-      <div class="qmeta" id="qMeta">—</div>
-      <div class="qtitle" id="qTitle">…</div>
-      <div class="qdesc" id="qDesc">…</div>
-
-      <div class="options" id="options"></div>
-
-      <div class="actions">
-        <div class="leftActions">
-          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
-          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
-        </div>
-
-        <div class="rightActions">
-          <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
-          <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+  <!-- START overlay -->
+  <div class="overlay" id="startOverlay" style="display:flex;">
+    <div class="modalBox">
+      <div class="modalTop">
+        <div class="badgeState bWarn">🎮 Prêt ?</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+          Mission • Chute du deuxième étage
         </div>
       </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- START overlay -->
-<div class="overlay" id="startOverlay" style="display:flex;">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">🎮 Prêt ?</div>
-      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Mission • Chute du deuxième étage
+      <div class="modalBody">
+        <div class="startTitle">Tu as une mission.</div>
+        <div class="startText" id="startRulesText">—</div>
+      </div>
+      <div class="modalActions">
+        <button class="startBtn" id="startBtn" type="button">DÉMARRER</button>
       </div>
     </div>
-    <div class="modalBody">
-      <div class="startTitle">Tu as une mission.</div>
-      <div class="startText" id="startRulesText">
-        —
+  </div>
+
+  <!-- LOADING overlay -->
+  <div class="overlay loadingOverlay" id="loadingOverlay">
+    <div class="loadingBox">CHARGEMENT…</div>
+  </div>
+
+  <!-- Feedback overlay -->
+  <div class="overlay" id="overlay">
+    <div class="modalBox" id="modalBox">
+      <div class="modalTop">
+        <div class="badgeState" id="badgeState">—</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+          Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
+        </div>
+      </div>
+      <div class="modalBody" id="modalText">…</div>
+      <div class="modalActions">
+        <button class="btnNeo" id="retryBtn" type="button">Réessayer</button>
+        <button class="btnPrimary" id="nextBtn" type="button">Suivant</button>
+        <button class="btnPrimary" id="okBtn" type="button" style="display:none;">OK</button>
       </div>
     </div>
-    <div class="modalActions">
-      <button class="startBtn" id="startBtn" type="button">DÉMARRER</button>
-    </div>
   </div>
-</div>
 
-<!-- LOADING overlay -->
-<div class="overlay loadingOverlay" id="loadingOverlay">
-  <div class="loadingBox">CHARGEMENT…</div>
-</div>
-
-<!-- Feedback overlay -->
-<div class="overlay" id="overlay">
-  <div class="modalBox" id="modalBox">
-    <div class="modalTop">
-      <div class="badgeState" id="badgeState">—</div>
-      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
+  <!-- Corrigé overlay -->
+  <div class="overlay" id="keyOverlay">
+    <div class="modalBox">
+      <div class="keyHeader">
+        <div class="badgeState bWarn">📘 Corrigé</div>
+        <button class="closeX" id="closeKeyBtn" type="button">✕</button>
       </div>
-    </div>
-    <div class="modalBody" id="modalText">…</div>
-    <div class="modalActions">
-      <button class="btnNeo" id="retryBtn" type="button">Réessayer</button>
-      <button class="btnPrimary" id="nextBtn" type="button">Suivant</button>
-      <button class="btnPrimary" id="okBtn" type="button" style="display:none;">OK</button>
+      <div class="keyBody" id="answerKeyWrap"></div>
     </div>
   </div>
-</div>
-
-<!-- Corrigé overlay -->
-<div class="overlay" id="keyOverlay">
-  <div class="modalBox">
-    <div class="keyHeader">
-      <div class="badgeState bWarn">📘 Corrigé</div>
-      <button class="closeX" id="closeKeyBtn" type="button">✕</button>
-    </div>
-    <div class="keyBody" id="answerKeyWrap"></div>
-  </div>
-</div>
 
 <script>
 /* ========= SFX ========= */
@@ -668,6 +729,9 @@ const progressBar = el("progressBar");
 const hintBtn = el("hintBtn"), hudHints = el("hudHints"), pauseBtn = el("pauseBtn");
 const showKeyBtn = el("showKeyBtn"), endBtn = el("endBtn");
 const keyOverlay = el("keyOverlay"), closeKeyBtn = el("closeKeyBtn"), answerKeyWrap = el("answerKeyWrap");
+
+const levelTabText = el("levelTabText");
+const miniHint = el("miniHint");
 
 /* ======= CONFIG ======= */
 const SCENARIO = {
@@ -725,8 +789,9 @@ hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
 
 difficultyChip.textContent = "MODE: " + labelNiveau(difficulty);
-el("levelTabText").textContent = labelNiveau(difficulty);
-el("miniRules").textContent = `⏱ ${TIMER_SECONDS}s / question • 🎯 ${MAX_ATTEMPTS} tentatives max • 💡 ${MAX_HINTS} indices`;
+levelTabText.textContent = labelNiveau(difficulty);
+miniHint.textContent = `⏱ ${TIMER_SECONDS}s • 🎯 ${MAX_ATTEMPTS} tentatives • 💡 ${MAX_HINTS} indices`;
+
 startRulesText.innerHTML = `
   Tu interviens en situation d’urgence.<br><br>
   <b>Tu as ${TIMER_SECONDS} secondes par question et ${MAX_ATTEMPTS} tentative(s) maximum.</b><br>
@@ -842,7 +907,7 @@ pauseBtn.addEventListener("click", ()=>{
   pauseBtn.textContent = paused ? "▶ Reprendre" : "⏸ Pause";
 });
 
-/* ======= Hint “sur la réponse” (sans modifier tes questions) ======= */
+/* ======= Hint ======= */
 function getHintForQuestion(q){
   const t = q.type;
   if(t==="single"){
@@ -850,18 +915,17 @@ function getHintForQuestion(q){
     if(ok) return `Indice : la meilleure action est celle qui correspond à : « ${ok.text.slice(0, Math.min(28, ok.text.length))}${ok.text.length>28 ? "…" : ""} »`;
   }
   if(t==="tf"){
-    return `Indice : réfléchis à la règle de base en traumatisme (immobilisation/évaluation avant mobilisation).`;
+    return `Indice : pense à la règle traumatique : immobilisation/évaluation avant toute mobilisation.`;
   }
   if(t==="multi"){
     const good = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
     return `Indice : il y a ${good.length} réponses correctes. Une des priorités est : « ${good[0]||"—"} ».`;
   }
   if(t==="short"){
-    return `Indice : réponse très courte, sans phrase (ex : 1–2 mots / un nombre).`;
+    return `Indice : réponse très courte, sans phrase (1–2 mots / un nombre).`;
   }
   if(t==="image_single"){
-    const ok = (q.options||[]).find(o=>o.kind==="ok");
-    if(ok) return `Indice : cherche l’image où l’on respecte l’axe tête-cou-tronc (immobilisation).`;
+    return `Indice : cherche l’image où l’on respecte l’axe tête-cou-tronc (immobilisation).`;
   }
   if(t==="drag_order"){
     const first = (q.expected||[])[0];
@@ -874,7 +938,7 @@ function getHintForQuestion(q){
   if(t==="cloze"){
     return `Indice : respecte exactement les deux valeurs demandées (nombre + état).`;
   }
-  return `Indice : relis la consigne et choisis l’action la plus sûre et prioritaire.`;
+  return `Indice : choisis l’action la plus sûre et prioritaire.`;
 }
 
 hintBtn.addEventListener("click", ()=>{
@@ -932,6 +996,7 @@ async function renderQuestion(i){
   qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
+  optionsEl.classList.remove("dragCompact");
 
   hudQnum.textContent = String(i+1);
   setProgressUI();
@@ -1077,6 +1142,7 @@ async function renderQuestion(i){
 
   if(type==="drag_order"){
     clearBtn.style.display="inline-block";
+    optionsEl.classList.add("dragCompact");
 
     const list = document.createElement("div");
     list.id="dragList";
@@ -1452,6 +1518,7 @@ closeKeyBtn.addEventListener("click", ()=>{
 });
 
 /* ======= Badges ======= */
+const BADGE_BASE = "assets/"; // badges: assets/or.png / assets/argent.png / assets/bronze.png
 function computeBadge(score){
   if(score >= 90) return { level: "OR", img: "or.png" };
   if(score >= 70) return { level: "ARGENT", img: "argent.png" };
@@ -1485,7 +1552,6 @@ function endScenario(){
   paused=false;
   pauseBtn.textContent="⏸ Pause";
 
-  // badge + save
   const b = computeBadge(score);
   saveBadge(b);
 
@@ -1501,7 +1567,8 @@ function endScenario(){
   optionsEl.innerHTML = `
     <div class="opt" style="cursor:default; text-align:center;">
       <div style="display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;">
-        <img src="${b.img}" alt="${b.level}" style="width:76px; height:76px; object-fit:contain; filter: drop-shadow(0 12px 22px rgba(0,0,0,.35));">
+        <img src="${BADGE_BASE + b.img}" alt="${b.level}"
+          style="width:76px; height:76px; object-fit:contain; filter: drop-shadow(0 12px 22px rgba(0,0,0,.35));">
         <div>
           <div style="font-size:13px; color: rgba(255,255,255,.75); font-weight:900; letter-spacing:.28px;">FIN — BADGE OBTENU</div>
           <div style="font-weight:950; font-size:22px; margin-top:2px;">🏅 Badge ${b.level}</div>
@@ -1511,17 +1578,14 @@ function endScenario(){
     </div>
   `;
 
-  // disable gameplay controls
   validateBtn.disabled=true;
   clearBtn.style.display="none";
   hintBtn.disabled=true;
   pauseBtn.disabled=true;
 
-  // activate end actions
   showKeyBtn.disabled=false;
   endBtn.style.display="inline-block";
 
-  // progress full
   progressBar.style.width = "100%";
 }
 
@@ -1544,7 +1608,6 @@ function motion(type){
 startBtn.addEventListener("click", async ()=>{
   ensureAudio(); sfxClick();
 
-  // reset session stats
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress=0; score=0;
@@ -1552,7 +1615,6 @@ startBtn.addEventListener("click", async ()=>{
 
   attemptsUsed=0; setAttemptsUI();
 
-  // reset hints for scenario
   hintsLeft = MAX_HINTS;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   hintUsedThisQuestion=false;
