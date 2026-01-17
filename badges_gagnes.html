@@ -14,18 +14,20 @@
   --muted: rgba(255,255,255,.70);
 
   --gold: rgba(255,200,80,1);
-  --ember: rgba(255,150,70,1);
-  --blue: rgba(80,170,255,1);
+  --red: rgba(255,70,70,1);
   --green: rgba(45,200,120,1);
+  --blue: rgba(80,170,255,1);
+  --ember: rgba(255,150,70,1);
+  --ember2: rgba(255,120,50,1);
 
-  --border: rgba(255,200,150,.18);
   --shadow: 0 18px 70px rgba(0,0,0,.50);
+  --border: rgba(255,200,150,.18);
 }
 
 html,body{
   margin:0;
   background: transparent;
-  overflow:hidden; /* Genially */
+  overflow:hidden;
   color: var(--text);
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
@@ -37,94 +39,51 @@ html,body{
   display:flex;
   justify-content:center;
   align-items:stretch;
-  position:relative;
 }
 
-/* ambiance (sans cadre) */
-.stage::before{
-  content:"";
-  position:absolute; inset:-2px;
-  pointer-events:none;
-  background:
-    radial-gradient(700px 280px at 15% 10%, rgba(255,150,70,.20), transparent 60%),
-    radial-gradient(760px 320px at 85% 90%, rgba(80,170,255,.16), transparent 62%),
-    radial-gradient(520px 280px at 55% 20%, rgba(255,200,80,.10), transparent 62%);
-  opacity:.95;
-}
-
-/* ✅ UN SEUL GRAND CONTENEUR (pas de cadres visibles) */
+/* ✅ UN SEUL GRAND CONTENEUR, SANS CADRE */
 .big{
-  width:min(1280px,100%);
+  width:min(1400px,100%);
   height:100%;
   display:grid;
-  grid-template-columns: 330px 1fr;
-  gap: 20px;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
   position:relative;
-  z-index:2;
 }
 
 /* LEFT : avatar pleine hauteur (sans cadre) */
 .left{
-  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  gap: 12px;
-  padding: 6px 4px;
+  gap: 10px;
+  padding-top: 8px;
 }
-
 .avatar{
   width: 100%;
-  height: min(560px, 66vh);
+  height: min(540px, 66vh);
   object-fit: contain;
-  filter:
-    drop-shadow(0 30px 56px rgba(0,0,0,.62))
-    drop-shadow(0 0 60px rgba(80,170,255,.10));
+  filter: drop-shadow(0 30px 55px rgba(0,0,0,.55));
 }
-
 .name{
   font-weight: 950;
-  font-size: 22px;
-  line-height:1.05;
-  text-shadow: 0 18px 40px rgba(0,0,0,.62);
-  letter-spacing:.2px;
-  text-align:center;
+  font-size: 20px;
+  line-height:1.1;
+  text-shadow: 0 16px 34px rgba(0,0,0,.55);
 }
-
-.sub{
-  color: rgba(255,255,255,.82);
-  font-weight: 850;
+.level{
   font-size: 12px;
-  text-align:center;
-}
-
-.levelRow{
-  display:flex;
-  gap: 10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top: 2px;
-}
-
-.chip{
+  font-weight: 950;
+  color: rgba(255,255,255,.82);
   padding: 7px 10px;
   border-radius: 999px;
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.10);
-  font-weight: 950;
-  font-size: 12px;
-  color: rgba(255,255,255,.88);
-  white-space:nowrap;
-}
-.chip.gold{
-  background: rgba(255,200,80,.10);
-  border-color: rgba(255,200,80,.28);
 }
 
-/* RIGHT : liste (sans cadre) */
+/* RIGHT */
 .right{
-  position:relative;
   display:flex;
   flex-direction:column;
   gap: 12px;
@@ -132,71 +91,62 @@ html,body{
   min-height:0;
 }
 
-/* header + progression (sans cadre) */
+/* top row */
 .topRow{
   display:flex;
-  align-items:flex-end;
+  align-items:center;
   justify-content:space-between;
-  gap: 14px;
+  gap: 12px;
   flex-wrap:wrap;
 }
-
 .hTitle{
   font-weight: 950;
-  font-size: 20px;
-  text-shadow: 0 18px 40px rgba(0,0,0,.62);
-  letter-spacing:.2px;
+  font-size: 18px;
+  text-shadow: 0 16px 34px rgba(0,0,0,.55);
 }
-
 .progressWrap{
   display:flex;
   align-items:center;
   gap: 10px;
   color: rgba(255,255,255,.82);
-  font-weight: 950;
+  font-weight: 900;
   font-size: 12px;
   white-space:nowrap;
 }
-
 .progressShell{
   width: 240px;
-  height: 9px;
+  height: 10px;
   border-radius: 999px;
   background: rgba(255,255,255,.10);
   border: 1px solid rgba(255,255,255,.10);
   overflow:hidden;
-  box-shadow: 0 10px 26px rgba(0,0,0,.22);
 }
-
 .progressBar{
   height:100%;
   width:0%;
-  background: linear-gradient(90deg, rgba(255,200,80,1), rgba(255,120,50,1));
-  transition: width .45s ease;
+  background: linear-gradient(90deg, rgba(80,170,255,.95), rgba(255,200,80,.95), rgba(255,120,50,.95));
+  transition: width .35s ease;
 }
 
-/* liste badges (seuls les gagnés) */
+/* list */
 .list{
   flex:1;
   min-height:0;
   overflow:auto;
-  padding-right: 8px;
-  padding-bottom: 4px;
+  padding-right: 6px;
   display:flex;
   flex-direction:column;
   gap: 10px;
 }
-
-/* scrollbar */
-.list::-webkit-scrollbar{ width: 9px; }
+.list::-webkit-scrollbar{ width: 10px; }
 .list::-webkit-scrollbar-thumb{
   background: rgba(255,255,255,.18);
-  border-radius: 10px;
+  border-radius: 999px;
   border: 2px solid rgba(0,0,0,.18);
 }
-.list::-webkit-scrollbar-track{ background: rgba(0,0,0,.14); border-radius: 10px; }
+.list::-webkit-scrollbar-track{ background: rgba(0,0,0,.16); border-radius: 999px; }
 
-/* item badge */
+/* card badge */
 .item{
   display:flex;
   align-items:center;
@@ -212,55 +162,37 @@ html,body{
   transform: translateY(10px);
   opacity:0;
 }
-
-/* entrée séquentielle */
 .item.in{
   animation: itemIn .55s cubic-bezier(.18,.9,.22,1) forwards;
 }
 @keyframes itemIn{
-  from{ transform: translateY(16px); opacity:0; }
+  from{ transform: translateY(14px); opacity:0; }
   to{ transform: translateY(0); opacity:1; }
 }
-
-/* glow léger interne */
 .item::after{
   content:"";
   position:absolute; inset:-2px;
   pointer-events:none;
   background:
-    radial-gradient(420px 160px at 10% 0%, rgba(255,150,70,.16), transparent 60%),
+    radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.16), transparent 60%),
     radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
-  opacity:.85;
-}
-
-/* highlight dernier badge */
-.item.last{
-  border-color: rgba(255,200,80,.30);
-  box-shadow: 0 0 0 3px rgba(255,200,80,.10), 0 18px 42px rgba(0,0,0,.34);
-  animation: lastPulse 1.05s ease 1;
-}
-@keyframes lastPulse{
-  0%{ transform: translateY(0) scale(1); }
-  40%{ transform: translateY(-1px) scale(1.012); }
-  100%{ transform: translateY(0) scale(1); }
+  opacity:.9;
 }
 
 .bimg{
-  width: 60px;
-  height: 60px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
-  filter: drop-shadow(0 12px 26px rgba(0,0,0,.48));
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,.45));
   position:relative;
   z-index:2;
 }
-
 .info{
   flex:1;
   min-width:0;
   position:relative;
   z-index:2;
 }
-
 .itTitle{
   font-weight: 950;
   font-size: 14px;
@@ -268,17 +200,15 @@ html,body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-
 .itMeta{
   margin-top: 6px;
   display:flex;
   flex-wrap:wrap;
   gap: 8px;
   font-size: 12px;
-  font-weight: 850;
+  font-weight: 900;
   color: rgba(255,255,255,.80);
 }
-
 .pill{
   padding: 6px 9px;
   border-radius: 999px;
@@ -286,7 +216,6 @@ html,body{
   border: 1px solid rgba(255,255,255,.10);
   white-space:nowrap;
 }
-
 .tag{
   font-weight: 950;
   font-size: 12px;
@@ -302,20 +231,19 @@ html,body{
 .tag.ARGENT{ border-color: rgba(210,220,235,.35); background: rgba(210,220,235,.10); }
 .tag.BRONZE{ border-color: rgba(255,150,70,.40); background: rgba(255,150,70,.10); }
 
-/* état vide (aucun badge gagné) */
+/* empty state */
 .empty{
-  margin-top: 14px;
+  margin-top: 8px;
   padding: 14px 14px;
   border-radius: 18px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 14px 34px rgba(0,0,0,.24);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
   color: rgba(255,255,255,.82);
-  font-weight: 850;
-  line-height:1.55;
+  font-weight: 900;
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
 }
 
-/* FULLSCREEN dernier badge */
+/* ===== FULLSCREEN LAST BADGE ===== */
 .full{
   position:fixed;
   inset:0;
@@ -324,34 +252,27 @@ html,body{
   z-index:999;
   pointer-events:none;
   background: radial-gradient(circle at center,
-    rgba(255,200,80,.14),
+    rgba(255,200,80,.12),
     rgba(0,0,0,.82) 65%);
   backdrop-filter: blur(2px);
 }
 .full.show{ display:grid; }
 .full img{
-  width: min(70vw, 420px);
+  width: min(72vw, 460px);
   filter:
-    drop-shadow(0 44px 100px rgba(0,0,0,.75))
-    drop-shadow(0 0 100px rgba(255,200,80,.35));
-  animation: zoomAndFly 1.85s cubic-bezier(.18,.9,.22,1) forwards;
+    drop-shadow(0 40px 90px rgba(0,0,0,.75))
+    drop-shadow(0 0 90px rgba(255,200,80,.35));
+  animation: zoomAndFly 1.8s cubic-bezier(.18,.9,.22,1) forwards;
 }
-/* plein écran -> recule -> vers la liste */
 @keyframes zoomAndFly{
   0%{ transform: scale(2.9); opacity:0; filter: blur(6px); }
-  22%{ transform: scale(1.6); opacity:1; filter: blur(0); }
-  70%{ transform: scale(.96); opacity:1; }
+  22%{ transform: scale(1.65); opacity:1; filter: blur(0); }
+  70%{ transform: scale(.98); opacity:1; }
   100%{ transform: scale(.18) translate(420px, -140px); opacity:0; }
 }
 
-/* confettis (léger) */
-.confetti{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:998;
-  display:none;
-}
+/* confetti */
+.confetti{ position:fixed; inset:0; pointer-events:none; z-index:998; display:none; }
 .confetti.show{ display:block; }
 .confetti i{
   position:absolute;
@@ -368,64 +289,52 @@ html,body{
 
 /* responsive */
 @media (max-width: 900px){
-  .big{ grid-template-columns: 1fr; gap: 10px; }
+  .big{ grid-template-columns: 1fr; }
   .avatar{ height: min(280px, 36vh); }
   .progressShell{ width: 200px; }
-  .left{ padding: 4px 2px; }
 }
 </style>
 </head>
 
 <body>
 <div class="stage">
-  <!-- ✅ UNIQUE GRAND CONTENEUR -->
   <div class="big">
 
-    <!-- LEFT (sans cadre) -->
     <div class="left">
       <img id="avatar" class="avatar" alt="avatar">
       <div class="name" id="pname">Dr. Joueur</div>
-      <div class="sub">Badges obtenus</div>
-      <div class="levelRow">
-        <div class="chip gold" id="plevel">NIVEAU : DÉBUTANT</div>
-        <div class="chip" id="plast">Dernier badge : —</div>
-      </div>
+      <div class="level" id="plevel">NIVEAU : DÉBUTANT</div>
     </div>
 
-    <!-- RIGHT (sans cadre) -->
     <div class="right">
       <div class="topRow">
-        <div class="hTitle">🏅 Badges gagnés</div>
+        <div class="hTitle">🏅 Tes badges</div>
         <div class="progressWrap">
           <span id="pcount">0/4</span>
-          <div class="progressShell" aria-label="progress">
-            <div class="progressBar" id="pbar"></div>
-          </div>
+          <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
         </div>
       </div>
 
-      <div class="list" id="list"></div>
+      <!-- ✅ compatible avec ton rendu demandé -->
+      <div id="badgesGrid" class="list"></div>
+
+      <div id="empty" class="empty" style="display:none;">
+        Aucun badge pour ce niveau pour le moment. Termine un scénario pour débloquer ton premier badge.
+      </div>
     </div>
 
   </div>
 </div>
 
-<!-- Fullscreen last badge -->
-<div class="full" id="full">
-  <img id="fullImg" alt="badge">
-</div>
-
-<!-- Confetti -->
+<div class="full" id="full"><img id="fullImg" alt="badge"></div>
 <div class="confetti" id="confetti"></div>
 
 <script>
 /* =========================
-   ✅ SFX (cohérent moteur)
+   ✅ SFX (WebAudio) cohérent
 ========================= */
 let audioCtx=null;
-function ensureAudio(){
-  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-}
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.09, type="sine", gain=0.05){
   ensureAudio();
   const t0 = audioCtx.currentTime;
@@ -443,69 +352,122 @@ function sfxVictory(){
   setTimeout(()=>tone(784,0.12,"sine",0.06), 220);
 }
 function sfxWhoosh(){
-  tone(520,0.05,"triangle",0.032);
-  setTimeout(()=>tone(360,0.08,"triangle",0.032), 60);
+  tone(420,0.05,"triangle",0.03);
+  setTimeout(()=>tone(300,0.07,"triangle",0.03), 55);
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
-
-/* Débloque l’audio (Chrome/Genially) */
 window.addEventListener("pointerdown", ()=>ensureAudio(), {once:true});
 
 /* =========================
-   ✅ DATA
+   ✅ DATA + helpers
 ========================= */
 const SCENARIOS = [
-  { id:1, label:"Scénario 1" },
-  { id:2, label:"Scénario 2" },
-  { id:3, label:"Scénario 3" },
-  { id:4, label:"Scénario 4" }
+  { id: 1, label: "Scénario 1" },
+  { id: 2, label: "Scénario 2" },
+  { id: 3, label: "Scénario 3" },
+  { id: 4, label: "Scénario 4" }
 ];
 
-function getDifficulty(){
-  return (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "DÉBUTANT").toUpperCase();
+const DIFFICULTY = (localStorage.getItem("niveau")
+  || localStorage.getItem("difficulty")
+  || "DÉBUTANT").toUpperCase();
+
+function escapeHtml(str){
+  return String(str||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
+
+function readBadgeForPage(scenarioId, difficultyLabel){
+  const key = `badge_s${scenarioId}_${difficultyLabel}`;
+  try{ return JSON.parse(localStorage.getItem(key) || "null"); }
+  catch(e){ return null; }
+}
+
 function getPlayer(){
-  return localStorage.getItem("playerName") || localStorage.getItem("player_name") || "Joueur";
+  return localStorage.getItem("playerName") || localStorage.getItem("player_name") || (window.player_name||window.playerName) || "Joueur";
 }
 function getAvatar(){
   return localStorage.getItem("avatar") || "medecin_f.png";
 }
-function badgeKey(scenarioId, difficulty){
-  return `badge_s${scenarioId}_${difficulty}`;
-}
-function readBadge(scenarioId, difficulty){
-  const key = badgeKey(scenarioId, difficulty);
-  try{ return JSON.parse(localStorage.getItem(key) || "null"); }catch(e){ return null; }
-}
-function esc(s){
-  return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+/* =========================
+   ✅ Render (badges gagnés seulement)
+========================= */
+const host = document.getElementById("badgesGrid");
+const empty = document.getElementById("empty");
+const pbar = document.getElementById("pbar");
+const pcount = document.getElementById("pcount");
+
+document.getElementById("pname").textContent = "Dr. " + getPlayer();
+document.getElementById("plevel").textContent = "NIVEAU : " + DIFFICULTY;
+document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
+
+function renderBadges(){
+  if(!host) return;
+
+  const obtained = [];
+  SCENARIOS.forEach(sc=>{
+    const b = readBadgeForPage(sc.id, DIFFICULTY);
+    if(b) obtained.push({ sc, b });
+  });
+
+  // progression x/4
+  pcount.textContent = obtained.length + "/4";
+  pbar.style.width = Math.round((obtained.length/4)*100) + "%";
+
+  if(obtained.length===0){
+    host.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  const cards = obtained.map(({sc,b})=>{
+    const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
+    const title = escapeHtml(b.scenarioLabel || sc.label);
+    const img = escapeHtml(b.badgeImage || "assets/bronze.png");
+    const diff = escapeHtml(b.difficulty || DIFFICULTY);
+    const score = escapeHtml(String(b.score ?? 0));
+
+    return `
+      <div class="item" data-badge="1">
+        <img class="bimg" src="${img}" alt="${lvl}">
+        <div class="info">
+          <div class="itTitle">${title}</div>
+          <div class="itMeta">
+            <span class="pill">⭐ ${score}</span>
+            <span class="pill">🎚 ${diff}</span>
+          </div>
+        </div>
+        <div class="tag ${lvl}">${lvl}</div>
+      </div>
+    `;
+  }).join("");
+
+  host.innerHTML = cards;
+
+  // animation entrée séquentielle
+  const items = [...host.querySelectorAll(".item")];
+  items.forEach((it,i)=>{
+    setTimeout(()=>it.classList.add("in"), 100 + i*140);
+  });
 }
 
 /* =========================
-   ✅ UI refs
+   ✅ Fullscreen last badge + confetti
 ========================= */
-const listEl = document.getElementById("list");
-const pbar = document.getElementById("pbar");
-const pcount = document.getElementById("pcount");
 const full = document.getElementById("full");
 const fullImg = document.getElementById("fullImg");
 const confetti = document.getElementById("confetti");
-const plast = document.getElementById("plast");
 
-const difficulty = getDifficulty();
-const player = getPlayer();
-
-document.getElementById("pname").textContent = "Dr. " + player;
-document.getElementById("plevel").textContent = "NIVEAU : " + difficulty;
-document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
-
-/* =========================
-   ✅ Confetti
-========================= */
 function fireConfetti(){
   confetti.innerHTML = "";
   const colors = ["#ffc850","#ff9646","#50aaff","#2dc878"];
-  for(let i=0;i<20;i++){
+  for(let i=0;i<18;i++){
     const p = document.createElement("i");
     p.style.left = (Math.random()*95)+"%";
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
@@ -516,132 +478,37 @@ function fireConfetti(){
   setTimeout(()=>confetti.classList.remove("show"), 1700);
 }
 
-/* =========================
-   ✅ Dernier badge fullscreen
-========================= */
-function showLastBadgeFullscreen(){
+function showLastBadge(){
   const key = localStorage.getItem("last_badge_key");
-  if(!key) return null;
+  if(!key) return false;
 
-  let last = null;
-  try{ last = JSON.parse(localStorage.getItem(key) || "null"); }catch(e){}
-  if(!last || !last.badgeImage) return null;
-
-  // ne rejoue pas en boucle
+  // anti-répétition
   const seenKey = "last_badge_seen_" + key;
-  if(localStorage.getItem(seenKey) === "1") return null;
-  localStorage.setItem(seenKey, "1");
+  if(localStorage.getItem(seenKey) === "1") return false;
 
-  fullImg.src = last.badgeImage;
+  let b=null;
+  try{ b = JSON.parse(localStorage.getItem(key)||"null"); }catch(e){}
+  if(!b || !b.badgeImage) return false;
+
+  localStorage.setItem(seenKey, "1");
+  fullImg.src = b.badgeImage;
+
   full.classList.add("show");
   sfxVictory();
   setTimeout(()=>sfxWhoosh(), 260);
   setTimeout(()=>fireConfetti(), 280);
-  setTimeout(()=>full.classList.remove("show"), 1850);
+  setTimeout(()=>full.classList.remove("show"), 1800);
 
-  return last;
+  return true;
 }
 
-/* =========================
-   ✅ Render : SEULEMENT badges gagnés
-========================= */
-function buildList(){
-  listEl.innerHTML = "";
-  const badges = [];
-
-  // récup badges gagnés (scénarios 1..4) pour le niveau courant
-  SCENARIOS.forEach(sc=>{
-    const b = readBadge(sc.id, difficulty);
-    if(b) badges.push(b);
-  });
-
-  // progression : nombre de badges gagnés / 4
-  const obtained = badges.length;
-  pcount.textContent = obtained + "/4";
-  pbar.style.width = Math.round((obtained/4)*100) + "%";
-
-  if(obtained === 0){
-    plast.textContent = "Dernier badge : —";
-    listEl.innerHTML = `
-      <div class="empty">
-        Aucun badge gagné pour l’instant dans ce niveau.<br>
-        Termine un scénario pour voir ton badge apparaître ici.
-      </div>
-    `;
-    return { nodes: [], obtained, keyToNode: {} };
-  }
-
-  // tri par scenarioId pour affichage logique
-  badges.sort((a,b)=> (a.scenarioId||0) - (b.scenarioId||0));
-
-  const keyToNode = {};
-  badges.forEach(b=>{
-    const level = String(b.badgeLevel || "BRONZE").toUpperCase();
-    const node = document.createElement("div");
-    node.className = "item";
-    node.dataset.key = `badge_s${b.scenarioId}_${(b.difficulty||difficulty).toUpperCase()}`;
-
-    node.innerHTML = `
-      <img class="bimg" src="${esc(b.badgeImage)}" alt="badge">
-      <div class="info">
-        <div class="itTitle">${esc(b.scenarioLabel || ("Scénario " + (b.scenarioId||"")))}</div>
-        <div class="itMeta">
-          <span class="pill">🏅 ${esc(level)}</span>
-          <span class="pill">⭐ ${esc(String(b.score ?? 0))}</span>
-          <span class="pill">🎚 ${esc((b.difficulty||difficulty).toUpperCase())}</span>
-        </div>
-      </div>
-      <div class="tag ${esc(level)}">${esc(level)}</div>
-    `;
-
-    listEl.appendChild(node);
-    keyToNode[node.dataset.key] = node;
-  });
-
-  // dernier badge (si on a l’info)
-  const lastKey = localStorage.getItem("last_badge_key");
-  plast.textContent = "Dernier badge : " + (lastKey ? lastKey.replace("badge_","") : "—");
-
-  return { nodes:[...listEl.querySelectorAll(".item")], obtained, keyToNode };
+/* init */
+renderBadges();
+const played = showLastBadge();
+if(played){
+  // petit son click si l’utilisateur clique sur un badge
+  host.addEventListener("click", ()=>sfxClick());
 }
-
-/* animation séquentielle */
-function animateSequential(items){
-  items.forEach((it, i)=>{
-    setTimeout(()=>it.classList.add("in"), 90 + i*120);
-  });
-}
-
-/* highlight et scroll sur dernier badge */
-function focusLast(built){
-  const lastKey = localStorage.getItem("last_badge_key");
-  if(!lastKey) return;
-
-  const node = built.keyToNode[lastKey];
-  if(!node) return;
-
-  node.classList.add("last");
-  node.scrollIntoView({behavior:"smooth", block:"center"});
-}
-
-/* =========================
-   ✅ INIT
-========================= */
-const last = showLastBadgeFullscreen();  // plein écran -> recule (visuel)
-const built = buildList();               // ensuite liste : seulement gagnés
-
-setTimeout(()=>{
-  animateSequential(built.nodes);
-  // focus sur le dernier badge si présent
-  setTimeout(()=>focusLast(built), 420);
-}, last ? 760 : 120);
-
-/* clic = petit sfx */
-listEl.addEventListener("click", (e)=>{
-  const it = e.target.closest(".item");
-  if(!it) return;
-  sfxClick();
-});
 </script>
 </body>
 </html>
