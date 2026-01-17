@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Évaluation diagnostique — Urgences (10 questions)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --glass: rgba(25,27,31,.72);
+      --glass2: rgba(15,17,20,.55);
+      --text: rgba(255,255,255,.93);
+      --muted: rgba(255,255,255,.70);
+      --good: rgba(45,200,120,1);
+      --warn: rgba(255,200,80,1);
+      --bad: rgba(255,70,70,1);
+      --accent1: rgba(255,150,70,1);
+      --accent2: rgba(80,170,255,1);
+      --ember: rgba(255,110,70,1);
+    }
+
+    html,body{
+      margin:0;
+      background: transparent;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow:hidden;
+      height:100%;
+    }
+
+    /* =============================
+       ✅ GAME BACKGROUND (dramatic)
+       ============================= */
+    .stage{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:18px;
+      overflow:hidden;
+      position: relative;
+    }
+    .stage::before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 420px at 15% 10%, rgba(255,150,70,.12), transparent 60%),
+        radial-gradient(900px 420px at 85% 15%, rgba(80,170,255,.10), transparent 62%),
+        radial-gradient(1100px 560px at 50% 95%, rgba(255,70,70,.08), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.35));
+      opacity: .95;
+      animation: bgDrift 8s ease-in-out infinite alternate;
+      transform: translateZ(0);
+    }
+    .stage::after{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(70% 55% at 50% 35%, rgba(0,0,0,0), rgba(0,0,0,.42) 75%, rgba(0,0,0,.68) 100%),
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0px, rgba(255,255,255,.05) 1px, rgba(0,0,0,0) 5px, rgba(0,0,0,0) 9px);
+      opacity:.14;
+      mix-blend-mode: overlay;
+      animation: scanMove 2.6s linear infinite;
+    }
+    @keyframes bgDrift{
+      from{ transform: translate3d(-8px,-6px,0) scale(1.01); }
+      to{ transform: translate3d(10px,8px,0) scale(1.03); }
+    }
+    @keyframes scanMove{
+      from{ transform: translateY(-12px); }
+      to{ transform: translateY(12px); }
+    }
+
+    .wrap{
+      width:min(1120px, 100%);
+      position: relative;
+      z-index: 2;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+
+    .hud{ display:grid; grid-template-columns: 1fr; gap: 18px; margin-bottom:18px; flex: 0 0 auto; }
+
+    .hudbox{
+      background: var(--glass);
+      border: 1px solid rgba(255,200,150,.22);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      position: relative;
+      overflow:hidden;
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      transform: translateZ(0);
+      animation: hudFloat 3.6s ease-in-out infinite alternate;
+    }
+    @keyframes hudFloat{
+      from{ transform: translateY(0); }
+      to{ transform: translateY(-3px); }
+    }
+    .hudbox::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      pointer-events:none;
+      background:
+        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
+    }
+
+    .hudLeft{ position:relative; z-index:2; }
+    .hudTitle{
+      font-weight: 950;
+      font-size: 20px;
+      line-height:1.1;
+      text-shadow: 0 18px 40px rgba(0,0,0,.70);
+      letter-spacing: .2px;
+    }
+    .hudSub{ margin-top:4px; color: var(--muted); font-weight: 850; font-size: 13px; }
+
+    .hudRight{ position:relative; z-index:2; display:flex; align-items:center; gap: 10px; flex-wrap: wrap; justify-content:flex-end; }
+
+    .chip{
+      background: rgba(255,150,70,.14);
+      border: 1px solid rgba(255,150,70,.20);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .progShell{
+      width: 160px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .progBar{
+      height:100%;
+      width:0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,176,90,1), rgba(80,170,255,1));
+      box-shadow: 0 0 0 3px rgba(255,150,70,.08);
+      transition: width .26s ease;
+    }
+
+    /* ✅ FRAME FIXE */
+    .frame{
+      background: var(--glass2);
+      border: 1px solid rgba(255,200,150,.22);
+      border-radius: 18px;
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      box-shadow: 0 18px 70px rgba(0,0,0,.50);
+      backdrop-filter: blur(12px);
+      transform: translateZ(0);
+
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .frame::after{
+      content:"";
+      position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(800px 260px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
+        radial-gradient(760px 260px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
+    }
+
+    .fxOut{ animation: fxOut .18s ease forwards; }
+    .fxIn{ animation: fxIn .22s ease-out both; }
+    @keyframes fxOut{
+      from{ opacity:1; transform: translateY(0) scale(1); filter: blur(0px); }
+      to{ opacity:0; transform: translateY(6px) scale(.995); filter: blur(3px); }
+    }
+    @keyframes fxIn{
+      from{ opacity:0; transform: translateY(10px) scale(.995); filter: blur(4px); }
+      to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0px); }
+    }
+
+    .shake{ animation: shake .28s linear; }
+    @keyframes shake{
+      0%{ transform: translate(0,0); }
+      20%{ transform: translate(-2px,1px); }
+      40%{ transform: translate(2px,-1px); }
+      60%{ transform: translate(-2px,-1px); }
+      80%{ transform: translate(2px,1px); }
+      100%{ transform: translate(0,0); }
+    }
+
+    .qmeta{
+      position: relative; z-index:2;
+      color: rgba(255,255,255,.70);
+      font-size: 12px; font-weight: 950;
+      letter-spacing: .35px; text-transform: uppercase;
+      flex: 0 0 auto;
+    }
+    .qtitle{
+      position: relative; z-index:2;
+      margin-top: 6px;
+      font-weight: 980;
+      font-size: clamp(18px, 2.2vw, 28px);
+      line-height: 1.15;
+      text-shadow: 0 18px 44px rgba(0,0,0,.75);
+      letter-spacing: .2px;
+      flex: 0 0 auto;
+    }
+    .qtitle.glitch{ animation: glitchFlicker 2.8s ease-in-out infinite; }
+    @keyframes glitchFlicker{
+      0%, 86%, 100%{ text-shadow: 0 18px 44px rgba(0,0,0,.75); filter:none; }
+      88%{ text-shadow: 2px 0 rgba(255,90,90,.35), -2px 0 rgba(80,170,255,.25), 0 18px 44px rgba(0,0,0,.75); }
+      90%{ filter: brightness(1.05); }
+      92%{ text-shadow: -2px 0 rgba(255,90,90,.25), 2px 0 rgba(80,170,255,.35), 0 18px 44px rgba(0,0,0,.75); }
+    }
+
+    .qdesc{
+      position: relative; z-index:2;
+      margin-top: 10px;
+      color: rgba(255,255,255,.82);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 980px;
+      flex: 0 0 auto;
+    }
+
+    /* ✅ zone scroll interne */
+    .options{
+      position: relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      margin-top: 16px;
+
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .options::-webkit-scrollbar{ width: 10px; }
+    .options::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+    }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.10); border-radius: 999px; }
+
+    .opt{
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, filter .12s ease, background .12s ease, box-shadow .12s ease;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
+      box-shadow: 0 10px 28px rgba(0,0,0,.20);
+      transform: translateZ(0);
+      position: relative;
+      overflow:hidden;
+    }
+    .opt:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10));
+    }
+    .opt.sel{
+      background: linear-gradient(180deg, rgba(255,150,70,.32), rgba(255,120,50,.16));
+      border-color: rgba(255,150,70,.34);
+      box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 18px 40px rgba(0,0,0,.32);
+      animation: pop .18s ease-out;
+    }
+    @keyframes pop{ from{ transform: scale(.98); } to{ transform: scale(1); } }
+
+    .actions{
+      position: relative;
+      z-index:2;
+      display:flex;
+      justify-content:flex-end;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      flex: 0 0 auto;
+    }
+
+    .btnPrimary{
+      border: none;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color: rgba(10,12,18,.96);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 980;
+      letter-spacing: .25px;
+      box-shadow: 0 18px 56px rgba(0,0,0,.42);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      position: relative;
+      overflow:hidden;
+    }
+    .btnPrimary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btnPrimary:active{ transform: translateY(0px) scale(.99); }
+    .btnPrimary:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; }
+
+    .flash{
+      position: fixed; inset:0;
+      pointer-events:none;
+      z-index: 8000;
+      opacity:0;
+      background:
+        radial-gradient(900px 420px at 50% 20%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(900px 460px at 50% 80%, rgba(80,170,255,.14), transparent 60%),
+        rgba(0,0,0,.38);
+      backdrop-filter: blur(9px);
+      transition: opacity .16s ease;
+    }
+    .flash.on{ opacity:1; }
+
+    /* =============================
+       ✅ OVERLAYS (black screens)
+       ============================= */
+    .overlay{
+      position: fixed; inset: 0;
+      display:none; align-items:center; justify-content:center;
+      z-index: 9999;
+      pointer-events: auto;
+      background: rgba(0,0,0,.92);
+      overflow:hidden;
+    }
+    .overlay::before{
+      content:"";
+      position:absolute;
+      inset:-30px;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 420px at 50% 20%, rgba(255,150,70,.12), transparent 60%),
+        radial-gradient(900px 480px at 40% 110%, rgba(80,170,255,.10), transparent 60%),
+        radial-gradient(1200px 700px at 50% 50%, rgba(255,255,255,.04), transparent 65%);
+      opacity:.95;
+      animation: overlayGlow 3.2s ease-in-out infinite alternate;
+    }
+    .overlay::after{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none;
+      background: radial-gradient(70% 55% at 50% 35%, rgba(0,0,0,0), rgba(0,0,0,.55) 75%, rgba(0,0,0,.78) 100%);
+      opacity:.9;
+    }
+    @keyframes overlayGlow{ from{ opacity:.75; } to{ opacity:1; } }
+
+    .cinBox{
+      width: min(860px, 92%);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,12,16,.56);
+      box-shadow: 0 30px 120px rgba(0,0,0,.74);
+      overflow:hidden;
+      position: relative;
+      transform: translateZ(0);
+      animation: cinIn .45s ease-out both;
+    }
+    @keyframes cinIn{
+      from{ opacity:0; transform: translateY(16px) scale(.99); filter: blur(2px); }
+      to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0px); }
+    }
+
+    .cinTop{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+    }
+
+    .badgeState{
+      font-weight: 980;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+    .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
+    .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
+    .bInfo{ border-color: rgba(80,170,255,.28); background: rgba(80,170,255,.10); }
+
+    .cinBody{ padding: 18px 16px; color: rgba(255,255,255,.92); line-height: 1.55; font-size: 14px; }
+    .cinTitle{
+      font-weight: 990;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: .35px;
+      margin: 6px 0 6px;
+      text-shadow: 0 22px 48px rgba(0,0,0,.70);
+    }
+    .cinText{ color: rgba(255,255,255,.84); }
+
+    .cinActions{
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      justify-content:flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.18));
+    }
+
+    .startBtn{
+      border:none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 990;
+      letter-spacing: .45px;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color: rgba(10,12,18,.96);
+      box-shadow: 0 20px 70px rgba(0,0,0,.48);
+      transition: transform .14s ease, filter .14s ease;
+    }
+    .startBtn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .startBtn:active{ transform: translateY(0px) scale(.99); }
+
+    .bottomHint{
+      margin-top: 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.78);
+      font-weight: 900;
+      font-size: 12px;
+    }
+    .kbd{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 980;
+      color: rgba(255,255,255,.90);
+    }
+
+    /* =============================
+       ✅ LOADING SCREEN (NEW)
+       ============================= */
+    .loadingTitle{
+      font-weight: 990;
+      font-size: clamp(18px, 2.6vw, 28px);
+      letter-spacing: .35px;
+      text-shadow: 0 24px 60px rgba(0,0,0,.78);
+    }
+    .loadingSub{
+      margin-top: 8px;
+      color: rgba(255,255,255,.75);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .loaderRow{
+      display:flex;
+      align-items:center;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .ring{
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.12);
+      border-top-color: rgba(255,176,90,1);
+      border-right-color: rgba(80,170,255,1);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      animation: spin 1.0s linear infinite;
+    }
+    @keyframes spin { to{ transform: rotate(360deg); } }
+
+    .loadBar{
+      flex:1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      position: relative;
+    }
+    .loadBar > i{
+      position:absolute; inset:0;
+      width: 40%;
+      background: linear-gradient(90deg, rgba(255,176,90,1), rgba(80,170,255,1));
+      border-radius: 999px;
+      animation: barMove 1.2s ease-in-out infinite;
+    }
+    @keyframes barMove{
+      0%{ transform: translateX(-120%); opacity:.65; }
+      55%{ opacity:1; }
+      100%{ transform: translateX(260%); opacity:.65; }
+    }
+    .blink{
+      animation: blink 1.05s ease-in-out infinite;
+    }
+    @keyframes blink{
+      0%,100%{ opacity:.55; }
+      50%{ opacity:1; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage">
+    <div class="wrap" id="wrap">
+      <div class="hud">
+        <div class="hudbox">
+          <div class="hudLeft">
+            <div class="hudTitle">Évaluation diagnostique</div>
+            <div class="hudSub">10 questions • Objectif : recommander un parcours (Débutant / Intermédiaire / Avancé)</div>
+          </div>
+          <div class="hudRight">
+            <div class="chip" id="modeChip">MODE: DIAGNOSTIC</div>
+            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
+            <div class="progShell" aria-label="progression">
+              <div class="progBar" id="progBar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame fxIn" id="frame">
+        <div class="qmeta" id="qMeta">Test — Diagnostic</div>
+        <div class="qtitle glitch" id="qTitle">…</div>
+        <div class="qdesc" id="qDesc">…</div>
+        <div class="options" id="options"></div>
+        <div class="actions">
+          <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flash" id="flash"></div>
+
+  <!-- ✅ NEW: écran de chargement AU DÉPART -->
+  <div class="overlay" id="bootOverlay" style="display:flex;">
+    <div class="cinBox" role="dialog" aria-modal="true">
+      <div class="cinTop">
+        <div class="badgeState bInfo">⚙️ Initialisation</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">Préparation du diagnostic</div>
+      </div>
+
+      <div class="cinBody">
+        <div class="loadingTitle">CHARGEMENT<span class="blink">…</span></div>
+        <div class="loadingSub">Mise en place des questions, des effets et de l’interface.</div>
+
+        <div class="loaderRow">
+          <div class="ring" aria-hidden="true"></div>
+          <div class="loadBar" aria-label="progression de chargement"><i></i></div>
+        </div>
+
+        <div class="bottomHint" style="margin-top:14px;">
+          <span>⛑️ Urgences</span>
+          <span class="kbd">Prépare-toi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ START: objectifs (après chargement) -->
+  <div class="overlay" id="startOverlay">
+    <div class="cinBox" role="dialog" aria-modal="true">
+      <div class="cinTop">
+        <div class="badgeState bInfo">🧪 Diagnostic</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">Mission préparatoire • 10 questions</div>
+      </div>
+
+      <div class="cinBody">
+        <div class="cinTitle">Avant de te lancer…</div>
+        <div class="cinText">
+          Tu vas passer un <b>test diagnostique</b> rapide. Il sert à <b>calibrer ton parcours</b> (Débutant, Intermédiaire ou Avancé)
+          pour que le jeu reste <b>motivant</b>, <b>juste</b> et <b>progressif</b>.
+        </div>
+
+        <div class="bottomHint" style="margin-top:14px;">
+          <span>🎮 Respire. Chaque seconde compte.</span>
+          <span class="kbd">PRÊT(E) →</span>
+        </div>
+      </div>
+
+      <div class="cinActions">
+        <button class="startBtn" id="startBtn" type="button">PRÊT(E)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ END: écran noir -->
+  <div class="overlay" id="endOverlay">
+    <div class="cinBox" role="dialog" aria-modal="true">
+      <div class="cinTop">
+        <div class="badgeState" id="endBadge">—</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">Résultats • Recommandation</div>
+      </div>
+
+      <div class="cinBody" id="endText">…</div>
+
+      <div class="cinActions" style="justify-content:space-between;">
+        <div style="color: rgba(255,255,255,.70); font-weight:950; font-size:12px;">
+          ⬇️ En bas : <b>COMMENCER</b> pour lancer ton parcours.
+        </div>
+        <button class="startBtn" id="endOk" type="button">COMMENCER</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const NEXT_GENIALLY_URL = "#"; // <- remplace par le lien de ta prochaine page Genially
+  const BOOT_MIN_MS = 1200;      // ✅ durée mini de l'écran chargement (ms)
+
+  const $ = (id)=>document.getElementById(id);
+  const frame = $("frame");
+  const flash = $("flash");
+  const progBar = $("progBar");
+
+  const qNum = $("hudQnum");
+  const qTotal = $("hudQtotal");
+  const qTitle = $("qTitle");
+  const qDesc = $("qDesc");
+  const qMeta = $("qMeta");
+  const optionsEl = $("options");
+  const validateBtn = $("validateBtn");
+
+  const bootOverlay = $("bootOverlay");
+  const startOverlay = $("startOverlay");
+  const startBtn = $("startBtn");
+  const endOverlay = $("endOverlay");
+  const endBadge = $("endBadge");
+  const endText = $("endText");
+  const endOk = $("endOk");
+
+  // NOTE: score is kept internally only
+  let score = 0;
+  let idx = 0;
+
+  let selectedSingle = null;
+  let multiSelected = new Set();
+  let inputValue = "";
+  let clozeValues = {};
+
+  /* =========================
+     ✅ DRAMATIC SFX (WebAudio)
+     ========================= */
+  let AC = null, master = null;
+  function ensureAudio(){
+    if(AC) return;
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain();
+    master.gain.value = 0.55;
+    master.connect(AC.destination);
+  }
+  function tone(freq, dur=0.08, type="sine", gain=0.22){
+    if(!AC) return;
+    const o = AC.createOscillator();
+    const g = AC.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.value = 0.0001;
+    g.gain.setTargetAtTime(gain, AC.currentTime, 0.008);
+    g.gain.setTargetAtTime(0.0001, AC.currentTime + dur, 0.02);
+    o.connect(g); g.connect(master);
+    o.start();
+    o.stop(AC.currentTime + dur + 0.08);
+  }
+  function whoosh(dur=0.14){
+    if(!AC) return;
+    const nBuf = AC.createBuffer(1, Math.floor(AC.sampleRate * dur), AC.sampleRate);
+    const data = nBuf.getChannelData(0);
+    for(let i=0;i<data.length;i++) data[i] = (Math.random()*2-1) * (1 - i/data.length);
+    const src = AC.createBufferSource();
+    src.buffer = nBuf;
+    const bp = AC.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.setValueAtTime(800, AC.currentTime);
+    bp.frequency.exponentialRampToValueAtTime(2200, AC.currentTime + dur);
+    const g = AC.createGain();
+    g.gain.value = 0.0001;
+    g.gain.setTargetAtTime(0.45, AC.currentTime, 0.01);
+    g.gain.setTargetAtTime(0.0001, AC.currentTime + dur, 0.03);
+    src.connect(bp); bp.connect(g); g.connect(master);
+    src.start();
+    src.stop(AC.currentTime + dur + 0.05);
+  }
+  const sfx = {
+    click(){ tone(520, 0.05, "triangle", 0.16); tone(980, 0.04, "sine", 0.10); },
+    select(){ tone(420, 0.06, "triangle", 0.14); },
+    validate(){ whoosh(0.12); tone(260, 0.10, "sawtooth", 0.10); },
+    success(){ tone(523, 0.10, "sine", 0.18); setTimeout(()=>tone(659,0.10,"sine",0.18), 70); setTimeout(()=>tone(784,0.12,"sine",0.18), 140); },
+  };
+
+  function flashFx(){
+    flash.classList.add("on");
+    setTimeout(()=>flash.classList.remove("on"), 150);
+  }
+  function shakeFx(){
+    frame.classList.remove("shake");
+    void frame.offsetWidth;
+    frame.classList.add("shake");
+  }
+  function transitionTo(renderFn){
+    frame.classList.remove("fxIn");
+    frame.classList.add("fxOut");
+    flashFx();
+    setTimeout(()=>{
+      renderFn();
+      frame.classList.remove("fxOut");
+      frame.classList.add("fxIn");
+    }, 170);
+  }
+
+  const questions = [
+    {
+      type: "single",
+      title: "AVP — arrivée sur les lieux",
+      desc: "Quelle est ta première action avant d’approcher les victimes ?",
+      options: [
+        { text: "Approcher et mobiliser la victime la plus bruyante", ok: false },
+        { text: "Sécuriser la zone (balisage), EPI, suppression des dangers", ok: true },
+        { text: "Commencer par remplir les informations d’accident", ok: false },
+        { text: "Demander aux témoins de déplacer les véhicules", ok: false }
+      ]
+    },
+    {
+      type: "multi",
+      title: "Sécurité — éléments indispensables",
+      desc: "Coche ce qui est essentiel pour une intervention AVP :",
+      options: [
+        { text: "Gants + gilet haute visibilité", correct: true },
+        { text: "Balisage (cônes/triangles)", correct: true },
+        { text: "Se placer dos à la circulation", correct: false },
+        { text: "Couper le contact si possible", correct: true }
+      ]
+    },
+    {
+      type: "single",
+      title: "Triage — priorité immédiate",
+      desc: "Quel signe impose une priorité IMMEDIATE ?",
+      options: [
+        { text: "Victime anxieuse mais consciente", ok: false },
+        { text: "Respiration absente/anormale", ok: true },
+        { text: "Douleur isolée au bras", ok: false },
+        { text: "Petite plaie superficielle", ok: false }
+      ]
+    },
+    {
+      type: "image_single",
+      title: "Décision — immobilisation",
+      desc: "Choisis l’image correspondant à la conduite la plus sûre après chute/AVP (rachis) :",
+      options: [
+        { label:"A", imgSrc:"assets/avp_q4_a.png", caption:"Victime assise / mobilisée", ok:false },
+        { label:"B", imgSrc:"assets/avp_q4_b.png", caption:"On la redresse pour la \"mettre à l’aise\"", ok:false },
+        { label:"C", imgSrc:"assets/avp_q4_c.png", caption:"Maintien axe tête-cou-tronc + surveillance + alerte", ok:true }
+      ]
+    },
+    {
+      type: "short",
+      title: "Hémorragie externe",
+      desc: "Quel est le premier geste à faire ? (1 mot)",
+      answers: ["compression", "comprimer"]
+    },
+    {
+      type: "cloze",
+      title: "Q6 — Alerte (message clair)",
+      desc: "complète les 2 informations: Un accident de la route entre deux véhicules (Dacia et Renault). 3 victimes sont impliquées dans une situation instable nécessitant une intervention rapide.",
+      template: "Accident sur la <b>{blank1}</b> • Victimes : <b>{blank2}</b>.",
+      blanks: [
+        { key: "blank1", answer: "route" },
+        { key: "blank2", answer: "3" }
+      ]
+    },
+    {
+      type: "tf",
+      title: "Polytrauma — boisson",
+      desc: "Après un AVP, on ne fait pas boire une victime polytraumatisée.",
+      correct: true
+    },
+    {
+      type: "hotspot",
+      title: "Hotspot — zone critique",
+      desc: "Clique la zone à protéger/immobiliser en priorité :",
+      imgSrc: "scenario_4_hotspot_q_15.png",
+      hotspots: [
+        { label:"rachis", x:60, y:54, w:10, h:35, ok:true },
+        { label:"épaule", x:52, y:40, w:12, h:12, ok:false },
+        { label:"genou",  x:65, y:90, w:12, h:12, ok:false }
+      ]
+    },
+    {
+      type: "multi",
+      title: "Erreur critique",
+      desc: "Sélectionne l’action dangereuse :",
+      options: [
+        { text: "Relever une victime sans immobilisation", correct: true },
+        { text: "Couvrir et isoler du sol", correct: false },
+        { text: "Compression d’une hémorragie massive", correct: false },
+        { text: "Alerte précoce structurée", correct: false }
+      ]
+    },
+    {
+      type: "drag_order",
+      title: "Priorités ABC",
+      desc: "Glisse-dépose pour remettre l’ordre :",
+      items: [
+        { id:"b", text:"Respiration (FR, ventilation)" },
+        { id:"c", text:"Circulation (saignements, pouls)" },
+        { id:"a", text:"Voies aériennes + protection cervicale" }
+      ],
+      expected: ["a","b","c"]
+    }
+  ];
+
+  qTotal.textContent = String(questions.length);
+
+  function setProgress(){
+    const pct = Math.max(0, Math.min(100, (idx / questions.length) * 100));
+    progBar.style.width = pct + "%";
+  }
+
+  function resetState(){
+    selectedSingle = null;
+    multiSelected.clear();
+    inputValue = "";
+    clozeValues = {};
+    validateBtn.disabled = true;
+  }
+
+  function mkOpt(text){
+    const d = document.createElement("div");
+    d.className = "opt";
+    d.textContent = text;
+    return d;
+  }
+
+  function renderQuestion(i){
+    resetState();
+    const q = questions[i];
+
+    qMeta.textContent = "Test — Diagnostic";
+    qTitle.textContent = q.title;
+    qDesc.innerHTML = q.desc;
+    optionsEl.innerHTML = "";
+    qNum.textContent = String(i+1);
+    setProgress();
+
+    qTitle.classList.remove("glitch");
+    void qTitle.offsetWidth;
+    qTitle.classList.add("glitch");
+
+    if(q.type === "single"){
+      q.options.forEach((opt, oi)=>{
+        const d = mkOpt(opt.text);
+        d.onclick = ()=>{
+          ensureAudio(); sfx.select();
+          [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+          d.classList.add("sel");
+          selectedSingle = oi;
+          validateBtn.disabled = false;
+        };
+        optionsEl.appendChild(d);
+      });
+    }
+
+    if(q.type === "tf"){
+      const opts = [{ label:"Vrai", val:true },{ label:"Faux", val:false }];
+      opts.forEach((o, oi)=>{
+        const d = mkOpt(o.label);
+        d.onclick = ()=>{
+          ensureAudio(); sfx.select();
+          [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+          d.classList.add("sel");
+          selectedSingle = oi;
+          validateBtn.disabled = false;
+        };
+        optionsEl.appendChild(d);
+      });
+    }
+
+    if(q.type === "multi"){
+      q.options.forEach((opt, oi)=>{
+        const d = mkOpt(opt.text);
+        d.onclick = ()=>{
+          ensureAudio(); sfx.select();
+          if(multiSelected.has(oi)) { multiSelected.delete(oi); d.classList.remove("sel"); }
+          else { multiSelected.add(oi); d.classList.add("sel"); }
+          validateBtn.disabled = (multiSelected.size === 0);
+        };
+        optionsEl.appendChild(d);
+      });
+    }
+
+    if(q.type === "short"){
+      const box = document.createElement("div");
+      box.className = "opt";
+      box.style.cursor = "default";
+      box.innerHTML = `
+        <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
+        <input id="shortInput" class="form-control" type="text" placeholder="Écris ta réponse ici…"
+          style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+        <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Un seul mot suffit.</div>
+      `;
+      optionsEl.appendChild(box);
+      const inp = box.querySelector("#shortInput");
+      inp.addEventListener("input", ()=>{
+        inputValue = inp.value;
+        validateBtn.disabled = (inp.value.trim().length === 0);
+      });
+    }
+
+    if(q.type === "cloze"){
+      const box = document.createElement("div");
+      box.className = "opt";
+      box.style.cursor = "default";
+      const html = q.template
+        .replace("{blank1}", `<input data-k="blank1" placeholder="..." style="display:inline-block; width:240px; margin:0 6px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.25); color: rgba(255,255,255,.92); font-weight:800;" />`)
+        .replace("{blank2}", `<input data-k="blank2" placeholder="..." style="display:inline-block; width:240px; margin:0 6px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.25); color: rgba(255,255,255,.92); font-weight:800;" />`);
+      box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+      optionsEl.appendChild(box);
+      const inputs = box.querySelectorAll("input[data-k]");
+      inputs.forEach(inp=>{
+        inp.addEventListener("input", ()=>{
+          clozeValues[inp.dataset.k] = inp.value;
+          const filled = q.blanks.every(b => (clozeValues[b.key]||"").trim().length>0);
+          validateBtn.disabled = !filled;
+        });
+      });
+    }
+
+    if(q.type === "image_single"){
+      const grid = document.createElement("div");
+      grid.className = "imgGrid";
+      q.options.forEach((opt, oi)=>{
+        const card = document.createElement("div");
+        card.className = "imgCard";
+        card.innerHTML = `
+          <div class="imgHead"><div>Option ${opt.label}</div><div class="imgTag">${opt.label}</div></div>
+          <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
+          <div class="imgCap">${opt.caption || ""}</div>
+        `;
+        card.onclick = ()=>{
+          ensureAudio(); sfx.select();
+          [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
+          card.classList.add("sel");
+          selectedSingle = oi;
+          validateBtn.disabled = false;
+        };
+        grid.appendChild(card);
+      });
+      optionsEl.appendChild(grid);
+    }
+
+    if(q.type === "hotspot"){
+      const msg = document.createElement("div");
+      msg.className = "pill";
+      msg.style.marginBottom = "10px";
+      msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
+      optionsEl.appendChild(msg);
+
+      const wrap = document.createElement("div");
+      wrap.style.position = "relative";
+      wrap.style.width = "100%";
+      wrap.style.maxWidth = "720px";
+      wrap.style.margin = "0 auto";
+      wrap.style.borderRadius = "18px";
+      wrap.style.overflow = "hidden";
+      wrap.style.border = "1px solid rgba(255,255,255,.14)";
+      wrap.style.background = "rgba(0,0,0,.18)";
+      wrap.innerHTML = `<img src="${q.imgSrc}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+      optionsEl.appendChild(wrap);
+
+      const zones = document.createElement("div");
+      zones.style.position = "absolute";
+      zones.style.inset = "0";
+      zones.style.pointerEvents = "auto";
+      wrap.appendChild(zones);
+
+      selectedSingle = null;
+      validateBtn.disabled = true;
+
+      q.hotspots.forEach((h, hi)=>{
+        const z = document.createElement("button");
+        z.type = "button";
+        z.className = "hotspot-zone";
+        z.style.left = h.x + "%";
+        z.style.top  = h.y + "%";
+        z.style.width = h.w + "%";
+        z.style.height= h.h + "%";
+        z.onclick = ()=>{
+          ensureAudio(); sfx.select();
+          [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
+          z.classList.add("sel");
+          selectedSingle = hi;
+          validateBtn.disabled = false;
+        };
+        zones.appendChild(z);
+      });
+    }
+
+    if(q.type === "drag_order"){
+      const box = document.createElement("div");
+      box.className = "opt";
+      box.style.cursor = "default";
+      box.innerHTML = `
+        <div style="font-weight:950; margin-bottom:10px;">Glisse les éléments dans le bon ordre :</div>
+        <div id="dragList" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : l’ordre ABC est une base.</div>
+      `;
+      optionsEl.appendChild(box);
+      const list = box.querySelector("#dragList");
+
+      q.items.forEach((it)=>{
+        const item = document.createElement("div");
+        item.className = "opt";
+        item.style.background = "linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10))";
+        item.style.borderColor = "rgba(255,255,255,.14)";
+        item.style.cursor = "grab";
+        item.draggable = true;
+        item.dataset.id = it.id;
+        item.textContent = it.text;
+        list.appendChild(item);
+      });
+
+      let dragSrc = null;
+      [...list.children].forEach((item)=>{
+        item.addEventListener("dragstart", ()=>{ ensureAudio(); sfx.click(); dragSrc = item; item.style.opacity = "0.6"; });
+        item.addEventListener("dragend", ()=>{ item.style.opacity = "1"; dragSrc = null; validateBtn.disabled = false; });
+        item.addEventListener("dragover", (e)=>{ e.preventDefault(); });
+        item.addEventListener("drop", (e)=>{
+          e.preventDefault();
+          if(!dragSrc || dragSrc === item) return;
+          const children = [...list.children];
+          const srcIndex = children.indexOf(dragSrc);
+          const tgtIndex = children.indexOf(item);
+          if(srcIndex < tgtIndex) list.insertBefore(dragSrc, item.nextSibling);
+          else list.insertBefore(dragSrc, item);
+          validateBtn.disabled = false;
+          ensureAudio(); sfx.select();
+        });
+      });
+
+      validateBtn.disabled = false;
+    }
+
+    try{ optionsEl.scrollTop = 0; }catch(e){}
+  }
+
+  function evaluateCurrent(){
+    const q = questions[idx];
+    let ok = false;
+
+    if(q.type === "single"){
+      ok = (selectedSingle !== null) && !!q.options[selectedSingle].ok;
+    }
+    if(q.type === "tf"){
+      if(selectedSingle === null) ok = false;
+      else {
+        const chosen = (selectedSingle===0);
+        ok = (chosen === q.correct);
+      }
+    }
+    if(q.type === "multi"){
+      const chosen = [...multiSelected].sort((a,b)=>a-b);
+      const correctIdx = q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+      ok = (chosen.length===correctIdx.length) && chosen.every((v,i)=>v===correctIdx[i]);
+    }
+    if(q.type === "short"){
+      const norm = (inputValue||"").trim().toLowerCase();
+      const accepted = (q.answers||[]).map(x=>String(x).trim().toLowerCase());
+      ok = accepted.includes(norm);
+    }
+    if(q.type === "cloze"){
+      ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
+    }
+    if(q.type === "image_single"){
+      ok = (selectedSingle !== null) && !!q.options[selectedSingle].ok;
+    }
+    if(q.type === "hotspot"){
+      ok = (selectedSingle !== null) && !!q.hotspots[selectedSingle].ok;
+    }
+    if(q.type === "drag_order"){
+      const list = optionsEl.querySelector("#dragList");
+      const order = list ? [...list.children].map(n=>n.dataset.id) : [];
+      ok = (order.length===q.expected.length) && order.every((id,i)=>id===q.expected[i]);
+    }
+
+    if(ok) score += 1;
+  }
+
+  function finish(){
+    const s = score;
+    let badgeClass = "badgeState bWarn";
+    let reco = "Intermédiaire";
+
+    if(s <= 5){ badgeClass = "badgeState bWarn"; reco = "Débutant"; }
+    else if(s <= 8){ badgeClass = "badgeState bWarn"; reco = "Intermédiaire"; }
+    else { badgeClass = "badgeState bGood"; reco = "Avancé"; }
+
+    endBadge.className = badgeClass;
+    endBadge.textContent = `✅ Recommandation : ${reco}`;
+
+    const detail = (reco==="Débutant")
+      ? `Tu as répondu correctement à une partie des questions clés. Je te propose le <b>parcours Débutant</b> pour consolider : sécurité de scène, triage simple, hémorragies et ABC. <br><br><b>Mais à toi le choix</b> : si tu veux un défi, teste Intermédiaire.`
+      : (reco==="Intermédiaire")
+        ? `Tu maîtrises les bases et tu as de bons réflexes. Je te propose le <b>parcours Intermédiaire</b> pour renforcer : multi-victimes, erreurs critiques, immobilisation rachis et alerte structurée. <br><br><b>Mais à toi le choix</b> : Débutant pour réviser, ou Avancé si tu te sens prête/prêt.`
+        : `Très bon niveau ! Tes réponses montrent une bonne décision rapide. Je te propose le <b>parcours Avancé</b> pour travailler : coordination, gestion du stress, cas complexes et transmission. <br><br><b>Mais à toi le choix</b> : Intermédiaire reste excellent pour consolider.`;
+
+    endText.innerHTML = `
+      <div style="font-weight:990; font-size:24px; margin-bottom:6px; text-shadow:0 24px 56px rgba(0,0,0,.75);">
+        Résultat du diagnostic
+      </div>
+      <div style="color: rgba(255,255,255,.86); line-height:1.7;">${detail}</div>
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill">🏁 Test terminé</span>
+        <span class="pill">🎯 Proposition : <b>${reco}</b></span>
+      </div>
+      <div style="margin-top:14px; color: rgba(255,255,255,.72); font-size:12px;">
+        Astuce : tu pourras refaire ce diagnostic plus tard pour voir ta progression.
+      </div>
+      <div class="bottomHint" style="margin-top:14px;">
+        <span>✅ Lance ton parcours :</span>
+        <span class="kbd">COMMENCER</span>
+      </div>
+    `;
+
+    endOverlay.style.display = "flex";
+    ensureAudio(); sfx.success();
+    flashFx();
+  }
+
+  validateBtn.addEventListener("click", ()=>{
+    ensureAudio(); sfx.validate();
+    shakeFx();
+    evaluateCurrent();
+    idx++;
+    if(idx >= questions.length){
+      transitionTo(()=>finish());
+    }else{
+      transitionTo(()=>renderQuestion(idx));
+    }
+  });
+
+  function startGame(ev){
+    try{
+      ev?.preventDefault?.();
+      ensureAudio(); sfx.click(); whoosh(0.16);
+      startOverlay.style.display = "none";
+      score = 0;
+      idx = 0;
+      setProgress();
+      transitionTo(()=>renderQuestion(0));
+    }catch(err){
+      console.error("Start failed:", err);
+      try{ startOverlay.style.display = "none"; }catch(e){}
+    }
+  }
+  startBtn.addEventListener("click", startGame, {passive:false});
+  startBtn.addEventListener("pointerup", startGame, {passive:false});
+  startBtn.addEventListener("touchend", startGame, {passive:false});
+
+  endOk.addEventListener("click", ()=>{
+    ensureAudio(); sfx.click(); whoosh(0.14);
+    flashFx();
+    window.location.href = NEXT_GENIALLY_URL;
+  });
+
+  // ✅ init preview
+  qMeta.textContent = "Test — Diagnostic";
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = "Chargement en cours…";
+  optionsEl.innerHTML = "";
+  qNum.textContent = "1";
+  qTotal.textContent = String(questions.length);
+  setProgress();
+
+  /* ===========================================
+     ✅ BOOT: afficher chargement puis objectifs
+     =========================================== */
+  function showObjectives(){
+    try{
+      bootOverlay.style.display = "none";
+      startOverlay.style.display = "flex";
+    }catch(e){}
+  }
+
+  // Afficher boot immédiatement, puis après une durée mini + quand la page est prête
+  const bootStart = performance.now();
+
+  window.addEventListener("load", ()=>{
+    const elapsed = performance.now() - bootStart;
+    const wait = Math.max(0, BOOT_MIN_MS - elapsed);
+
+    // petit effet: flash léger juste avant objectifs
+    setTimeout(()=>{
+      flashFx();
+      setTimeout(showObjectives, 120);
+    }, wait);
+  });
+</script>
+</body>
+</html>
