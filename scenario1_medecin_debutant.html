@@ -1710,42 +1710,33 @@ keyOverlay.addEventListener("click", (e)=>{
 });
 
 /* ===== End scenario ===== */
+/* ===== End scenario ===== */
 function endScenario(){
 
-  // ===== ENREGISTREMENT DU BADGE =====
+  // 1) Calcul badge (source unique)
+  const badge = computeBadge(score); 
+  // badge = { type:"OR|ARGENT|BRONZE", img:"assets/or.png", name:"Badge Or" }
 
-// Détermination du badge selon le score
-let badgeLevel = "BRONZE";
-let badgeImage = "assets/bronze.png";
+  // 2) Enregistrement compatible page badges
+  const badgeData = {
+    scenarioId: SCENARIO.id,
+    scenarioLabel: SCENARIO.label,
+    mission: SCENARIO.mission,
+    difficulty: DIFF.label,      // "DÉBUTANT" / "INTERMÉDIAIRE" / "EXPERT"
+    badgeLevel: badge.type,      // OR / ARGENT / BRONZE
+    badgeImage: badge.img,       // "assets/or.png" ...
+    score: score,
+    date: Date.now()
+  };
 
-if(score >= 90){
-  badgeLevel = "OR";
-  badgeImage = "assets/or.png";
-}else if(score >= 70){
-  badgeLevel = "ARGENT";
-  badgeImage = "assets/argent.png";
-}
+  const badgeKey = `badge_s${SCENARIO.id}_${DIFF.label}`;
+  localStorage.setItem(badgeKey, JSON.stringify(badgeData));
+  localStorage.setItem("last_badge_key", badgeKey);
 
-// Création de l’objet badge
-const badgeData = {
-  scenarioId: SCENARIO.id,                 // ex: 4
-  scenarioLabel: SCENARIO.label,           // ex: "Scénario 4 — AVP"
-  difficulty: DIFF.label,                  // ex: "DÉBUTANT"
-  badgeLevel: badgeLevel,                  // OR / ARGENT / BRONZE
-  badgeImage: badgeImage,                  // image du badge
-  score: score,                            // score final
-  date: Date.now()
-};
+  // (Optionnel) si tu veux garder ton historique existant
+  // saveBadge(badge);  ❌ à supprimer si saveBadge() ré-enregistre déjà dans localStorage
 
-// Clé de stockage (TRÈS IMPORTANT)
-const badgeKey = `badge_s${SCENARIO.id}_${DIFF.label}`;
-
-// Sauvegarde dans le navigateur
-localStorage.setItem(badgeKey, JSON.stringify(badgeData));
-
-// Sauvegarde du dernier badge gagné (animation)
-localStorage.setItem("last_badge_key", badgeKey);
-
+  // --- le reste de ton code UI ---
   stopTimer();
   hideOverlay();
   optionsEl.innerHTML="";
@@ -1753,9 +1744,6 @@ localStorage.setItem("last_badge_key", badgeKey);
   clearBtn.style.display="none";
 
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
-
-  const badge = computeBadge(score);
-  saveBadge(badge);
 
   qMeta.textContent = "Fin — Badge obtenu";
   qTitle.textContent = "🎉 Félicitations !";
@@ -1766,9 +1754,9 @@ localStorage.setItem("last_badge_key", badgeKey);
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <img src="${badge.img}" alt="badge" style="width:64px; height:64px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
         <div>
-          <div style="font-weight:950; font-size:15px;">🏅 Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
+          <div style="font-weight:950; font-size:15px;">🏅 ${escapeHtml(badge.name)} — ${escapeHtml(SCENARIO.mission)}</div>
           <div style="margin-top:3px; color: rgba(255,255,255,.76); font-size:12px;">
-            Niveau : <b>${escapeHtml(difficulty.toUpperCase())}</b> • Type : <b>${escapeHtml(badge.type.toUpperCase())}</b>
+            Niveau : <b>${escapeHtml(DIFF.label)}</b> • Type : <b>${escapeHtml(badge.type)}</b>
           </div>
         </div>
       </div>
@@ -1780,7 +1768,7 @@ localStorage.setItem("last_badge_key", badgeKey);
       </div>
 
       <div style="margin-top:8px; color: rgba(255,255,255,.72); font-size:12px;">
-        ✅ Badge enregistré (nom + type + niveau).
+        ✅ Badge enregistré : <b>${escapeHtml(badgeKey)}</b>
       </div>
     </div>
   `;
@@ -1790,21 +1778,18 @@ localStorage.setItem("last_badge_key", badgeKey);
       <div style="display:flex; justify-content:center; margin-bottom:8px;">
         <img src="${badge.img}" alt="badge" style="width:78px; height:78px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
       </div>
-      <div style="font-weight:950;">Badge ${escapeHtml(badge.label)} — ${escapeHtml(SCENARIO.mission)}</div>
-      <div style="color: rgba(255,255,255,.74); font-size:12px; margin-top:4px;">Niveau : ${escapeHtml(difficulty.toUpperCase())}</div>
+      <div style="font-weight:950;">${escapeHtml(badge.name)} — ${escapeHtml(SCENARIO.mission)}</div>
+      <div style="color: rgba(255,255,255,.74); font-size:12px; margin-top:4px;">Niveau : ${escapeHtml(DIFF.label)}</div>
     </div>
   `;
 
-  if(progressBar) progressBar.style.width = "100%";
+  if(progressBarEl) progressBarEl.style.width = "100%";
   locked = true;
   updateHintBtn();
 
   showKeyBtn.disabled = false;
-
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
-
-  
 }
 
 /* Motion */
