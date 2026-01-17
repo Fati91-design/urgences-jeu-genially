@@ -1710,86 +1710,98 @@ keyOverlay.addEventListener("click", (e)=>{
 });
 
 /* ===== End scenario ===== */
-/* ===== End scenario ===== */
 function endScenario(){
-
-  // 1) Calcul badge (source unique)
-  const badge = computeBadge(score); 
-  // badge = { type:"OR|ARGENT|BRONZE", img:"assets/or.png", name:"Badge Or" }
-
-  // 2) Enregistrement compatible page badges
-  const badgeData = {
-    scenarioId: SCENARIO.id,
-    scenarioLabel: SCENARIO.label,
-    mission: SCENARIO.mission,
-    difficulty: DIFF.label,      // "DÉBUTANT" / "INTERMÉDIAIRE" / "EXPERT"
-    badgeLevel: badge.type,      // OR / ARGENT / BRONZE
-    badgeImage: badge.img,       // "assets/or.png" ...
-    score: score,
-    date: Date.now()
-  };
-
-  const badgeKey = `badge_s${SCENARIO.id}_${DIFF.label}`;
-  localStorage.setItem(badgeKey, JSON.stringify(badgeData));
-  localStorage.setItem("last_badge_key", badgeKey);
-
-  // (Optionnel) si tu veux garder ton historique existant
-  // saveBadge(badge);  ❌ à supprimer si saveBadge() ré-enregistre déjà dans localStorage
-
-  // --- le reste de ton code UI ---
   stopTimer();
   hideOverlay();
-  optionsEl.innerHTML="";
-  validateBtn.disabled=true;
-  clearBtn.style.display="none";
 
-  const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
+  // Verrouiller l'UI de quiz
+  optionsEl.innerHTML = "";
+  validateBtn.disabled = true;
+  validateBtn.classList.remove("show");
+  validateBtn.style.display = "none";     // ✅ comme screenshot: Valider n’est plus utile
+  clearBtn.style.display = "none";
+  locked = true;
 
-  qMeta.textContent = "Fin — Badge obtenu";
-  qTitle.textContent = "🎉 Félicitations !";
-  sfxVictory();
+  // Activer Corrigé uniquement à la fin (comme tu fais déjà)
+  showKeyBtn.disabled = false;
 
-  qDesc.innerHTML = `
-    <div style="margin-top:6px; color: rgba(255,255,255,.86); font-size:13px;">
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <img src="${badge.img}" alt="badge" style="width:64px; height:64px; border-radius:16px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
-        <div>
-          <div style="font-weight:950; font-size:15px;">🏅 ${escapeHtml(badge.name)} — ${escapeHtml(SCENARIO.mission)}</div>
-          <div style="margin-top:3px; color: rgba(255,255,255,.76); font-size:12px;">
-            Niveau : <b>${escapeHtml(DIFF.label)}</b> • Type : <b>${escapeHtml(badge.type)}</b>
+  // Afficher bouton Terminer à gauche (comme screenshot)
+  endBtn.style.display = "inline-block";
+  endBtn.classList.add("show");
+
+  // ----- Badge (type + image) -----
+  const levelLabel = normalizeLevelLabel();         // ex: DEBUTANT
+  const badgeType  = computeBadgeTypeFromScore(score); // OR/ARGENT/BRONZE
+  const badgeImg   = badgeImageForType(badgeType);
+
+  // Enregistrer (nom + type + niveau) comme tu voulais
+  const saved = saveBadge({
+    scenario: SCENARIO.id,
+    mission: SCENARIO.mission,
+    type: badgeType,
+    level: levelLabel,
+    score
+  });
+
+  // Progress full
+  if(progressBar) progressBar.style.width = "100%";
+
+  // Texte FIN (comme screenshot)
+  qMeta.textContent = "FIN — BADGE OBTENU";
+  qTitle.textContent = "Félicitations !";
+  qDesc.innerHTML = ""; // on remplace par un bloc résultat dans optionsEl
+
+  // Stress label (optionnel: Calme si faible)
+  const stressLabel = (stress <= 25) ? "Calme" : (stress <= 60) ? "Sous tension" : "Critique";
+
+  // Indices restants (affichage)
+  const used = (HINT_MAX - hintsLeft);
+  const hintLeftTxt = `${hintsLeft} / ${HINT_MAX}`;
+
+  // ----- Bloc résultat (identique à ton screenshot) -----
+  optionsEl.innerHTML = `
+    <div class="resultWrap">
+
+      <div class="resultCard">
+        <div class="badgeThumb">
+          <img src="assets/${saved.img}" alt="badge">
+        </div>
+
+        <div class="badgeText">
+          <div class="badgeLine">🏅 Badge ${badgeType} — ${escapeHtml(SCENARIO.mission)}</div>
+          <div class="badgeSub">Niveau : <b>${escapeHtml(levelLabel)}</b> • Type : <b>${escapeHtml(badgeType)}</b></div>
+
+          <div class="resultPills">
+            <span class="pill">⭐ Score final : <b>${score}</b></span>
+            <span class="pill">😰 Stress : <b>${stress}%</b> (<span style="color:rgba(255,255,255,.78);">${stressLabel}</span>)</span>
+            <span class="pill">💡 Indices restants : <b>${hintLeftTxt}</b></span>
+          </div>
+
+          <div class="resultInfo">
+            <span class="okDot"></span>
+            <span>Badge enregistré (nom + type + niveau).</span>
           </div>
         </div>
       </div>
 
-      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-        <span class="pill">⭐ Score final : <b>${score}</b></span>
-        <span class="pill">😰 Stress : <b>${stress}%</b> (${escapeHtml(stressState)})</span>
-        <span class="pill">💡 Indices restants : <b>${hintsLeft}</b> / ${HINT_MAX}</span>
+      <div class="resultHero">
+        <div class="heroBadge">
+          <img src="assets/${saved.img}" alt="badge">
+        </div>
+        <p class="heroTitle">Badge ${badgeType} — ${escapeHtml(SCENARIO.mission)}</p>
+        <div class="heroSub">Niveau : <b>${escapeHtml(levelLabel)}</b></div>
       </div>
 
-      <div style="margin-top:8px; color: rgba(255,255,255,.72); font-size:12px;">
-        ✅ Badge enregistré : <b>${escapeHtml(badgeKey)}</b>
-      </div>
     </div>
   `;
 
-  optionsEl.innerHTML = `
-    <div class="opt" style="cursor:default; text-align:center;">
-      <div style="display:flex; justify-content:center; margin-bottom:8px;">
-        <img src="${badge.img}" alt="badge" style="width:78px; height:78px; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); object-fit:cover;">
-      </div>
-      <div style="font-weight:950;">${escapeHtml(badge.name)} — ${escapeHtml(SCENARIO.mission)}</div>
-      <div style="color: rgba(255,255,255,.74); font-size:12px; margin-top:4px;">Niveau : ${escapeHtml(DIFF.label)}</div>
-    </div>
-  `;
-
-  if(progressBarEl) progressBarEl.style.width = "100%";
-  locked = true;
+  // On désactive Indice/Pause une fois terminé
   updateHintBtn();
+  hintBtn.disabled = true;
+  pauseBtn.disabled = true;
 
-  showKeyBtn.disabled = false;
-  endBtn.style.display = "inline-block";
-  endBtn.classList.add("show");
+  // petit son victoire
+  sfxVictory();
 }
 
 /* Motion */
