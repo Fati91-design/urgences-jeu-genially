@@ -25,10 +25,22 @@
     --ember2: rgba(255,120,50,1);
   }
 
-  html,body{ margin:0; background:transparent; color:var(--text); font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow:hidden; }
+  /* ✅ MODIF 1: arrière-plan noir */
+  html,body{
+    margin:0;
+    background:#000;            /* <-- noir */
+    color:var(--text);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    overflow:hidden;
+  }
 
   /* ✅ Genially: scène fixe 16:9 + scale auto */
-  .genially-stage{ width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .genially-stage{
+    width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    background:#000;            /* <-- noir (sécurité) */
+  }
   .genially-page{ width:1920px; height:1080px; position:relative; transform-origin:center; }
   .page-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding: 38px 52px; }
 
@@ -41,9 +53,16 @@
     transform: translateY(10px);
     display:none;
     transition: opacity .35s ease, transform .35s ease;
+
+    /* ✅ MODIF 2: centrer la "table" (le bloc dashboard) au milieu */
+    width:100%;
+    height:100%;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
   }
   #appMain.is-on{
-    display:block;
+    display:flex; /* <-- au lieu de block pour centrer */
   }
   #appMain.is-visible{
     opacity:1;
@@ -117,6 +136,9 @@
     box-shadow: 0 22px 80px rgba(0,0,0,.55);
     overflow: hidden;
     position: relative;
+
+    /* ✅ MODIF 2: centrer horizontalement */
+    margin: 0 auto;
   }
   .glass::before{
     content:"";
