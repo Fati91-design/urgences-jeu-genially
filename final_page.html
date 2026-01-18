@@ -41,8 +41,10 @@
     overflow:hidden;
     background:#000;
   }
+
+  /* ✅ ADAPTATION GENIALLY : 1980 x 1020 */
   .genially-page{
-    width:1920px; height:1080px;
+    width:1980px; height:1020px;
     position:relative;
     transform-origin:center;
   }
@@ -829,8 +831,9 @@
 (function scaleGeniallyPage(){
   const page = document.getElementById('geniallyPage');
   function apply(){
-    const sw = window.innerWidth / 1920;
-    const sh = window.innerHeight / 1080;
+    /* ✅ ADAPTATION GENIALLY : 1980 x 1020 */
+    const sw = window.innerWidth / 1980;
+    const sh = window.innerHeight / 1020;
     const s = Math.min(sw, sh);
     page.style.transform = `scale(${s})`;
   }
@@ -1125,7 +1128,6 @@ function closeBadgesModal(){
       : `Bravo, ${playerName}. Continue à t’entraîner : chaque seconde compte.`;
   $("finalMsg").textContent = msg;
 
-  // Enregistre un "badge fin" lisible (optionnel)
   const key = `badge_game_end_${activeFilterKey}`;
   localStorage.setItem(key, JSON.stringify({
     scenario: "FIN",
@@ -1153,7 +1155,6 @@ $("badgesBtn").addEventListener("click", ()=>{
 
 $("boClose").addEventListener("click", ()=>{ sfxClick(); closeBadgesModal(); });
 
-// clic hors carte => fermer
 $("badgesOverlay").addEventListener("click", (e)=>{
   if(e.target === $("badgesOverlay")){
     sfxClick();
@@ -1161,7 +1162,6 @@ $("badgesOverlay").addEventListener("click", (e)=>{
   }
 });
 
-// ✅ enlève totalement les liens: pas de navigation, juste click SFX
 $("replayBtn").addEventListener("click", ()=>{ sfxClick(); });
 $("homeBtn").addEventListener("click", ()=>{ sfxClick(); });
 </script>
