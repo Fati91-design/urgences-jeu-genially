@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Évaluation sommative — Urgences – Agir pour sauver</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --glass: rgba(25,27,31,.72);
+      --glass2: rgba(15,17,20,.55);
+
+      --text: rgba(255,255,255,.93);
+      --muted: rgba(255,255,255,.72);
+
+      --ember: rgba(255,150,70,1);
+      --ember2: rgba(255,120,50,1);
+      --blue: rgba(80,170,255,1);
+      --green: rgba(45,200,120,1);
+      --red: rgba(255,70,70,1);
+      --gold: rgba(255,200,80,1);
+
+      --shadow: rgba(0,0,0,.65);
+    }
+
+    html,body{
+      margin:0;
+      height:100%;
+      background:transparent;
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow:hidden; /* ✅ Genially anti-scroll */
+    }
+
+    /* ===== Stage / Wrap ===== */
+    .stage{
+      height:100vh;
+      padding:16px 14px;
+      overflow:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding-bottom:110px; /* laisse la place aux boutons fixes */
+    }
+    .wrap{
+      width:min(1120px,100%);
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:0;
+    }
+
+    /* ===== Top tabs (référence style) ===== */
+    .topTabs{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .levelTab{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px;
+      background:var(--glass);
+      border:1px solid rgba(255,200,150,.22);
+      box-shadow:0 18px 65px rgba(0,0,0,.35);
+      backdrop-filter:blur(12px);
+      font-weight:950; letter-spacing:.2px;
+      white-space:nowrap;
+      position:relative; overflow:hidden;
+    }
+    .levelTab::after{
+      content:""; position:absolute; inset:-2px; pointer-events:none; opacity:.85;
+      background:
+        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+    }
+    .levelDot{
+      width:10px; height:10px; border-radius:99px;
+      background:linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      box-shadow:0 0 0 4px rgba(255,150,70,.15);
+      position:relative; z-index:2;
+    }
+    .levelTab span{ position:relative; z-index:2; }
+
+    .progressShell{
+      flex:1 1 260px; min-width:220px; height:10px; border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden; position:relative;
+      box-shadow:0 14px 40px rgba(0,0,0,.25);
+    }
+    .progressBar{
+      height:100%; width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      transition:width .25s ease;
+    }
+    .miniHint{
+      font-weight:950; font-size:12px;
+      color:rgba(255,255,255,.78);
+      padding:10px 12px; border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      white-space:nowrap;
+    }
+
+    /* ===== HUD ===== */
+    .hud{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      min-height:0;
+    }
+    .hudbox{
+      background:var(--glass);
+      border:1px solid rgba(255,200,150,.22);
+      border-radius:18px;
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      position:relative; overflow:hidden;
+      box-shadow:0 18px 65px rgba(0,0,0,.45);
+      backdrop-filter:blur(12px);
+      min-height:0;
+    }
+    .hudbox::after{
+      content:""; position:absolute; inset:-2px; pointer-events:none; opacity:.9;
+      background:
+        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+    }
+
+    .profile{ display:flex; align-items:center; gap:14px; min-width:0; position:relative; z-index:2; }
+    .avatarFrame{
+      width:92px; height:92px; border-radius:24px; padding:4px;
+      background:linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
+      box-shadow:0 18px 42px rgba(0,0,0,.45);
+      flex:0 0 auto;
+    }
+    .avatar{
+      width:100%; height:100%;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      object-fit:cover;
+      object-position:50% 6%;
+      transform:scale(1.35);
+      transform-origin:50% 12%;
+      background:rgba(255,255,255,.06);
+    }
+    .ptext{ min-width:0; }
+    .pname{
+      font-weight:950; font-size:22px; line-height:1.05;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      text-shadow:0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top:4px; font-weight:850; font-size:13px;
+      color:var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .chip{
+      background:rgba(255,150,70,.14);
+      border:1px solid rgba(255,150,70,.20);
+      border-radius:999px;
+      padding:9px 12px;
+      font-size:12px; font-weight:950;
+      white-space:nowrap;
+      position:relative; z-index:2;
+    }
+
+    .stats{
+      display:flex; align-items:center; justify-content:flex-end;
+      gap:10px; flex-wrap:wrap;
+      position:relative; z-index:2;
+    }
+    .pill{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:950; font-size:13px;
+      white-space:nowrap;
+    }
+
+    /* ✅ Timer pill (anneau) */
+    .timerPill{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:950; font-size:13px;
+      white-space:nowrap;
+      transition: box-shadow .18s ease, border-color .18s ease, background .18s ease, transform .12s ease;
+    }
+    .timerPill .ring{
+      width:34px; height:34px; border-radius:99px;
+      background: conic-gradient(rgba(255,176,90,1) calc(var(--p)*1%), rgba(255,255,255,.14) 0);
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
+      flex:0 0 auto;
+    }
+    .timerPill .inner{
+      width:24px; height:24px; border-radius:99px;
+      background:rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+    }
+    .timerWarn{
+      border-color: rgba(255,200,80,.30);
+      box-shadow:0 0 0 5px rgba(255,200,80,.10), 0 16px 40px rgba(0,0,0,.25);
+      transform: translateY(-1px);
+    }
+    .timerDanger{
+      border-color: rgba(255,70,70,.35);
+      box-shadow:0 0 0 6px rgba(255,70,70,.12), 0 18px 48px rgba(0,0,0,.28);
+      animation: pulseDanger .7s ease-in-out infinite;
+    }
+    @keyframes pulseDanger{
+      0%,100%{ filter:brightness(1); }
+      50%{ filter:brightness(1.12); }
+    }
+
+    /* Pression (stress) */
+    .pressureWrap{
+      width:240px; height:12px; border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .pressureBar{
+      height:100%; width:0%;
+      background:linear-gradient(90deg, rgba(45,200,120,.95), rgba(255,200,80,.95), rgba(255,70,70,.95));
+      transition:width .25s ease;
+    }
+
+    /* ===== Main frame ===== */
+    .frame{
+      background:var(--glass2);
+      border:1px solid rgba(255,200,150,.22);
+      border-radius:18px;
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 18px 70px rgba(0,0,0,.50);
+      backdrop-filter:blur(12px);
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+    }
+    .frame::after{
+      content:""; position:absolute; inset:-2px; pointer-events:none; opacity:.9;
+      background:
+        radial-gradient(800px 260px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
+        radial-gradient(760px 260px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
+    }
+
+    .qmeta{ position:relative; z-index:2; color:rgba(255,255,255,.70); font-size:12px; font-weight:950; letter-spacing:.35px; text-transform:uppercase; }
+    .qtitle{ position:relative; z-index:2; margin-top:6px; font-weight:950; font-size:clamp(18px,2.2vw,26px); line-height:1.2; text-shadow:0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position:relative; z-index:2; margin-top:10px; color:rgba(255,255,255,.82); font-size:14px; line-height:1.5; max-width:980px; }
+
+    .options{
+      position:relative; z-index:2;
+      display:flex; flex-direction:column; gap:12px;
+      margin-top:16px;
+      overflow:auto;
+      min-height:0;
+      padding-right:2px;
+    }
+    .options::-webkit-scrollbar{ width:10px; }
+    .options::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16); border-radius:999px; }
+    .options::-webkit-scrollbar-track{ background:rgba(0,0,0,.15); border-radius:999px; }
+
+    .opt{
+      border-radius:14px;
+      padding:13px 14px;
+      font-weight:950;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
+      transition:transform .12s ease,filter .12s ease,background .12s ease;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
+      box-shadow:0 10px 28px rgba(0,0,0,.20);
+    }
+    .opt:hover{ transform:translateY(-1px); filter:brightness(1.07); background:linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
+    .opt:active{ transform:translateY(0px); filter:brightness(.98); }
+    .opt.sel{
+      background:linear-gradient(180deg, rgba(255,150,70,.30), rgba(255,120,50,.18));
+      border-color:rgba(255,150,70,.30);
+      box-shadow:0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
+    }
+
+    /* ===== Actions (fixes) ===== */
+    .actions{
+      position:fixed;
+      left:50%;
+      bottom:14px;
+      transform:translateX(-50%);
+      width:min(1120px, calc(100% - 28px));
+      z-index:25;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .actionsLeft,.actionsRight{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btnNeo{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.14);
+      color:rgba(255,255,255,.90);
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .btnNeo:disabled{ opacity:.45; cursor:not-allowed; }
+    .btnPrimary{
+      border:none;
+      background:linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color:rgba(10,12,18,.96);
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .btnPrimary:disabled{ opacity:.45; filter:grayscale(.2); cursor:not-allowed; }
+
+    /* ===== Overlays ===== */
+    .overlay{
+      position:fixed; inset:0;
+      display:none; align-items:center; justify-content:center;
+      z-index:50;
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(8px);
+    }
+
+    /* ✅ plein écran noir (règles/intro) */
+    .overlayBlack{
+      background:#000 !important;
+      backdrop-filter:none !important;
+    }
+    .blackStage{
+      width:min(980px,92%);
+      padding:26px 22px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.10);
+      background:radial-gradient(700px 280px at 50% 0%, rgba(255,120,50,.18), transparent 60%),
+                 radial-gradient(740px 260px at 30% 120%, rgba(80,170,255,.10), transparent 60%),
+                 rgba(0,0,0,.92);
+      box-shadow:0 30px 120px rgba(0,0,0,.80);
+      position:relative;
+      overflow:hidden;
+    }
+    .blackStage::after{
+      content:"";
+      position:absolute; inset:-2px; pointer-events:none; opacity:.9;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 22%),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.03) 0, rgba(255,255,255,.03) 1px, transparent 2px, transparent 6px);
+      mix-blend-mode:overlay;
+    }
+
+    .modalBox{
+      width:min(860px,92%);
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,10,14,.82);
+      box-shadow:0 26px 90px rgba(0,0,0,.62);
+      overflow:hidden;
+      position:relative;
+    }
+    .modalTop{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .badgeState{
+      font-weight:950;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      white-space:nowrap;
+      display:flex; align-items:center; gap:8px;
+    }
+    .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
+    .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
+    .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
+
+    .modalBody{ padding:16px; color:rgba(255,255,255,.92); line-height:1.5; font-size:14px; }
+    .modalActions{
+      padding:14px 16px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;
+    }
+
+    .startTitle{ font-weight:950; font-size:26px; margin-bottom:8px; letter-spacing:.2px; }
+    .startText{ color:rgba(255,255,255,.85); font-size:14px; line-height:1.55; position:relative; z-index:2; }
+    .startBtn{
+      border:none; border-radius:14px; padding:12px 16px;
+      font-weight:950; letter-spacing:.3px;
+      background:linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color:rgba(10,12,18,.96);
+      box-shadow:0 18px 50px rgba(0,0,0,.35);
+    }
+    .xBtn{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      color:rgba(255,255,255,.92);
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    /* ===== Animations ===== */
+    .shake{ animation:shake .24s linear 1; }
+    @keyframes shake{ 0%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} 100%{transform:translateX(0)} }
+    .pulseGood{ animation:pulseGood .32s ease 1; }
+    @keyframes pulseGood{ from{ box-shadow:0 0 0 0 rgba(45,200,120,0);} 50%{ box-shadow:0 0 0 7px rgba(45,200,120,.18);} to{ box-shadow:0 0 0 0 rgba(45,200,120,0);} }
+    .flashBad{ animation:flashBad .30s ease 1; }
+    @keyframes flashBad{ from{ box-shadow:0 0 0 0 rgba(255,70,70,0);} 50%{ box-shadow:0 0 0 7px rgba(255,70,70,.22);} to{ box-shadow:0 0 0 0 rgba(255,70,70,0);} }
+
+    /* ===== Effets fin (confettis) ===== */
+    .fxLayer{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:60;
+      display:none;
+    }
+    .fxLayer.show{ display:block; }
+    .confetti{
+      position:absolute;
+      top:-12px;
+      width:10px; height:16px;
+      border-radius:4px;
+      opacity:.95;
+      transform:translateY(0) rotate(0deg);
+      animation:fall linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(110vh) rotate(540deg);
+        opacity:.95;
+      }
+    }
+    .glitchRed{
+      position:fixed; inset:0; pointer-events:none; z-index:58;
+      display:none;
+      background:
+        repeating-linear-gradient(180deg, rgba(255,70,70,.06) 0, rgba(255,70,70,.06) 1px, transparent 2px, transparent 6px),
+        radial-gradient(1000px 420px at 50% 0%, rgba(255,70,70,.18), transparent 60%);
+      mix-blend-mode:screen;
+      animation:glitch 1.8s infinite;
+    }
+    .glitchRed.show{ display:block; }
+    @keyframes glitch{
+      0%,100%{ transform:translate(0,0); opacity:.55; }
+      20%{ transform:translate(1px,-1px); opacity:.65; }
+      40%{ transform:translate(-2px,1px); opacity:.50; }
+      60%{ transform:translate(2px,1px); opacity:.62; }
+      80%{ transform:translate(-1px,-2px); opacity:.52; }
+    }
+
+    /* responsive */
+    @media (max-width: 980px){
+      .hud{ grid-template-columns:1fr; }
+      .progressShell{ min-width:100%; }
+      .pressureWrap{ width:190px; }
+      .avatarFrame{ width:72px; height:72px; border-radius:20px; }
+      .avatar{ border-radius:16px; transform:scale(1.25); }
+      .pname{ font-size:18px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="stage">
+  <div class="wrap">
+
+    <!-- Top tabs -->
+    <div class="topTabs">
+      <div class="levelTab">
+        <span class="levelDot"></span>
+        <span id="levelTabText">ÉVALUATION SOMMATIVE</span>
+      </div>
+      <div class="progressShell" aria-label="Progression">
+        <div class="progressBar" id="progressBar"></div>
+      </div>
+      <div class="miniHint" id="miniHint">🎯 Dernière épreuve • Résultats à la fin</div>
+    </div>
+
+    <!-- HUD -->
+    <div class="hud">
+      <div class="hudbox">
+        <div class="profile">
+          <div class="avatarFrame">
+            <img class="avatar" id="hudAvatar" alt="Avatar">
+          </div>
+          <div class="ptext">
+            <div class="pname" id="hudName">Joueur</div>
+            <div class="prole" id="hudRole">Rôle: —</div>
+          </div>
+        </div>
+        <div class="chip" id="difficultyChip">MODE: SOMMATIVE</div>
+      </div>
+
+      <div class="hudbox">
+        <div class="stats">
+          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
+
+          <!-- ✅ Timer 45s -->
+          <div class="timerPill" id="timerPill" style="--p:100;">
+            <span class="ring" id="timerRing" style="--p:100;"><span class="inner"></span></span>
+            <span>⏱ <span id="timerText">45</span>s</span>
+          </div>
+
+          <div class="pill">💡 Aides <span id="hudHints">2</span></div>
+          <div class="pill">😰 Pression</div>
+          <div class="pressureWrap" title="Pression">
+            <div class="pressureBar" id="pressureBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frame -->
+    <div class="frame" id="frame">
+      <div class="qmeta" id="qMeta">Évaluation sommative</div>
+      <div class="qtitle" id="qTitle">…</div>
+      <div class="qdesc" id="qDesc">…</div>
+
+      <div class="options" id="options"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="actions">
+  <div class="actionsLeft">
+    <button class="btnNeo" id="hintBtn" type="button">💡 Aide</button>
+    <button class="btnNeo" id="reviewBtn" type="button" disabled>📋 Détails (fin)</button>
+  </div>
+  <div class="actionsRight">
+    <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+    <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+  </div>
+</div>
+
+<!-- ✅ START overlay (plein écran noir) -->
+<div class="overlay overlayBlack" id="startOverlay" style="display:flex;">
+  <div class="blackStage">
+    <div style="position:relative; z-index:2;">
+      <div class="startTitle">Dernière épreuve : l’évaluation sommative</div>
+
+      <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;">
+        <span class="pill" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.10);">👤 <b id="startName">Joueur</b></span>
+        <span class="pill" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.10);">🧩 Rôle : <b id="startRole">—</b></span>
+        <span class="pill" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.10);">📌 Résultats : <b>à la fin</b></span>
+      </div>
+
+      <div class="startText" style="margin-top:14px;">
+        Tu arrives à la fin de <b>Urgences – Agir pour sauver</b>.
+        Cette épreuve valide ton parcours : <b>réagir vite</b>, <b>éviter les erreurs critiques</b>,
+        et <b>garder ton sang-froid</b> quand la pression monte.
+        <br><br>
+
+        <div style="padding:12px 12px; border-radius:16px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
+          <div style="font-weight:950; margin-bottom:6px;">⚠️ Règles & objectif</div>
+          <ul style="margin:0 0 0 18px; padding:0; color: rgba(255,255,255,.86);">
+            <li><b>10 questions</b> sur étouffement, brûlure, chute, AVP</li>
+            <li><b>45 secondes</b> par question</li>
+            <li><b>Pas de score affiché</b> pendant le quiz (uniquement à la fin)</li>
+            <li><b>2 aides maximum</b> pour tout le quiz (une aide = indice, sans révéler la solution)</li>
+            <li>La <b>pression</b> augmente si tu te trompes ou si le temps expire</li>
+          </ul>
+          <div style="margin-top:10px; color: rgba(255,255,255,.85);">
+            👉 Ta mission : <b>prendre la bonne décision</b> au bon moment. Chaque seconde compte.
+          </div>
+        </div>
+
+        <div style="margin-top:14px; color: rgba(255,255,255,.82);">
+          Quand tu es prêt(e), clique sur <b>“Je suis prêt(e)”</b>.
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+        <button class="startBtn" id="startBtn" type="button">✅ Je suis prêt(e)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback overlay (gardé mais NON utilisé) -->
+<div class="overlay" id="feedbackOverlay">
+  <div class="modalBox" id="modalBox">
+    <div class="modalTop">
+      <div class="badgeState" id="badgeState">—</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Pression : <span id="modalPressure">0</span>%
+      </div>
+    </div>
+    <div class="modalBody" id="modalText">…</div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="nextBtn" type="button">Suivant</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hint overlay -->
+<div class="overlay" id="hintOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">💡 Aide</div>
+      <button class="xBtn" id="hintCloseBtn" type="button">✕</button>
+    </div>
+    <div class="modalBody" id="hintText">…</div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="hintOkBtn" type="button">Reprendre</button>
+    </div>
+  </div>
+</div>
+
+<!-- End overlay (résultats + détails) -->
+<div class="overlay" id="endOverlay">
+  <div class="modalBox" style="width:min(980px,92%);">
+    <div class="modalTop">
+      <div class="badgeState" id="endBadge">—</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        <span id="endMeta">—</span>
+      </div>
+    </div>
+
+    <div class="modalBody" id="endBody" style="max-height:72vh; overflow:auto;">
+      …
+    </div>
+
+    <div class="modalActions">
+      <button class="btnNeo" id="replayBtn" type="button">🔁 Rejouer l’épreuve</button>
+      <button class="btnPrimary" id="continueBtn" type="button">➡️ Retour au jeu</button>
+    </div>
+  </div>
+</div>
+
+<!-- FX layers -->
+<div class="glitchRed" id="glitchRed"></div>
+<div class="fxLayer" id="fxLayer"></div>
+
+<script>
+/* ========= SFX (WebAudio) ========= */
+let audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+}
+function tone(freq, dur=0.08, type="sine", gain=0.05){
+  ensureAudio();
+  const t0 = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  g.gain.value = gain;
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t0);
+  osc.stop(t0 + dur);
+}
+function sfxClick(){ tone(520,0.04,"triangle",0.035); }
+function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
+function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
+function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
+function sfxAlarmLong(){
+  ensureAudio();
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(520, now);
+  osc.frequency.linearRampToValueAtTime(380, now + 0.35);
+  osc.frequency.linearRampToValueAtTime(520, now + 0.70);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(now); osc.stop(now + 1.15);
+}
+function sfxVictory(){
+  ensureAudio();
+  const notes = [
+    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
+    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
+  ];
+  let t = 0;
+  notes.forEach((n)=>{
+    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
+    t += n.d + 0.03;
+  });
+}
+function sfxSoft(){ tone(440,0.06,"sine",0.04); setTimeout(()=>tone(520,0.06,"sine",0.04), 70); }
+/* ✅ tiny warning ticks */
+function sfxTick(){ tone(740,0.03,"sine",0.025); }
+function sfxTickHard(){ tone(980,0.04,"square",0.03); }
+
+/* ========= Helpers ========= */
+const el = (id)=>document.getElementById(id);
+const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
+const startName = el("startName"), startRole = el("startRole");
+
+const hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal");
+const progressBar = el("progressBar");
+const miniHint = el("miniHint");
+const pressureBar = el("pressureBar");
+const hudHints = el("hudHints");
+
+const timerPill = el("timerPill");
+const timerRing = el("timerRing");
+const timerText = el("timerText");
+
+const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc = el("qDesc"), optionsEl = el("options");
+const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
+const hintBtn = el("hintBtn"), reviewBtn = el("reviewBtn");
+
+const startOverlay = el("startOverlay"), startBtn = el("startBtn");
+
+/* Feedback overlay (gardé mais NON utilisé) */
+const feedbackOverlay = el("feedbackOverlay");
+
+const hintOverlay = el("hintOverlay"), hintText = el("hintText"), hintOkBtn = el("hintOkBtn"), hintCloseBtn = el("hintCloseBtn");
+const endOverlay = el("endOverlay"), endBadge = el("endBadge"), endBody = el("endBody"), endMeta = el("endMeta");
+const replayBtn = el("replayBtn"), continueBtn = el("continueBtn");
+
+const fxLayer = el("fxLayer");
+const glitchRed = el("glitchRed");
+const frame = el("frame");
+
+/* ========= Profil (robuste) ========= */
+const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
+
+const playerName =
+  (window.player_name || window.playerName ||
+   localStorage.getItem("player_name") || localStorage.getItem("playerName") ||
+   "Joueur");
+
+const roleRaw =
+  (window.role || window.metier ||
+   localStorage.getItem("role") || localStorage.getItem("metier") ||
+   localStorage.getItem("job") || localStorage.getItem("profession") ||
+   "—");
+
+const roleKey = String(roleRaw||"").toLowerCase();
+const roleLabel = roleLabelMap[roleKey] || roleRaw;
+
+const avatarFile =
+  localStorage.getItem("avatar") ||
+  (roleKey && roleLabelMap[roleKey] ? (roleKey + "_f.png") : "medecin_f.png");
+
+/* Niveau (si tu l’as stocké dans l’étape d’avant) */
+const niveau =
+  (window.niveau || localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "Sommative");
+
+hudName.textContent = playerName;
+hudRole.textContent = "Rôle: " + roleLabel;
+hudAvatar.src = "assets/avatars/" + avatarFile;
+
+startName.textContent = playerName;
+startRole.textContent = roleLabel;
+
+difficultyChip.textContent = "MODE: " + String(niveau).toUpperCase();
+
+/* ========= Config ========= */
+const NEXT_GENIALLY_URL = "#"; // ✅ mets ici ton lien de retour Genially
+
+const HINT_MAX = 2; // ✅ aides pour tout le quiz
+const HINT_KEY = "sommative_hints_left_v1";
+
+/* ✅ 45 sec par question */
+const TIMER_SECONDS = 45;
+
+/* pression */
+const PRESSURE_RULES = { wrong: 12, correct: -4, critical: 18, timeout: 16 };
+const PRESSURE_MAX = 100;
+
+/* ========= Questions (10) ========= */
+const questions = [
+  {
+    type:'single',
+    title:'Étouffement — obstruction totale',
+    desc:"Chez un adulte conscient qui ne peut pas parler/respirer, tu fais d'abord :",
+    options:[
+      {text:"Donner de l'eau", correct:false},
+      {text:"5 claques dorsales entre les omoplates", correct:true},
+      {text:"Massage cardiaque immédiat", correct:false},
+      {text:"Attendre les secours sans agir", correct:false}
+    ],
+    hint:"Pense au tout premier geste chez un adulte conscient : action rapide, victime penchée en avant."
+  },
+  {
+    type:'single',
+    title:'Étouffement — après les claques',
+    desc:"Si l'obstruction persiste après les claques dorsales :",
+    options:[
+      {text:"Compressions abdominales (Heimlich) si approprié", correct:true},
+      {text:"Mettre la victime debout et la secouer", correct:false},
+      {text:"La faire courir", correct:false},
+      {text:"Lui taper sur la tête", correct:false}
+    ],
+    hint:"Si le premier geste échoue, on passe à une manœuvre de désobstruction (sans violence inutile)."
+  },
+  {
+    type:'tf',
+    title:'Brûlure — conduite à tenir',
+    desc:"On refroidit une brûlure à l'eau tempérée pendant au moins 10 minutes.",
+    correct:true,
+    hint:"Les brûlures : priorité = refroidir longtemps (eau tempérée), pas de “remèdes” dangereux."
+  },
+  {
+    type:'single',
+    title:'Brûlure — erreur à éviter',
+    desc:"Quelle action est à éviter sur une brûlure ?",
+    options:[
+      {text:"Refroidir à l'eau", correct:false},
+      {text:"Percer les cloques", correct:true},
+      {text:"Protéger avec un pansement stérile si possible", correct:false},
+      {text:"Retirer bijoux autour de la zone si possible", correct:false}
+    ],
+    hint:"Évite tout ce qui aggrave la lésion ou augmente le risque d’infection."
+  },
+  {
+    type:'single',
+    title:'Chute — suspicion rachis',
+    desc:"Après une chute avec douleur cervicale, la priorité est :",
+    options:[
+      {text:"Faire marcher la victime pour tester", correct:false},
+      {text:"Maintenir tête-cou-tronc alignés et alerter", correct:true},
+      {text:"Donner à boire", correct:false},
+      {text:"Mettre assis \"pour respirer mieux\"", correct:false}
+    ],
+    hint:"Chute + douleur cervicale = protection rachis : immobiliser/aligner, appeler."
+  },
+  {
+    type:'short',
+    title:'Hémorragie — geste immédiat',
+    desc:"Quel est le premier geste ? (1 mot)",
+    answers:["compression","comprimer"],
+    hint:"Un seul mot : geste qui STOPPE le sang immédiatement."
+  },
+  {
+    type:'cloze2',
+    title:"Alerte — message utile",
+    desc:"Complète les informations essentielles :",
+    template:"Lors d’un accident, le message d’alerte doit préciser le <b>{b1}</b> et le <b>{b2}</b> de victimes.",
+    blanks:[
+      {key:"b1", accept:["lieu"]},
+      {key:"b2", accept:["nombre"]}
+    ],
+    hint:"Le message d’alerte : où ? + combien ? (deux infos vitales)."
+  },
+  {
+    type:'tf',
+    title:'AVP — boissons',
+    desc:"Après un accident, on évite de faire boire une victime polytraumatisée.",
+    correct:true,
+    hint:"Après un AVP, faire boire peut être dangereux (risque chirurgie/aspiration)."
+  },
+  {
+    type:'multi',
+    title:'Sécurité de scène',
+    desc:"Coche ce qui est essentiel avant d'intervenir :",
+    options:[
+      {text:"Gants et protection", correct:true},
+      {text:"Balisage / sécurisation", correct:true},
+      {text:"Se placer dos à la circulation", correct:false},
+      {text:"Couper le contact si possible", correct:true}
+    ],
+    hint:"Sécurité : se protéger + sécuriser la zone + réduire les risques (plusieurs bonnes réponses)."
+  },
+  {
+    type:'drag_order',
+    title:'Priorités ABC',
+    desc:"Remets l'ordre ABC :",
+    items:[
+      {id:'b', text:'Respiration (ventilation)'},
+      {id:'c', text:'Circulation (saignement, pouls)'},
+      {id:'a', text:'Voies aériennes + protection cervicale'}
+    ],
+    expected:['a','b','c'],
+    hint:"Commence par les voies aériennes (A), puis respiration (B), puis circulation (C)."
+  }
+];
+
+const TOTAL = questions.length;
+hudQtotal.textContent = String(TOTAL);
+
+/* ========= State ========= */
+let idx = 0;
+let score = 0;                // score visible seulement à la fin
+let pressure = 0;             // pression visible pendant
+let hintsLeft = Math.max(0, Math.min(HINT_MAX, parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10) || HINT_MAX));
+let hintUsedThisQuestion = false;
+
+/* réponses utilisateur (pour le détail final) */
+let answersLog = []; // [{qIndex, title, type, userAnswer, correctAnswer, isCorrect, timedOut}]
+
+/* sélection courante */
+let selectedSingle = null;
+let multiSelected = new Set();
+let inputValue = "";
+let clozeValues = {};
+let dragState = [];
+
+/* ========= Timer state ========= */
+let timeLeft = TIMER_SECONDS;
+let timerId = null;
+let timerPaused = false;
+let warned10 = false;
+let warned5 = false;
+
+/* ========= Utils ========= */
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function setProgress(){
+  const p = clamp(Math.round((idx / TOTAL) * 100), 0, 100);
+  progressBar.style.width = p + "%";
+}
+function setPressure(v){
+  pressure = clamp(v,0,PRESSURE_MAX);
+  pressureBar.style.width = pressure + "%";
+}
+function addPressure(d){ setPressure(pressure + d); }
+
+function setHintsUI(){
+  hudHints.textContent = String(hintsLeft);
+  hintBtn.disabled = (hintsLeft<=0 || hintUsedThisQuestion || startOverlay.style.display !== "none" || endOverlay.style.display === "flex" || hintOverlay.style.display === "flex" || feedbackOverlay.style.display === "flex");
+}
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+/* ========= Effets courts (sans afficher score) ========= */
+function fxGood(){
+  frame.classList.remove("pulseGood");
+  void frame.offsetWidth;
+  frame.classList.add("pulseGood");
+}
+function fxBad(){
+  frame.classList.remove("flashBad","shake");
+  void frame.offsetWidth;
+  frame.classList.add("flashBad","shake");
+}
+function showGlitchRed(ms=900){
+  glitchRed.classList.add("show");
+  setTimeout(()=>glitchRed.classList.remove("show"), ms);
+}
+
+/* ========= Timer ========= */
+function updateTimerUI(){
+  timerText.textContent = String(timeLeft);
+
+  const pct = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
+  timerRing.style.setProperty("--p", String(pct));
+  timerPill.style.setProperty("--p", String(pct));
+
+  timerPill.classList.remove("timerWarn","timerDanger");
+  if(timeLeft <= 5) timerPill.classList.add("timerDanger");
+  else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
+
+  miniHint.textContent = `🎯 Dernière épreuve • Résultats à la fin • Temps: ${timeLeft}s • Pression: ${pressure}%`;
+}
+function stopTimer(){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+}
+function startTimer(){
+  stopTimer();
+  timeLeft = TIMER_SECONDS;
+  timerPaused = false;
+  warned10 = false;
+  warned5 = false;
+  updateTimerUI();
+
+  timerId = setInterval(()=>{
+    if(timerPaused) return;
+    timeLeft = Math.max(0, timeLeft - 1);
+
+    if(timeLeft === 10 && !warned10){
+      warned10 = true;
+      sfxTick();
+    }
+    if(timeLeft === 5 && !warned5){
+      warned5 = true;
+      sfxTickHard();
+    }
+
+    updateTimerUI();
+
+    if(timeLeft <= 0){
+      stopTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+function pauseTimer(){
+  timerPaused = true;
+}
+function resumeTimer(){
+  timerPaused = false;
+}
+
+/* ========= Récupérer réponses correctes (texte) ========= */
+function getCorrectAnswerText(q){
+  if(q.type==="single"){
+    const c = q.options.find(o=>o.correct);
+    return c ? c.text : "—";
+  }
+  if(q.type==="tf"){
+    return q.correct ? "Vrai" : "Faux";
+  }
+  if(q.type==="multi"){
+    return q.options.filter(o=>o.correct).map(o=>o.text).join(" ; ");
+  }
+  if(q.type==="short"){
+    return (q.answers||[]).join(" / ");
+  }
+  if(q.type==="cloze2"){
+    return "Lieu + nombre (de victimes)";
+  }
+  if(q.type==="drag_order"){
+    const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
+    return q.expected.map(id=>map[id]||id).join(" → ");
+  }
+  return "—";
+}
+function getUserAnswerText(q){
+  if(q.type==="single"){
+    if(selectedSingle===null) return "—";
+    return q.options[selectedSingle]?.text ?? "—";
+  }
+  if(q.type==="tf"){
+    if(selectedSingle===null) return "—";
+    return (selectedSingle===0) ? "Vrai" : "Faux";
+  }
+  if(q.type==="multi"){
+    if(multiSelected.size===0) return "—";
+    const arr = Array.from(multiSelected).sort((a,b)=>a-b).map(i=>q.options[i]?.text).filter(Boolean);
+    return arr.join(" ; ") || "—";
+  }
+  if(q.type==="short"){
+    return (inputValue||"").trim() || "—";
+  }
+  if(q.type==="cloze2"){
+    const b1 = (clozeValues.b1||"").trim();
+    const b2 = (clozeValues.b2||"").trim();
+    return `${b1 || "—"} ; ${b2 || "—"}`;
+  }
+  if(q.type==="drag_order"){
+    if(!dragState.length) return "—";
+    const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
+    return dragState.map(it=>map[it.id]||it.text||it.id).join(" → ");
+  }
+  return "—";
+}
+
+/* ========= Correction ========= */
+function isCorrect(q){
+  if(q.type==="single"){
+    return selectedSingle !== null && q.options[selectedSingle]?.correct === true;
+  }
+  if(q.type==="tf"){
+    if(selectedSingle === null) return false;
+    const val = (selectedSingle === 0); // Vrai
+    return val === q.correct;
+  }
+  if(q.type==="multi"){
+    const chosen = Array.from(multiSelected).sort((a,b)=>a-b);
+    const correct = q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+    if(chosen.length !== correct.length) return false;
+    return chosen.every((v,i)=>v===correct[i]);
+  }
+  if(q.type==="short"){
+    const norm = String(inputValue||"").trim().toLowerCase();
+    const acc = (q.answers||[]).map(a=>String(a).trim().toLowerCase());
+    return acc.includes(norm);
+  }
+  if(q.type==="cloze2"){
+    const v1 = String(clozeValues.b1||"").trim().toLowerCase();
+    const v2 = String(clozeValues.b2||"").trim().toLowerCase();
+    const ok1 = (q.blanks[0].accept||[]).map(x=>String(x).toLowerCase()).includes(v1);
+    const ok2 = (q.blanks[1].accept||[]).map(x=>String(x).toLowerCase()).includes(v2);
+    return ok1 && ok2;
+  }
+  if(q.type==="drag_order"){
+    const ids = dragState.map(it=>it.id);
+    if(ids.length !== q.expected.length) return false;
+    return ids.every((v,i)=>v===q.expected[i]);
+  }
+  return false;
+}
+
+/* ========= Reset selection ========= */
+function resetSelection(){
+  selectedSingle = null;
+  multiSelected = new Set();
+  inputValue = "";
+  clozeValues = {};
+  dragState = [];
+  hintUsedThisQuestion = false;
+  clearBtn.style.display = "none";
+  validateBtn.disabled = true;
+  setHintsUI();
+}
+
+/* ========= Render ========= */
+function mkOpt(text){
+  const d = document.createElement("div");
+  d.className = "opt";
+  d.textContent = text;
+  return d;
+}
+
+function renderQuestion(){
+  resetSelection();
+  setProgress();
+
+  const q = questions[idx];
+  hudQnum.textContent = String(idx+1);
+
+  qMeta.textContent = "Évaluation sommative";
+  qTitle.textContent = q.title;
+  qDesc.innerHTML = q.desc || "";
+  optionsEl.innerHTML = "";
+
+  if(q.type === "single"){
+    q.options.forEach((o,i)=>{
+      const d = mkOpt(o.text);
+      d.onclick = ()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle = i;
+        validateBtn.disabled = false;
+      };
+      optionsEl.appendChild(d);
+    });
+    startTimer();
+    return;
+  }
+
+  if(q.type === "tf"){
+    const opts = [{label:"Vrai"},{label:"Faux"}];
+    opts.forEach((o,i)=>{
+      const d = mkOpt(o.label);
+      d.onclick = ()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle = i;
+        validateBtn.disabled = false;
+      };
+      optionsEl.appendChild(d);
+    });
+    startTimer();
+    return;
+  }
+
+  if(q.type === "multi"){
+    clearBtn.style.display = "inline-block";
+    q.options.forEach((o,i)=>{
+      const d = mkOpt(o.text);
+      d.onclick = ()=>{
+        sfxClick();
+        if(multiSelected.has(i)){ multiSelected.delete(i); d.classList.remove("sel"); }
+        else { multiSelected.add(i); d.classList.add("sel"); }
+        validateBtn.disabled = (multiSelected.size === 0);
+      };
+      optionsEl.appendChild(d);
+    });
+    startTimer();
+    return;
+  }
+
+  if(q.type === "short"){
+    clearBtn.style.display = "inline-block";
+    const box = document.createElement("div");
+    box.className = "opt";
+    box.style.cursor = "default";
+    box.innerHTML = `
+      <div style="font-weight:950;margin-bottom:8px;">Ta réponse</div>
+      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">(Un seul mot suffit)</div>
+    `;
+    optionsEl.appendChild(box);
+    const inp = box.querySelector("#shortInput");
+    inp.addEventListener("input", ()=>{
+      inputValue = inp.value;
+      validateBtn.disabled = (inp.value.trim().length === 0);
+    });
+    startTimer();
+    return;
+  }
+
+  if(q.type === "cloze2"){
+    clearBtn.style.display = "inline-block";
+    const box = document.createElement("div");
+    box.className = "opt";
+    box.style.cursor = "default";
+    const html = q.template
+      .replace("{b1}", `<input data-k="b1" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+      .replace("{b2}", `<input data-k="b2" class="form-control" style="display:inline-block; width:180px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.9;">${html}</div>`;
+    optionsEl.appendChild(box);
+
+    const inputs = box.querySelectorAll("input[data-k]");
+    inputs.forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        clozeValues[inp.dataset.k] = inp.value;
+        const filled = ["b1","b2"].every(k => String(clozeValues[k]||"").trim().length>0);
+        validateBtn.disabled = !filled;
+      });
+    });
+    startTimer();
+    return;
+  }
+
+  if(q.type === "drag_order"){
+    clearBtn.style.display = "inline-block";
+
+    const note = document.createElement("div");
+    note.className="pill";
+    note.style.marginBottom="10px";
+    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
+    optionsEl.appendChild(note);
+
+    const list = document.createElement("div");
+    list.id="dragList";
+    list.style.display="grid";
+    list.style.gap="10px";
+
+    // shuffle
+    const items = q.items.slice();
+    for(let k=items.length-1;k>0;k--){
+      const j=Math.floor(Math.random()*(k+1));
+      [items[k],items[j]]=[items[j],items[k]];
+    }
+    dragState = items;
+
+    function renderList(){
+      list.innerHTML = "";
+      dragState.forEach((it, pos)=>{
+        const row = document.createElement("div");
+        row.className="opt";
+        row.setAttribute("draggable","true");
+        row.dataset.pos = String(pos);
+        row.dataset.id = it.id;
+        row.innerHTML = `<div style="font-weight:950;">${escapeHtml(it.text)}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+        list.appendChild(row);
+      });
+      validateBtn.disabled = true;
+    }
+
+    let dragSrc = null;
+    list.addEventListener("dragstart",(e)=>{
+      const target = e.target.closest("[draggable='true']");
+      if(!target) return;
+      dragSrc = target;
+      e.dataTransfer.effectAllowed="move";
+      target.style.opacity="0.6";
+    });
+    list.addEventListener("dragend",(e)=>{
+      const target = e.target.closest("[draggable='true']");
+      if(target) target.style.opacity="1";
+      dragSrc=null;
+    });
+    list.addEventListener("dragover",(e)=>{
+      e.preventDefault();
+      const over = e.target.closest("[draggable='true']");
+      if(!over || !dragSrc || over===dragSrc) return;
+      const rect = over.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height/2;
+      list.insertBefore(dragSrc, before ? over : over.nextSibling);
+
+      // rebuild dragState from DOM
+      const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
+      const map = Object.fromEntries(q.items.map(it=>[it.id,it]));
+      dragState = order.map(id=>map[id]).filter(Boolean);
+      validateBtn.disabled = false;
+    });
+
+    renderList();
+    optionsEl.appendChild(list);
+
+    startTimer();
+    return;
+  }
+
+  validateBtn.disabled = true;
+  startTimer();
+}
+
+/* ========= Aide (indice) ========= */
+function openHint(){
+  if(hintsLeft<=0 || hintUsedThisQuestion) return;
+  sfxClick();
+
+  // ✅ pause timer pendant l’aide
+  pauseTimer();
+
+  hintUsedThisQuestion = true;
+  hintsLeft = Math.max(0, hintsLeft - 1);
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  setHintsUI();
+
+  const q = questions[idx];
+  hintText.textContent = q.hint || "Garde ton calme : sécurité, évaluation, gestes adaptés.";
+  hintOverlay.style.display = "flex";
+}
+function closeHint(){
+  hintOverlay.style.display = "none";
+  setHintsUI();
+
+  // ✅ reprise timer
+  resumeTimer();
+}
+
+/* ========= (Feedback immédiat désactivé) ========= */
+function subtleNudge(){
+  frame.classList.remove("shake");
+  void frame.offsetWidth;
+  frame.classList.add("shake");
+}
+
+/* ========= Validation ========= */
+function logAnswer(q, ok, timedOut=false, forcedUserAnswer=null){
+  answersLog.push({
+    qIndex: idx,
+    title: q.title,
+    type: q.type,
+    userAnswer: forcedUserAnswer !== null ? forcedUserAnswer : getUserAnswerText(q),
+    correctAnswer: getCorrectAnswerText(q),
+    isCorrect: ok,
+    timedOut: timedOut
+  });
+}
+
+function applyResultEffects(ok, critical=false, timedOut=false){
+  // ✅ effets visuels + sons qui changent selon le résultat
+  if(timedOut){
+    fxBad();
+    showGlitchRed(900);
+    sfxAlarmLong();
+    return;
+  }
+  if(ok){
+    fxGood();
+    sfxCorrect();
+  }else{
+    fxBad();
+    critical ? sfxCritical() : sfxWrong();
+    if(pressure >= 85) sfxAlarmLong();
+  }
+}
+
+function validateCurrent(){
+  const q = questions[idx];
+
+  // sécurité (Valider est déjà désactivé tant que non rempli, mais on garde)
+  if(q.type==="single" || q.type==="tf"){
+    if(selectedSingle===null){ subtleNudge(); return; }
+  }
+  if(q.type==="multi"){
+    if(multiSelected.size===0){ subtleNudge(); return; }
+  }
+  if(q.type==="short"){
+    if((inputValue||"").trim().length===0){ subtleNudge(); return; }
+  }
+  if(q.type==="cloze2"){
+    const filled = ["b1","b2"].every(k => String(clozeValues[k]||"").trim().length>0);
+    if(!filled){ subtleNudge(); return; }
+  }
+  if(q.type==="drag_order"){
+    if(!dragState.length){ subtleNudge(); return; }
+  }
+
+  // stop timer car validation réussie (et on change de question)
+  stopTimer();
+
+  // ✅ Pas de feedback "score": on calcule en coulisse
+  const ok = isCorrect(q);
+
+  const critical =
+    (!ok) && (q.title.includes("erreur") || q.title.includes("AVP") || q.title.includes("rachis") || q.title.includes("obstruction totale"));
+
+  if(ok){
+    score += 1;
+    addPressure(PRESSURE_RULES.correct);
+  }else{
+    addPressure(critical ? PRESSURE_RULES.critical : PRESSURE_RULES.wrong);
+  }
+
+  logAnswer(q, ok, false, null);
+
+  // ✅ effets (sans afficher le score)
+  applyResultEffects(ok, critical, false);
+
+  idx++;
+  if(idx >= TOTAL) finish();
+  else renderQuestion();
+}
+
+function handleTimeout(){
+  // si overlay d’aide ouvert, on ignore (timer est pausé) — sécurité
+  if(hintOverlay.style.display === "flex" || startOverlay.style.display !== "none" || endOverlay.style.display === "flex") return;
+
+  const q = questions[idx];
+
+  // ✅ timeout = échec silencieux (sans score affiché)
+  addPressure(PRESSURE_RULES.timeout);
+
+  logAnswer(q, false, true, "⏱ Temps écoulé");
+
+  // effets timeout
+  applyResultEffects(false, true, true);
+
+  idx++;
+  if(idx >= TOTAL) finish();
+  else renderQuestion();
+}
+
+/* ========= Détails finaux ========= */
+function buildDetailsHTML(){
+  const rows = answersLog.map((a, i)=>{
+    const ok = a.isCorrect;
+    const tag = a.timedOut
+      ? `<span class="badgeState bBad" style="display:inline-flex;">⏱ Temps écoulé</span>`
+      : (ok
+          ? `<span class="badgeState bGood" style="display:inline-flex;">✅ Correct</span>`
+          : `<span class="badgeState bBad" style="display:inline-flex;">❌ Incorrect</span>`);
+
+    return `
+      <div style="border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04); border-radius:16px; padding:12px 12px; margin-top:10px;">
+        <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;">
+          <div style="font-weight:950;">Q${i+1} — ${escapeHtml(a.title)}</div>
+          ${tag}
+        </div>
+        <div style="margin-top:10px; display:grid; gap:8px;">
+          <div><span style="color:rgba(255,255,255,.72); font-weight:900;">Ta réponse :</span>
+            <div style="margin-top:4px; font-weight:850; color:rgba(255,255,255,.92);">${escapeHtml(a.userAnswer)}</div>
+          </div>
+          <div><span style="color:rgba(255,255,255,.72); font-weight:900;">Bonne réponse :</span>
+            <div style="margin-top:4px; font-weight:850; color:rgba(255,255,255,.92);">${escapeHtml(a.correctAnswer)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div style="font-weight:950; font-size:18px; margin-top:12px;">📋 Détails question par question</div>
+    <div style="color:rgba(255,255,255,.78); margin-top:6px;">
+      Voici ton récapitulatif complet (réponses + correction). Utilise-le pour consolider tes réflexes.
+    </div>
+    ${rows}
+  `;
+}
+
+/* ========= Effets fin selon score ========= */
+function spawnConfetti(count=90){
+  fxLayer.innerHTML = "";
+  fxLayer.classList.add("show");
+  const w = window.innerWidth;
+  for(let i=0;i<count;i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.floor(Math.random()*w) + "px";
+    c.style.animationDuration = (1.8 + Math.random()*1.6) + "s";
+    c.style.animationDelay = (Math.random()*0.25) + "s";
+    c.style.transform = "rotate(" + Math.floor(Math.random()*360) + "deg)";
+    const hues = [25, 45, 190, 140, 0, 280];
+    const hue = hues[Math.floor(Math.random()*hues.length)];
+    c.style.background = "hsla(" + hue + ", 90%, 62%, .95)";
+    c.style.opacity = (0.75 + Math.random()*0.25).toFixed(2);
+    fxLayer.appendChild(c);
+  }
+  setTimeout(()=>fxLayer.classList.remove("show"), 2400);
+}
+function showGlitchRedLong(ms=1800){
+  glitchRed.classList.add("show");
+  setTimeout(()=>glitchRed.classList.remove("show"), ms);
+}
+
+/* ========= Fin ========= */
+function finish(){
+  stopTimer();
+
+  validateBtn.disabled = true;
+  hintBtn.disabled = true;
+  clearBtn.style.display = "none";
+  reviewBtn.disabled = false;
+
+  const s = score;
+  const total = TOTAL;
+  const pct = Math.round((s/total)*100);
+
+  let badgeCls = "badgeState bWarn";
+  let stateTxt = "✅ Fin — Évaluation sommative";
+  let headline = "Résultat";
+  let msg = "";
+  let nextReco = "";
+
+  if(pct >= 90){
+    badgeCls = "badgeState bGood";
+    headline = "🏆 Maîtrise excellente";
+    msg = "Tu gardes la lucidité même sous pression. Tes réflexes sont solides : tu es prêt(e) à intervenir avec méthode.";
+    nextReco = "Continue à t’entraîner pour automatiser encore plus tes gestes.";
+    sfxVictory();
+    spawnConfetti(110);
+  }else if(pct >= 70){
+    badgeCls = "badgeState bWarn";
+    headline = "✨ Très bon niveau";
+    msg = "Les bases sont acquises. Il te reste quelques points à renforcer pour être plus constant(e) en situation réelle.";
+    nextReco = "Rejoue 1 ou 2 scénarios ciblés pour consolider tes points faibles.";
+    sfxSoft();
+    spawnConfetti(70);
+  }else{
+    badgeCls = "badgeState bBad";
+    headline = "🚨 À renforcer";
+    msg = "Sous pression, tu hésites encore sur des priorités importantes. Ce n’est pas grave : c’est exactement le but de l’entraînement.";
+    nextReco = "Repars sur les scénarios (débutant/intermédiaire), et répète jusqu’à obtenir des réflexes stables.";
+    sfxAlarmLong();
+    showGlitchRedLong();
+  }
+
+  endBadge.className = badgeCls;
+  endBadge.textContent = stateTxt;
+  endMeta.textContent = `${playerName} • ${roleLabel} • Pression finale: ${pressure}%`;
+
+  const summaryPills = `
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+      <span class="pill">🎯 Score final : <b>${s} / ${total}</b></span>
+      <span class="pill">📈 Réussite : <b>${pct}%</b></span>
+      <span class="pill">😰 Pression : <b>${pressure}%</b></span>
+      <span class="pill">💡 Aides restantes : <b>${hintsLeft}</b></span>
+    </div>
+  `;
+
+  endBody.innerHTML = `
+    <div style="font-weight:950; font-size:22px;">${headline}</div>
+    <div style="margin-top:8px; color:rgba(255,255,255,.86); line-height:1.6;">
+      ${escapeHtml(msg)}
+    </div>
+    ${summaryPills}
+
+    <div style="margin-top:14px; padding:12px 12px; border-radius:16px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
+      <div style="font-weight:950;">🎓 Conseil de progression</div>
+      <div style="margin-top:6px; color:rgba(255,255,255,.84);">${escapeHtml(nextReco)}</div>
+    </div>
+
+    ${buildDetailsHTML()}
+  `;
+
+  endOverlay.style.display = "flex";
+  progressBar.style.width = "100%";
+}
+
+/* ========= Boutons ========= */
+validateBtn.addEventListener("click", validateCurrent);
+
+clearBtn.addEventListener("click", ()=>{
+  sfxClick();
+  renderQuestion(); // reset question + restart timer
+});
+
+hintBtn.addEventListener("click", openHint);
+hintOkBtn.addEventListener("click", closeHint);
+hintCloseBtn.addEventListener("click", closeHint);
+
+reviewBtn.addEventListener("click", ()=>{
+  if(endOverlay.style.display === "flex") return;
+  sfxClick();
+});
+
+replayBtn.addEventListener("click", ()=>{
+  sfxClick();
+  stopTimer();
+
+  endOverlay.style.display = "none";
+  answersLog = [];
+  idx = 0;
+  score = 0;
+  pressure = 0;
+  setPressure(0);
+
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  setHintsUI();
+
+  progressBar.style.width = "0%";
+  hudQnum.textContent = "1";
+
+  // reset timer UI
+  timeLeft = TIMER_SECONDS;
+  updateTimerUI();
+
+  startOverlay.style.display = "flex";
+});
+
+continueBtn.addEventListener("click", ()=>{
+  window.location.href = NEXT_GENIALLY_URL;
+});
+
+/* ========= Start ========= */
+startBtn.addEventListener("click", ()=>{
+  ensureAudio();
+  sfxClick();
+
+  stopTimer();
+
+  answersLog = [];
+  idx = 0;
+  score = 0;
+  pressure = 0;
+  setPressure(0);
+
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  setHintsUI();
+
+  startOverlay.style.display = "none";
+  endOverlay.style.display = "none";
+
+  feedbackOverlay.style.display = "none";
+  hintOverlay.style.display = "none";
+
+  hudQnum.textContent = "1";
+  progressBar.style.width = "0%";
+
+  renderQuestion();
+});
+
+/* ========= Init ========= */
+(function init(){
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = "Cette épreuve s’ouvrira après le clic sur <b>Je suis prêt(e)</b>.";
+  optionsEl.innerHTML = "";
+
+  setHintsUI();
+  setProgress();
+  setPressure(0);
+
+  timeLeft = TIMER_SECONDS;
+  updateTimerUI();
+
+  el("levelTabText").textContent = "ÉVALUATION SOMMATIVE";
+})();
+</script>
+</body>
+</html>
