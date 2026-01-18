@@ -21,6 +21,9 @@
       --blue: rgba(80,170,255,1);
       --ember: rgba(255,150,70,1);
       --ember2: rgba(255,120,50,1);
+
+      /* ✅ Genially auto-scale */
+      --scale: 1;
     }
 
     /* ✅ Genially anti-scroll */
@@ -33,39 +36,59 @@
       height:100%;
     }
 
-    /* ✅ Stage Genially */
+    /* ✅ Genially: scène fixe 16:9 + scale auto (NEW) */
+    .genially-stage{
+      width:100vw;
+      height:100vh;
+      position:relative;
+      overflow:hidden;
+      background:transparent;
+    }
+    .genially-page{
+      width:1920px;          /* base */
+      height:1080px;         /* base */
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%) scale(var(--scale));
+      transform-origin:center;
+      overflow:hidden;
+      background:transparent;
+    }
+
+    /* ✅ Stage Genially (adapté: plus en vh, mais en % de la page fixe) */
     .stage{
-      height: 100vh;
-      padding: 10px;
+      height: 100%;
+      padding: 8px;          /* réduit */
       overflow:hidden;
       display:flex;
       justify-content:center;
       align-items:flex-start;
     }
     .wrap{
-      width: min(1120px, 100%);
+      width: min(1060px, 100%);  /* réduit */
       height: 100%;
       display:flex;
       flex-direction:column;
-      gap: 12px;
+      gap: 10px;                 /* réduit */
     }
 
     /* ===== TOP TABS (référence) ===== */
     .topTabs{
       display:flex;
       align-items:center;
-      gap: 10px;
+      gap: 8px;              /* réduit */
       flex-wrap: wrap;
-      margin-bottom: 2px;
+      margin-bottom: 0px;    /* réduit */
     }
     .levelTab{
-      display:flex; align-items:center; gap: 10px;
-      padding: 10px 12px;
+      display:flex; align-items:center; gap: 8px;
+      padding: 8px 10px;     /* réduit */
       border-radius: 999px;
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
       backdrop-filter: blur(12px);
-      box-shadow: 0 18px 65px rgba(0,0,0,.40);
+      box-shadow: 0 16px 55px rgba(0,0,0,.38);
       position: relative;
       overflow:hidden;
     }
@@ -78,30 +101,30 @@
       opacity:.9;
     }
     .levelDot{
-      width: 12px; height: 12px; border-radius: 999px;
+      width: 10px; height: 10px; border-radius: 999px; /* réduit */
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
-      box-shadow: 0 0 0 5px rgba(255,150,70,.14);
+      box-shadow: 0 0 0 4px rgba(255,150,70,.14);      /* réduit */
       position:relative; z-index:2;
     }
     #levelTabText{
       font-weight: 950;
       letter-spacing: .25px;
-      font-size: 12px;
+      font-size: 11px;       /* réduit */
       color: rgba(255,255,255,.88);
       position:relative; z-index:2;
       white-space: nowrap;
     }
 
     .progressShell{
-      height: 9px;
-      flex: 1 1 280px;
+      height: 8px;           /* réduit */
+      flex: 1 1 260px;       /* réduit */
       min-width: 220px;
       border-radius: 999px;
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
       position: relative;
-      box-shadow: 0 14px 44px rgba(0,0,0,.30);
+      box-shadow: 0 12px 38px rgba(0,0,0,.28);
       backdrop-filter: blur(12px);
     }
     .progressBar{
@@ -112,34 +135,34 @@
       transition: width .25s ease;
     }
     .miniHint{
-      padding: 10px 12px;
+      padding: 8px 10px;     /* réduit */
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 12px;
+      font-size: 11px;       /* réduit */
       color: rgba(255,255,255,.80);
       white-space: nowrap;
-      display:flex; align-items:center; gap: 10px;
+      display:flex; align-items:center; gap: 8px; /* réduit */
       backdrop-filter: blur(12px);
     }
     .miniHint b{ color: rgba(255,255,255,.92); }
 
     /* ===== HUD ===== */
-    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hud{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; } /* réduit */
 
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 16px;        /* réduit */
+      padding: 10px 12px;         /* réduit */
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      gap: 10px;                  /* réduit */
       position: relative;
       overflow:hidden;
-      box-shadow: 0 18px 65px rgba(0,0,0,.45);
+      box-shadow: 0 16px 55px rgba(0,0,0,.42);
       backdrop-filter: blur(12px);
     }
     .hudbox::after{
@@ -153,17 +176,17 @@
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+    .profile{ display:flex; align-items:center; gap: 10px; min-width: 0; position: relative; z-index:2; }
 
     .avatarFrame{
-      width: 72px; height: 72px; border-radius: 20px; padding: 4px;
+      width: 60px; height: 60px; border-radius: 18px; padding: 4px; /* réduit */
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
-      box-shadow: 0 18px 42px rgba(0,0,0,.45);
+      box-shadow: 0 16px 36px rgba(0,0,0,.42);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 16px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
@@ -173,15 +196,31 @@
     }
 
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 20px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 12px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .pname{
+      font-weight: 950;
+      font-size: 16px;          /* réduit */
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 12px 26px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top: 3px;
+      font-weight: 850;
+      font-size: 11px;          /* réduit */
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
 
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
+      padding: 7px 10px;        /* réduit */
+      font-size: 11px;          /* réduit */
       font-weight: 950;
       white-space: nowrap;
       position: relative;
@@ -192,7 +231,7 @@
       display:flex;
       align-items:center;
       justify-content:flex-end;
-      gap: 10px;
+      gap: 8px;                 /* réduit */
       flex-wrap: wrap;
       position: relative;
       z-index:2;
@@ -201,49 +240,49 @@
     .pill{
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
+      gap: 8px;                 /* réduit */
+      padding: 8px 10px;        /* réduit */
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 12px;
+      font-size: 11px;          /* réduit */
       white-space: nowrap;
     }
 
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+    .timerPill{ padding: 7px 9px; gap: 8px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
 
     .ring{
-      width: 34px; height: 34px; border-radius: 999px;
+      width: 30px; height: 30px; border-radius: 999px; /* réduit */
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
-      box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
+      box-shadow: 0 0 0 4px rgba(255,200,80,.14), 0 0 24px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 24px; height: 24px; border-radius: 999px;
+      width: 22px; height: 22px; border-radius: 999px; /* réduit */
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 12px; font-weight: 950;
+      font-size: 11px; font-weight: 950; /* réduit */
     }
 
-    .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 14px; font-weight: 950; }
+    .timeText{ display:flex; align-items:center; gap: 7px; }
+    .timeText .label{ font-size: 10px; font-weight: 900; color: rgba(255,255,255,.75); } /* réduit */
+    .timeText .sec{ font-size: 12px; font-weight: 950; } /* réduit */
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 5px rgba(255,200,80,.18), 0 0 32px rgba(255,200,80,.14);
+      box-shadow: 0 0 0 4px rgba(255,200,80,.18), 0 0 28px rgba(255,200,80,.14);
     }
     .timerDanger .ring{
       background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.14) 0);
-      box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
+      box-shadow: 0 0 0 4px rgba(255,70,70,.20), 0 0 36px rgba(255,70,70,.18);
     }
 
     .stressWrap{
-      width: 200px; height: 10px; border-radius: 999px;
+      width: 170px; height: 9px; border-radius: 999px; /* réduit */
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -258,8 +297,8 @@
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 16px;
+      border-radius: 16px;          /* réduit */
+      padding: 12px;                /* réduit */
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
@@ -278,17 +317,17 @@
       opacity:.9;
     }
 
-    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 11px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; } /* réduit */
+    .qtitle{ position: relative; z-index:2; margin-top: 5px; font-weight: 950; font-size: clamp(16px, 1.7vw, 22px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); } /* réduit */
+    .qdesc{ position: relative; z-index:2; margin-top: 8px; color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.45; max-width: 980px; } /* réduit */
 
     .options{
       position: relative;
       z-index:2;
       display:flex;
       flex-direction:column;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;               /* réduit */
+      margin-top: 12px;        /* réduit */
       overflow:auto;
       padding-right: 6px;
       flex: 1;
@@ -302,7 +341,7 @@
 
     .opt{
       border-radius: 14px;
-      padding: 13px 14px;
+      padding: 11px 12px;      /* réduit */
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
@@ -311,6 +350,7 @@
       border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
+      font-size: 13px;         /* réduit */
     }
     .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
@@ -327,7 +367,7 @@
       display:flex;
       justify-content:space-between;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 12px;       /* réduit */
       flex-wrap: wrap;
       align-items:center;
     }
@@ -343,9 +383,10 @@
       background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.90);
       border-radius: 12px;
-      padding: 10px 12px;
+      padding: 9px 11px;      /* réduit */
       font-weight: 950;
       letter-spacing: .2px;
+      font-size: 12px;        /* réduit */
     }
 
     .btnPrimary{
@@ -353,10 +394,11 @@
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 9px 12px;      /* réduit */
       font-weight: 950;
       letter-spacing: .2px;
       display:none;
+      font-size: 12px;        /* réduit */
     }
     .btnPrimary.show{ display:inline-block; }
     .btnPrimary:disabled{
@@ -375,8 +417,8 @@
     }
 
     .modalBox{
-      width: min(760px, 92%);
-      border-radius: 18px;
+      width: min(680px, 90%); /* réduit */
+      border-radius: 16px;    /* réduit */
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
@@ -385,7 +427,7 @@
     }
 
     .modalTop{
-      padding: 14px 16px;
+      padding: 12px 14px;     /* réduit */
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
@@ -393,8 +435,8 @@
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 6px 9px;       /* réduit */
+      font-size: 11px;        /* réduit */
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
@@ -403,21 +445,22 @@
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{ padding: 14px; color: rgba(255,255,255,.92); line-height: 1.45; font-size: 13px; } /* réduit */
     .modalActions{
-      padding: 14px 16px;
+      padding: 12px 14px;     /* réduit */
       border-top: 1px solid rgba(255,255,255,.10);
       display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
     }
 
-    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
-    .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
+    .startTitle{ font-weight: 950; font-size: 18px; margin-bottom: 6px; } /* réduit */
+    .startText{ color: rgba(255,255,255,.82); font-size: 13px; line-height: 1.4; } /* réduit */
     .startBtn{
-      border:none; border-radius: 14px; padding: 12px 16px;
+      border:none; border-radius: 14px; padding: 11px 14px; /* réduit */
       font-weight: 950; letter-spacing: .3px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      font-size: 12.5px; /* réduit */
     }
 
     /* ===== Animations ===== */
@@ -469,12 +512,12 @@
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:16px;
-      margin-top:12px;
+      gap:12px;               /* réduit */
+      margin-top:10px;        /* réduit */
     }
     @media (max-width: 900px){ .imgGrid{ grid-template-columns: 1fr; } }
     .imgCard{
-      border-radius:18px;
+      border-radius:16px;     /* réduit */
       overflow:hidden;
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.14);
@@ -488,210 +531,237 @@
       box-shadow:0 0 0 4px rgba(255,165,0,.25), 0 20px 40px rgba(0,0,0,.35);
     }
     .imgHead{
-      padding:12px 16px;
+      padding:10px 12px;      /* réduit */
       font-weight:900;
       display:flex;
       justify-content:space-between;
       background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
+      font-size: 12px;        /* réduit */
     }
     .imgTag{
-      width:36px;
-      height:36px;
+      width:34px;
+      height:34px;
       border-radius:12px;
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:900;
       background:rgba(0,0,0,.25);
+      font-size: 12px;
     }
     .imgPic{
       width:100%;
-      height:220px;
+      height:190px;           /* réduit */
       object-fit:cover;
       display:block;
     }
     .imgCap{
-      padding:14px;
+      padding:12px;
       text-align:center;
       font-weight:800;
+      font-size: 12px;        /* réduit */
     }
 
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
       .progressShell{ flex-basis: 100%; }
-      .stressWrap{ width: 170px; }
+      .stressWrap{ width: 160px; }
     }
   </style>
 </head>
 
 <body>
-<div class="stage">
-  <div class="wrap">
 
-    <!-- ✅ TOP TABS (référence) -->
-    <div class="topTabs">
-      <div class="levelTab">
-        <span class="levelDot"></span>
-        <span id="levelTabText">NIVEAU —</span>
-      </div>
+<!-- ✅ Genially wrapper (NEW) -->
+<div class="genially-stage">
+  <div class="genially-page">
 
-      <div class="progressShell" aria-label="Progression">
-        <div class="progressBar" id="progressBar"></div>
-      </div>
+    <div class="stage">
+      <div class="wrap">
 
-      <div class="miniHint" id="miniHint">
-        ⏱ <b id="miniTime">60s</b>
-        • 🎯 <b id="miniAttempts">3</b>
-        • 💡 <b id="miniHints">3</b>
-      </div>
-    </div>
-
-    <div class="hud">
-      <div class="hudbox">
-        <div class="profile">
-          <div class="avatarFrame">
-            <img class="avatar" id="hudAvatar" alt="Avatar">
+        <!-- ✅ TOP TABS (référence) -->
+        <div class="topTabs">
+          <div class="levelTab">
+            <span class="levelDot"></span>
+            <span id="levelTabText">NIVEAU —</span>
           </div>
-          <div class="ptext">
-            <div class="pname" id="hudName">Joueur</div>
-            <div class="prole" id="hudRole">Rôle: —</div>
+
+          <div class="progressShell" aria-label="Progression">
+            <div class="progressBar" id="progressBar"></div>
+          </div>
+
+          <div class="miniHint" id="miniHint">
+            ⏱ <b id="miniTime">60s</b>
+            • 🎯 <b id="miniAttempts">3</b>
+            • 💡 <b id="miniHints">3</b>
           </div>
         </div>
-        <div class="chip" id="difficultyChip">MODE: —</div>
-      </div>
 
-      <div class="hudbox">
-        <div class="stats">
-          <div class="pill">⭐ <span id="hudScore">0</span></div>
-          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
+        <div class="hud">
+          <div class="hudbox">
+            <div class="profile">
+              <div class="avatarFrame">
+                <img class="avatar" id="hudAvatar" alt="Avatar">
+              </div>
+              <div class="ptext">
+                <div class="pname" id="hudName">Joueur</div>
+                <div class="prole" id="hudRole">Rôle: —</div>
+              </div>
+            </div>
+            <div class="chip" id="difficultyChip">MODE: —</div>
+          </div>
 
-          <div class="pill timerPill" id="timerPill">
-            <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
-            <div class="timeText">
-              <div class="label">Temps</div>
-              <div class="sec"><span id="hudTime">60</span>s</div>
+          <div class="hudbox">
+            <div class="stats">
+              <div class="pill">⭐ <span id="hudScore">0</span></div>
+              <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
+              <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
+
+              <div class="pill timerPill" id="timerPill">
+                <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
+                <div class="timeText">
+                  <div class="label">Temps</div>
+                  <div class="sec"><span id="hudTime">60</span>s</div>
+                </div>
+              </div>
+
+              <div class="stressWrap" title="Stress">
+                <div class="stressBar" id="stressBar"></div>
+              </div>
+
+              <!-- ✅ Boutons HUD (référence) -->
+              <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
+              <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
             </div>
           </div>
+        </div>
 
-          <div class="stressWrap" title="Stress">
-            <div class="stressBar" id="stressBar"></div>
+        <div class="frame" id="frame">
+          <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
+          <div class="qtitle" id="qTitle">…</div>
+          <div class="qdesc" id="qDesc">…</div>
+
+          <div class="options" id="options"></div>
+
+          <div class="actions">
+            <!-- ✅ gauche: Corrigé + Terminer (référence) -->
+            <div class="actionsLeft">
+              <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+              <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+            </div>
+
+            <!-- ✅ droite: Valider + Effacer -->
+            <div class="actionsRight">
+              <button class="btnPrimary show" id="validateBtn" type="button" disabled>Valider</button>
+              <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+            </div>
           </div>
+        </div>
 
-          <!-- ✅ Boutons HUD (référence) -->
-          <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
-          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
+      </div>
+    </div>
+
+    <!-- START overlay -->
+    <div class="overlay" id="startOverlay" style="display:flex;">
+      <div class="modalBox">
+        <div class="modalTop">
+          <div class="badgeState bWarn">🎮 Prêt ?</div>
+          <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+            Mission • <span id="startMission">Étouffement</span>
+          </div>
+        </div>
+        <div class="modalBody">
+          <div class="startTitle" id="startTitle">Tu as une mission.</div>
+          <div class="startText" id="startText">
+            ...
+          </div>
+        </div>
+        <div class="modalActions">
+          <button class="startBtn" id="startBtn">DÉMARRER</button>
         </div>
       </div>
     </div>
 
-    <div class="frame" id="frame">
-      <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
-      <div class="qtitle" id="qTitle">…</div>
-      <div class="qdesc" id="qDesc">…</div>
-
-      <div class="options" id="options"></div>
-
-      <div class="actions">
-        <!-- ✅ gauche: Corrigé + Terminer (référence) -->
-        <div class="actionsLeft">
-          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
-          <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+    <!-- Feedback overlay -->
+    <div class="overlay" id="overlay">
+      <div class="modalBox" id="modalBox">
+        <div class="modalTop">
+          <div class="badgeState" id="badgeState">—</div>
+          <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+            Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
+          </div>
         </div>
-
-        <!-- ✅ droite: Valider + Effacer -->
-        <div class="actionsRight">
-          <button class="btnPrimary show" id="validateBtn" type="button" disabled>Valider</button>
-          <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+        <div class="modalBody" id="modalText">…</div>
+        <div class="modalActions">
+          <button class="btnNeo" id="retryBtn">Réessayer</button>
+          <button class="btnPrimary" id="nextBtn">Suivant</button>
+          <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
         </div>
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- START overlay -->
-<div class="overlay" id="startOverlay" style="display:flex;">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">🎮 Prêt ?</div>
-      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Mission • <span id="startMission">Étouffement</span>
+    <!-- ✅ Key overlay (Corrigé) -->
+    <div class="overlay" id="keyOverlay">
+      <div class="modalBox">
+        <div class="modalTop">
+          <div class="badgeState bWarn">📘 Corrigé</div>
+          <button class="btnNeo" id="closeKeyBtn" type="button">✕</button>
+        </div>
+        <div class="modalBody" id="keyBody" style="max-height:70vh; overflow:auto;"></div>
+        <div class="modalActions">
+          <button class="btnNeo" id="closeKeyBtn2" type="button">Fermer</button>
+        </div>
       </div>
     </div>
-    <div class="modalBody">
-      <div class="startTitle" id="startTitle">Tu as une mission.</div>
-      <div class="startText" id="startText">
-        ...
+
+    <!-- ✅ Hint overlay -->
+    <div class="overlay" id="hintOverlay">
+      <div class="modalBox">
+        <div class="modalTop">
+          <div class="badgeState bWarn">💡 Indice</div>
+          <button class="btnNeo" id="closeHintBtn" type="button">✕</button>
+        </div>
+        <div class="modalBody" id="hintBody">…</div>
+        <div class="modalActions">
+          <button class="btnPrimary show" id="resumeHintBtn" type="button">Reprendre</button>
+        </div>
       </div>
     </div>
-    <div class="modalActions">
-      <button class="startBtn" id="startBtn">DÉMARRER</button>
-    </div>
-  </div>
-</div>
 
-<!-- Feedback overlay -->
-<div class="overlay" id="overlay">
-  <div class="modalBox" id="modalBox">
-    <div class="modalTop">
-      <div class="badgeState" id="badgeState">—</div>
-      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
+    <!-- ✅ Pause overlay -->
+    <div class="overlay" id="pauseOverlay">
+      <div class="modalBox">
+        <div class="modalTop">
+          <div class="badgeState bWarn">⏸ Pause</div>
+          <button class="btnNeo" id="closePauseBtn" type="button">✕</button>
+        </div>
+        <div class="modalBody">
+          Le chrono est en pause. Reprends quand tu veux.
+        </div>
+        <div class="modalActions">
+          <button class="btnPrimary show" id="resumePauseBtn" type="button">Reprendre</button>
+        </div>
       </div>
     </div>
-    <div class="modalBody" id="modalText">…</div>
-    <div class="modalActions">
-      <button class="btnNeo" id="retryBtn">Réessayer</button>
-      <button class="btnPrimary" id="nextBtn">Suivant</button>
-      <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
-    </div>
+
   </div>
 </div>
 
-<!-- ✅ Key overlay (Corrigé) -->
-<div class="overlay" id="keyOverlay">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">📘 Corrigé</div>
-      <button class="btnNeo" id="closeKeyBtn" type="button">✕</button>
-    </div>
-    <div class="modalBody" id="keyBody" style="max-height:70vh; overflow:auto;"></div>
-    <div class="modalActions">
-      <button class="btnNeo" id="closeKeyBtn2" type="button">Fermer</button>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Hint overlay -->
-<div class="overlay" id="hintOverlay">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">💡 Indice</div>
-      <button class="btnNeo" id="closeHintBtn" type="button">✕</button>
-    </div>
-    <div class="modalBody" id="hintBody">…</div>
-    <div class="modalActions">
-      <button class="btnPrimary show" id="resumeHintBtn" type="button">Reprendre</button>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Pause overlay -->
-<div class="overlay" id="pauseOverlay">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">⏸ Pause</div>
-      <button class="btnNeo" id="closePauseBtn" type="button">✕</button>
-    </div>
-    <div class="modalBody">
-      Le chrono est en pause. Reprends quand tu veux.
-    </div>
-    <div class="modalActions">
-      <button class="btnPrimary show" id="resumePauseBtn" type="button">Reprendre</button>
-    </div>
-  </div>
-</div>
+<script>
+/* ✅ Genially auto-scale (NEW) */
+(function fitGenially(){
+  const BASE_W = 1920;     // change si ton Genially est différent
+  const BASE_H = 1080;     // ex: 1980 x 1020
+  function apply(){
+    const vw = Math.max(1, window.innerWidth);
+    const vh = Math.max(1, window.innerHeight);
+    const s = Math.min(vw / BASE_W, vh / BASE_H);
+    document.documentElement.style.setProperty("--scale", s.toFixed(4));
+  }
+  window.addEventListener("resize", apply);
+  apply();
+})();
+</script>
 
 <script>
 /* ========= SFX (WebAudio) ========= */
@@ -824,7 +894,7 @@ let paused = false;
 let hintUsedThisQuestion = false;
 
 /* ======= QUESTIONS (inchangées) ======= */
-const questions = [{"type": "single", "title": "Diagnostic clinique", "desc": "Tu es **médecin**. Patient conscient : incapacité à parler, toux inefficace, mains au cou. Quel diagnostic immédiat ?", "options": [{"text": "Obstruction grave des voies aériennes (étouffement grave)", "kind": "ok", "fb": "✅ Oui : incapacité à parler + toux inefficace = obstruction grave."}, {"text": "Crise d’asthme", "kind": "wrong", "fb": "❌ Moins probable : tableau typique d’étouffement."}, {"text": "Crise d’angoisse", "kind": "wrong", "fb": "❌ Non : signes typiques d’obstruction."}, {"text": "Obstruction légère (toux efficace)", "kind": "wrong", "fb": "❌ Non : ici toux inefficace."}]}, {"type": "tf", "title": "Indication Heimlich", "desc": "Vrai ou faux : si le patient tousse efficacement et peut parler, on réalise Heimlich immédiatement.", "tf": {"trueOpt": {"kind": "wrong", "fb": "❌ Faux : toux efficace → encourager, surveiller."}, "falseOpt": {"kind": "ok", "fb": "✅ Exact : Heimlich si obstruction grave (toux inefficace)."}}}, {"type": "multi", "title": "Conduite médicale", "desc": "Sélectionne toutes les propositions correctes.", "options": [{"text": "Confirmer gravité : parole impossible / toux inefficace", "correct": true}, {"text": "Demander à un témoin d’alerter et de ramener un DAE", "correct": true}, {"text": "Faire boire pour “décoller”", "correct": false}, {"text": "Patient penché en avant pour claques dorsales", "correct": true}], "okFb": "✅ Bon raisonnement clinique.", "badFb": "❌ Boire est dangereux."}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?<br>", "options": [{"label": "A", "caption": "Bouche-à-bouche immédiat", "kind": "wrong", "fb": "❌ Non : la victime est consciente, priorité à la désobstruction.", "imgSrc": "assets/q4_a.png"}, {"label": "B", "caption": "5 claques dorsales", "kind": "ok", "fb": "✅ Oui : on commence par les claques dorsales.", "imgSrc": "assets/q4_b.png"}, {"label": "C", "caption": "Victime allongée sur le dos", "kind": "wrong", "fb": "❌ Non : on garde la victime penchée en avant pour les claques.", "imgSrc": "assets/q4_c.png"}]}, {"type": "drag_order", "title": "Algorithme (ordonner)", "desc": "Glisse les étapes dans l’ordre correct.", "items": [{"id": "dx", "text": "Identifier obstruction grave (parole/toux/respiration)"}, {"id": "pos", "text": "Patient penché en avant"}, {"id": "back", "text": "5 claques dorsales"}, {"id": "abd", "text": "5 compressions abdominales"}, {"id": "alert", "text": "Alerter / demander un DAE"}], "expected": ["dx", "pos", "back", "abd", "alert"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre incorrect."}, {"type": "cloze", "title": "Texte à trous", "desc": "Complète avec un seul mot.", "template": "Chez un patient conscient avec toux inefficace et impossibilité de parler, on parle d’une <b>{blank1}</b> des voies aériennes.", "blanks": [{"key": "blank1", "answer": "obstruction"}], "okFb": "✅ Correct : obstruction.", "badFb": "❌ Attendu : obstruction."}, {"type": "short", "title": "Alerte", "desc": "Numéro du SAMU au Maroc ? (3 chiffres)", "answers": ["141"], "okFb": "✅ 141.", "badFb": "❌ Attendu : 141."}, {"type": "single", "title": "Piège / sécurité", "desc": "Choisis la meilleure réponse.", "options": [{"text": "Balayage digital à l’aveugle", "kind": "critical", "fb": "🚨 Erreur critique : peut enfoncer l’objet.", "pts": -10}, {"text": "Retirer un objet visible", "kind": "ok", "fb": "✅ Oui, si visible."}, {"text": "Encourager la toux si efficace", "kind": "ok", "fb": "✅ Oui."}, {"text": "Faire boire", "kind": "critical", "fb": "🚨 Erreur critique : aspiration.", "pts": -10}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Où se situe le problème ?", "desc": "", "imgSrc": "scenario_1_hotspot.png", "hotspots": [{"label": "Zone correcte", "x": 38.29, "y": 45.07, "w": 23.21, "h": 23.98, "kind": "ok", "fb": "✅ Correct : zone de la gorge (étouffement).", "pts": 10}, {"label": "Zone fausse", "x": 46.63, "y": 13.35, "w": 22.22, "h": 27.08, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}, {"label": "Zone fausse", "x": 55.16, "y": 78.72, "w": 25.79, "h": 19.15, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}]}, {"type": "multi", "title": "Après les gestes", "desc": "Sélectionne toutes les réponses correctes.", "options": [{"text": "Alerter si échec des gestes", "correct": true}, {"text": "Surveiller respiration après amélioration", "correct": true}, {"text": "Faire manger/boire pour tester", "correct": false}, {"text": "Rassurer et rester avec le patient", "correct": true}], "okFb": "✅ Correct.", "badFb": "❌ Ne pas faire manger/boire."}];
+const questions = [{"type": "single", "title": "Diagnostic clinique", "desc": "Tu es **médecin**. Patient conscient : incapacité à parler, toux inefficace, mains au cou. Quel diagnostic immédiat ?", "options": [{"text": "Obstruction grave des voies aériennes (étouffement grave)", "kind": "ok", "fb": "✅ Oui : incapacité à parler + toux inefficace = obstruction grave."}, {"text": "Crise d’asthme", "kind": "wrong", "fb": "❌ Moins probable : tableau typique d’étouffement."}, {"text": "Crise d’angoisse", "kind": "wrong", "fb": "❌ Non : signes typiques d’obstruction."}, {"text": "Obstruction légère (toux efficace)", "kind": "wrong", "fb": "❌ Non : ici toux inefficace."}]}, {"type": "tf", "title": "Indication Heimlich", "desc": "Vrai ou faux : si le patient tousse efficacement et peut parler, on réalise Heimlich immédiatement.", "tf": {"trueOpt": {"kind": "wrong", "fb": "❌ Faux : toux efficace → encourager, surveiller."}, "falseOpt": {"kind": "ok", "fb": "✅ Exact : Heimlich si obstruction grave (toux inefficace)."}}}, {"type": "multi", "title": "Conduite médicale", "desc": "Sélectionne toutes les propositions correctes.", "options": [{"text": "Confirmer gravité : parole impossible / toux inefficace", "correct": true}, {"text": "Demander à un témoin d’alerter et de ramener un DAE", "correct": true}, {"text": "Faire boire pour “décoller”", "correct": false}, {"text": "Patient penché en avant pour claques dorsales", "correct": true}], "okFb": "✅ Bon raisonnement clinique.", "badFb": "❌ Boire est dangereux."}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?<br>", "options": [{"label": "A", "caption": "Bouche-à-bouche immédiat", "kind": "wrong", "fb": "❌ Non : la victime est consciente, priorité à la désobstruction.", "imgSrc": "assets/q4_a.png"}, {"label": "B", "caption": "5 claques dorsales", "kind": "ok", "fb": "✅ Oui : on commence par les claques dorsales.", "imgSrc": "assets/q4_b.png"}, {"label": "C", "caption": "Victime allongée sur le dos", "kind": "wrong", "fb": "❌ Non : on garde la victime penchée en avant pour les claques.", "imgSrc": "assets/q4_c.png"}]}, {"type": "drag_order", "title": "Algorithme (ordonner)", "desc": "Glisse les étapes dans l’ordre correct.", "items": [{"id": "dx", "text": "Identifier obstruction grave (parole/toux/respiration)"}, {"id": "pos", "text": "Patient penché en avant"}, {"id": "back", "text": "5 claques dorsales"}, {"id": "abd", "text": "5 compressions abdominales"}, {"id": "alert", "text": "Alerter / demander un DAE"}], "expected": ["dx", "pos", "back", "abd", "alert"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre incorrect."}, {"type": "cloze", "title": "Texte à trous", "desc": "Complète avec un seul mot.", "template": "Chez un patient conscient avec toux inefficace et impossibilité de parler, on parle d’une <b>{blank1}</b> des voies aériennes.", "blanks": [{"key": "blank1", "answer": "obstruction"}], "okFb": "✅ Correct : obstruction.", "badFb": "❌ Attendu :  obstruction."}, {"type": "short", "title": "Alerte", "desc": "Numéro du SAMU au Maroc ? (3 chiffres)", "answers": ["141"], "okFb": "✅ 141.", "badFb": "❌ Attendu : 141."}, {"type": "single", "title": "Piège / sécurité", "desc": "Choisis la meilleure réponse.", "options": [{"text": "Balayage digital à l’aveugle", "kind": "critical", "fb": "🚨 Erreur critique : peut enfoncer l’objet.", "pts": -10}, {"text": "Retirer un objet visible", "kind": "ok", "fb": "✅ Oui, si visible."}, {"text": "Encourager la toux si efficace", "kind": "ok", "fb": "✅ Oui."}, {"text": "Faire boire", "kind": "critical", "fb": "🚨 Erreur critique : aspiration.", "pts": -10}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Où se situe le problème ?", "desc": "", "imgSrc": "scenario_1_hotspot.png", "hotspots": [{"label": "Zone correcte", "x": 38.29, "y": 45.07, "w": 23.21, "h": 23.98, "kind": "ok", "fb": "✅ Correct : zone de la gorge (étouffement).", "pts": 10}, {"label": "Zone fausse", "x": 46.63, "y": 13.35, "w": 22.22, "h": 27.08, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}, {"label": "Zone fausse", "x": 55.16, "y": 78.72, "w": 25.79, "h": 19.15, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}]}, {"type": "multi", "title": "Après les gestes", "desc": "Sélectionne toutes les réponses correctes.", "options": [{"text": "Alerter si échec des gestes", "correct": true}, {"text": "Surveiller respiration après amélioration", "correct": true}, {"text": "Faire manger/boire pour tester", "correct": false}, {"text": "Rassurer et rester avec le patient", "correct": true}], "okFb": "✅ Correct.", "badFb": "❌ Ne pas faire manger/boire."}];
 const TOTAL = questions.length;
 
 /* ========= UI init ========= */
@@ -929,7 +999,6 @@ function startTimer(reset=true){
     }
   }, 1000);
 }
-
 
 /* ========= SELECTION STATE ========= */
 let selectedSingle = null;
@@ -1191,7 +1260,6 @@ function renderQuestion(i, resetAttempts=true){
   setProgress();
   setMini();
   startTimer(true);
-
 }
 
 /* ========= Clear ========= */
@@ -1213,14 +1281,11 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail, resumeTime
 
   okBtn.style.display="none"; okBtn.onclick=null;
 
- retryBtn.onclick = ()=>{
-  hideOverlay();
-  locked = false;
-
-  // ✅ reprise exacte du chrono si resumeTimer=true
-  // ✅ reset chrono si resumeTimer=false (cas timeout par ex.)
-  startTimer(resumeTimer ? false : true);
-};
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    locked = false;
+    startTimer(resumeTimer ? false : true);
+  };
 
   nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
 
@@ -1266,11 +1331,11 @@ function failedAttempt(baseMsg){
     missionFail(`❌ ${ATTEMPTS_MAX} tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-showOverlay(
-  "warn",
-  `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`,
-  {allowRetry:true, allowNext:false, missionFail:false, resumeTimer:true}
-);
+  showOverlay(
+    "warn",
+    `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`,
+    {allowRetry:true, allowNext:false, missionFail:false, resumeTimer:true}
+  );
 }
 
 function evaluateOption(opt){
@@ -1464,7 +1529,7 @@ function buildAnswerKey(){
   }).join("");
 
   return `
-    <div style="font-weight:950; font-size:16px; margin-bottom:10px;">Bonnes réponses</div>
+    <div style="font-weight:950; font-size:15px; margin-bottom:10px;">Bonnes réponses</div>
     <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
       <table style="width:100%; border-collapse:collapse; min-width:680px;">
         <thead>
@@ -1525,7 +1590,6 @@ function showHint(){
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   setMini();
 
-  // Pause chrono
   const wasLocked = locked;
   locked = true;
 
@@ -1535,9 +1599,6 @@ function showHint(){
   const resume = ()=>{
     hintOverlay.style.display="none";
     locked = wasLocked ? true : false;
-    // reprendre le timer sans reset : on relance un startTimer (référence = pause)
-    // Ici on garde simple : on relance le timer à plein uniquement si timerId était arrêté.
-    // Mais on était en cours, donc on continue : on ne touche pas timeLeft, on redémarre l'interval.
     if(!timerId){
       startTimer();
     }else{
@@ -1548,7 +1609,6 @@ function showHint(){
   resumeHintBtn.onclick = ()=>{ sfxClick(); resume(); };
   closeHintBtn.onclick = ()=>{ sfxClick(); resume(); };
 
-  // désactiver si plus d'indices
   hintBtn.disabled = (hintsLeft<=0);
 }
 function hideHint(){ hintOverlay.style.display="none"; }
@@ -1561,9 +1621,7 @@ function showPause(){
   locked = true;
   pauseOverlay.style.display="flex";
 }
-function hidePause(){
-  pauseOverlay.style.display="none";
-}
+function hidePause(){ pauseOverlay.style.display="none"; }
 function resumePause(){
   if(!paused) return;
   paused = false;
@@ -1576,7 +1634,6 @@ closePauseBtn.onclick = ()=>{ sfxClick(); resumePause(); };
 
 /* ========= Fin scénario (référence) ========= */
 function computeBadgeType(sc){
-  // règle simple (référence) : Or >= 90 ; Argent >= 70 ; sinon Bronze
   if(sc >= 90) return {type:"OR", img:"or.png"};
   if(sc >= 70) return {type:"ARGENT", img:"argent.png"};
   return {type:"BRONZE", img:"bronze.png"};
@@ -1616,20 +1673,18 @@ function endScenario(){
   `;
   optionsEl.innerHTML = `
     <div class="opt" style="cursor:default; text-align:center;">
-      <div style="font-weight:950; font-size:14px; color: rgba(255,255,255,.75); margin-bottom:10px;">🏅 BADGE</div>
-      <img src="assets/${b.img}" alt="${b.type}" style="width:140px; height:auto; display:block; margin:0 auto 10px; filter: drop-shadow(0 22px 40px rgba(0,0,0,.45));">
-      <div style="font-weight:950; font-size:16px;">${escapeHtml(b.type)} — ${escapeHtml(SCENARIO.mission)}</div>
-      <div style="margin-top:6px; color: rgba(255,255,255,.76); font-size:13px;">Niveau : ${escapeHtml(RULE.label)} • Rôle : ${escapeHtml(roleLabelMap[role]||"")}</div>
+      <div style="font-weight:950; font-size:13px; color: rgba(255,255,255,.75); margin-bottom:10px;">🏅 BADGE</div>
+      <img src="assets/${b.img}" alt="${b.type}" style="width:120px; height:auto; display:block; margin:0 auto 10px; filter: drop-shadow(0 22px 40px rgba(0,0,0,.45));">
+      <div style="font-weight:950; font-size:15px;">${escapeHtml(b.type)} — ${escapeHtml(SCENARIO.mission)}</div>
+      <div style="margin-top:6px; color: rgba(255,255,255,.76); font-size:12px;">Niveau : ${escapeHtml(RULE.label)} • Rôle : ${escapeHtml(roleLabelMap[role]||"")}</div>
     </div>
   `;
 
-  // ✅ verrouiller actions
   validateBtn.disabled = true;
   clearBtn.style.display = "none";
   hintBtn.disabled = true;
   pauseBtn.disabled = true;
 
-  // ✅ activer Corrigé + afficher Terminer
   showKeyBtn.disabled = false;
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
@@ -1653,7 +1708,6 @@ function motion(type){
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // ✅ reset mission au démarrage (référence)
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress = 0; score = 0;
@@ -1701,7 +1755,8 @@ nextBtn.onclick = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx
   hintBtn.disabled = (hintsLeft<=0);
 })();
 </script>
-  <script src="badge-manager.js"></script>
+
+<script src="badge-manager.js"></script>
 
 </body>
 </html>
