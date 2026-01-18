@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Urgences — Badges</title>
 
-<!-- (Optionnel) Police sympa, légère. Si tu veux rester 100% offline, supprime ces 2 lignes. -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --glass: rgba(25,27,31,.72);
   --glass2: rgba(15,17,20,.55);
+
   --text: rgba(255,255,255,.93);
   --muted: rgba(255,255,255,.70);
 
   --gold: rgba(255,200,80,1);
+  --red: rgba(255,70,70,1);
+  --green: rgba(45,200,120,1);
   --blue: rgba(80,170,255,1);
   --ember: rgba(255,150,70,1);
   --ember2: rgba(255,120,50,1);
@@ -28,8 +26,6 @@
   --shadow: 0 18px 70px rgba(0,0,0,.50);
   --shadow2: 0 14px 34px rgba(0,0,0,.28);
 
-  --r12: 12px;
-  --r16: 16px;
   --r18: 18px;
   --r22: 22px;
 }
@@ -39,9 +35,10 @@ html,body{
   background: transparent;
   overflow:hidden; /* Genially */
   color: var(--text);
-  font-family: Inter, system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
+/* ✅ Stage Genially */
 .stage{
   height:100vh;
   padding: 10px;
@@ -52,7 +49,7 @@ html,body{
   position: relative;
 }
 
-/* ✨ Ambient background glow (ne bouge pas tes éléments) */
+/* ✨ Glow ambience (style jeu) */
 .stage::before,
 .stage::after{
   content:"";
@@ -60,211 +57,199 @@ html,body{
   inset:-30px;
   pointer-events:none;
   z-index:0;
-  opacity:.85;
+  opacity:.9;
 }
 .stage::before{
   background:
-    radial-gradient(700px 260px at 20% 10%, rgba(255,150,70,.18), transparent 62%),
-    radial-gradient(860px 320px at 80% 25%, rgba(80,170,255,.12), transparent 62%),
-    radial-gradient(820px 340px at 55% 120%, rgba(255,200,80,.10), transparent 62%);
+    radial-gradient(760px 260px at 18% 10%, rgba(255,150,70,.18), transparent 62%),
+    radial-gradient(920px 340px at 85% 22%, rgba(80,170,255,.12), transparent 62%),
+    radial-gradient(860px 340px at 55% 120%, rgba(255,200,80,.10), transparent 62%);
   filter: blur(2px);
 }
 .stage::after{
   background:
-    radial-gradient(520px 220px at 15% 80%, rgba(80,170,255,.08), transparent 62%),
-    radial-gradient(620px 260px at 90% 90%, rgba(255,120,50,.10), transparent 62%);
+    radial-gradient(560px 220px at 15% 80%, rgba(80,170,255,.09), transparent 62%),
+    radial-gradient(680px 280px at 92% 92%, rgba(255,120,50,.10), transparent 62%);
   mix-blend-mode: screen;
 }
 
-/* Layout inchangé */
-.big{
-  width:min(1400px,100%);
-  height:100%;
-  display:grid;
-  grid-template-columns: 320px 1fr;
-  gap: 18px;
-  position:relative;
-  z-index:1; /* au-dessus du glow */
-}
+/* ✅ Un seul grand conteneur */
+.bigWrap{
+  width: min(1650px, 100%);
+  height: 100%;
+  position: relative;
+  z-index: 1;
 
-/* Left column */
-.left{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  gap: 12px;
-  padding-top: 8px;
-}
-
-/* Carte de profil (fond glass derrière, sans déplacer) */
-.profileCard{
-  width: 100%;
   border-radius: var(--r22);
-  border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
-  box-shadow: var(--shadow2);
+  border: 1px solid rgba(255,200,150,.22);
+  box-shadow: var(--shadow);
   backdrop-filter: blur(12px);
+
   overflow:hidden;
-  position:relative;
-  padding: 12px 12px 14px;
+  display:grid;
+  grid-template-columns: 340px 1fr;
 }
-.profileCard::after{
+
+/* Light sheen */
+.bigWrap::after{
   content:"";
   position:absolute;
   inset:-2px;
   pointer-events:none;
   background:
-    radial-gradient(440px 160px at 15% 0%, rgba(255,150,70,.16), transparent 60%),
-    radial-gradient(560px 240px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+    radial-gradient(900px 320px at 20% 0%, rgba(255,150,70,.16), transparent 62%),
+    radial-gradient(980px 360px at 92% 120%, rgba(80,170,255,.10), transparent 62%);
   opacity:.9;
+  z-index:0;
+}
+
+/* LEFT */
+.left{
+  position:relative;
+  z-index:1;
+  border-right: 1px solid rgba(255,255,255,.08);
+  padding: 16px 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  align-items:center;
+}
+
+.avatarCol{
+  width:100%;
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  align-items:center;
+}
+
+.avatarFrame{
+  width:100%;
+  height: 100%;
+  min-height: 420px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  overflow:hidden;
+  position:relative;
+  box-shadow: 0 18px 55px rgba(0,0,0,.40);
+}
+.avatarFrame::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  transform: rotate(18deg) translateX(-160%);
+  animation: sheen 3.6s ease-in-out infinite;
+  opacity:.65;
+}
+@keyframes sheen{
+  0%{ transform: rotate(18deg) translateX(-160%); }
+  55%{ transform: rotate(18deg) translateX(160%); }
+  100%{ transform: rotate(18deg) translateX(160%); }
 }
 
 .avatar{
-  width: 100%;
-  height: min(520px, 64vh);
+  width:100%;
+  height:100%;
   object-fit: contain;
   filter: drop-shadow(0 30px 55px rgba(0,0,0,.55));
-  position:relative;
-  z-index:2;
+  transform: translateY(6px) scale(1.03);
 }
 
-/* Bloc texte (inchangé) */
-.name{
-  font-family: Anton, Inter, system-ui, sans-serif;
-  letter-spacing:.3px;
-  font-weight: 400;
-  font-size: 24px;
-  line-height:1.08;
-  text-shadow: 0 16px 34px rgba(0,0,0,.55);
-  position:relative;
-  z-index:2;
-  margin-top: 8px;
-  text-align:center;
-}
-
-.level{
-  font-size: 12px;
+.playerName{
   font-weight: 950;
-  color: rgba(255,255,255,.82);
-  padding: 8px 10px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.20);
-  border: 1px solid var(--line);
+  font-size: 22px;
+  text-align:center;
+  text-shadow: 0 16px 34px rgba(0,0,0,.55);
+}
+
+.levelPill{
   display:inline-flex;
   align-items:center;
-  gap: 8px;
-  position:relative;
-  z-index:2;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,150,70,.18), rgba(80,170,255,.10));
+  box-shadow: 0 16px 44px rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  font-weight: 950;
+  letter-spacing: .25px;
+  white-space: nowrap;
 }
 .levelDot{
-  width: 9px; height: 9px; border-radius:999px;
+  width: 10px; height: 10px; border-radius: 999px;
   background: rgba(255,176,90,1);
   box-shadow: 0 0 0 5px rgba(255,176,90,.18);
 }
 
-/* Right column */
+/* RIGHT */
 .right{
+  position:relative;
+  z-index:1;
+  padding: 16px 16px 14px 16px;
   display:flex;
   flex-direction:column;
   gap: 12px;
-  padding: 8px 8px 0 8px;
   min-height:0;
 }
 
-/* Top row: mêmes éléments / même place */
+/* Top row */
 .topRow{
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap: 12px;
   flex-wrap:wrap;
 }
-
-/* Header title */
-.hTitle{
-  font-family: Anton, Inter, system-ui, sans-serif;
-  font-weight: 400;
+.title{
+  font-weight: 950;
   font-size: 22px;
-  letter-spacing:.35px;
+  letter-spacing: .25px;
   text-shadow: 0 16px 34px rgba(0,0,0,.55);
   display:flex;
   align-items:center;
   gap: 10px;
 }
-.hTitle .badgeIcon{
+.titleIcon{
   width: 34px; height: 34px;
   border-radius: 14px;
   display:grid;
   place-items:center;
   background: linear-gradient(180deg, rgba(255,150,70,.20), rgba(80,170,255,.10));
-  border: 1px solid var(--line);
-  box-shadow: 0 14px 34px rgba(0,0,0,.26);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
 }
 
-/* Progress group */
 .progressWrap{
   display:flex;
   align-items:center;
   gap: 10px;
   color: rgba(255,255,255,.82);
-  font-weight: 900;
+  font-weight: 950;
   font-size: 12px;
   white-space:nowrap;
 }
-
 .progressShell{
-  width: 260px;
+  width: 280px;
   height: 10px;
   border-radius: 999px;
   background: rgba(255,255,255,.10);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,.12);
   overflow:hidden;
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
 }
 .progressBar{
   height:100%;
   width:0%;
   background: linear-gradient(90deg, rgba(80,170,255,.95), rgba(255,200,80,.95), rgba(255,120,50,.95));
-  transition: width .45s cubic-bezier(.2,.8,.2,1);
-  position:relative;
-}
-.progressBar::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
-  transform: translateX(-120%);
-  animation: shine 2.2s ease-in-out infinite;
-  opacity:.6;
-}
-@keyframes shine{
-  0%{ transform: translateX(-140%); }
-  50%{ transform: translateX(140%); }
-  100%{ transform: translateX(140%); }
+  transition: width .55s cubic-bezier(.2,.8,.2,1);
 }
 
-/* Debug button */
-.debugBtn{
-  border:1px solid var(--line);
-  background: rgba(0,0,0,.18);
-  color: rgba(255,255,255,.92);
-  border-radius: 14px;
-  padding: 9px 11px;
-  font-weight: 950;
-  cursor:pointer;
-  font-size: 12px;
-  box-shadow: 0 14px 34px rgba(0,0,0,.22);
-  transition: transform .12s ease, filter .12s ease, background .12s ease;
-}
-.debugBtn:hover{
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-  background: rgba(255,255,255,.06);
-}
-.debugBtn:active{ transform: translateY(0px); }
-
-/* List zone */
+/* List */
 .list{
   flex:1;
   min-height:0;
@@ -285,22 +270,24 @@ html,body{
   border-radius: 999px;
 }
 
-/* Badge card improved */
-.item{
+/* Badge card (style jeu + hover) */
+.badgeItem{
   display:flex;
   align-items:center;
   gap: 14px;
   padding: 12px 14px;
   border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.12);
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
-  border: 1px solid var(--line);
   box-shadow: var(--shadow2);
   position:relative;
   overflow:hidden;
-  transform: translateY(0);
-  transition: transform .14s ease, filter .14s ease, border-color .14s ease;
+
+  transform: translateY(10px);
+  opacity: 0;
+  animation: inUp .55s cubic-bezier(.2,.8,.2,1) forwards;
 }
-.item::after{
+.badgeItem::after{
   content:"";
   position:absolute; inset:-2px;
   pointer-events:none;
@@ -309,40 +296,32 @@ html,body{
     radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
   opacity:.9;
 }
-.item:hover{
-  transform: translateY(-2px);
+.badgeItem:hover{
+  transform: translateY(-2px) !important;
   filter: brightness(1.05);
   border-color: rgba(255,255,255,.18);
 }
 
-.bimg{
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 26px rgba(0,0,0,.48));
-  position:relative;
-  z-index:2;
+@keyframes inUp{
+  to{ transform: translateY(0); opacity: 1; }
 }
 
-/* Tiny "shine" on badge image */
-.bimgWrap{
+.badgeImgWrap{
   width: 74px;
   height: 74px;
   border-radius: 22px;
   display:grid;
   place-items:center;
   background: rgba(0,0,0,.18);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,.12);
   position:relative;
   overflow:hidden;
-  z-index:2;
 }
-.bimgWrap::before{
+.badgeImgWrap::before{
   content:"";
-  position:absolute;
-  inset:-40%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
-  transform: rotate(20deg) translateX(-140%);
+  position:absolute; inset:-40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
+  transform: rotate(20deg) translateX(-160%);
   animation: badgeShine 3.2s ease-in-out infinite;
   opacity:.55;
 }
@@ -352,21 +331,22 @@ html,body{
   100%{ transform: rotate(20deg) translateX(160%); }
 }
 
-.info{
-  flex:1;
-  min-width:0;
-  position:relative;
-  z-index:2;
+.badgeImg{
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,.48));
 }
-.itTitle{
+
+.badgeInfo{ flex:1; min-width:0; position:relative; z-index:1; }
+.badgeTitle{
   font-weight: 950;
   font-size: 14px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  letter-spacing:.15px;
 }
-.itMeta{
+.badgeMeta{
   margin-top: 7px;
   display:flex;
   flex-wrap:wrap;
@@ -375,12 +355,11 @@ html,body{
   font-weight: 900;
   color: rgba(255,255,255,.80);
 }
-
 .pill{
   padding: 6px 9px;
   border-radius: 999px;
   background: rgba(0,0,0,.18);
-  border: 1px solid var(--line2);
+  border: 1px solid rgba(255,255,255,.08);
   white-space:nowrap;
 }
 
@@ -389,66 +368,111 @@ html,body{
   font-size: 12px;
   padding: 7px 11px;
   border-radius: 999px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255,255,255,.12);
   background: rgba(0,0,0,.18);
-  position:relative;
-  z-index:2;
   white-space:nowrap;
   box-shadow: 0 14px 34px rgba(0,0,0,.18);
+  position:relative;
+  z-index:1;
 }
-.tag.OR{
-  border-color: rgba(255,200,80,.35);
-  background: rgba(255,200,80,.10);
-}
-.tag.ARGENT{
-  border-color: rgba(210,220,235,.35);
-  background: rgba(210,220,235,.10);
-}
-.tag.BRONZE{
-  border-color: rgba(255,150,70,.40);
-  background: rgba(255,150,70,.10);
+.tag.OR{ border-color: rgba(255,200,80,.35); background: rgba(255,200,80,.10); }
+.tag.ARGENT{ border-color: rgba(210,220,235,.35); background: rgba(210,220,235,.10); }
+.tag.BRONZE{ border-color: rgba(255,150,70,.40); background: rgba(255,150,70,.10); }
+
+/* Bottom actions */
+.bottomRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+  flex-wrap:wrap;
 }
 
+.hintTxt{
+  color: rgba(255,255,255,.72);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.btnPrimary{
+  border:none;
+  background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+  color: rgba(10,12,18,.96);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 950;
+  letter-spacing: .2px;
+  cursor: pointer;
+  box-shadow: 0 18px 50px rgba(0,0,0,.25);
+  transition: transform .12s ease, filter .12s ease;
+}
+.btnPrimary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+.btnPrimary:active{ transform: translateY(0px); }
+
+.btnNeo{
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.14);
+  color: rgba(255,255,255,.92);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 950;
+  letter-spacing: .2px;
+  cursor: pointer;
+}
+
+/* Empty state */
 .empty{
-  margin-top: 8px;
   padding: 14px 14px;
   border-radius: 20px;
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
   color: rgba(255,255,255,.82);
   font-weight: 900;
   box-shadow: var(--shadow2);
 }
 
-/* DEBUG panel improved */
-.debug{
-  margin-top: 10px;
-  padding: 12px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  background: rgba(0,0,0,.22);
-  color: rgba(255,255,255,.85);
-  font-size: 12px;
-  font-weight: 850;
-  overflow:auto;
-  max-height: 200px;
+/* ✅ Overlay "Prêt pour la nouvelle mission" */
+.fullOverlay{
+  position: fixed;
+  inset: 0;
   display:none;
-  box-shadow: 0 14px 34px rgba(0,0,0,.22);
+  z-index: 999;
+  background: rgba(0,0,0,.92);
+  align-items:center;
+  justify-content:center;
 }
-.debug pre{
-  margin: 8px 0 0 0;
-  white-space: pre-wrap;
-  word-break: break-word;
-  color: rgba(255,255,255,.78);
-  font-weight: 800;
-  font-size: 11px;
+.fullBox{
+  width: min(980px, 92%);
+  text-align:center;
+  padding: 26px 18px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.35);
+  box-shadow: 0 30px 90px rgba(0,0,0,.70);
+}
+.readyTitle{
+  font-weight: 950;
+  font-size: clamp(22px, 3.1vw, 34px);
+  text-shadow: 0 16px 40px rgba(0,0,0,.65);
+}
+.readySub{
+  margin-top: 10px;
+  color: rgba(255,255,255,.72);
+  font-weight: 900;
+}
+.readyActions{
+  margin-top: 20px;
+  display:flex;
+  justify-content:center;
+  gap: 12px;
+  flex-wrap:wrap;
 }
 
-/* Responsive: positions conservées (left en haut, right en dessous) */
-@media (max-width: 900px){
-  .big{ grid-template-columns: 1fr; }
-  .profileCard{ padding: 12px; }
-  .avatar{ height: min(280px, 36vh); }
+/* Responsive */
+@media (max-width: 980px){
+  .bigWrap{ grid-template-columns: 1fr; }
+  .left{ border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .avatarFrame{ min-height: 260px; }
   .progressShell{ width: 220px; }
 }
 </style>
@@ -456,54 +480,115 @@ html,body{
 
 <body>
 <div class="stage">
-  <div class="big">
+  <div class="bigWrap" id="bigWrap">
 
-    <!-- LEFT (emplacement identique) -->
+    <!-- LEFT -->
     <div class="left">
-      <div class="profileCard">
-        <img id="avatar" class="avatar" alt="avatar">
-        <div class="name" id="pname">Dr. Joueur</div>
-        <div class="level" id="plevel"><span class="levelDot"></span> NIVEAU : DÉBUTANT</div>
+      <div class="avatarCol">
+        <div class="avatarFrame">
+          <img id="avatar" class="avatar" alt="avatar">
+        </div>
+        <div class="playerName" id="pname">Dr. Joueur</div>
+        <div class="levelPill" id="plevel"><span class="levelDot"></span> NIVEAU : DÉBUTANT</div>
       </div>
     </div>
 
-    <!-- RIGHT (emplacement identique) -->
+    <!-- RIGHT -->
     <div class="right">
       <div class="topRow">
-        <div class="hTitle">
-          <span class="badgeIcon">🏅</span>
-          <span>Tes badges</span>
+        <div class="title">
+          <span class="titleIcon">🏅</span>
+          <span>Badges gagnés</span>
         </div>
 
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <button class="debugBtn" id="toggleDebug" type="button">🧪 Debug</button>
-
-          <div class="progressWrap">
-            <span id="pcount">0/4</span>
-            <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
-          </div>
+        <div class="progressWrap">
+          <span id="pcount">0/4</span>
+          <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
         </div>
       </div>
 
-      <div id="badgesGrid" class="list"></div>
+      <div id="badgesList" class="list"></div>
 
       <div id="empty" class="empty" style="display:none;">
-        Aucun badge trouvé. Termine au moins un scénario pour voir tes badges apparaître ici.
+        Aucun badge trouvé pour ce niveau. Termine une mission pour débloquer tes badges.
       </div>
 
-      <div class="debug" id="debugPanel">
-        <div>🔎 Diagnostic localStorage</div>
-        <pre id="debugText">...</pre>
+      <div class="bottomRow">
+        <div class="hintTxt" id="hintTxt">Chaque seconde compte… garde ton sang-froid.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btnNeo" id="btnRefresh" type="button">🔄 Actualiser</button>
+          <button class="btnPrimary" id="btnNext" type="button">➡ Suivant</button>
+        </div>
       </div>
     </div>
 
   </div>
 </div>
 
+<!-- ✅ Overlay noir -->
+<div class="fullOverlay" id="readyOverlay">
+  <div class="fullBox">
+    <div class="readyTitle">Prêt pour la nouvelle mission ?</div>
+    <div class="readySub">Respire, observe, puis agis avec précision.</div>
+
+    <div class="readyActions">
+      <button class="btnPrimary" id="btnYes" type="button">✅ Oui</button>
+      <button class="btnNeo" id="btnNo" type="button">✖ Non</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* =========================
-   ✅ Helpers
-========================= */
+/* =====================================================
+   ✅ CONFIG
+===================================================== */
+// 🔁 Remplace par la page / URL du scénario suivant
+const NEXT_SCENARIO_URL = "#";
+
+// ✅ Nombre total de scénarios (progression 4/4)
+const TOTAL_SCENARIOS = 4;
+
+// Dossier avatars (comme ton moteur)
+const AVATAR_BASE = "assets/avatars/";
+
+// Images badges (comme ton moteur)
+const BADGE_IMG_FALLBACK = {
+  OR: "assets/or.png",
+  ARGENT: "assets/argent.png",
+  BRONZE: "assets/bronze.png"
+};
+
+/* =====================================================
+   ✅ SFX (cohérent avec ton moteur WebAudio)
+===================================================== */
+let audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function tone(freq, dur=0.08, type="sine", gain=0.05){
+  ensureAudio();
+  const t0 = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  g.gain.value = gain;
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0 + dur);
+}
+function sfxClick(){ tone(520,0.04,"triangle",0.035); }
+function sfxBadge(){ tone(660,0.06,"sine",0.06); setTimeout(()=>tone(880,0.07,"sine",0.06), 75); }
+function sfxVictory(){
+  ensureAudio();
+  const notes = [{f:659,d:0.09},{f:784,d:0.10},{f:988,d:0.12},{f:1175,d:0.16}];
+  let t=0;
+  notes.forEach(n=>{ setTimeout(()=>tone(n.f,n.d,"sine",0.06), t*1000); t += n.d + 0.03; });
+}
+
+/* =====================================================
+   ✅ Utils
+===================================================== */
+const $ = (id)=>document.getElementById(id);
+
 function escapeHtml(str){
   return String(str||"")
     .replaceAll("&","&amp;")
@@ -520,7 +605,7 @@ function normDifficulty(raw){
   return "DÉBUTANT";
 }
 
-function getDifficultyLabel(){
+function getDifficulty(){
   const raw =
     (typeof window.niveau !== "undefined" && window.niveau) ? window.niveau :
     (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
@@ -534,42 +619,41 @@ function getPlayer(){
     || (typeof window.playerName !== "undefined" ? window.playerName : "")
     || "Joueur";
 }
+
 function getAvatar(){
   return localStorage.getItem("avatar") || "medecin_f.png";
 }
 
-/* =========================
-   ✅ Read badges robustly
-   1) badges_history (si présent)
-   2) scan clés badge_s*
-========================= */
+/* =====================================================
+   ✅ Lire badges (robuste)
+   - badges_history (si présent)
+   - scan badge_s* (toutes variantes)
+===================================================== */
 function readBadgesFromHistory(targetDifficulty){
-  const out = [];
   let arr = [];
-  try { arr = JSON.parse(localStorage.getItem("badges_history") || "[]"); }
-  catch(e){ arr = []; }
-  if(!Array.isArray(arr)) return out;
+  try{ arr = JSON.parse(localStorage.getItem("badges_history") || "[]"); }catch(e){ arr=[]; }
+  if(!Array.isArray(arr)) return [];
 
-  arr.forEach((b)=>{
+  const out = [];
+  arr.forEach(b=>{
     const diff = normDifficulty(b.niveau || b.difficulty || b.level || "");
     if(diff !== targetDifficulty) return;
 
     const sid = Number(b.scenarioId ?? b.scenario ?? b.scenario_id ?? NaN);
     if(!Number.isFinite(sid)) return;
 
+    const type = String(b.badgeLevel || b.badgeType || b.type || "BRONZE").toUpperCase();
     out.push({
-      key: b.__key || null,
       scenarioId: sid,
       scenarioLabel: b.scenarioLabel || b.label || ("Scénario " + sid),
       mission: b.mission || "",
       difficulty: diff,
-      badgeLevel: String((b.badgeLevel || b.badgeType || b.type || "BRONZE")).toUpperCase(),
-      badgeImage: b.badgeImage || b.img || "assets/bronze.png",
+      badgeLevel: type,
+      badgeImage: b.badgeImage || b.img || BADGE_IMG_FALLBACK[type] || BADGE_IMG_FALLBACK.BRONZE,
       score: Number(b.score ?? 0),
       date: Number(b.date ?? b.ts ?? Date.now())
     });
   });
-
   return out;
 }
 
@@ -577,36 +661,35 @@ function scanBadgesFromLocalStorage(targetDifficulty){
   const out = [];
   const keys = Object.keys(localStorage);
 
-  keys.forEach((k)=>{
+  keys.forEach(k=>{
     if(!k.startsWith("badge_s")) return;
     if(k === "badges_history") return;
 
-    let v = null;
-    try { v = JSON.parse(localStorage.getItem(k) || "null"); }
-    catch(e){ v = null; }
+    let v=null;
+    try{ v = JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ v=null; }
     if(!v || typeof v !== "object") return;
 
     const sid = Number(v.scenarioId ?? v.scenario ?? v.scenario_id ?? NaN);
     if(!Number.isFinite(sid)) return;
 
-    const diff = normDifficulty(v.difficulty || v.niveau || v.level || "");
-    let diff2 = diff;
+    // difficulté: soit dans l'objet, soit dans la clé si tu utilises badge_s1_DEBUTANT
+    let diff = normDifficulty(v.difficulty || v.niveau || v.level || "");
     if(!String(v.difficulty||v.niveau||"").trim()){
       const up = k.toUpperCase();
-      if(up.includes("EXPERT")) diff2 = "EXPERT";
-      else if(up.includes("INTER")) diff2 = "INTERMÉDIAIRE";
-      else if(up.includes("DEB")) diff2 = "DÉBUTANT";
+      if(up.includes("EXPERT")) diff = "EXPERT";
+      else if(up.includes("INTER")) diff = "INTERMÉDIAIRE";
+      else if(up.includes("DEB")) diff = "DÉBUTANT";
     }
-    if(diff2 !== targetDifficulty) return;
+    if(diff !== targetDifficulty) return;
 
+    const type = String(v.badgeLevel || v.badgeType || v.type || "BRONZE").toUpperCase();
     out.push({
-      key: k,
       scenarioId: sid,
       scenarioLabel: v.scenarioLabel || v.label || ("Scénario " + sid),
       mission: v.mission || "",
-      difficulty: diff2,
-      badgeLevel: String(v.badgeLevel || v.badgeType || v.type || "BRONZE").toUpperCase(),
-      badgeImage: v.badgeImage || v.img || "assets/bronze.png",
+      difficulty: diff,
+      badgeLevel: type,
+      badgeImage: v.badgeImage || v.img || BADGE_IMG_FALLBACK[type] || BADGE_IMG_FALLBACK.BRONZE,
       score: Number(v.score ?? 0),
       date: Number(v.date ?? v.ts ?? Date.now())
     });
@@ -624,102 +707,122 @@ function uniqueByScenario(arr){
   return [...map.values()].sort((a,b)=>a.scenarioId - b.scenarioId);
 }
 
-/* =========================
+/* =====================================================
    ✅ Render
-========================= */
-const DIFFICULTY = getDifficultyLabel();
-document.getElementById("pname").textContent = "Dr. " + getPlayer();
-document.getElementById("plevel").innerHTML = `<span class="levelDot"></span> NIVEAU : ${escapeHtml(DIFFICULTY)}`;
-document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
+===================================================== */
+const DIFF = getDifficulty();
 
-const host = document.getElementById("badgesGrid");
-const empty = document.getElementById("empty");
-const pbar = document.getElementById("pbar");
-const pcount = document.getElementById("pcount");
+// Header left
+$("pname").textContent = "Dr. " + getPlayer();
+$("plevel").innerHTML = `<span class="levelDot"></span> NIVEAU : ${escapeHtml(DIFF)}`;
+$("avatar").src = AVATAR_BASE + getAvatar();
 
-function render(){
-  const fromHist = readBadgesFromHistory(DIFFICULTY);
-  const fromScan = scanBadgesFromLocalStorage(DIFFICULTY);
-  let badges = uniqueByScenario([...fromHist, ...fromScan]);
+function renderBadges(){
+  const host = $("badgesList");
+  const empty = $("empty");
+  const pcount = $("pcount");
+  const pbar = $("pbar");
 
-  // progression sur 4
-  pcount.textContent = badges.length + "/4";
-  pbar.style.width = Math.round((badges.length/4)*100) + "%";
+  const fromHist = readBadgesFromHistory(DIFF);
+  const fromScan = scanBadgesFromLocalStorage(DIFF);
 
-  if(badges.length === 0){
+  // ✅ seulement badges gagnés
+  const badges = uniqueByScenario([...fromHist, ...fromScan]).filter(b => Number(b.scenarioId) >= 1);
+
+  // Progress
+  const n = badges.length;
+  pcount.textContent = n + "/" + TOTAL_SCENARIOS;
+  pbar.style.width = Math.round((n / TOTAL_SCENARIOS) * 100) + "%";
+
+  if(n === 0){
     host.innerHTML = "";
     empty.style.display = "block";
-  }else{
-    empty.style.display = "none";
-    host.innerHTML = badges.map(b=>{
-      const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
-      const title = escapeHtml(b.scenarioLabel || ("Scénario " + b.scenarioId));
-      const img = escapeHtml(b.badgeImage || "assets/bronze.png");
-      const diff = escapeHtml(b.difficulty || DIFFICULTY);
-      const score = escapeHtml(String(b.score ?? 0));
-      const mission = escapeHtml(b.mission || "");
-
-      return `
-        <div class="item">
-          <div class="bimgWrap">
-            <img class="bimg" src="${img}" alt="${lvl}">
-          </div>
-
-          <div class="info">
-            <div class="itTitle">${title}${mission ? " — " + mission : ""}</div>
-            <div class="itMeta">
-              <span class="pill">⭐ ${score}</span>
-              <span class="pill">🎚 ${diff}</span>
-              <span class="pill">#${escapeHtml(String(b.scenarioId))}</span>
-            </div>
-          </div>
-
-          <div class="tag ${lvl}">${lvl}</div>
-        </div>
-      `;
-    }).join("");
+    return;
   }
+  empty.style.display = "none";
 
-  buildDebug(fromHist, fromScan, badges);
+  // ✅ apparition séquentielle
+  host.innerHTML = badges.map((b, i)=>{
+    const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
+    const title = escapeHtml(b.scenarioLabel || ("Scénario " + b.scenarioId));
+    const mission = escapeHtml(b.mission || "");
+    const score = escapeHtml(String(b.score ?? 0));
+    const diff = escapeHtml(b.difficulty || DIFF);
+
+    const img = escapeHtml(b.badgeImage || BADGE_IMG_FALLBACK[lvl] || BADGE_IMG_FALLBACK.BRONZE);
+    const delay = (i * 80); // ms
+
+    return `
+      <div class="badgeItem" style="animation-delay:${delay}ms;">
+        <div class="badgeImgWrap">
+          <img class="badgeImg" src="${img}" alt="${lvl}">
+        </div>
+
+        <div class="badgeInfo">
+          <div class="badgeTitle">${title}${mission ? " — " + mission : ""}</div>
+          <div class="badgeMeta">
+            <span class="pill">⭐ ${score}</span>
+            <span class="pill">🎚 ${diff}</span>
+            <span class="pill">#${escapeHtml(String(b.scenarioId))}</span>
+          </div>
+        </div>
+
+        <div class="tag ${lvl}">${lvl}</div>
+      </div>
+    `;
+  }).join("");
+
+  // Son “apparition badges” (léger)
+  try{ sfxBadge(); }catch(e){}
 }
 
-/* =========================
-   ✅ DEBUG
-========================= */
-const debugPanel = document.getElementById("debugPanel");
-const debugText = document.getElementById("debugText");
-document.getElementById("toggleDebug").addEventListener("click", ()=>{
-  debugPanel.style.display = (debugPanel.style.display === "block") ? "none" : "block";
+/* =====================================================
+   ✅ Boutons
+===================================================== */
+$("btnRefresh").addEventListener("click", ()=>{
+  ensureAudio(); sfxClick();
+  renderBadges();
 });
 
-function buildDebug(fromHist, fromScan, finalBadges){
-  const keys = Object.keys(localStorage).sort();
-  const badgeKeys = keys.filter(k=>k.startsWith("badge_s"));
-  const lastKey = localStorage.getItem("last_badge_key");
+$("btnNext").addEventListener("click", ()=>{
+  ensureAudio(); sfxClick();
+  $("readyOverlay").style.display = "flex";
+});
 
-  const lines = [];
-  lines.push("DIFFICULTY (page) = " + DIFFICULTY);
-  lines.push("playerName = " + getPlayer());
-  lines.push("avatar = " + getAvatar());
-  lines.push("");
-  lines.push("last_badge_key = " + (lastKey || "—"));
-  lines.push("");
-  lines.push("Keys badge_s* trouvées (" + badgeKeys.length + "):");
-  badgeKeys.forEach(k=>lines.push(" - " + k));
-  lines.push("");
-  lines.push("badges_history length = " + (JSON.parse(localStorage.getItem("badges_history")||"[]").length || 0));
-  lines.push("fromHistory (filtered) = " + fromHist.length);
-  lines.push("fromScan (filtered) = " + fromScan.length);
-  lines.push("finalBadges = " + finalBadges.length);
-  lines.push("");
-  finalBadges.forEach(b=>{
-    lines.push(`• S${b.scenarioId} ${b.badgeLevel} score=${b.score} diff=${b.difficulty} key=${b.key||"—"}`);
-  });
+$("btnNo").addEventListener("click", ()=>{
+  sfxClick();
+  $("readyOverlay").style.display = "none";
+});
 
-  debugText.textContent = lines.join("\n");
-}
+$("btnYes").addEventListener("click", ()=>{
+  sfxVictory();
+  // petite pause très courte pour laisser le son démarrer
+  setTimeout(()=>{ window.location.href = NEXT_SCENARIO_URL; }, 180);
+});
 
-render();
+// Fermer overlay si clic dehors (optionnel)
+$("readyOverlay").addEventListener("click", (e)=>{
+  if(e.target === $("readyOverlay")){
+    sfxClick();
+    $("readyOverlay").style.display = "none";
+  }
+});
+
+/* =====================================================
+   ✅ Init
+===================================================== */
+(function init(){
+  // Astuce texte dynamique optionnel
+  const lines = [
+    "Chaque seconde compte… garde ton sang-froid.",
+    "Observe. Décide. Agis.",
+    "Reste précis, même sous pression.",
+    "Un bon geste vaut une vie."
+  ];
+  $("hintTxt").textContent = lines[Math.floor(Math.random()*lines.length)];
+
+  renderBadges();
+})();
 </script>
 </body>
 </html>
