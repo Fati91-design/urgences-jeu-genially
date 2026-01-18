@@ -5,12 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Urgences — Badges</title>
 
+<!-- (Optionnel) Police sympa, légère. Si tu veux rester 100% offline, supprime ces 2 lignes. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --glass: rgba(25,27,31,.72);
   --glass2: rgba(15,17,20,.55);
   --text: rgba(255,255,255,.93);
   --muted: rgba(255,255,255,.70);
+
+  --gold: rgba(255,200,80,1);
+  --blue: rgba(80,170,255,1);
+  --ember: rgba(255,150,70,1);
+  --ember2: rgba(255,120,50,1);
+
+  --line: rgba(255,255,255,.12);
+  --line2: rgba(255,255,255,.08);
+
+  --shadow: 0 18px 70px rgba(0,0,0,.50);
+  --shadow2: 0 14px 34px rgba(0,0,0,.28);
+
+  --r12: 12px;
+  --r16: 16px;
+  --r18: 18px;
+  --r22: 22px;
 }
 
 html,body{
@@ -18,7 +39,7 @@ html,body{
   background: transparent;
   overflow:hidden; /* Genially */
   color: var(--text);
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family: Inter, system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
 
 .stage{
@@ -28,8 +49,34 @@ html,body{
   display:flex;
   justify-content:center;
   align-items:stretch;
+  position: relative;
 }
 
+/* ✨ Ambient background glow (ne bouge pas tes éléments) */
+.stage::before,
+.stage::after{
+  content:"";
+  position:absolute;
+  inset:-30px;
+  pointer-events:none;
+  z-index:0;
+  opacity:.85;
+}
+.stage::before{
+  background:
+    radial-gradient(700px 260px at 20% 10%, rgba(255,150,70,.18), transparent 62%),
+    radial-gradient(860px 320px at 80% 25%, rgba(80,170,255,.12), transparent 62%),
+    radial-gradient(820px 340px at 55% 120%, rgba(255,200,80,.10), transparent 62%);
+  filter: blur(2px);
+}
+.stage::after{
+  background:
+    radial-gradient(520px 220px at 15% 80%, rgba(80,170,255,.08), transparent 62%),
+    radial-gradient(620px 260px at 90% 90%, rgba(255,120,50,.10), transparent 62%);
+  mix-blend-mode: screen;
+}
+
+/* Layout inchangé */
 .big{
   width:min(1400px,100%);
   height:100%;
@@ -37,41 +84,86 @@ html,body{
   grid-template-columns: 320px 1fr;
   gap: 18px;
   position:relative;
+  z-index:1; /* au-dessus du glow */
 }
 
+/* Left column */
 .left{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:flex-start;
-  gap: 10px;
+  gap: 12px;
   padding-top: 8px;
+}
+
+/* Carte de profil (fond glass derrière, sans déplacer) */
+.profileCard{
+  width: 100%;
+  border-radius: var(--r22);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
+  box-shadow: var(--shadow2);
+  backdrop-filter: blur(12px);
+  overflow:hidden;
+  position:relative;
+  padding: 12px 12px 14px;
+}
+.profileCard::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  pointer-events:none;
+  background:
+    radial-gradient(440px 160px at 15% 0%, rgba(255,150,70,.16), transparent 60%),
+    radial-gradient(560px 240px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+  opacity:.9;
 }
 
 .avatar{
   width: 100%;
-  height: min(540px, 66vh);
+  height: min(520px, 64vh);
   object-fit: contain;
   filter: drop-shadow(0 30px 55px rgba(0,0,0,.55));
+  position:relative;
+  z-index:2;
 }
 
+/* Bloc texte (inchangé) */
 .name{
-  font-weight: 950;
-  font-size: 20px;
-  line-height:1.1;
+  font-family: Anton, Inter, system-ui, sans-serif;
+  letter-spacing:.3px;
+  font-weight: 400;
+  font-size: 24px;
+  line-height:1.08;
   text-shadow: 0 16px 34px rgba(0,0,0,.55);
+  position:relative;
+  z-index:2;
+  margin-top: 8px;
+  text-align:center;
 }
 
 .level{
   font-size: 12px;
   font-weight: 950;
   color: rgba(255,255,255,.82);
-  padding: 7px 10px;
+  padding: 8px 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.20);
+  border: 1px solid var(--line);
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  position:relative;
+  z-index:2;
+}
+.levelDot{
+  width: 9px; height: 9px; border-radius:999px;
+  background: rgba(255,176,90,1);
+  box-shadow: 0 0 0 5px rgba(255,176,90,.18);
 }
 
+/* Right column */
 .right{
   display:flex;
   flex-direction:column;
@@ -80,6 +172,7 @@ html,body{
   min-height:0;
 }
 
+/* Top row: mêmes éléments / même place */
 .topRow{
   display:flex;
   align-items:center;
@@ -88,12 +181,28 @@ html,body{
   flex-wrap:wrap;
 }
 
+/* Header title */
 .hTitle{
-  font-weight: 950;
-  font-size: 18px;
+  font-family: Anton, Inter, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing:.35px;
   text-shadow: 0 16px 34px rgba(0,0,0,.55);
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.hTitle .badgeIcon{
+  width: 34px; height: 34px;
+  border-radius: 14px;
+  display:grid;
+  place-items:center;
+  background: linear-gradient(180deg, rgba(255,150,70,.20), rgba(80,170,255,.10));
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 34px rgba(0,0,0,.26);
 }
 
+/* Progress group */
 .progressWrap{
   display:flex;
   align-items:center;
@@ -105,20 +214,57 @@ html,body{
 }
 
 .progressShell{
-  width: 240px;
+  width: 260px;
   height: 10px;
   border-radius: 999px;
   background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.10);
+  border: 1px solid var(--line);
   overflow:hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
 }
 .progressBar{
   height:100%;
   width:0%;
   background: linear-gradient(90deg, rgba(80,170,255,.95), rgba(255,200,80,.95), rgba(255,120,50,.95));
-  transition: width .35s ease;
+  transition: width .45s cubic-bezier(.2,.8,.2,1);
+  position:relative;
+}
+.progressBar::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  transform: translateX(-120%);
+  animation: shine 2.2s ease-in-out infinite;
+  opacity:.6;
+}
+@keyframes shine{
+  0%{ transform: translateX(-140%); }
+  50%{ transform: translateX(140%); }
+  100%{ transform: translateX(140%); }
 }
 
+/* Debug button */
+.debugBtn{
+  border:1px solid var(--line);
+  background: rgba(0,0,0,.18);
+  color: rgba(255,255,255,.92);
+  border-radius: 14px;
+  padding: 9px 11px;
+  font-weight: 950;
+  cursor:pointer;
+  font-size: 12px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
+  transition: transform .12s ease, filter .12s ease, background .12s ease;
+}
+.debugBtn:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  background: rgba(255,255,255,.06);
+}
+.debugBtn:active{ transform: translateY(0px); }
+
+/* List zone */
 .list{
   flex:1;
   min-height:0;
@@ -134,21 +280,26 @@ html,body{
   border-radius: 999px;
   border: 2px solid rgba(0,0,0,.18);
 }
-.list::-webkit-scrollbar-track{ background: rgba(0,0,0,.16); border-radius: 999px; }
+.list::-webkit-scrollbar-track{
+  background: rgba(0,0,0,.16);
+  border-radius: 999px;
+}
 
+/* Badge card improved */
 .item{
   display:flex;
   align-items:center;
   gap: 14px;
   padding: 12px 14px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow2);
   position:relative;
   overflow:hidden;
+  transform: translateY(0);
+  transition: transform .14s ease, filter .14s ease, border-color .14s ease;
 }
-
 .item::after{
   content:"";
   position:absolute; inset:-2px;
@@ -158,14 +309,47 @@ html,body{
     radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
   opacity:.9;
 }
+.item:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  border-color: rgba(255,255,255,.18);
+}
 
 .bimg{
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
-  filter: drop-shadow(0 14px 26px rgba(0,0,0,.45));
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,.48));
   position:relative;
   z-index:2;
+}
+
+/* Tiny "shine" on badge image */
+.bimgWrap{
+  width: 74px;
+  height: 74px;
+  border-radius: 22px;
+  display:grid;
+  place-items:center;
+  background: rgba(0,0,0,.18);
+  border: 1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+  z-index:2;
+}
+.bimgWrap::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  transform: rotate(20deg) translateX(-140%);
+  animation: badgeShine 3.2s ease-in-out infinite;
+  opacity:.55;
+}
+@keyframes badgeShine{
+  0%{ transform: rotate(20deg) translateX(-160%); }
+  55%{ transform: rotate(20deg) translateX(160%); }
+  100%{ transform: rotate(20deg) translateX(160%); }
 }
 
 .info{
@@ -180,9 +364,10 @@ html,body{
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  letter-spacing:.15px;
 }
 .itMeta{
-  margin-top: 6px;
+  margin-top: 7px;
   display:flex;
   flex-wrap:wrap;
   gap: 8px;
@@ -190,53 +375,65 @@ html,body{
   font-weight: 900;
   color: rgba(255,255,255,.80);
 }
+
 .pill{
   padding: 6px 9px;
   border-radius: 999px;
   background: rgba(0,0,0,.18);
-  border: 1px solid rgba(255,255,255,.10);
+  border: 1px solid var(--line2);
   white-space:nowrap;
 }
 
 .tag{
   font-weight: 950;
   font-size: 12px;
-  padding: 6px 10px;
+  padding: 7px 11px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid var(--line);
   background: rgba(0,0,0,.18);
   position:relative;
   z-index:2;
   white-space:nowrap;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
 }
-.tag.OR{ border-color: rgba(255,200,80,.35); background: rgba(255,200,80,.10); }
-.tag.ARGENT{ border-color: rgba(210,220,235,.35); background: rgba(210,220,235,.10); }
-.tag.BRONZE{ border-color: rgba(255,150,70,.40); background: rgba(255,150,70,.10); }
+.tag.OR{
+  border-color: rgba(255,200,80,.35);
+  background: rgba(255,200,80,.10);
+}
+.tag.ARGENT{
+  border-color: rgba(210,220,235,.35);
+  background: rgba(210,220,235,.10);
+}
+.tag.BRONZE{
+  border-color: rgba(255,150,70,.40);
+  background: rgba(255,150,70,.10);
+}
 
 .empty{
   margin-top: 8px;
   padding: 14px 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
   color: rgba(255,255,255,.82);
   font-weight: 900;
-  box-shadow: 0 14px 34px rgba(0,0,0,.22);
+  box-shadow: var(--shadow2);
 }
 
-/* DEBUG panel */
+/* DEBUG panel improved */
 .debug{
   margin-top: 10px;
   padding: 12px 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  border: 1px solid var(--line);
   background: rgba(0,0,0,.22);
   color: rgba(255,255,255,.85);
   font-size: 12px;
   font-weight: 850;
   overflow:auto;
-  max-height: 180px;
+  max-height: 200px;
   display:none;
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
 }
 .debug pre{
   margin: 8px 0 0 0;
@@ -247,21 +444,12 @@ html,body{
   font-size: 11px;
 }
 
-.debugBtn{
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.18);
-  color: rgba(255,255,255,.90);
-  border-radius: 12px;
-  padding: 8px 10px;
-  font-weight: 950;
-  cursor:pointer;
-  font-size: 12px;
-}
-
+/* Responsive: positions conservées (left en haut, right en dessous) */
 @media (max-width: 900px){
   .big{ grid-template-columns: 1fr; }
+  .profileCard{ padding: 12px; }
   .avatar{ height: min(280px, 36vh); }
-  .progressShell{ width: 200px; }
+  .progressShell{ width: 220px; }
 }
 </style>
 </head>
@@ -270,17 +458,26 @@ html,body{
 <div class="stage">
   <div class="big">
 
+    <!-- LEFT (emplacement identique) -->
     <div class="left">
-      <img id="avatar" class="avatar" alt="avatar">
-      <div class="name" id="pname">Dr. Joueur</div>
-      <div class="level" id="plevel">NIVEAU : DÉBUTANT</div>
+      <div class="profileCard">
+        <img id="avatar" class="avatar" alt="avatar">
+        <div class="name" id="pname">Dr. Joueur</div>
+        <div class="level" id="plevel"><span class="levelDot"></span> NIVEAU : DÉBUTANT</div>
+      </div>
     </div>
 
+    <!-- RIGHT (emplacement identique) -->
     <div class="right">
       <div class="topRow">
-        <div class="hTitle">🏅 Tes badges</div>
+        <div class="hTitle">
+          <span class="badgeIcon">🏅</span>
+          <span>Tes badges</span>
+        </div>
+
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
           <button class="debugBtn" id="toggleDebug" type="button">🧪 Debug</button>
+
           <div class="progressWrap">
             <span id="pcount">0/4</span>
             <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
@@ -291,7 +488,7 @@ html,body{
       <div id="badgesGrid" class="list"></div>
 
       <div id="empty" class="empty" style="display:none;">
-        Aucun badge trouvé. Assure-toi d’avoir fini au moins un scénario (et que le badge est bien enregistré dans localStorage).
+        Aucun badge trouvé. Termine au moins un scénario pour voir tes badges apparaître ici.
       </div>
 
       <div class="debug" id="debugPanel">
@@ -351,14 +548,12 @@ function readBadgesFromHistory(targetDifficulty){
   let arr = [];
   try { arr = JSON.parse(localStorage.getItem("badges_history") || "[]"); }
   catch(e){ arr = []; }
-
   if(!Array.isArray(arr)) return out;
 
   arr.forEach((b)=>{
     const diff = normDifficulty(b.niveau || b.difficulty || b.level || "");
     if(diff !== targetDifficulty) return;
 
-    // scenarioId (plusieurs noms possibles)
     const sid = Number(b.scenarioId ?? b.scenario ?? b.scenario_id ?? NaN);
     if(!Number.isFinite(sid)) return;
 
@@ -391,14 +586,12 @@ function scanBadgesFromLocalStorage(targetDifficulty){
     catch(e){ v = null; }
     if(!v || typeof v !== "object") return;
 
-    // scenarioId
     const sid = Number(v.scenarioId ?? v.scenario ?? v.scenario_id ?? NaN);
     if(!Number.isFinite(sid)) return;
 
     const diff = normDifficulty(v.difficulty || v.niveau || v.level || "");
-    // IMPORTANT: si diff manquante dans l’objet, on essaie de la déduire de la clé badge_s1_DEBUTANT
     let diff2 = diff;
-    if(!diff2 || diff2 === "DÉBUTANT" && !String(v.difficulty||v.niveau||"").trim()){
+    if(!String(v.difficulty||v.niveau||"").trim()){
       const up = k.toUpperCase();
       if(up.includes("EXPERT")) diff2 = "EXPERT";
       else if(up.includes("INTER")) diff2 = "INTERMÉDIAIRE";
@@ -409,7 +602,7 @@ function scanBadgesFromLocalStorage(targetDifficulty){
     out.push({
       key: k,
       scenarioId: sid,
-      scenarioLabel: v.scenarioLabel || v.scenarioLabel || v.label || v.scenario || ("Scénario " + sid),
+      scenarioLabel: v.scenarioLabel || v.label || ("Scénario " + sid),
       mission: v.mission || "",
       difficulty: diff2,
       badgeLevel: String(v.badgeLevel || v.badgeType || v.type || "BRONZE").toUpperCase(),
@@ -423,7 +616,6 @@ function scanBadgesFromLocalStorage(targetDifficulty){
 }
 
 function uniqueByScenario(arr){
-  // garde le plus récent par scenarioId (si doublons)
   const map = new Map();
   arr.forEach(b=>{
     const prev = map.get(b.scenarioId);
@@ -437,7 +629,7 @@ function uniqueByScenario(arr){
 ========================= */
 const DIFFICULTY = getDifficultyLabel();
 document.getElementById("pname").textContent = "Dr. " + getPlayer();
-document.getElementById("plevel").textContent = "NIVEAU : " + DIFFICULTY;
+document.getElementById("plevel").innerHTML = `<span class="levelDot"></span> NIVEAU : ${escapeHtml(DIFFICULTY)}`;
 document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
 
 const host = document.getElementById("badgesGrid");
@@ -446,14 +638,11 @@ const pbar = document.getElementById("pbar");
 const pcount = document.getElementById("pcount");
 
 function render(){
-  // 1) history
   const fromHist = readBadgesFromHistory(DIFFICULTY);
-  // 2) scan clés
   const fromScan = scanBadgesFromLocalStorage(DIFFICULTY);
-
   let badges = uniqueByScenario([...fromHist, ...fromScan]);
 
-  // Progression (sur 4)
+  // progression sur 4
   pcount.textContent = badges.length + "/4";
   pbar.style.width = Math.round((badges.length/4)*100) + "%";
 
@@ -472,7 +661,10 @@ function render(){
 
       return `
         <div class="item">
-          <img class="bimg" src="${img}" alt="${lvl}">
+          <div class="bimgWrap">
+            <img class="bimg" src="${img}" alt="${lvl}">
+          </div>
+
           <div class="info">
             <div class="itTitle">${title}${mission ? " — " + mission : ""}</div>
             <div class="itMeta">
@@ -481,13 +673,13 @@ function render(){
               <span class="pill">#${escapeHtml(String(b.scenarioId))}</span>
             </div>
           </div>
+
           <div class="tag ${lvl}">${lvl}</div>
         </div>
       `;
     }).join("");
   }
 
-  // debug
   buildDebug(fromHist, fromScan, badges);
 }
 
@@ -520,7 +712,6 @@ function buildDebug(fromHist, fromScan, finalBadges){
   lines.push("fromScan (filtered) = " + fromScan.length);
   lines.push("finalBadges = " + finalBadges.length);
   lines.push("");
-  // aperçu
   finalBadges.forEach(b=>{
     lines.push(`• S${b.scenarioId} ${b.badgeLevel} score=${b.score} diff=${b.difficulty} key=${b.key||"—"}`);
   });
