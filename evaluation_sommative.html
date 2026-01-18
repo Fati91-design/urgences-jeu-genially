@@ -178,44 +178,38 @@
       white-space:nowrap;
     }
 
-    /* ✅ Timer pill (anneau) */
-    .timerPill{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:999px;
+    /* ✅ bouton "Aide" en haut (même style pill) */
+    .pillBtn{
+      appearance:none;
+      -webkit-appearance:none;
+      cursor:pointer;
+      user-select:none;
+      outline:none;
+      border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:950; font-size:13px;
-      white-space:nowrap;
-      transition: box-shadow .18s ease, border-color .18s ease, background .18s ease, transform .12s ease;
+      color:rgba(255,255,255,.92);
     }
-    .timerPill .ring{
-      width:34px; height:34px; border-radius:99px;
-      background: conic-gradient(rgba(255,176,90,1) calc(var(--p)*1%), rgba(255,255,255,.14) 0);
+    .pillBtn:hover{ filter:brightness(1.07); }
+    .pillBtn:active{ transform:translateY(1px); }
+    .pillBtn:disabled{ opacity:.45; cursor:not-allowed; filter:grayscale(.2); transform:none; }
+
+    /* ✅ Timer pill + anneau */
+    .timerPill{ gap:10px; }
+    .ring{
+      --p: 1;
+      width:28px; height:28px; border-radius:99px;
+      background: conic-gradient(rgba(255,176,90,1) calc(var(--p) * 1turn), rgba(255,255,255,.10) 0);
       display:grid; place-items:center;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 10px 24px rgba(0,0,0,.25);
-      flex:0 0 auto;
-    }
-    .timerPill .inner{
-      width:24px; height:24px; border-radius:99px;
-      background:rgba(0,0,0,.28);
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
       border:1px solid rgba(255,255,255,.10);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
     }
-    .timerWarn{
-      border-color: rgba(255,200,80,.30);
-      box-shadow:0 0 0 5px rgba(255,200,80,.10), 0 16px 40px rgba(0,0,0,.25);
-      transform: translateY(-1px);
+    .ring .inner{
+      width:20px; height:20px; border-radius:99px;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
     }
-    .timerDanger{
-      border-color: rgba(255,70,70,.35);
-      box-shadow:0 0 0 6px rgba(255,70,70,.12), 0 18px 48px rgba(0,0,0,.28);
-      animation: pulseDanger .7s ease-in-out infinite;
-    }
-    @keyframes pulseDanger{
-      0%,100%{ filter:brightness(1); }
-      50%{ filter:brightness(1.12); }
-    }
+    .timerWarn .ring{ box-shadow:0 0 0 6px rgba(255,200,80,.12), 0 12px 30px rgba(0,0,0,.26); }
+    .timerDanger .ring{ box-shadow:0 0 0 7px rgba(255,70,70,.14), 0 12px 30px rgba(0,0,0,.26); }
 
     /* Pression (stress) */
     .pressureWrap{
@@ -263,6 +257,7 @@
       overflow:auto;
       min-height:0;
       padding-right:2px;
+      padding-bottom:10px;
     }
     .options::-webkit-scrollbar{ width:10px; }
     .options::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16); border-radius:999px; }
@@ -416,10 +411,6 @@
     /* ===== Animations ===== */
     .shake{ animation:shake .24s linear 1; }
     @keyframes shake{ 0%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} 100%{transform:translateX(0)} }
-    .pulseGood{ animation:pulseGood .32s ease 1; }
-    @keyframes pulseGood{ from{ box-shadow:0 0 0 0 rgba(45,200,120,0);} 50%{ box-shadow:0 0 0 7px rgba(45,200,120,.18);} to{ box-shadow:0 0 0 0 rgba(45,200,120,0);} }
-    .flashBad{ animation:flashBad .30s ease 1; }
-    @keyframes flashBad{ from{ box-shadow:0 0 0 0 rgba(255,70,70,0);} 50%{ box-shadow:0 0 0 7px rgba(255,70,70,.22);} to{ box-shadow:0 0 0 0 rgba(255,70,70,0);} }
 
     /* ===== Effets fin (confettis) ===== */
     .fxLayer{
@@ -509,13 +500,19 @@
         <div class="stats">
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
-          <!-- ✅ Timer 45s -->
-          <div class="timerPill" id="timerPill" style="--p:100;">
-            <span class="ring" id="timerRing" style="--p:100;"><span class="inner"></span></span>
-            <span>⏱ <span id="timerText">45</span>s</span>
+          <!-- ✅ bouton Aide EN HAUT (fonctionnel) -->
+          <button class="pill pillBtn" id="topHintBtn" type="button" title="Utiliser une aide">
+            💡 Aide <span id="hudHints">2</span>
+          </button>
+
+          <!-- ✅ chrono 45s / question -->
+          <div class="pill timerPill" id="timerPill" title="Temps restant">
+            <div class="ring" id="timerRing" style="--p:1;">
+              <div class="inner"></div>
+            </div>
+            ⏱️ <span id="hudTimer">45</span>s
           </div>
 
-          <div class="pill">💡 Aides <span id="hudHints">2</span></div>
           <div class="pill">😰 Pression</div>
           <div class="pressureWrap" title="Pression">
             <div class="pressureBar" id="pressureBar"></div>
@@ -570,10 +567,10 @@
           <div style="font-weight:950; margin-bottom:6px;">⚠️ Règles & objectif</div>
           <ul style="margin:0 0 0 18px; padding:0; color: rgba(255,255,255,.86);">
             <li><b>10 questions</b> sur étouffement, brûlure, chute, AVP</li>
-            <li><b>45 secondes</b> par question</li>
+            <li><b>Chrono : 45 secondes</b> par question</li>
             <li><b>Pas de score affiché</b> pendant le quiz (uniquement à la fin)</li>
-            <li><b>2 aides maximum</b> pour tout le quiz (une aide = indice, sans révéler la solution)</li>
-            <li>La <b>pression</b> augmente si tu te trompes ou si le temps expire</li>
+            <li><b>2 aides максимум</b> pour tout le quiz (une aide = indice, sans révéler la solution)</li>
+            <li>La <b>pression</b> augmente si tu te trompes (garde le contrôle)</li>
           </ul>
           <div style="margin-top:10px; color: rgba(255,255,255,.85);">
             👉 Ta mission : <b>prendre la bonne décision</b> au bon moment. Chaque seconde compte.
@@ -666,9 +663,7 @@ function tone(freq, dur=0.08, type="sine", gain=0.05){
   osc.stop(t0 + dur);
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
-function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
 function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
-function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
 function sfxAlarmLong(){
   ensureAudio();
   const now = audioCtx.currentTime;
@@ -697,9 +692,6 @@ function sfxVictory(){
   });
 }
 function sfxSoft(){ tone(440,0.06,"sine",0.04); setTimeout(()=>tone(520,0.06,"sine",0.04), 70); }
-/* ✅ tiny warning ticks */
-function sfxTick(){ tone(740,0.03,"sine",0.025); }
-function sfxTickHard(){ tone(980,0.04,"square",0.03); }
 
 /* ========= Helpers ========= */
 const el = (id)=>document.getElementById(id);
@@ -712,13 +704,9 @@ const miniHint = el("miniHint");
 const pressureBar = el("pressureBar");
 const hudHints = el("hudHints");
 
-const timerPill = el("timerPill");
-const timerRing = el("timerRing");
-const timerText = el("timerText");
-
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc = el("qDesc"), optionsEl = el("options");
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
-const hintBtn = el("hintBtn"), reviewBtn = el("reviewBtn");
+const hintBtn = el("hintBtn"), topHintBtn = el("topHintBtn"), reviewBtn = el("reviewBtn");
 
 const startOverlay = el("startOverlay"), startBtn = el("startBtn");
 
@@ -732,6 +720,16 @@ const replayBtn = el("replayBtn"), continueBtn = el("continueBtn");
 const fxLayer = el("fxLayer");
 const glitchRed = el("glitchRed");
 const frame = el("frame");
+
+/* ===== Timer UI ===== */
+const TIME_LIMIT = 45;
+let timeLeft = TIME_LIMIT;
+let timerId = null;
+let timerPaused = false;
+
+const hudTimer = el("hudTimer");
+const timerPill = el("timerPill");
+const timerRing = el("timerRing");
 
 /* ========= Profil (robuste) ========= */
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
@@ -770,14 +768,11 @@ difficultyChip.textContent = "MODE: " + String(niveau).toUpperCase();
 /* ========= Config ========= */
 const NEXT_GENIALLY_URL = "#"; // ✅ mets ici ton lien de retour Genially
 
-const HINT_MAX = 2; // ✅ aides pour tout le quiz
+/* ✅✅ MODIF demandée : 2 aides seulement pour toute l’évaluation */
+const HINT_MAX = 2; // ✅ aides pour tout le quiz (total)
 const HINT_KEY = "sommative_hints_left_v1";
 
-/* ✅ 45 sec par question */
-const TIMER_SECONDS = 45;
-
-/* pression */
-const PRESSURE_RULES = { wrong: 12, correct: -4, critical: 18, timeout: 16 };
+const PRESSURE_RULES = { wrong: 12, correct: -4, critical: 18, timeout: 14 }; // pression
 const PRESSURE_MAX = 100;
 
 /* ========= Questions (10) ========= */
@@ -899,7 +894,7 @@ let hintsLeft = Math.max(0, Math.min(HINT_MAX, parseInt(localStorage.getItem(HIN
 let hintUsedThisQuestion = false;
 
 /* réponses utilisateur (pour le détail final) */
-let answersLog = []; // [{qIndex, title, type, userAnswer, correctAnswer, isCorrect, timedOut}]
+let answersLog = []; // [{qIndex, title, type, userAnswer, correctAnswer, isCorrect}]
 
 /* sélection courante */
 let selectedSingle = null;
@@ -907,13 +902,6 @@ let multiSelected = new Set();
 let inputValue = "";
 let clozeValues = {};
 let dragState = [];
-
-/* ========= Timer state ========= */
-let timeLeft = TIMER_SECONDS;
-let timerId = null;
-let timerPaused = false;
-let warned10 = false;
-let warned5 = false;
 
 /* ========= Utils ========= */
 function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
@@ -927,9 +915,16 @@ function setPressure(v){
 }
 function addPressure(d){ setPressure(pressure + d); }
 
+function isBusyOverlay(){
+  return (startOverlay.style.display !== "none" || endOverlay.style.display === "flex" || hintOverlay.style.display === "flex" || feedbackOverlay.style.display === "flex");
+}
+
 function setHintsUI(){
   hudHints.textContent = String(hintsLeft);
-  hintBtn.disabled = (hintsLeft<=0 || hintUsedThisQuestion || startOverlay.style.display !== "none" || endOverlay.style.display === "flex" || hintOverlay.style.display === "flex" || feedbackOverlay.style.display === "flex");
+
+  const disabled = (hintsLeft<=0 || hintUsedThisQuestion || isBusyOverlay());
+  hintBtn.disabled = disabled;
+  topHintBtn.disabled = disabled;
 }
 function escapeHtml(s){
   return String(s)
@@ -940,73 +935,64 @@ function escapeHtml(s){
     .replace(/'/g,'&#39;');
 }
 
-/* ========= Effets courts (sans afficher score) ========= */
-function fxGood(){
-  frame.classList.remove("pulseGood");
-  void frame.offsetWidth;
-  frame.classList.add("pulseGood");
-}
-function fxBad(){
-  frame.classList.remove("flashBad","shake");
-  void frame.offsetWidth;
-  frame.classList.add("flashBad","shake");
-}
-function showGlitchRed(ms=900){
-  glitchRed.classList.add("show");
-  setTimeout(()=>glitchRed.classList.remove("show"), ms);
-}
-
 /* ========= Timer ========= */
 function updateTimerUI(){
-  timerText.textContent = String(timeLeft);
-
-  const pct = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
-  timerRing.style.setProperty("--p", String(pct));
-  timerPill.style.setProperty("--p", String(pct));
+  hudTimer.textContent = String(timeLeft);
+  const p = clamp(timeLeft / TIME_LIMIT, 0, 1);
+  timerRing.style.setProperty("--p", String(p));
 
   timerPill.classList.remove("timerWarn","timerDanger");
+  if(timeLeft <= 10) timerPill.classList.add("timerWarn");
   if(timeLeft <= 5) timerPill.classList.add("timerDanger");
-  else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
-
-  miniHint.textContent = `🎯 Dernière épreuve • Résultats à la fin • Temps: ${timeLeft}s • Pression: ${pressure}%`;
 }
+
 function stopTimer(){
   if(timerId){ clearInterval(timerId); timerId = null; }
-}
-function startTimer(){
-  stopTimer();
-  timeLeft = TIMER_SECONDS;
-  timerPaused = false;
-  warned10 = false;
-  warned5 = false;
-  updateTimerUI();
-
-  timerId = setInterval(()=>{
-    if(timerPaused) return;
-    timeLeft = Math.max(0, timeLeft - 1);
-
-    if(timeLeft === 10 && !warned10){
-      warned10 = true;
-      sfxTick();
-    }
-    if(timeLeft === 5 && !warned5){
-      warned5 = true;
-      sfxTickHard();
-    }
-
-    updateTimerUI();
-
-    if(timeLeft <= 0){
-      stopTimer();
-      handleTimeout();
-    }
-  }, 1000);
 }
 function pauseTimer(){
   timerPaused = true;
 }
 function resumeTimer(){
   timerPaused = false;
+}
+function startTimer(reset=true){
+  stopTimer();
+  if(reset){
+    timeLeft = TIME_LIMIT;
+  }
+  timerPaused = false;
+  updateTimerUI();
+
+  timerId = setInterval(()=>{
+    if(timerPaused) return;
+    if(isBusyOverlay()) return; // sécurité (si overlay affiché)
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft <= 0){
+      stopTimer();
+      onTimeout();
+    }
+  }, 1000);
+}
+
+function onTimeout(){
+  // Temps écoulé : on log en incorrect + pression + question suivante
+  const q = questions[idx];
+
+  const critical =
+    (q.title.includes("erreur") || q.title.includes("AVP") || q.title.includes("rachis") || q.title.includes("obstruction totale"));
+
+  addPressure(critical ? PRESSURE_RULES.critical : PRESSURE_RULES.timeout);
+
+  if(pressure >= 85) sfxAlarmLong();
+  sfxWrong();
+
+  logAnswer(q, false, "⏱️ Temps écoulé");
+  idx++;
+  if(idx >= TOTAL) finish();
+  else renderQuestion({ keepTime:false });
+
+  miniHint.textContent = "🎯 Dernière épreuve • Résultats à la fin • Pression: " + pressure + "% • ⏱️ Timeout";
 }
 
 /* ========= Récupérer réponses correctes (texte) ========= */
@@ -1120,7 +1106,9 @@ function mkOpt(text){
   return d;
 }
 
-function renderQuestion(){
+function renderQuestion(opts){
+  const keepTime = !!(opts && opts.keepTime);
+
   resetSelection();
   setProgress();
 
@@ -1131,6 +1119,12 @@ function renderQuestion(){
   qTitle.textContent = q.title;
   qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
+
+  // miniHint dynamique (pression)
+  miniHint.textContent = "🎯 Dernière épreuve • Résultats à la fin • Pression: " + pressure + "%";
+
+  // Timer 45s par question
+  startTimer(!keepTime);
 
   if(q.type === "single"){
     q.options.forEach((o,i)=>{
@@ -1144,13 +1138,12 @@ function renderQuestion(){
       };
       optionsEl.appendChild(d);
     });
-    startTimer();
     return;
   }
 
   if(q.type === "tf"){
-    const opts = [{label:"Vrai"},{label:"Faux"}];
-    opts.forEach((o,i)=>{
+    const optsTF = [{label:"Vrai"},{label:"Faux"}];
+    optsTF.forEach((o,i)=>{
       const d = mkOpt(o.label);
       d.onclick = ()=>{
         sfxClick();
@@ -1161,7 +1154,6 @@ function renderQuestion(){
       };
       optionsEl.appendChild(d);
     });
-    startTimer();
     return;
   }
 
@@ -1177,7 +1169,6 @@ function renderQuestion(){
       };
       optionsEl.appendChild(d);
     });
-    startTimer();
     return;
   }
 
@@ -1198,7 +1189,6 @@ function renderQuestion(){
       inputValue = inp.value;
       validateBtn.disabled = (inp.value.trim().length === 0);
     });
-    startTimer();
     return;
   }
 
@@ -1221,7 +1211,6 @@ function renderQuestion(){
         validateBtn.disabled = !filled;
       });
     });
-    startTimer();
     return;
   }
 
@@ -1291,23 +1280,18 @@ function renderQuestion(){
 
     renderList();
     optionsEl.appendChild(list);
-
-    startTimer();
     return;
   }
 
   validateBtn.disabled = true;
-  startTimer();
 }
 
 /* ========= Aide (indice) ========= */
 function openHint(){
   if(hintsLeft<=0 || hintUsedThisQuestion) return;
+  if(isBusyOverlay()) return;
+
   sfxClick();
-
-  // ✅ pause timer pendant l’aide
-  pauseTimer();
-
   hintUsedThisQuestion = true;
   hintsLeft = Math.max(0, hintsLeft - 1);
   localStorage.setItem(HINT_KEY, String(hintsLeft));
@@ -1316,13 +1300,15 @@ function openHint(){
   const q = questions[idx];
   hintText.textContent = q.hint || "Garde ton calme : sécurité, évaluation, gestes adaptés.";
   hintOverlay.style.display = "flex";
+
+  // Pause chrono pendant l’aide
+  pauseTimer();
+  updateTimerUI();
 }
 function closeHint(){
   hintOverlay.style.display = "none";
-  setHintsUI();
-
-  // ✅ reprise timer
   resumeTimer();
+  setHintsUI();
 }
 
 /* ========= (Feedback immédiat désactivé) ========= */
@@ -1333,34 +1319,15 @@ function subtleNudge(){
 }
 
 /* ========= Validation ========= */
-function logAnswer(q, ok, timedOut=false, forcedUserAnswer=null){
+function logAnswer(q, ok, overrideUserAnswer=null){
   answersLog.push({
     qIndex: idx,
     title: q.title,
     type: q.type,
-    userAnswer: forcedUserAnswer !== null ? forcedUserAnswer : getUserAnswerText(q),
+    userAnswer: overrideUserAnswer !== null ? overrideUserAnswer : getUserAnswerText(q),
     correctAnswer: getCorrectAnswerText(q),
-    isCorrect: ok,
-    timedOut: timedOut
+    isCorrect: ok
   });
-}
-
-function applyResultEffects(ok, critical=false, timedOut=false){
-  // ✅ effets visuels + sons qui changent selon le résultat
-  if(timedOut){
-    fxBad();
-    showGlitchRed(900);
-    sfxAlarmLong();
-    return;
-  }
-  if(ok){
-    fxGood();
-    sfxCorrect();
-  }else{
-    fxBad();
-    critical ? sfxCritical() : sfxWrong();
-    if(pressure >= 85) sfxAlarmLong();
-  }
 }
 
 function validateCurrent(){
@@ -1384,60 +1351,41 @@ function validateCurrent(){
     if(!dragState.length){ subtleNudge(); return; }
   }
 
-  // stop timer car validation réussie (et on change de question)
   stopTimer();
 
-  // ✅ Pas de feedback "score": on calcule en coulisse
+  // ✅ Pas de feedback immédiat : on calcule en “silence”
   const ok = isCorrect(q);
-
-  const critical =
-    (!ok) && (q.title.includes("erreur") || q.title.includes("AVP") || q.title.includes("rachis") || q.title.includes("obstruction totale"));
 
   if(ok){
     score += 1;
     addPressure(PRESSURE_RULES.correct);
   }else{
+    const critical =
+      (q.title.includes("erreur") || q.title.includes("AVP") || q.title.includes("rachis") || q.title.includes("obstruction totale"));
     addPressure(critical ? PRESSURE_RULES.critical : PRESSURE_RULES.wrong);
+
+    // alarme si pression trop haute (sans révéler correct/incorrect)
+    if(pressure >= 85) sfxAlarmLong();
   }
 
-  logAnswer(q, ok, false, null);
+  logAnswer(q, ok);
 
-  // ✅ effets (sans afficher le score)
-  applyResultEffects(ok, critical, false);
-
-  idx++;
-  if(idx >= TOTAL) finish();
-  else renderQuestion();
-}
-
-function handleTimeout(){
-  // si overlay d’aide ouvert, on ignore (timer est pausé) — sécurité
-  if(hintOverlay.style.display === "flex" || startOverlay.style.display !== "none" || endOverlay.style.display === "flex") return;
-
-  const q = questions[idx];
-
-  // ✅ timeout = échec silencieux (sans score affiché)
-  addPressure(PRESSURE_RULES.timeout);
-
-  logAnswer(q, false, true, "⏱ Temps écoulé");
-
-  // effets timeout
-  applyResultEffects(false, true, true);
+  sfxClick();
 
   idx++;
   if(idx >= TOTAL) finish();
-  else renderQuestion();
+  else renderQuestion({ keepTime:false });
+
+  miniHint.textContent = "🎯 Dernière épreuve • Résultats à la fin • Pression: " + pressure + "%";
 }
 
 /* ========= Détails finaux ========= */
 function buildDetailsHTML(){
   const rows = answersLog.map((a, i)=>{
     const ok = a.isCorrect;
-    const tag = a.timedOut
-      ? `<span class="badgeState bBad" style="display:inline-flex;">⏱ Temps écoulé</span>`
-      : (ok
-          ? `<span class="badgeState bGood" style="display:inline-flex;">✅ Correct</span>`
-          : `<span class="badgeState bBad" style="display:inline-flex;">❌ Incorrect</span>`);
+    const tag = ok
+      ? `<span class="badgeState bGood" style="display:inline-flex;">✅ Correct</span>`
+      : `<span class="badgeState bBad" style="display:inline-flex;">❌ Incorrect</span>`;
 
     return `
       <div style="border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04); border-radius:16px; padding:12px 12px; margin-top:10px;">
@@ -1477,7 +1425,7 @@ function spawnConfetti(count=90){
     c.style.left = Math.floor(Math.random()*w) + "px";
     c.style.animationDuration = (1.8 + Math.random()*1.6) + "s";
     c.style.animationDelay = (Math.random()*0.25) + "s";
-    c.style.transform = "rotate(" + Math.floor(Math.random()*360) + "deg)";
+    c.style.transform = "rotate(" + Math.floor(Math.random()*360) + "deg";
     const hues = [25, 45, 190, 140, 0, 280];
     const hue = hues[Math.floor(Math.random()*hues.length)];
     c.style.background = "hsla(" + hue + ", 90%, 62%, .95)";
@@ -1486,7 +1434,7 @@ function spawnConfetti(count=90){
   }
   setTimeout(()=>fxLayer.classList.remove("show"), 2400);
 }
-function showGlitchRedLong(ms=1800){
+function showGlitchRed(ms=1800){
   glitchRed.classList.add("show");
   setTimeout(()=>glitchRed.classList.remove("show"), ms);
 }
@@ -1497,6 +1445,7 @@ function finish(){
 
   validateBtn.disabled = true;
   hintBtn.disabled = true;
+  topHintBtn.disabled = true;
   clearBtn.style.display = "none";
   reviewBtn.disabled = false;
 
@@ -1530,7 +1479,7 @@ function finish(){
     msg = "Sous pression, tu hésites encore sur des priorités importantes. Ce n’est pas grave : c’est exactement le but de l’entraînement.";
     nextReco = "Repars sur les scénarios (débutant/intermédiaire), et répète jusqu’à obtenir des réflexes stables.";
     sfxAlarmLong();
-    showGlitchRedLong();
+    showGlitchRed();
   }
 
   endBadge.className = badgeCls;
@@ -1568,12 +1517,15 @@ function finish(){
 /* ========= Boutons ========= */
 validateBtn.addEventListener("click", validateCurrent);
 
+/* ✅ Effacer sans “reset chrono” (garde le temps restant) */
 clearBtn.addEventListener("click", ()=>{
   sfxClick();
-  renderQuestion(); // reset question + restart timer
+  renderQuestion({ keepTime:true });
 });
 
 hintBtn.addEventListener("click", openHint);
+topHintBtn.addEventListener("click", openHint);
+
 hintOkBtn.addEventListener("click", closeHint);
 hintCloseBtn.addEventListener("click", closeHint);
 
@@ -1601,7 +1553,7 @@ replayBtn.addEventListener("click", ()=>{
   hudQnum.textContent = "1";
 
   // reset timer UI
-  timeLeft = TIMER_SECONDS;
+  timeLeft = TIME_LIMIT;
   updateTimerUI();
 
   startOverlay.style.display = "flex";
@@ -1616,12 +1568,9 @@ startBtn.addEventListener("click", ()=>{
   ensureAudio();
   sfxClick();
 
-  stopTimer();
-
   answersLog = [];
   idx = 0;
   score = 0;
-  pressure = 0;
   setPressure(0);
 
   hintsLeft = HINT_MAX;
@@ -1631,13 +1580,14 @@ startBtn.addEventListener("click", ()=>{
   startOverlay.style.display = "none";
   endOverlay.style.display = "none";
 
+  // ✅ on s'assure que l'ancien feedback overlay ne s'affiche jamais
   feedbackOverlay.style.display = "none";
   hintOverlay.style.display = "none";
 
   hudQnum.textContent = "1";
   progressBar.style.width = "0%";
 
-  renderQuestion();
+  renderQuestion({ keepTime:false });
 });
 
 /* ========= Init ========= */
@@ -1650,10 +1600,11 @@ startBtn.addEventListener("click", ()=>{
   setProgress();
   setPressure(0);
 
-  timeLeft = TIMER_SECONDS;
-  updateTimerUI();
-
   el("levelTabText").textContent = "ÉVALUATION SOMMATIVE";
+
+  // timer initial UI (avant start)
+  timeLeft = TIME_LIMIT;
+  updateTimerUI();
 })();
 </script>
 </body>
