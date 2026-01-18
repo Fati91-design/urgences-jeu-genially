@@ -41,7 +41,7 @@ html,body{
   align-items:stretch;
 }
 
-/* ✅ UN SEUL GRAND CONTENEUR, SANS CADRE */
+/* ✅ UN SEUL GRAND CONTENEUR (pas de cadre visible) */
 .big{
   width:min(1400px,100%);
   height:100%;
@@ -146,7 +146,7 @@ html,body{
 }
 .list::-webkit-scrollbar-track{ background: rgba(0,0,0,.16); border-radius: 999px; }
 
-/* card badge */
+/* badge item */
 .item{
   display:flex;
   align-items:center;
@@ -231,7 +231,7 @@ html,body{
 .tag.ARGENT{ border-color: rgba(210,220,235,.35); background: rgba(210,220,235,.10); }
 .tag.BRONZE{ border-color: rgba(255,150,70,.40); background: rgba(255,150,70,.10); }
 
-/* empty state */
+/* empty */
 .empty{
   margin-top: 8px;
   padding: 14px 14px;
@@ -243,7 +243,40 @@ html,body{
   box-shadow: 0 14px 34px rgba(0,0,0,.22);
 }
 
-/* ===== FULLSCREEN LAST BADGE ===== */
+/* ✅ message félicitations (discret, en haut à droite) */
+.congrats{
+  display:none;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 14px 34px rgba(0,0,0,.22);
+  position:relative;
+  overflow:hidden;
+}
+.congrats::after{
+  content:"";
+  position:absolute; inset:-2px;
+  pointer-events:none;
+  background:
+    radial-gradient(520px 200px at 15% 0%, rgba(255,200,80,.14), transparent 60%),
+    radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+  opacity:.9;
+}
+.congrats .t{
+  position:relative; z-index:2;
+  font-weight: 950;
+  font-size: 14px;
+}
+.congrats .s{
+  position:relative; z-index:2;
+  margin-top: 4px;
+  color: rgba(255,255,255,.78);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+/* ===== FULLSCREEN LAST BADGE (plein écran puis “rangé”) ===== */
 .full{
   position:fixed;
   inset:0;
@@ -258,17 +291,19 @@ html,body{
 }
 .full.show{ display:grid; }
 .full img{
-  width: min(72vw, 460px);
+  width: min(78vw, 520px);
   filter:
     drop-shadow(0 40px 90px rgba(0,0,0,.75))
     drop-shadow(0 0 90px rgba(255,200,80,.35));
   animation: zoomAndFly 1.8s cubic-bezier(.18,.9,.22,1) forwards;
 }
+
+/* destination (vers la liste) */
 @keyframes zoomAndFly{
-  0%{ transform: scale(2.9); opacity:0; filter: blur(6px); }
-  22%{ transform: scale(1.65); opacity:1; filter: blur(0); }
-  70%{ transform: scale(.98); opacity:1; }
-  100%{ transform: scale(.18) translate(420px, -140px); opacity:0; }
+  0%{ transform: scale(3.1); opacity:0; filter: blur(7px); }
+  22%{ transform: scale(1.7); opacity:1; filter: blur(0); }
+  70%{ transform: scale(1.0); opacity:1; }
+  100%{ transform: scale(.18) translate(var(--tx, 420px), var(--ty, -140px)); opacity:0; }
 }
 
 /* confetti */
@@ -307,6 +342,7 @@ html,body{
     </div>
 
     <div class="right">
+
       <div class="topRow">
         <div class="hTitle">🏅 Tes badges</div>
         <div class="progressWrap">
@@ -315,7 +351,11 @@ html,body{
         </div>
       </div>
 
-      <!-- ✅ compatible avec ton rendu demandé -->
+      <div class="congrats" id="congrats">
+        <div class="t" id="congratsT">🎉 Félicitations, Dr. …</div>
+        <div class="s" id="congratsS">Nouveau badge ajouté à ta collection.</div>
+      </div>
+
       <div id="badgesGrid" class="list"></div>
 
       <div id="empty" class="empty" style="display:none;">
@@ -351,6 +391,10 @@ function sfxVictory(){
   setTimeout(()=>tone(659,0.10,"sine",0.055), 110);
   setTimeout(()=>tone(784,0.12,"sine",0.06), 220);
 }
+function sfxBadgePop(){
+  tone(784,0.06,"triangle",0.040);
+  setTimeout(()=>tone(988,0.08,"triangle",0.045), 70);
+}
 function sfxWhoosh(){
   tone(420,0.05,"triangle",0.03);
   setTimeout(()=>tone(300,0.07,"triangle",0.03), 55);
@@ -368,9 +412,16 @@ const SCENARIOS = [
   { id: 4, label: "Scénario 4" }
 ];
 
-const DIFFICULTY = (localStorage.getItem("niveau")
-  || localStorage.getItem("difficulty")
-  || "DÉBUTANT").toUpperCase();
+function getDifficultyLabel(){
+  // on aligne avec badge-manager.js : DÉBUTANT / INTERMÉDIAIRE / EXPERT
+  const raw = (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
+  const d = String(raw).toLowerCase();
+  if(d.includes("expert")) return "EXPERT";
+  if(d.includes("inter"))  return "INTERMÉDIAIRE";
+  return "DÉBUTANT";
+}
+
+const DIFFICULTY = getDifficultyLabel();
 
 function escapeHtml(str){
   return String(str||"")
@@ -388,7 +439,10 @@ function readBadgeForPage(scenarioId, difficultyLabel){
 }
 
 function getPlayer(){
-  return localStorage.getItem("playerName") || localStorage.getItem("player_name") || (window.player_name||window.playerName) || "Joueur";
+  return localStorage.getItem("playerName")
+    || localStorage.getItem("player_name")
+    || (window.player_name||window.playerName)
+    || "Joueur";
 }
 function getAvatar(){
   return localStorage.getItem("avatar") || "medecin_f.png";
@@ -401,12 +455,15 @@ const host = document.getElementById("badgesGrid");
 const empty = document.getElementById("empty");
 const pbar = document.getElementById("pbar");
 const pcount = document.getElementById("pcount");
+const congrats = document.getElementById("congrats");
+const congratsT = document.getElementById("congratsT");
+const congratsS = document.getElementById("congratsS");
 
 document.getElementById("pname").textContent = "Dr. " + getPlayer();
 document.getElementById("plevel").textContent = "NIVEAU : " + DIFFICULTY;
 document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
 
-function renderBadges(){
+function renderBadges({highlightKey=null}={}){
   if(!host) return;
 
   const obtained = [];
@@ -426,6 +483,7 @@ function renderBadges(){
   }
   empty.style.display = "none";
 
+  // rendu (liste)
   const cards = obtained.map(({sc,b})=>{
     const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
     const title = escapeHtml(b.scenarioLabel || sc.label);
@@ -433,8 +491,12 @@ function renderBadges(){
     const diff = escapeHtml(b.difficulty || DIFFICULTY);
     const score = escapeHtml(String(b.score ?? 0));
 
+    // clé éventuelle (pour highlight)
+    const key = `badge_s${sc.id}_${DIFFICULTY}`;
+    const isNew = (highlightKey && key === highlightKey);
+
     return `
-      <div class="item" data-badge="1">
+      <div class="item" data-key="${escapeHtml(key)}" data-new="${isNew ? "1":"0"}">
         <img class="bimg" src="${img}" alt="${lvl}">
         <div class="info">
           <div class="itTitle">${title}</div>
@@ -453,12 +515,12 @@ function renderBadges(){
   // animation entrée séquentielle
   const items = [...host.querySelectorAll(".item")];
   items.forEach((it,i)=>{
-    setTimeout(()=>it.classList.add("in"), 100 + i*140);
+    setTimeout(()=>it.classList.add("in"), 90 + i*140);
   });
 }
 
 /* =========================
-   ✅ Fullscreen last badge + confetti
+   ✅ Fullscreen last badge + confetti + “rangement”
 ========================= */
 const full = document.getElementById("full");
 const fullImg = document.getElementById("fullImg");
@@ -478,6 +540,26 @@ function fireConfetti(){
   setTimeout(()=>confetti.classList.remove("show"), 1700);
 }
 
+function computeFlyTargetToList(){
+  // on vise la zone où se trouve la liste (approx), pour donner l’impression “rangé”
+  const list = document.getElementById("badgesGrid");
+  if(!list) return {tx: 420, ty: -140};
+
+  const rect = list.getBoundingClientRect();
+  // cible vers le coin haut-droit de la liste
+  const targetX = rect.left + rect.width * 0.85;
+  const targetY = rect.top + rect.height * 0.12;
+
+  // notre animation part du centre écran => calc translation approximative
+  const cx = window.innerWidth * 0.5;
+  const cy = window.innerHeight * 0.5;
+
+  const tx = Math.round(targetX - cx);
+  const ty = Math.round(targetY - cy);
+
+  return {tx, ty};
+}
+
 function showLastBadge(){
   const key = localStorage.getItem("last_badge_key");
   if(!key) return false;
@@ -490,25 +572,56 @@ function showLastBadge(){
   try{ b = JSON.parse(localStorage.getItem(key)||"null"); }catch(e){}
   if(!b || !b.badgeImage) return false;
 
+  // IMPORTANT : ne jouer que si le badge correspond au niveau affiché
+  const expectedDiff = DIFFICULTY;
+  const actualDiff = String(b.difficulty || "").toUpperCase();
+  if(actualDiff && actualDiff !== expectedDiff) return false;
+
   localStorage.setItem(seenKey, "1");
+
+  // message félicitations
+  congratsT.textContent = "🎉 Félicitations, Dr. " + getPlayer() + " !";
+  congratsS.textContent = "Ton dernier badge a été ajouté à ta liste.";
+  congrats.style.display = "block";
+
+  // animation plein écran
+  const {tx, ty} = computeFlyTargetToList();
+  fullImg.style.setProperty("--tx", tx + "px");
+  fullImg.style.setProperty("--ty", ty + "px");
   fullImg.src = b.badgeImage;
 
   full.classList.add("show");
+
   sfxVictory();
+  setTimeout(()=>sfxBadgePop(), 150);
   setTimeout(()=>sfxWhoosh(), 260);
   setTimeout(()=>fireConfetti(), 280);
-  setTimeout(()=>full.classList.remove("show"), 1800);
+
+  // au “rangement”, on re-render pour être sûr que la liste contient ce badge
+  setTimeout(()=>{
+    full.classList.remove("show");
+    renderBadges({highlightKey:key});
+  }, 1800);
+
+  // petit flash sur l’item nouvellement ajouté (optionnel léger)
+  setTimeout(()=>{
+    const el = host.querySelector(`[data-key="${CSS.escape(key)}"]`);
+    if(el){
+      el.style.transition = "filter .25s ease";
+      el.style.filter = "brightness(1.12)";
+      setTimeout(()=>{ el.style.filter = ""; }, 550);
+    }
+  }, 2050);
 
   return true;
 }
 
 /* init */
 renderBadges();
-const played = showLastBadge();
-if(played){
-  // petit son click si l’utilisateur clique sur un badge
-  host.addEventListener("click", ()=>sfxClick());
-}
+showLastBadge();
+
+// click sound
+host.addEventListener("click", ()=>sfxClick());
 </script>
 </body>
 </html>
