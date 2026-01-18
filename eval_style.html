@@ -40,7 +40,6 @@
       height:100vh;
       overflow:hidden;
       isolation:isolate;
-      display:block;
       background: transparent;
     }
 
@@ -176,11 +175,38 @@
     }
 
     /* =====================
+       PILULE MISSION (en haut)
+    ====================== */
+    .missionPill{
+      position:absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      pointer-events:none;
+
+      display:inline-block;
+      padding:7px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.34);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+
+      font-weight:950;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.78);
+      white-space: nowrap;
+    }
+
+    /* =====================
        ✅ NOM DU JEU EN HAUT (forme + couleurs conservées)
     ====================== */
     .gameTop{
       position:absolute;
-      top: 46px;
+      top: 54px;
       left:50%;
       transform: translateX(-50%);
       z-index: 25;
@@ -196,9 +222,8 @@
       text-transform:uppercase;
       line-height: .95;
       letter-spacing:.03em;
-      font-size: 54px; /* réduit */
+      font-size: clamp(26px, 4.2vw, 54px); /* ✅ réduit + responsive */
 
-      opacity:1;
       text-shadow:
         0 34px 110px rgba(0,0,0,.90),
         0 0 55px rgba(255,120,60,.28),
@@ -210,8 +235,7 @@
 
     .gameName span{
       display:inline-block;
-      /* fallback */
-      color:#fff;
+      color:#fff; /* fallback */
     }
 
     @supports (-webkit-background-clip:text) or (background-clip:text){
@@ -226,13 +250,13 @@
     }
 
     /* =====================
-       ✅ TEXTE CENTRAL : "EVALUATION SOMMATIVE" SUR UNE SEULE LIGNE
+       ✅ CENTRE : "ÉVALUATION SOMMATIVE" SUR LA MÊME LIGNE + style du titre
     ====================== */
     .centerLabel{
       position:absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -56%);
+      transform: translate(-50%, -58%);
       z-index: 22;
       width: min(1300px, 96%);
       text-align:center;
@@ -242,23 +266,28 @@
     .centerLabel h2{
       margin:0;
       font-family:'Anton', sans-serif;
+      font-weight: 800;
       text-transform:uppercase;
-      letter-spacing:.06em;
-      font-size: 118px;
+      letter-spacing:.02em;
+      font-size: 100px;
       line-height: .95;
-      color:#fff;
 
-      /* ✅ même "forme" (glow + ombres) */
-      text-shadow:
-        0 34px 110px rgba(0,0,0,.92),
-        0 0 70px rgba(255,120,60,.18),
-        0 0 70px rgba(80,170,255,.14);
+    }
 
-      /* ✅ forcer une seule ligne */
-      white-space: nowrap;
-
-      animation: subtitleEnter .95s cubic-bezier(.12,.98,.18,1) .30s both;
-      will-change: transform, opacity, filter;
+    /* ✅ même couleurs/gradient que le titre */
+    .centerLabel h2 span{
+      display:inline-block;
+      color:#ffff; /* fallback */
+    }
+    @supports (-webkit-background-clip:text) or (background-clip:text){
+      .centerLabel h2 span{
+        background: linear-gradient(90deg, #fff2dc, #ff9a55, #7ec7ff, #fff2dc);
+        background-size:260% 100%;
+        -webkit-background-clip:text;
+        background-clip:text;
+        color:transparent;
+        animation: shine 2.2s ease .65s forwards;
+      }
     }
 
     /* =====================
@@ -319,6 +348,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
 
       pointer-events:none;
+      white-space: nowrap;
     }
 
     /* =====================
@@ -429,21 +459,24 @@
     @keyframes embersRise{ 0%{ transform: translateY(12px); opacity:.20; } 30%{ opacity:.70; } 100%{ transform: translateY(-140px); opacity:0; } }
 
     @media (max-width: 720px){
-      .gameTop{ top: 44px; }
-      .gameName{ font-size: 32px; }
-      .centerLabel h2{ font-size: 54px; }
+      .missionPill{ top: 10px; font-size:11px; padding:6px 12px; }
+      .gameTop{ top: 46px; }
       .startBtn{ bottom: 170px; }
+      .slogan{ white-space: normal; }
+      .centerLabel h2{ letter-spacing:.04em; }
     }
 
     @media (prefers-reduced-motion: reduce){
       .glow,.fog,.lightning,.thunderWave,.thunderFlash,.grain,.fireGlow,.embers,
-      .gameName,.gameName span,.centerLabel h2{ animation:none !important; }
+      .gameName,.gameName span,.centerLabel h2,.centerLabel h2 span{ animation:none !important; }
     }
   </style>
 </head>
 
 <body>
 <main class="scene">
+
+  <div class="missionPill">MISSION • ÉVALUATION SOMMATIVE</div>
 
   <div class="grade" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
@@ -456,18 +489,17 @@
   <div class="thunderFlash" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- ✅ FEU -->
   <div class="fireGlow" aria-hidden="true"></div>
   <div class="embers" aria-hidden="true"></div>
 
-  <!-- ✅ NOM DU JEU EN HAUT (même style/couleurs) -->
+  <!-- ✅ NOM DU JEU EN HAUT -->
   <header class="gameTop" aria-label="Nom du jeu">
     <h1 class="gameName"><span>URGENCES — AGIR POUR SAUVER</span></h1>
   </header>
 
-  <!-- ✅ CENTRE : sur une seule ligne -->
+  <!-- ✅ CENTRE : ÉVALUATION SOMMATIVE (même ligne + même couleurs/forme) -->
   <section class="centerLabel" aria-label="Évaluation">
-    <h2>ÉVALUATION SOMMATIVE</h2>
+    <h2><span>ÉVALUATION SOMMATIVE</span></h2>
   </section>
 
   <button class="startBtn" id="startBtn">COMMENCER</button>
