@@ -9,25 +9,14 @@
 :root{
   --glass: rgba(25,27,31,.72);
   --glass2: rgba(15,17,20,.55);
-
   --text: rgba(255,255,255,.93);
   --muted: rgba(255,255,255,.70);
-
-  --gold: rgba(255,200,80,1);
-  --red: rgba(255,70,70,1);
-  --green: rgba(45,200,120,1);
-  --blue: rgba(80,170,255,1);
-  --ember: rgba(255,150,70,1);
-  --ember2: rgba(255,120,50,1);
-
-  --shadow: 0 18px 70px rgba(0,0,0,.50);
-  --border: rgba(255,200,150,.18);
 }
 
 html,body{
   margin:0;
   background: transparent;
-  overflow:hidden;
+  overflow:hidden; /* Genially */
   color: var(--text);
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
@@ -41,7 +30,6 @@ html,body{
   align-items:stretch;
 }
 
-/* ✅ UN SEUL GRAND CONTENEUR (pas de cadre visible) */
 .big{
   width:min(1400px,100%);
   height:100%;
@@ -51,7 +39,6 @@ html,body{
   position:relative;
 }
 
-/* LEFT : avatar pleine hauteur (sans cadre) */
 .left{
   display:flex;
   flex-direction:column;
@@ -60,18 +47,21 @@ html,body{
   gap: 10px;
   padding-top: 8px;
 }
+
 .avatar{
   width: 100%;
   height: min(540px, 66vh);
   object-fit: contain;
   filter: drop-shadow(0 30px 55px rgba(0,0,0,.55));
 }
+
 .name{
   font-weight: 950;
   font-size: 20px;
   line-height:1.1;
   text-shadow: 0 16px 34px rgba(0,0,0,.55);
 }
+
 .level{
   font-size: 12px;
   font-weight: 950;
@@ -82,7 +72,6 @@ html,body{
   border: 1px solid rgba(255,255,255,.10);
 }
 
-/* RIGHT */
 .right{
   display:flex;
   flex-direction:column;
@@ -91,7 +80,6 @@ html,body{
   min-height:0;
 }
 
-/* top row */
 .topRow{
   display:flex;
   align-items:center;
@@ -99,11 +87,13 @@ html,body{
   gap: 12px;
   flex-wrap:wrap;
 }
+
 .hTitle{
   font-weight: 950;
   font-size: 18px;
   text-shadow: 0 16px 34px rgba(0,0,0,.55);
 }
+
 .progressWrap{
   display:flex;
   align-items:center;
@@ -113,6 +103,7 @@ html,body{
   font-size: 12px;
   white-space:nowrap;
 }
+
 .progressShell{
   width: 240px;
   height: 10px;
@@ -128,7 +119,6 @@ html,body{
   transition: width .35s ease;
 }
 
-/* list */
 .list{
   flex:1;
   min-height:0;
@@ -146,7 +136,6 @@ html,body{
 }
 .list::-webkit-scrollbar-track{ background: rgba(0,0,0,.16); border-radius: 999px; }
 
-/* badge item */
 .item{
   display:flex;
   align-items:center;
@@ -158,17 +147,8 @@ html,body{
   box-shadow: 0 14px 34px rgba(0,0,0,.28);
   position:relative;
   overflow:hidden;
+}
 
-  transform: translateY(10px);
-  opacity:0;
-}
-.item.in{
-  animation: itemIn .55s cubic-bezier(.18,.9,.22,1) forwards;
-}
-@keyframes itemIn{
-  from{ transform: translateY(14px); opacity:0; }
-  to{ transform: translateY(0); opacity:1; }
-}
 .item::after{
   content:"";
   position:absolute; inset:-2px;
@@ -187,6 +167,7 @@ html,body{
   position:relative;
   z-index:2;
 }
+
 .info{
   flex:1;
   min-width:0;
@@ -216,6 +197,7 @@ html,body{
   border: 1px solid rgba(255,255,255,.10);
   white-space:nowrap;
 }
+
 .tag{
   font-weight: 950;
   font-size: 12px;
@@ -231,7 +213,6 @@ html,body{
 .tag.ARGENT{ border-color: rgba(210,220,235,.35); background: rgba(210,220,235,.10); }
 .tag.BRONZE{ border-color: rgba(255,150,70,.40); background: rgba(255,150,70,.10); }
 
-/* empty */
 .empty{
   margin-top: 8px;
   padding: 14px 14px;
@@ -243,86 +224,40 @@ html,body{
   box-shadow: 0 14px 34px rgba(0,0,0,.22);
 }
 
-/* ✅ message félicitations (discret, en haut à droite) */
-.congrats{
-  display:none;
-  padding: 10px 12px;
+/* DEBUG panel */
+.debug{
+  margin-top: 10px;
+  padding: 12px 12px;
   border-radius: 18px;
-  background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
-  box-shadow: 0 14px 34px rgba(0,0,0,.22);
-  position:relative;
-  overflow:hidden;
-}
-.congrats::after{
-  content:"";
-  position:absolute; inset:-2px;
-  pointer-events:none;
-  background:
-    radial-gradient(520px 200px at 15% 0%, rgba(255,200,80,.14), transparent 60%),
-    radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
-  opacity:.9;
-}
-.congrats .t{
-  position:relative; z-index:2;
-  font-weight: 950;
-  font-size: 14px;
-}
-.congrats .s{
-  position:relative; z-index:2;
-  margin-top: 4px;
-  color: rgba(255,255,255,.78);
+  background: rgba(0,0,0,.22);
+  color: rgba(255,255,255,.85);
   font-size: 12px;
   font-weight: 850;
-}
-
-/* ===== FULLSCREEN LAST BADGE (plein écran puis “rangé”) ===== */
-.full{
-  position:fixed;
-  inset:0;
+  overflow:auto;
+  max-height: 180px;
   display:none;
-  place-items:center;
-  z-index:999;
-  pointer-events:none;
-  background: radial-gradient(circle at center,
-    rgba(255,200,80,.12),
-    rgba(0,0,0,.82) 65%);
-  backdrop-filter: blur(2px);
 }
-.full.show{ display:grid; }
-.full img{
-  width: min(78vw, 520px);
-  filter:
-    drop-shadow(0 40px 90px rgba(0,0,0,.75))
-    drop-shadow(0 0 90px rgba(255,200,80,.35));
-  animation: zoomAndFly 1.8s cubic-bezier(.18,.9,.22,1) forwards;
+.debug pre{
+  margin: 8px 0 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: rgba(255,255,255,.78);
+  font-weight: 800;
+  font-size: 11px;
 }
 
-/* destination (vers la liste) */
-@keyframes zoomAndFly{
-  0%{ transform: scale(3.1); opacity:0; filter: blur(7px); }
-  22%{ transform: scale(1.7); opacity:1; filter: blur(0); }
-  70%{ transform: scale(1.0); opacity:1; }
-  100%{ transform: scale(.18) translate(var(--tx, 420px), var(--ty, -140px)); opacity:0; }
+.debugBtn{
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: rgba(255,255,255,.90);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-weight: 950;
+  cursor:pointer;
+  font-size: 12px;
 }
 
-/* confetti */
-.confetti{ position:fixed; inset:0; pointer-events:none; z-index:998; display:none; }
-.confetti.show{ display:block; }
-.confetti i{
-  position:absolute;
-  top:-10px;
-  width:8px;
-  height:14px;
-  opacity:0;
-  animation: fall 1.6s ease forwards;
-}
-@keyframes fall{
-  10%{ opacity:1 }
-  100%{ transform: translateY(105vh) rotate(260deg); opacity:0 }
-}
-
-/* responsive */
 @media (max-width: 900px){
   .big{ grid-template-columns: 1fr; }
   .avatar{ height: min(280px, 36vh); }
@@ -342,87 +277,36 @@ html,body{
     </div>
 
     <div class="right">
-
       <div class="topRow">
         <div class="hTitle">🏅 Tes badges</div>
-        <div class="progressWrap">
-          <span id="pcount">0/4</span>
-          <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="debugBtn" id="toggleDebug" type="button">🧪 Debug</button>
+          <div class="progressWrap">
+            <span id="pcount">0/4</span>
+            <div class="progressShell"><div class="progressBar" id="pbar"></div></div>
+          </div>
         </div>
-      </div>
-
-      <div class="congrats" id="congrats">
-        <div class="t" id="congratsT">🎉 Félicitations, Dr. …</div>
-        <div class="s" id="congratsS">Nouveau badge ajouté à ta collection.</div>
       </div>
 
       <div id="badgesGrid" class="list"></div>
 
       <div id="empty" class="empty" style="display:none;">
-        Aucun badge pour ce niveau pour le moment. Termine un scénario pour débloquer ton premier badge.
+        Aucun badge trouvé. Assure-toi d’avoir fini au moins un scénario (et que le badge est bien enregistré dans localStorage).
+      </div>
+
+      <div class="debug" id="debugPanel">
+        <div>🔎 Diagnostic localStorage</div>
+        <pre id="debugText">...</pre>
       </div>
     </div>
 
   </div>
 </div>
 
-<div class="full" id="full"><img id="fullImg" alt="badge"></div>
-<div class="confetti" id="confetti"></div>
-
 <script>
 /* =========================
-   ✅ SFX (WebAudio) cohérent
+   ✅ Helpers
 ========================= */
-let audioCtx=null;
-function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
-function tone(freq, dur=0.09, type="sine", gain=0.05){
-  ensureAudio();
-  const t0 = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  g.gain.value = gain;
-  osc.connect(g); g.connect(audioCtx.destination);
-  osc.start(t0); osc.stop(t0 + dur);
-}
-function sfxVictory(){
-  tone(523,0.10,"sine",0.055);
-  setTimeout(()=>tone(659,0.10,"sine",0.055), 110);
-  setTimeout(()=>tone(784,0.12,"sine",0.06), 220);
-}
-function sfxBadgePop(){
-  tone(784,0.06,"triangle",0.040);
-  setTimeout(()=>tone(988,0.08,"triangle",0.045), 70);
-}
-function sfxWhoosh(){
-  tone(420,0.05,"triangle",0.03);
-  setTimeout(()=>tone(300,0.07,"triangle",0.03), 55);
-}
-function sfxClick(){ tone(520,0.04,"triangle",0.035); }
-window.addEventListener("pointerdown", ()=>ensureAudio(), {once:true});
-
-/* =========================
-   ✅ DATA + helpers
-========================= */
-const SCENARIOS = [
-  { id: 1, label: "Scénario 1" },
-  { id: 2, label: "Scénario 2" },
-  { id: 3, label: "Scénario 3" },
-  { id: 4, label: "Scénario 4" }
-];
-
-function getDifficultyLabel(){
-  // on aligne avec badge-manager.js : DÉBUTANT / INTERMÉDIAIRE / EXPERT
-  const raw = (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
-  const d = String(raw).toLowerCase();
-  if(d.includes("expert")) return "EXPERT";
-  if(d.includes("inter"))  return "INTERMÉDIAIRE";
-  return "DÉBUTANT";
-}
-
-const DIFFICULTY = getDifficultyLabel();
-
 function escapeHtml(str){
   return String(str||"")
     .replaceAll("&","&amp;")
@@ -432,16 +316,25 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 }
 
-function readBadgeForPage(scenarioId, difficultyLabel){
-  const key = `badge_s${scenarioId}_${difficultyLabel}`;
-  try{ return JSON.parse(localStorage.getItem(key) || "null"); }
-  catch(e){ return null; }
+function normDifficulty(raw){
+  const d = String(raw||"").toLowerCase();
+  if(d.includes("expert")) return "EXPERT";
+  if(d.includes("inter")) return "INTERMÉDIAIRE";
+  return "DÉBUTANT";
+}
+
+function getDifficultyLabel(){
+  const raw =
+    (typeof window.niveau !== "undefined" && window.niveau) ? window.niveau :
+    (localStorage.getItem("niveau") || localStorage.getItem("difficulty") || "débutant");
+  return normDifficulty(raw);
 }
 
 function getPlayer(){
   return localStorage.getItem("playerName")
     || localStorage.getItem("player_name")
-    || (window.player_name||window.playerName)
+    || (typeof window.player_name !== "undefined" ? window.player_name : "")
+    || (typeof window.playerName !== "undefined" ? window.playerName : "")
     || "Joueur";
 }
 function getAvatar(){
@@ -449,179 +342,193 @@ function getAvatar(){
 }
 
 /* =========================
-   ✅ Render (badges gagnés seulement)
+   ✅ Read badges robustly
+   1) badges_history (si présent)
+   2) scan clés badge_s*
 ========================= */
-const host = document.getElementById("badgesGrid");
-const empty = document.getElementById("empty");
-const pbar = document.getElementById("pbar");
-const pcount = document.getElementById("pcount");
-const congrats = document.getElementById("congrats");
-const congratsT = document.getElementById("congratsT");
-const congratsS = document.getElementById("congratsS");
+function readBadgesFromHistory(targetDifficulty){
+  const out = [];
+  let arr = [];
+  try { arr = JSON.parse(localStorage.getItem("badges_history") || "[]"); }
+  catch(e){ arr = []; }
 
+  if(!Array.isArray(arr)) return out;
+
+  arr.forEach((b)=>{
+    const diff = normDifficulty(b.niveau || b.difficulty || b.level || "");
+    if(diff !== targetDifficulty) return;
+
+    // scenarioId (plusieurs noms possibles)
+    const sid = Number(b.scenarioId ?? b.scenario ?? b.scenario_id ?? NaN);
+    if(!Number.isFinite(sid)) return;
+
+    out.push({
+      key: b.__key || null,
+      scenarioId: sid,
+      scenarioLabel: b.scenarioLabel || b.label || ("Scénario " + sid),
+      mission: b.mission || "",
+      difficulty: diff,
+      badgeLevel: String((b.badgeLevel || b.badgeType || b.type || "BRONZE")).toUpperCase(),
+      badgeImage: b.badgeImage || b.img || "assets/bronze.png",
+      score: Number(b.score ?? 0),
+      date: Number(b.date ?? b.ts ?? Date.now())
+    });
+  });
+
+  return out;
+}
+
+function scanBadgesFromLocalStorage(targetDifficulty){
+  const out = [];
+  const keys = Object.keys(localStorage);
+
+  keys.forEach((k)=>{
+    if(!k.startsWith("badge_s")) return;
+    if(k === "badges_history") return;
+
+    let v = null;
+    try { v = JSON.parse(localStorage.getItem(k) || "null"); }
+    catch(e){ v = null; }
+    if(!v || typeof v !== "object") return;
+
+    // scenarioId
+    const sid = Number(v.scenarioId ?? v.scenario ?? v.scenario_id ?? NaN);
+    if(!Number.isFinite(sid)) return;
+
+    const diff = normDifficulty(v.difficulty || v.niveau || v.level || "");
+    // IMPORTANT: si diff manquante dans l’objet, on essaie de la déduire de la clé badge_s1_DEBUTANT
+    let diff2 = diff;
+    if(!diff2 || diff2 === "DÉBUTANT" && !String(v.difficulty||v.niveau||"").trim()){
+      const up = k.toUpperCase();
+      if(up.includes("EXPERT")) diff2 = "EXPERT";
+      else if(up.includes("INTER")) diff2 = "INTERMÉDIAIRE";
+      else if(up.includes("DEB")) diff2 = "DÉBUTANT";
+    }
+    if(diff2 !== targetDifficulty) return;
+
+    out.push({
+      key: k,
+      scenarioId: sid,
+      scenarioLabel: v.scenarioLabel || v.scenarioLabel || v.label || v.scenario || ("Scénario " + sid),
+      mission: v.mission || "",
+      difficulty: diff2,
+      badgeLevel: String(v.badgeLevel || v.badgeType || v.type || "BRONZE").toUpperCase(),
+      badgeImage: v.badgeImage || v.img || "assets/bronze.png",
+      score: Number(v.score ?? 0),
+      date: Number(v.date ?? v.ts ?? Date.now())
+    });
+  });
+
+  return out;
+}
+
+function uniqueByScenario(arr){
+  // garde le plus récent par scenarioId (si doublons)
+  const map = new Map();
+  arr.forEach(b=>{
+    const prev = map.get(b.scenarioId);
+    if(!prev || (b.date||0) > (prev.date||0)) map.set(b.scenarioId, b);
+  });
+  return [...map.values()].sort((a,b)=>a.scenarioId - b.scenarioId);
+}
+
+/* =========================
+   ✅ Render
+========================= */
+const DIFFICULTY = getDifficultyLabel();
 document.getElementById("pname").textContent = "Dr. " + getPlayer();
 document.getElementById("plevel").textContent = "NIVEAU : " + DIFFICULTY;
 document.getElementById("avatar").src = "assets/avatars/" + getAvatar();
 
-function renderBadges({highlightKey=null}={}){
-  if(!host) return;
+const host = document.getElementById("badgesGrid");
+const empty = document.getElementById("empty");
+const pbar = document.getElementById("pbar");
+const pcount = document.getElementById("pcount");
 
-  const obtained = [];
-  SCENARIOS.forEach(sc=>{
-    const b = readBadgeForPage(sc.id, DIFFICULTY);
-    if(b) obtained.push({ sc, b });
-  });
+function render(){
+  // 1) history
+  const fromHist = readBadgesFromHistory(DIFFICULTY);
+  // 2) scan clés
+  const fromScan = scanBadgesFromLocalStorage(DIFFICULTY);
 
-  // progression x/4
-  pcount.textContent = obtained.length + "/4";
-  pbar.style.width = Math.round((obtained.length/4)*100) + "%";
+  let badges = uniqueByScenario([...fromHist, ...fromScan]);
 
-  if(obtained.length===0){
+  // Progression (sur 4)
+  pcount.textContent = badges.length + "/4";
+  pbar.style.width = Math.round((badges.length/4)*100) + "%";
+
+  if(badges.length === 0){
     host.innerHTML = "";
     empty.style.display = "block";
-    return;
-  }
-  empty.style.display = "none";
+  }else{
+    empty.style.display = "none";
+    host.innerHTML = badges.map(b=>{
+      const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
+      const title = escapeHtml(b.scenarioLabel || ("Scénario " + b.scenarioId));
+      const img = escapeHtml(b.badgeImage || "assets/bronze.png");
+      const diff = escapeHtml(b.difficulty || DIFFICULTY);
+      const score = escapeHtml(String(b.score ?? 0));
+      const mission = escapeHtml(b.mission || "");
 
-  // rendu (liste)
-  const cards = obtained.map(({sc,b})=>{
-    const lvl = escapeHtml(String(b.badgeLevel||"BRONZE").toUpperCase());
-    const title = escapeHtml(b.scenarioLabel || sc.label);
-    const img = escapeHtml(b.badgeImage || "assets/bronze.png");
-    const diff = escapeHtml(b.difficulty || DIFFICULTY);
-    const score = escapeHtml(String(b.score ?? 0));
-
-    // clé éventuelle (pour highlight)
-    const key = `badge_s${sc.id}_${DIFFICULTY}`;
-    const isNew = (highlightKey && key === highlightKey);
-
-    return `
-      <div class="item" data-key="${escapeHtml(key)}" data-new="${isNew ? "1":"0"}">
-        <img class="bimg" src="${img}" alt="${lvl}">
-        <div class="info">
-          <div class="itTitle">${title}</div>
-          <div class="itMeta">
-            <span class="pill">⭐ ${score}</span>
-            <span class="pill">🎚 ${diff}</span>
+      return `
+        <div class="item">
+          <img class="bimg" src="${img}" alt="${lvl}">
+          <div class="info">
+            <div class="itTitle">${title}${mission ? " — " + mission : ""}</div>
+            <div class="itMeta">
+              <span class="pill">⭐ ${score}</span>
+              <span class="pill">🎚 ${diff}</span>
+              <span class="pill">#${escapeHtml(String(b.scenarioId))}</span>
+            </div>
           </div>
+          <div class="tag ${lvl}">${lvl}</div>
         </div>
-        <div class="tag ${lvl}">${lvl}</div>
-      </div>
-    `;
-  }).join("");
+      `;
+    }).join("");
+  }
 
-  host.innerHTML = cards;
-
-  // animation entrée séquentielle
-  const items = [...host.querySelectorAll(".item")];
-  items.forEach((it,i)=>{
-    setTimeout(()=>it.classList.add("in"), 90 + i*140);
-  });
+  // debug
+  buildDebug(fromHist, fromScan, badges);
 }
 
 /* =========================
-   ✅ Fullscreen last badge + confetti + “rangement”
+   ✅ DEBUG
 ========================= */
-const full = document.getElementById("full");
-const fullImg = document.getElementById("fullImg");
-const confetti = document.getElementById("confetti");
+const debugPanel = document.getElementById("debugPanel");
+const debugText = document.getElementById("debugText");
+document.getElementById("toggleDebug").addEventListener("click", ()=>{
+  debugPanel.style.display = (debugPanel.style.display === "block") ? "none" : "block";
+});
 
-function fireConfetti(){
-  confetti.innerHTML = "";
-  const colors = ["#ffc850","#ff9646","#50aaff","#2dc878"];
-  for(let i=0;i<18;i++){
-    const p = document.createElement("i");
-    p.style.left = (Math.random()*95)+"%";
-    p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDelay = (Math.random()*0.35)+"s";
-    confetti.appendChild(p);
-  }
-  confetti.classList.add("show");
-  setTimeout(()=>confetti.classList.remove("show"), 1700);
+function buildDebug(fromHist, fromScan, finalBadges){
+  const keys = Object.keys(localStorage).sort();
+  const badgeKeys = keys.filter(k=>k.startsWith("badge_s"));
+  const lastKey = localStorage.getItem("last_badge_key");
+
+  const lines = [];
+  lines.push("DIFFICULTY (page) = " + DIFFICULTY);
+  lines.push("playerName = " + getPlayer());
+  lines.push("avatar = " + getAvatar());
+  lines.push("");
+  lines.push("last_badge_key = " + (lastKey || "—"));
+  lines.push("");
+  lines.push("Keys badge_s* trouvées (" + badgeKeys.length + "):");
+  badgeKeys.forEach(k=>lines.push(" - " + k));
+  lines.push("");
+  lines.push("badges_history length = " + (JSON.parse(localStorage.getItem("badges_history")||"[]").length || 0));
+  lines.push("fromHistory (filtered) = " + fromHist.length);
+  lines.push("fromScan (filtered) = " + fromScan.length);
+  lines.push("finalBadges = " + finalBadges.length);
+  lines.push("");
+  // aperçu
+  finalBadges.forEach(b=>{
+    lines.push(`• S${b.scenarioId} ${b.badgeLevel} score=${b.score} diff=${b.difficulty} key=${b.key||"—"}`);
+  });
+
+  debugText.textContent = lines.join("\n");
 }
 
-function computeFlyTargetToList(){
-  // on vise la zone où se trouve la liste (approx), pour donner l’impression “rangé”
-  const list = document.getElementById("badgesGrid");
-  if(!list) return {tx: 420, ty: -140};
-
-  const rect = list.getBoundingClientRect();
-  // cible vers le coin haut-droit de la liste
-  const targetX = rect.left + rect.width * 0.85;
-  const targetY = rect.top + rect.height * 0.12;
-
-  // notre animation part du centre écran => calc translation approximative
-  const cx = window.innerWidth * 0.5;
-  const cy = window.innerHeight * 0.5;
-
-  const tx = Math.round(targetX - cx);
-  const ty = Math.round(targetY - cy);
-
-  return {tx, ty};
-}
-
-function showLastBadge(){
-  const key = localStorage.getItem("last_badge_key");
-  if(!key) return false;
-
-  // anti-répétition
-  const seenKey = "last_badge_seen_" + key;
-  if(localStorage.getItem(seenKey) === "1") return false;
-
-  let b=null;
-  try{ b = JSON.parse(localStorage.getItem(key)||"null"); }catch(e){}
-  if(!b || !b.badgeImage) return false;
-
-  // IMPORTANT : ne jouer que si le badge correspond au niveau affiché
-  const expectedDiff = DIFFICULTY;
-  const actualDiff = String(b.difficulty || "").toUpperCase();
-  if(actualDiff && actualDiff !== expectedDiff) return false;
-
-  localStorage.setItem(seenKey, "1");
-
-  // message félicitations
-  congratsT.textContent = "🎉 Félicitations, Dr. " + getPlayer() + " !";
-  congratsS.textContent = "Ton dernier badge a été ajouté à ta liste.";
-  congrats.style.display = "block";
-
-  // animation plein écran
-  const {tx, ty} = computeFlyTargetToList();
-  fullImg.style.setProperty("--tx", tx + "px");
-  fullImg.style.setProperty("--ty", ty + "px");
-  fullImg.src = b.badgeImage;
-
-  full.classList.add("show");
-
-  sfxVictory();
-  setTimeout(()=>sfxBadgePop(), 150);
-  setTimeout(()=>sfxWhoosh(), 260);
-  setTimeout(()=>fireConfetti(), 280);
-
-  // au “rangement”, on re-render pour être sûr que la liste contient ce badge
-  setTimeout(()=>{
-    full.classList.remove("show");
-    renderBadges({highlightKey:key});
-  }, 1800);
-
-  // petit flash sur l’item nouvellement ajouté (optionnel léger)
-  setTimeout(()=>{
-    const el = host.querySelector(`[data-key="${CSS.escape(key)}"]`);
-    if(el){
-      el.style.transition = "filter .25s ease";
-      el.style.filter = "brightness(1.12)";
-      setTimeout(()=>{ el.style.filter = ""; }, 550);
-    }
-  }, 2050);
-
-  return true;
-}
-
-/* init */
-renderBadges();
-showLastBadge();
-
-// click sound
-host.addEventListener("click", ()=>sfxClick());
+render();
 </script>
 </body>
 </html>
