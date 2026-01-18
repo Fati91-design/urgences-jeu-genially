@@ -33,11 +33,29 @@
 
     .stage{
       min-height: 100vh;
+      height: 100vh;
       display:flex;
       justify-content:center;
       align-items:flex-start;
       padding: 16px 14px;
       overflow:hidden;
+    }
+
+    /* ✅ GENIALLY AUTO-SCALE (ajout) */
+    .scaler{
+      width:100%;
+      height:100%;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      overflow:hidden;
+    }
+    .scalerInner{
+      --scale: 1;
+      transform: scale(var(--scale));
+      transform-origin: top center;
+      will-change: transform;
+      width: fit-content;
     }
 
     /* ✅ version large (référence) */
@@ -606,85 +624,90 @@
 </head>
 
 <body>
-  <div class="stage">
-    <div class="wrap">
+  <div class="stage" id="stage">
+    <!-- ✅ GENIALLY AUTO-SCALE wrapper (ajout) -->
+    <div class="scaler" id="scaler">
+      <div class="scalerInner" id="scalerInner">
+        <div class="wrap" id="wrap">
 
-      <!-- TOP TABS -->
-      <div class="topTabs">
-        <div class="levelTab">
-          <div class="levelDot"></div>
-          <div id="levelTabText">NIVEAU</div>
-        </div>
-
-        <div class="progressShell" title="Progression">
-          <div class="progressBar" id="progressBar"></div>
-        </div>
-
-        <div class="miniHint" id="miniHint">—</div>
-      </div>
-
-      <!-- HUD -->
-      <div class="hud">
-        <div class="hudbox">
-          <div class="profile">
-            <div class="avatarFrame">
-              <img class="avatar" id="hudAvatar" alt="Avatar">
+          <!-- TOP TABS -->
+          <div class="topTabs">
+            <div class="levelTab">
+              <div class="levelDot"></div>
+              <div id="levelTabText">NIVEAU</div>
             </div>
-            <div class="ptext">
-              <div class="pname" id="hudName">Dr. Joueur</div>
-              <div class="prole" id="hudRole">Rôle: —</div>
+
+            <div class="progressShell" title="Progression">
+              <div class="progressBar" id="progressBar"></div>
             </div>
+
+            <div class="miniHint" id="miniHint">—</div>
           </div>
-          <div class="chip" id="difficultyChip">MODE: —</div>
-        </div>
 
-        <div class="hudbox">
-          <div class="stats">
-            <div class="pill">⭐ <span id="hudScore">0</span></div>
-            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
-            <div class="pill">🎯 <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">0</span></div>
+          <!-- HUD -->
+          <div class="hud">
+            <div class="hudbox">
+              <div class="profile">
+                <div class="avatarFrame">
+                  <img class="avatar" id="hudAvatar" alt="Avatar">
+                </div>
+                <div class="ptext">
+                  <div class="pname" id="hudName">Dr. Joueur</div>
+                  <div class="prole" id="hudRole">Rôle: —</div>
+                </div>
+              </div>
+              <div class="chip" id="difficultyChip">MODE: —</div>
+            </div>
 
-            <div class="pill timerPill" id="timerPill">
-              <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
-              <div class="timeText">
-                <div class="label">Temps</div>
-                <div class="sec"><span id="hudTime">0</span>s</div>
+            <div class="hudbox">
+              <div class="stats">
+                <div class="pill">⭐ <span id="hudScore">0</span></div>
+                <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
+                <div class="pill">🎯 <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">0</span></div>
+
+                <div class="pill timerPill" id="timerPill">
+                  <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
+                  <div class="timeText">
+                    <div class="label">Temps</div>
+                    <div class="sec"><span id="hudTime">0</span>s</div>
+                  </div>
+                </div>
+
+                <div class="stressWrap" title="Stress">
+                  <div class="stressBar" id="stressBar"></div>
+                </div>
+
+                <button class="btnNeo" id="hintBtn" type="button">💡 Indice (<span id="hudHints">0</span>)</button>
+                <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
               </div>
             </div>
+          </div>
 
-            <div class="stressWrap" title="Stress">
-              <div class="stressBar" id="stressBar"></div>
+          <!-- FRAME -->
+          <div class="frame" id="frame">
+            <div class="qmeta" id="qMeta">—</div>
+            <div class="qtitle" id="qTitle">…</div>
+            <div class="qdesc" id="qDesc">…</div>
+
+            <div class="options" id="options"></div>
+
+            <div class="actions">
+              <div class="leftActions">
+                <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+                <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+              </div>
+
+              <div class="rightActions">
+                <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+                <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+              </div>
             </div>
-
-            <button class="btnNeo" id="hintBtn" type="button">💡 Indice (<span id="hudHints">0</span>)</button>
-            <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- FRAME -->
-      <div class="frame" id="frame">
-        <div class="qmeta" id="qMeta">—</div>
-        <div class="qtitle" id="qTitle">…</div>
-        <div class="qdesc" id="qDesc">…</div>
-
-        <div class="options" id="options"></div>
-
-        <div class="actions">
-          <div class="leftActions">
-            <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
-            <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
           </div>
 
-          <div class="rightActions">
-            <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
-            <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
+        </div><!-- /wrap -->
+      </div><!-- /scalerInner -->
+    </div><!-- /scaler -->
+  </div><!-- /stage -->
 
   <!-- START overlay -->
   <div class="overlay" id="startOverlay" style="display:flex;">
@@ -746,6 +769,47 @@
       <div class="modalBody keyBody" id="keyBody"></div>
     </div>
   </div>
+
+<script>
+/* ✅ GENIALLY AUTO-SCALE (ajout) : réduit automatiquement la taille globale pour tenir dans la page */
+(function(){
+  const stage = document.getElementById("stage");
+  const inner = document.getElementById("scalerInner");
+  const wrap  = document.getElementById("wrap");
+
+  function fitGenially(){
+    if(!stage || !inner || !wrap) return;
+
+    const st = stage.getBoundingClientRect();
+    const cs = getComputedStyle(stage);
+    const padX = (parseFloat(cs.paddingLeft)||0) + (parseFloat(cs.paddingRight)||0);
+    const padY = (parseFloat(cs.paddingTop)||0)  + (parseFloat(cs.paddingBottom)||0);
+
+    const availW = Math.max(0, st.width  - padX);
+    const availH = Math.max(0, st.height - padY);
+
+    // tailles "réelles" du contenu (non affectées par transform)
+    const bw = Math.max(wrap.scrollWidth, wrap.offsetWidth);
+    const bh = Math.max(wrap.scrollHeight, wrap.offsetHeight);
+
+    // marge de sécurité (Genially aime bien rogner 1-2%)
+    const s = Math.min(1, (availW / bw) * 0.985, (availH / bh) * 0.985);
+
+    inner.style.setProperty("--scale", String(Math.max(0.5, s).toFixed(4)));
+  }
+
+  window.__fitGenially = fitGenially;
+
+  // multiple passes (fonts / images)
+  window.addEventListener("resize", ()=> requestAnimationFrame(fitGenially));
+  window.addEventListener("load", ()=> {
+    requestAnimationFrame(fitGenially);
+    setTimeout(fitGenially, 150);
+    setTimeout(fitGenially, 450);
+    setTimeout(fitGenially, 900);
+  });
+})();
+</script>
 
 <script>
 /* ========= SFX (WebAudio) ========= */
@@ -873,7 +937,7 @@ let score = parseInt(localStorage.getItem("score") || "0", 10); if(isNaN(score))
 let stress = parseInt(localStorage.getItem("stress") || "0", 10); if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 0; // ✅ nombre d'erreurs/timeouts sur la question
+let attemptsForCurrentQuestion = 0;
 let locked = true;
 let paused = false;
 let timerId = null;
@@ -887,6 +951,7 @@ let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
 let clozeValues = {};
+
 /* ========= UI init ========= */
 function setScore(v){
   score=v;
@@ -958,7 +1023,6 @@ function startTimer(){
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
-      // timeout = tentative + stress
       attemptsForCurrentQuestion++;
       setAttemptsUI();
       addStress(STRESS_RULES.timeout);
@@ -1031,7 +1095,6 @@ function resetMission(showStart=true){
   setScore(0);
   setStress(0);
 
-  // reset hints for scenario
   hintsLeft = diff.hints;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   setHintsUI();
@@ -1042,12 +1105,14 @@ function resetMission(showStart=true){
   validateBtn.disabled=true;
   clearBtn.style.display="none";
 
-  // reset top progress
   setProgress();
 
   if(showStart){
     startOverlay.style.display="flex";
   }
+
+  // ✅ resize after reset
+  requestAnimationFrame(()=> window.__fitGenially && window.__fitGenially());
 }
 
 /* ========= Hint (auto) ========= */
@@ -1094,7 +1159,6 @@ function useHint(){
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   hintUsedThisQuestion = true;
 
-  // pause timer
   paused = true;
   stopTimer();
 
@@ -1175,7 +1239,6 @@ async function renderQuestion(i, resetAttempts=true){
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
-  // update top progress (before timer)
   setProgress();
 
   const type = q.type;
@@ -1320,7 +1383,6 @@ async function renderQuestion(i, resetAttempts=true){
       zones.appendChild(z);
     });
 
-    // Valider ne doit pas être activé sans sélection
     validateBtn.disabled = true;
   }
 
@@ -1377,7 +1439,7 @@ async function renderQuestion(i, resetAttempts=true){
     });
     list.addEventListener("drop",(e)=>{
       e.preventDefault();
-      validateBtn.disabled=false; // il a interagi
+      validateBtn.disabled=false;
     });
 
     validateBtn.disabled = true;
@@ -1385,9 +1447,11 @@ async function renderQuestion(i, resetAttempts=true){
 
   hudQnum.textContent = String(i+1);
 
-  // enable/disable hint depending state
   setHintsUI();
   startTimer();
+
+  // ✅ re-fit après rendu (Genially)
+  requestAnimationFrame(()=> window.__fitGenially && window.__fitGenially());
 }
 
 /* ========= Clear ========= */
@@ -1460,16 +1524,11 @@ validateBtn.onclick = ()=>{
   if(type==="short"){
     if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
   }
-  if(type==="drag_order"){
-    // OK: on accepte (mais s'il n'a pas touché, validateBtn restera disabled)
-  }
 
   stopTimer();
   locked=true;
 
-  if(type==="single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="tf"){
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
@@ -1508,9 +1567,7 @@ validateBtn.onclick = ()=>{
     return;
   }
 
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
@@ -1615,7 +1672,6 @@ keyCloseBtn.onclick = ()=>{
 
 /* ========= End scenario (badge) ========= */
 function computeBadgeFromScore(){
-  // score attendu ~ 10 pts/question (approx)
   const max = TOTAL * 10;
   const pct = clamp(Math.round((score / max) * 100), 0, 100);
 
@@ -1655,7 +1711,6 @@ function endScenario(){
   clearBtn.style.display="none";
   validateBtn.disabled = true;
 
-  // set progress to 100%
   progressBar.style.width = "100%";
 
   const badge = computeBadgeFromScore();
@@ -1711,6 +1766,9 @@ function endScenario(){
     sfxClick();
     window.location.href = NEXT_SCENARIO_URL;
   };
+
+  // ✅ refit après écran fin
+  requestAnimationFrame(()=> window.__fitGenially && window.__fitGenially());
 }
 
 /* ========= Buttons ========= */
@@ -1733,13 +1791,11 @@ startBtn.addEventListener("click", async ()=>{
   ensureAudio();
   sfxClick();
 
-  // reset score/stress au départ (référence)
   localStorage.setItem("score","0");
   localStorage.setItem("stress","0");
   setScore(0);
   setStress(0);
 
-  // init hints per scenario
   if(!localStorage.getItem(HINT_KEY)){
     localStorage.setItem(HINT_KEY, String(diff.hints));
   }
@@ -1756,6 +1812,8 @@ startBtn.addEventListener("click", async ()=>{
   idx=0;
   setProgress();
   renderQuestion(0, true);
+
+  requestAnimationFrame(()=> window.__fitGenially && window.__fitGenially());
 });
 
 /* ========= INIT ========= */
@@ -1763,12 +1821,10 @@ startBtn.addEventListener("click", async ()=>{
   setProfile();
   setTopLevel();
 
-  // attempts/hints init
   setAttemptsUI();
   setScore(score);
   setStress(stress);
 
-  // ensure hint key exists for this scenario
   if(!localStorage.getItem(HINT_KEY)){
     localStorage.setItem(HINT_KEY, String(diff.hints));
   }
@@ -1790,8 +1846,12 @@ startBtn.addEventListener("click", async ()=>{
   ring.style.setProperty("--p","100%");
   setRingProgress();
   setProgress();
+
+  // ✅ fit initial (Genially)
+  requestAnimationFrame(()=> window.__fitGenially && window.__fitGenially());
 })();
 </script>
+
   <script src="badge-manager.js"></script>
 </body>
 </html>
