@@ -24,7 +24,7 @@
     html,body{
       height:100%;
       margin:0;
-      background: transparent; /* ✅ transparent */
+      background: transparent;
       overflow:hidden;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
@@ -39,10 +39,10 @@
       isolation:isolate;
       display:grid;
       place-items:center;
-      background: transparent; /* ✅ transparent */
+      background: transparent;
     }
 
-    /* ✅ on supprime bg1/bg2 : on garde juste leur "empreinte" (rien à afficher) */
+    /* ✅ on supprime bg1/bg2 */
     .bg1, .bg2, .fgWrap{ display:none !important; }
 
     .grade{
@@ -51,19 +51,19 @@
         radial-gradient(1000px 520px at 18% 28%, rgba(255,120,60,.24), transparent 60%),
         radial-gradient(1000px 520px at 85% 62%, rgba(80,170,255,.20), transparent 65%),
         linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.86));
-      opacity:.55; /* ✅ un peu plus léger car fond transparent */
+      opacity:.55;
       pointer-events:none;
     }
 
     .vignette{
       position:absolute; inset:0; z-index:-5;
       background: radial-gradient(1400px 900px at 50% 38%, transparent 28%, rgba(0,0,0,.92) 92%);
-      opacity:.55; /* ✅ léger */
+      opacity:.55;
       pointer-events:none;
     }
 
     /* =====================
-       FX (on garde tout)
+       FX (inchangés)
     ====================== */
     .glow{
       position:absolute; inset:0; z-index:0; pointer-events:none;
@@ -142,6 +142,45 @@
     }
 
     /* =====================
+       ✅ FEU (ajout)
+    ====================== */
+    .fireGlow{
+      position:absolute;
+      inset:-10%;
+      z-index:2;
+      pointer-events:none;
+      mix-blend-mode: screen;
+      opacity:.75;
+      background:
+        radial-gradient(680px 240px at 50% 100%, rgba(255,120,60,.35), transparent 70%),
+        radial-gradient(900px 320px at 20% 105%, rgba(255,200,80,.16), transparent 72%),
+        radial-gradient(900px 320px at 80% 105%, rgba(255,80,80,.12), transparent 72%);
+      filter: blur(10px);
+      animation: fireGlow 2.6s ease-in-out infinite;
+    }
+
+    .embers{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
+      opacity:.65;
+      background:
+        radial-gradient(2px 2px at 10% 92%, rgba(255,210,120,.95), transparent 60%),
+        radial-gradient(2px 2px at 18% 96%, rgba(255,140,80,.90), transparent 60%),
+        radial-gradient(2px 2px at 26% 94%, rgba(255,220,160,.92), transparent 60%),
+        radial-gradient(2px 2px at 35% 98%, rgba(255,120,60,.88), transparent 60%),
+        radial-gradient(2px 2px at 44% 93%, rgba(255,210,120,.92), transparent 60%),
+        radial-gradient(2px 2px at 55% 97%, rgba(255,160,90,.90), transparent 60%),
+        radial-gradient(2px 2px at 63% 95%, rgba(255,230,180,.90), transparent 60%),
+        radial-gradient(2px 2px at 72% 98%, rgba(255,120,60,.88), transparent 60%),
+        radial-gradient(2px 2px at 84% 94%, rgba(255,210,120,.92), transparent 60%),
+        radial-gradient(2px 2px at 92% 97%, rgba(255,150,80,.90), transparent 60%);
+      filter: blur(.2px);
+      animation: embersRise 3.6s linear infinite;
+    }
+
+    /* =====================
        MISSION FIXE EN HAUT
     ====================== */
     .missionPill{
@@ -168,20 +207,20 @@
     }
 
     /* =====================
-       ✅ TITRES FIXÉS + réglage hauteur
-       👉 Pour MONTER le titre : augmente bottom
+       TITRES + entrée (sécurisée)
     ====================== */
     .titleWrap{
-      position: fixed;              /* ✅ fixe */
+      position: fixed;
       left:50%;
       transform: translateX(-50%);
-      bottom: 180px;                 /* 🔼 augmente (ex: 95px / 110px) pour monter */
+      bottom: 180px;
       z-index: 8;
       width: min(980px, 92%);
       text-align:center;
       pointer-events:none;
     }
 
+    /* ✅ IMPORTANT: visibles même si l’animation est bloquée */
     .title{
       margin: 0;
       font-family:'Anton', sans-serif;
@@ -191,7 +230,7 @@
       letter-spacing: .016em;
       font-size: 120px;
 
-      opacity:1;                    /* ✅ fixé */
+      opacity:1;
       transform:none;
       filter:none;
 
@@ -199,6 +238,10 @@
         0 34px 110px rgba(0,0,0,.90),
         0 0 55px rgba(255,120,60,.28),
         0 0 55px rgba(80,170,255,.20);
+
+      /* ✅ entrée (ne casse pas l’affichage si bloquée) */
+      animation: titleEnter 1.05s cubic-bezier(.12,.98,.18,1) .25s both;
+      will-change: transform, opacity, filter;
     }
 
     .title span{
@@ -208,7 +251,10 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      animation: shine 2.2s ease .15s forwards;
+
+      animation:
+        shine 2.2s ease .65s forwards,
+        heatWobble 2.6s ease-in-out 1.1s infinite;
     }
 
     .subtitleBig{
@@ -219,15 +265,20 @@
       line-height: .90;
       letter-spacing: .010em;
       text-shadow: 0 28px 90px rgba(0,0,0,.86);
-      opacity:1;  
-      bottom:120px;	  /* ✅ fixe */
+
+      opacity:1;
+      transform:none;
+      filter:none;
+
+      animation: subtitleEnter .9s cubic-bezier(.12,.98,.18,1) .48s both;
+      will-change: transform, opacity, filter;
     }
 
     /* =====================
        BOUTON START (fixe)
     ====================== */
     .startBtn{
-      position: fixed;              /* ✅ fixe */
+      position: fixed;
       bottom: 90px;
       left:50%;
       transform:translateX(-50%);
@@ -259,7 +310,7 @@
        SLOGAN (fixe bas)
     ====================== */
     .slogan{
-      position: fixed;              /* ✅ fixe */
+      position: fixed;
       bottom:18px;
       left:50%;
       transform:translateX(-50%);
@@ -280,7 +331,7 @@
       backdrop-filter: blur(8px);
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
 
-      opacity:1;                    /* ✅ fixe */
+      opacity:1;
       pointer-events:none;
     }
 
@@ -359,14 +410,8 @@
        ANIMS
     ====================== */
     @keyframes shine{ to{ background-position:100% 0 } }
-    @keyframes glowPulse{
-      0%,100%{opacity:.78}
-      50%{opacity:1}
-    }
-    @keyframes fogMove{
-      0%,100%{transform:translateX(-1%)}
-      50%{transform:translateX(2%)}
-    }
+    @keyframes glowPulse{ 0%,100%{opacity:.78} 50%{opacity:1} }
+    @keyframes fogMove{ 0%,100%{transform:translateX(-1%)} 50%{transform:translateX(2%)} }
     @keyframes grain{
       0%{ transform: translate(0,0); }
       25%{ transform: translate(-2%,1%); }
@@ -374,20 +419,8 @@
       75%{ transform: translate(-1%,-1%); }
       100%{ transform: translate(0,0); }
     }
-    @keyframes lightning1{
-      0%,78%{opacity:0}
-      80%{opacity:.95}
-      83%{opacity:.10}
-      86%{opacity:.65}
-      100%{opacity:0}
-    }
-    @keyframes lightning2{
-      0%,64%{opacity:0}
-      66%{opacity:.90}
-      69%{opacity:.12}
-      72%{opacity:.62}
-      100%{opacity:0}
-    }
+    @keyframes lightning1{ 0%,78%{opacity:0} 80%{opacity:.95} 83%{opacity:.10} 86%{opacity:.65} 100%{opacity:0} }
+    @keyframes lightning2{ 0%,64%{opacity:0} 66%{opacity:.90} 69%{opacity:.12} 72%{opacity:.62} 100%{opacity:0} }
     @keyframes thunderWave{
       0%,78%{ opacity:0; transform: translateX(-50%) scale(.92); }
       80%{ opacity:.85; transform: translateX(-50%) scale(1.02); }
@@ -395,15 +428,20 @@
       86%{ opacity:.55; transform: translateX(-50%) scale(1.03); }
       100%{ opacity:0; transform: translateX(-50%) scale(1.00); }
     }
-    @keyframes thunderFlash{
-      0%,78%{ opacity:0; }
-      80%{ opacity:.92; }
-      82%{ opacity:.10; }
-      85%{ opacity:.68; }
-      100%{ opacity:0; }
-    }
+    @keyframes thunderFlash{ 0%,78%{ opacity:0; } 80%{ opacity:.92; } 82%{ opacity:.10; } 85%{ opacity:.68; } 100%{ opacity:0; } }
 
-    /* Responsive */
+    @keyframes titleEnter{
+      from{ opacity:0; transform: translateY(34px) scale(.96); filter: blur(12px); }
+      to{ opacity:1; transform: translateY(0) scale(1); filter: blur(0px); }
+    }
+    @keyframes subtitleEnter{
+      from{ opacity:0; transform: translateY(22px); filter: blur(10px); }
+      to{ opacity:1; transform: translateY(0); filter: blur(0px); }
+    }
+    @keyframes fireGlow{ 0%,100%{ opacity:.55; transform: translateY(0);} 50%{ opacity:.95; transform: translateY(-6px);} }
+    @keyframes embersRise{ 0%{ transform: translateY(12px); opacity:.20; } 30%{ opacity:.70; } 100%{ transform: translateY(-140px); opacity:0; } }
+    @keyframes heatWobble{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-1px);} }
+
     @media (max-width: 720px){
       .missionPill{ top: 10px; font-size:11px; padding:6px 12px; }
       .title{ font-size: 64px; }
@@ -411,20 +449,22 @@
       .startBtn{ bottom: 170px; }
       .titleWrap{ bottom: 78px; }
     }
+
+    @media (prefers-reduced-motion: reduce){
+      .glow,.fog,.lightning,.thunderWave,.thunderFlash,.grain,.fireGlow,.embers,
+      .title,.subtitleBig,.title span{ animation:none !important; }
+    }
   </style>
 </head>
 
 <body>
 <main class="scene">
 
-  <!-- ✅ FIXE EN HAUT -->
   <div class="missionPill">MISSION • PREMIERS SECOURS</div>
 
-  <!-- ✅ plus d'images bg1/bg2 -->
   <div class="grade" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
 
-  <!-- FX -->
   <div class="glow" aria-hidden="true"></div>
   <div class="fog" aria-hidden="true"></div>
   <div class="lightning flash1" aria-hidden="true"></div>
@@ -433,19 +473,19 @@
   <div class="thunderFlash" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- ✅ Titre rapproché du slogan -->
+  <!-- ✅ FEU -->
+  <div class="fireGlow" aria-hidden="true"></div>
+  <div class="embers" aria-hidden="true"></div>
+
   <section class="titleWrap" aria-label="Introduction du jeu">
     <h1 class="title"><span>URGENCES</span></h1>
     <div class="subtitleBig">AGIR POUR SAUVER</div>
   </section>
 
-  <!-- Start -->
   <button class="startBtn" id="startBtn">COMMENCER LA MISSION</button>
 
-  <!-- ✅ Slogan fixe -->
   <div class="slogan">CHAQUE SECONDE COMPTE — CHOISIS. AGIS. SAUVE.</div>
 
-  <!-- Cut -->
   <div class="cut" id="cut">
     <div class="cutText" id="cutText">MISSION EN COURS…</div>
     <div class="cutHint" id="cutHint">
@@ -464,7 +504,6 @@
 
   startBtn.addEventListener("click", ()=>{
     cut.classList.add("on");
-
     setTimeout(()=>{
       cutText.style.opacity = "0";
       cutText.style.pointerEvents = "none";
@@ -472,23 +511,12 @@
     }, 3000);
   });
 
-  continueBtn.addEventListener("click", ()=>{
-    // window.location.href = "index.html";
-  });
+  continueBtn.addEventListener("click", ()=>{});
 </script>
 
 <script>
   (function resetGameIfNewRun(){
-    const keys = [
-      "player_name",
-      "playerName",
-      "role",
-      "avatar",
-      "niveau",
-      "score",
-      "tentatives",
-      "badges"
-    ];
+    const keys = ["player_name","playerName","role","avatar","niveau","score","tentatives","badges"];
     keys.forEach(k => localStorage.removeItem(k));
     keys.forEach(k => sessionStorage.removeItem(k));
   })();
