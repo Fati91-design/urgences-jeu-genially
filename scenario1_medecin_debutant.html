@@ -1,4 +1,4 @@
-applique la même chose sur le code suivant (garde le code et tous ces éléments ) et réduit seulement les éléments pour qu'il seront adapter à genially : <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -21,6 +21,9 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       --blue: rgba(80,170,255,1);
       --ember: rgba(255,150,70,1);
       --ember2: rgba(255,120,50,1);
+
+      /* ✅ hauteur réservée pour la barre d’actions fixée */
+      --actionsH: 74px;
     }
 
     /* ✅ Genially anti-scroll */
@@ -48,6 +51,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       display:flex;
       flex-direction:column;
       gap: 12px;
+      position: relative;
     }
 
     /* ===== TOP TABS (référence) ===== */
@@ -60,7 +64,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
     }
     .levelTab{
       display:flex; align-items:center; gap: 10px;
-      padding: 10px 12px;
+      padding: 8px 10px;                 /* ✅ un peu plus compact */
       border-radius: 999px;
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
@@ -78,7 +82,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       opacity:.9;
     }
     .levelDot{
-      width: 12px; height: 12px; border-radius: 999px;
+      width: 11px; height: 11px; border-radius: 999px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       box-shadow: 0 0 0 5px rgba(255,150,70,.14);
       position:relative; z-index:2;
@@ -112,7 +116,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       transition: width .25s ease;
     }
     .miniHint{
-      padding: 10px 12px;
+      padding: 8px 10px;                 /* ✅ un peu plus compact */
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -132,7 +136,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 14px 16px;
+      padding: 12px 14px;               /* ✅ un peu plus compact */
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -153,17 +157,17 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
+    .profile{ display:flex; align-items:center; gap: 12px; min-width: 0; position: relative; z-index:2; }
 
     .avatarFrame{
-      width: 72px; height: 72px; border-radius: 20px; padding: 4px;
+      width: 66px; height: 66px; border-radius: 18px; padding: 4px; /* ✅ un peu plus petit */
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 16px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
@@ -173,14 +177,14 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
     }
 
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 20px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .pname{ font-weight: 950; font-size: 18px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
     .prole{ margin-top: 4px; font-weight: 850; font-size: 12px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
     .chip{
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
       border-radius: 999px;
-      padding: 9px 12px;
+      padding: 8px 10px;                /* ✅ compact */
       font-size: 12px;
       font-weight: 950;
       white-space: nowrap;
@@ -202,7 +206,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       display:flex;
       align-items:center;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 8px 10px;                /* ✅ compact */
       border-radius: 999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
@@ -211,7 +215,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       white-space: nowrap;
     }
 
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+    .timerPill{ padding: 7px 9px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
 
     .ring{
       width: 34px; height: 34px; border-radius: 999px;
@@ -243,7 +247,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
     }
 
     .stressWrap{
-      width: 200px; height: 10px; border-radius: 999px;
+      width: 190px; height: 10px; border-radius: 999px; /* ✅ légèrement réduit */
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -254,16 +258,19 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       transition: width .25s ease;
     }
 
-    /* ===== FRAME (avec options scroll) ===== */
+    /* ===== FRAME (taille fixe + scroll interne) ===== */
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 16px;
+
+      /* ✅ IMPORTANT: padding bas augmenté pour ne pas cacher le contenu sous la barre d’actions fixée */
+      padding: 14px 16px calc(var(--actionsH) + 14px);
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
+
       flex: 1;
       min-height: 0;
       display:flex;
@@ -279,8 +286,32 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+
+    /* ✅ titres légèrement réduits pour Genially */
+    .qtitle{
+      position: relative; z-index:2;
+      margin-top: 6px;
+      font-weight: 950;
+      font-size: clamp(16px, 2vw, 22px);
+      line-height: 1.2;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+
+    /* ✅ conteneur description “fixé” (scroll si long) */
+    .qdesc{
+      position: relative; z-index:2;
+      margin-top: 8px;
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 980px;
+      max-height: 110px;          /* ✅ fixe la zone description */
+      overflow: auto;             /* ✅ scroll si trop long */
+      padding-right: 6px;
+    }
+    .qdesc::-webkit-scrollbar{ width: 10px; }
+    .qdesc::-webkit-scrollbar-track{ background: rgba(255,255,255,.06); border-radius: 999px; }
+    .qdesc::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.18); border-radius: 999px; border: 2px solid rgba(0,0,0,0); background-clip: padding-box; }
 
     .options{
       position: relative;
@@ -288,7 +319,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       display:flex;
       flex-direction:column;
       gap: 12px;
-      margin-top: 14px;
+      margin-top: 12px;
       overflow:auto;
       padding-right: 6px;
       flex: 1;
@@ -302,7 +333,7 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
 
     .opt{
       border-radius: 14px;
-      padding: 13px 14px;
+      padding: 12px 13px;          /* ✅ compact */
       font-weight: 950;
       letter-spacing: .2px;
       cursor:pointer;
@@ -321,15 +352,21 @@ applique la même chose sur le code suivant (garde le code et tous ces élément
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
+    /* ✅ Actions fixées en bas (Valider + Corrigé toujours visibles) */
     .actions{
-      position: relative;
-      z-index:2;
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      width: min(1120px, calc(100% - 20px));
+      z-index: 25;
+
       display:flex;
       justify-content:space-between;
       gap: 10px;
-      margin-top: 14px;
       flex-wrap: wrap;
       align-items:center;
+
     }
     .actionsLeft, .actionsRight{
       display:flex;
@@ -891,13 +928,9 @@ function setRingProgress(){
 function stopTimer(){ clearInterval(timerId); timerId=null; }
 function startTimer(reset=true){
   stopTimer();
-
-  // ✅ reset=true : nouveau départ (nouvelle question / timeout)
-  // ✅ reset=false : reprendre au temps restant (après tentative ratée)
   if(reset || timeLeft <= 0){
     timeLeft = TIMER_SECONDS;
   }
-
   hudTime.textContent = String(timeLeft);
   setRingProgress();
 
@@ -919,7 +952,6 @@ function startTimer(reset=true){
       if(attemptsForCurrentQuestion >= 4){
         missionFail("⏱️ Temps écoulé (3 fois). Mission échouée. Retour au départ… (score remis à zéro)");
       }else{
-        // ✅ après timeout, on repart à TIMER_SECONDS (pas de reprise à 0)
         showOverlay(
           "warn",
           "⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/3)",
@@ -929,7 +961,6 @@ function startTimer(reset=true){
     }
   }, 1000);
 }
-
 
 /* ========= SELECTION STATE ========= */
 let selectedSingle = null;
@@ -1116,7 +1147,6 @@ function renderQuestion(i, resetAttempts=true){
     const note = document.createElement("div");
     note.className="pill";
     note.style.marginBottom="6px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
     optionsEl.appendChild(note);
 
     const list = document.createElement("div");
@@ -1191,7 +1221,6 @@ function renderQuestion(i, resetAttempts=true){
   setProgress();
   setMini();
   startTimer(true);
-
 }
 
 /* ========= Clear ========= */
@@ -1213,14 +1242,11 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail, resumeTime
 
   okBtn.style.display="none"; okBtn.onclick=null;
 
- retryBtn.onclick = ()=>{
-  hideOverlay();
-  locked = false;
-
-  // ✅ reprise exacte du chrono si resumeTimer=true
-  // ✅ reset chrono si resumeTimer=false (cas timeout par ex.)
-  startTimer(resumeTimer ? false : true);
-};
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    locked = false;
+    startTimer(resumeTimer ? false : true);
+  };
 
   nextBtn.onclick  = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
 
@@ -1232,18 +1258,12 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail, resumeTime
 }
 function hideOverlay(){ overlay.style.display="none"; }
 
-function missionFail(message){
-  stopTimer();
-  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
-  motion("critical");
-}
-
 function resetMission(showStart=true){
   stopTimer();
   idx=0;
   attemptsForCurrentQuestion=0;
-  setAttemptsUI();
 
+  setAttemptsUI();
   setScore(0);
   setStress(0);
 
@@ -1266,11 +1286,11 @@ function failedAttempt(baseMsg){
     missionFail(`❌ ${ATTEMPTS_MAX} tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)`);
     return;
   }
-showOverlay(
-  "warn",
-  `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`,
-  {allowRetry:true, allowNext:false, missionFail:false, resumeTimer:true}
-);
+  showOverlay(
+    "warn",
+    `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/3)`,
+    {allowRetry:true, allowNext:false, missionFail:false, resumeTimer:true}
+  );
 }
 
 function evaluateOption(opt){
@@ -1333,9 +1353,7 @@ validateBtn.onclick = ()=>{
   stopTimer();
   locked=true;
 
-  if(type==="single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="tf"){
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
@@ -1374,9 +1392,7 @@ validateBtn.onclick = ()=>{
     return;
   }
 
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
@@ -1479,10 +1495,7 @@ function buildAnswerKey(){
     </div>
   `;
 }
-function showKey(){
-  keyBody.innerHTML = buildAnswerKey();
-  keyOverlay.style.display="flex";
-}
+function showKey(){ keyBody.innerHTML = buildAnswerKey(); keyOverlay.style.display="flex"; }
 function hideKey(){ keyOverlay.style.display="none"; }
 showKeyBtn.onclick = ()=>{ sfxClick(); showKey(); };
 closeKeyBtn.onclick = ()=>{ sfxClick(); hideKey(); };
@@ -1502,18 +1515,10 @@ function computeHintForQuestion(q){
     const list = q.options.filter(o=>o.correct).map(o=>`• ${escapeHtml(o.text)}`).join("<br>");
     return `Indice : il y a <b>${q.options.filter(o=>o.correct).length}</b> bonnes propositions.<br>${list}`;
   }
-  if(q.type==="short"){
-    return `Indice : c’est un numéro à <b>3 chiffres</b>.`;
-  }
-  if(q.type==="drag_order"){
-    return `Indice : commence par <b>identifier</b> la gravité, puis positionner le patient, puis les gestes.`;
-  }
-  if(q.type==="cloze"){
-    return `Indice : le mot attendu décrit une <b>gêne</b> dans le passage de l’air.`;
-  }
-  if(q.type==="hotspot"){
-    return `Indice : pense à la <b>zone</b> où l’air passe quand on s’étouffe.`;
-  }
+  if(q.type==="short"){ return `Indice : c’est un numéro à <b>3 chiffres</b>.`; }
+  if(q.type==="drag_order"){ return `Indice : commence par <b>identifier</b> la gravité, puis positionner le patient, puis les gestes.`; }
+  if(q.type==="cloze"){ return `Indice : le mot attendu décrit une <b>gêne</b> dans le passage de l’air.`; }
+  if(q.type==="hotspot"){ return `Indice : pense à la <b>zone</b> où l’air passe quand on s’étouffe.`; }
   return "Indice indisponible.";
 }
 function showHint(){
@@ -1525,7 +1530,6 @@ function showHint(){
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   setMini();
 
-  // Pause chrono
   const wasLocked = locked;
   locked = true;
 
@@ -1535,20 +1539,13 @@ function showHint(){
   const resume = ()=>{
     hintOverlay.style.display="none";
     locked = wasLocked ? true : false;
-    // reprendre le timer sans reset : on relance un startTimer (référence = pause)
-    // Ici on garde simple : on relance le timer à plein uniquement si timerId était arrêté.
-    // Mais on était en cours, donc on continue : on ne touche pas timeLeft, on redémarre l'interval.
-    if(!timerId){
-      startTimer();
-    }else{
-      locked = false;
-    }
+    if(!timerId){ startTimer(); }
+    else{ locked = false; }
   };
 
   resumeHintBtn.onclick = ()=>{ sfxClick(); resume(); };
   closeHintBtn.onclick = ()=>{ sfxClick(); resume(); };
 
-  // désactiver si plus d'indices
   hintBtn.disabled = (hintsLeft<=0);
 }
 function hideHint(){ hintOverlay.style.display="none"; }
@@ -1561,9 +1558,7 @@ function showPause(){
   locked = true;
   pauseOverlay.style.display="flex";
 }
-function hidePause(){
-  pauseOverlay.style.display="none";
-}
+function hidePause(){ pauseOverlay.style.display="none"; }
 function resumePause(){
   if(!paused) return;
   paused = false;
@@ -1576,7 +1571,6 @@ closePauseBtn.onclick = ()=>{ sfxClick(); resumePause(); };
 
 /* ========= Fin scénario (référence) ========= */
 function computeBadgeType(sc){
-  // règle simple (référence) : Or >= 90 ; Argent >= 70 ; sinon Bronze
   if(sc >= 90) return {type:"OR", img:"or.png"};
   if(sc >= 70) return {type:"ARGENT", img:"argent.png"};
   return {type:"BRONZE", img:"bronze.png"};
@@ -1623,13 +1617,11 @@ function endScenario(){
     </div>
   `;
 
-  // ✅ verrouiller actions
   validateBtn.disabled = true;
   clearBtn.style.display = "none";
   hintBtn.disabled = true;
   pauseBtn.disabled = true;
 
-  // ✅ activer Corrigé + afficher Terminer
   showKeyBtn.disabled = false;
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
@@ -1649,11 +1641,17 @@ function motion(type){
   else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
 }
 
+/* ========= Mission fail ========= */
+function missionFail(message){
+  stopTimer();
+  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
+  motion("critical");
+}
+
 /* ========= Start ========= */
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // ✅ reset mission au démarrage (référence)
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress = 0; score = 0;
@@ -1671,16 +1669,6 @@ startBtn.addEventListener("click", ()=>{
   locked=false;
   renderQuestion(0, true);
 });
-
-/* ========= Mission fail ========= */
-function missionFail(message){
-  stopTimer();
-  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
-  motion("critical");
-}
-
-/* ========= Progress next ========= */
-nextBtn.onclick = ()=>{ hideOverlay(); idx++; if(idx < TOTAL) renderQuestion(idx,true); else endScenario(); };
 
 /* ========= Init ========= */
 (function init(){
