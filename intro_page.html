@@ -223,6 +223,7 @@
     /* ✅ IMPORTANT: visibles même si l’animation est bloquée */
     .title{
       margin: 0;
+      note: 0;
       font-family:'Anton', sans-serif;
       font-weight: 500;
       text-transform:uppercase;
@@ -502,13 +503,16 @@
   const cutText = document.getElementById("cutText");
   const continueBtn = document.getElementById("continueBtn");
 
+  /* ✅ AJUSTE ICI la durée du “téléchargement” (ms) */
+  const LOADING_MS = 2500; // ex: 2000, 3000, 4500...
+
   startBtn.addEventListener("click", ()=>{
     cut.classList.add("on");
     setTimeout(()=>{
       cutText.style.opacity = "0";
       cutText.style.pointerEvents = "none";
       cut.classList.add("showHint");
-    }, 300);
+    }, LOADING_MS);
   });
 
   continueBtn.addEventListener("click", ()=>{});
