@@ -597,7 +597,7 @@
     }
     .imgPic{
       width:100%;
-      height:220px; /* référence */
+      height:220px;
       aspect-ratio:4/3;
       object-fit:cover;
       display:block;
@@ -959,23 +959,136 @@ let paused = false;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
 
-/* ========= QUESTIONS (prises du code fourni) ========= */
-const questions = [{"type": "single", "title": "Triage & coordination", "desc": "En tant que pompier, quelle est la **priorité** juste après sécurisation ?", "options": [{"text": "Évacuer la victime vers une zone sûre", "kind": "ok", "fb": "✅ Oui : mise en sécurité avant les soins prolongés."}, {"text": "Chercher une pommade", "kind": "wrong", "fb": "❌ Non : pas prioritaire."}, {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non : risque de vomissement/complications."}, {"text": "Percer les cloques", "kind": "wrong", "fb": "❌ Non : risque infectieux."}]}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon refroidissement** d’une brûlure ?", "options": [{"label": "A", "caption": "Eau glacée / glaçons", "kind": "wrong", "fb": "❌ Non : le froid intense peut aggraver.", "imgSrc": "assets/burn_a.png"}, {"label": "B", "caption": "Eau du robinet (fraîche)", "kind": "ok", "fb": "✅ Oui : eau courante fraîche.", "imgSrc": "assets/burn_b.png"}, {"label": "C", "caption": "Beurre / dentifrice", "kind": "critical", "fb": "🚨 Erreur critique : à éviter.", "pts": -10, "imgSrc": "assets/burn_c.png"}]}, {"type": "single", "title": "Estimation de surface", "desc": "La paume de la victime représente environ :", "options": [{"text": "1 %", "kind": "ok", "fb": "✅ Correct : repère rapide pour estimer la surface brûlée."}, {"text": "5 %", "kind": "wrong", "fb": "❌ Trop élevé : surestime la surface."}, {"text": "10 %", "kind": "wrong", "fb": "❌ Beaucoup trop élevé."}, {"text": "0,1 %", "kind": "wrong", "fb": "❌ Trop faible : sous-estime."}]}, {"type": "cloze", "title": "Repères", "desc": "15 et 1", "template": "<b>{blank1}</b> min / <b>{blank2}</b> %", "blanks": [{"key": "blank1", "answer": "15"}, {"key": "blank2", "answer": "1"}], "okFb": "✅ Correct : 15 min de refroidissement ; paume ≈ 1%.", "badFb": "❌ Attendu : 15 et 1."}, {"type": "multi", "title": "Actions", "desc": "Choisir", "options": [{"text": "Refroidir", "correct": true}, {"text": "Arracher tissu", "correct": false}], "okFb": "✅ Correct : refroidir oui, arracher un tissu collé non (aggrave la lésion).", "badFb": "❌ Incorrect : ne jamais arracher un tissu collé."}, {"type": "drag_order", "title": "Ordonner les étapes", "desc": "Glisse les actions dans l’ordre logique.", "items": [{"id": "remove", "text": "Retirer bagues/bijoux (si possible)"}, {"id": "cool", "text": "Refroidir sous eau courante"}, {"id": "protect", "text": "Protéger (compresse propre / film)"}, {"id": "pain", "text": "Surveiller douleur / état général"}, {"id": "call", "text": "Alerter si critères de gravité"}], "expected": ["remove", "cool", "protect", "pain", "call"], "okFb": "✅ Très bien.", "badFb": "❌ Revois l’ordre."}, {"type": "single", "title": "Piège (intermédiaire)", "desc": "Quelle action est une **erreur** fréquente ?", "options": [{"text": "Mettre une crème avant refroidissement", "kind": "ok", "fb": "🚨 Exact : cela enferme la chaleur."}, {"text": "Refroidir puis protéger", "kind": "wrong", "fb": "✅ Bon geste."}, {"text": "Retirer bijoux si possible", "kind": "wrong", "fb": "✅ Bon geste."}, {"text": "Couvrir avec compresse propre", "kind": "wrong", "fb": "✅ Bon geste."}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Localiser la brûlure", "desc": "", "imgSrc": "scenario_2_hotspot.png", "hotspots": [{"label": "ok", "x": 38, "y": 25, "w": 28, "h": 26, "kind": "ok", "fb": "✅ Correct.", "pts": 10}, {"label": "ko", "x": 12, "y": 12, "w": 22, "h": 22, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}, {"label": "ko", "x": 62, "y": 70, "w": 22, "h": 22, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}]}, {"type": "multi", "title": "Critères d’évacuation (choix multiple)", "desc": "Coche les situations qui imposent une évacuation/alerte rapide.", "options": [{"text": "Atteinte du visage / cou", "correct": true}, {"text": "Brûlure chimique ou électrique", "correct": true}, {"text": "Petite rougeur superficielle localisée", "correct": false}, {"text": "Brûlure étendue ou profonde", "correct": true}], "okFb": "✅ Correct : ces critères définissent une brûlure potentiellement grave.", "badFb": "❌ Incorrect : tu as coché un cas non grave ou oublié un critère de gravité."}, {"type": "tf", "title": "Transport", "desc": "Vrai ou faux : une brûlure grave doit être évacuée vers une structure hospitalière / spécialisée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai : brûlure grave = évacuation médicale."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux : retarder l’évacuation met la victime en danger."}}}];
+/* ========= QUESTIONS (DU CODE FOURNI) ========= */
+const questions = [
+  {
+    "type": "single",
+    "title": "Triage & coordination",
+    "desc": "En tant que pompier, quelle est la **priorité** juste après sécurisation ?",
+    "options": [
+      {"text": "Évacuer la victime vers une zone sûre", "kind": "ok", "fb": "✅ Oui : mise en sécurité avant les soins prolongés."},
+      {"text": "Chercher une pommade", "kind": "wrong", "fb": "❌ Non : pas prioritaire."},
+      {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non : risque de vomissement/complications."},
+      {"text": "Percer les cloques", "kind": "wrong", "fb": "❌ Non : risque infectieux."}
+    ]
+  },
+  {
+    "type": "image_single",
+    "title": "Choix de l’image",
+    "desc": "Quel visuel correspond au **bon refroidissement** d’une brûlure ?",
+    "options": [
+      {"label":"A","caption":"Eau glacée / glaçons","kind":"wrong","fb":"❌ Non : le froid intense peut aggraver.","imgSrc":"assets/burn_a.png"},
+      {"label":"B","caption":"Eau du robinet (fraîche)","kind":"ok","fb":"✅ Oui : eau courante fraîche.","imgSrc":"assets/burn_b.png"},
+      {"label":"C","caption":"Beurre / dentifrice","kind":"critical","fb":"🚨 Erreur critique : à éviter.","pts":-10,"imgSrc":"assets/burn_c.png"}
+    ]
+  },
+  {
+    "type":"single",
+    "title":"Estimation de surface",
+    "desc":"La paume de la victime représente environ :",
+    "options":[
+      {"text":"1 %","kind":"ok","fb":"✅ Correct : repère rapide pour estimer la surface brûlée."},
+      {"text":"5 %","kind":"wrong","fb":"❌ Trop élevé : surestime la surface."},
+      {"text":"10 %","kind":"wrong","fb":"❌ Beaucoup trop élevé."},
+      {"text":"0,1 %","kind":"wrong","fb":"❌ Trop faible : sous-estime."}
+    ]
+  },
+  {
+    "type":"cloze",
+    "title":"Repères",
+    "desc":"15 et 1",
+    "template":"<b>{blank1}</b> min / <b>{blank2}</b> %",
+    "blanks":[{"key":"blank1","answer":"15"},{"key":"blank2","answer":"1"}],
+    "okFb":"✅ Correct : 15 min de refroidissement ; paume ≈ 1%.",
+    "badFb":"❌ Attendu : 15 et 1."
+  },
+  {
+    "type":"multi",
+    "title":"Actions",
+    "desc":"Choisir",
+    "options":[
+      {"text":"Refroidir","correct":true},
+      {"text":"Arracher tissu","correct":false}
+    ],
+    "okFb":"✅ Correct : refroidir oui, arracher un tissu collé non (aggrave la lésion).",
+    "badFb":"❌ Incorrect : ne jamais arracher un tissu collé."
+  },
+  {
+    "type":"drag_order",
+    "title":"Ordonner les étapes",
+    "desc":"Glisse les actions dans l’ordre logique.",
+    "items":[
+      {"id":"remove","text":"Retirer bagues/bijoux (si possible)"},
+      {"id":"cool","text":"Refroidir sous eau courante"},
+      {"id":"protect","text":"Protéger (compresse propre / film)"},
+      {"id":"pain","text":"Surveiller douleur / état général"},
+      {"id":"call","text":"Alerter si critères de gravité"}
+    ],
+    "expected":["remove","cool","protect","pain","call"],
+    "okFb":"✅ Très bien.",
+    "badFb":"❌ Revois l’ordre."
+  },
+  {
+    "type":"single",
+    "title":"Piège (intermédiaire)",
+    "desc":"Quelle action est une **erreur** fréquente ?",
+    "options":[
+      {"text":"Mettre une crème avant refroidissement","kind":"ok","fb":"🚨 Exact : cela enferme la chaleur."},
+      {"text":"Refroidir puis protéger","kind":"wrong","fb":"✅ Bon geste."},
+      {"text":"Retirer bijoux si possible","kind":"wrong","fb":"✅ Bon geste."},
+      {"text":"Couvrir avec compresse propre","kind":"wrong","fb":"✅ Bon geste."}
+    ]
+  },
+  {
+    "type":"hotspot",
+    "gate":true,
+    "title":"Hotspot — Localiser la brûlure",
+    "desc":"",
+    "imgSrc":"scenario_2_hotspot.png",
+    "hotspots":[
+      {"label":"ok","x":38,"y":25,"w":28,"h":26,"kind":"ok","fb":"✅ Correct.","pts":10},
+      {"label":"ko","x":12,"y":12,"w":22,"h":22,"kind":"wrong","fb":"❌ Faux.","pts":-2},
+      {"label":"ko","x":62,"y":70,"w":22,"h":22,"kind":"wrong","fb":"❌ Faux.","pts":-2}
+    ]
+  },
+  {
+    "type":"multi",
+    "title":"Critères d’évacuation (choix multiple)",
+    "desc":"Coche les situations qui imposent une évacuation/alerte rapide.",
+    "options":[
+      {"text":"Atteinte du visage / cou","correct":true},
+      {"text":"Brûlure chimique ou électrique","correct":true},
+      {"text":"Petite rougeur superficielle localisée","correct":false},
+      {"text":"Brûlure étendue ou profonde","correct":true}
+    ],
+    "okFb":"✅ Correct : ces critères définissent une brûlure potentiellement grave.",
+    "badFb":"❌ Incorrect : tu as coché un cas non grave ou oublié un critère de gravité."
+  },
+  {
+    "type":"tf",
+    "title":"Transport",
+    "desc":"Vrai ou faux : une brûlure grave doit être évacuée vers une structure hospitalière / spécialisée.",
+    "tf":{
+      "trueOpt":{"kind":"ok","fb":"✅ Vrai : brûlure grave = évacuation médicale."},
+      "falseOpt":{"kind":"wrong","fb":"❌ Faux : retarder l’évacuation met la victime en danger."}
+    }
+  }
+];
 
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
-/* ====== Hints text (1 indice max / question) ====== */
+/* ====== Indices (2 total / 1 par question) ====== */
 const hintsTextByIndex = [
-  "Pense au triage : après sécurisation, on éloigne la victime du danger avant tout.",
-  "Le refroidissement recommandé = eau courante fraîche (pas glacée) pendant plusieurs minutes.",
-  "La paume de la main de la victime est un repère rapide standard pour estimer une surface.",
-  "Deux valeurs-clés : durée du refroidissement et % approximatif de la paume.",
-  "Coche uniquement ce qui aide et évite ce qui arrache la peau / textile collé.",
-  "Ordre logique : retirer ce qui serre, refroidir, protéger, surveiller, alerter si grave.",
-  "Ne mets rien qui enferme la chaleur AVANT d’avoir refroidi.",
-  "Choisis la zone correspondant à la brûlure sur l’image, pas un autre endroit.",
-  "Visage/cou, chimique/électrique, étendue/profonde = gravité → alerte/évacuation.",
+  "Après sécurisation : priorité = mise en sécurité/évacuation vers zone sûre.",
+  "Refroidissement recommandé : eau courante fraîche (pas glace) plusieurs minutes.",
+  "Repère standard : la paume ≈ 1% de surface corporelle.",
+  "Deux valeurs-clés : 15 min et 1%.",
+  "Choisis les actions utiles et évite tout ce qui arrache le tissu/peau.",
+  "Ordre logique : retirer bijoux → refroidir → protéger → surveiller → alerter si gravité.",
+  "Erreur fréquente : crème avant refroidissement (elle enferme la chaleur).",
+  "Clique la zone exacte de la brûlure sur l’image.",
+  "Gravité : visage/cou, chimique/électrique, étendue/profonde = évacuation/alerte.",
   "Brûlure grave = évacuation médicale (Vrai)."
 ];
 
@@ -1150,25 +1263,6 @@ function renderQuestion(i, resetAttempts=true){
     });
   }
 
-  if(type === "short"){
-    clearBtn.style.display = "inline-block";
-    const box = document.createElement("div");
-    box.className="opt";
-    box.style.cursor="default";
-    box.innerHTML = `
-      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
-      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
-        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
-      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
-    `;
-    optionsEl.appendChild(box);
-    const inp = box.querySelector("#shortInput");
-    inp.addEventListener("input", ()=>{
-      inputValue = inp.value;
-      validateBtn.disabled = (inp.value.trim().length === 0);
-    });
-  }
-
   if(type === "cloze"){
     clearBtn.style.display = "inline-block";
     const box = document.createElement("div");
@@ -1300,7 +1394,7 @@ function renderQuestion(i, resetAttempts=true){
     wrap.appendChild(zones);
 
     selectedSingle = null;
-    validateBtn.disabled = false; // autorisé, mais on contrôlera la sélection au validate
+    validateBtn.disabled = false;
 
     (q.hotspots||[]).forEach((h, hi)=>{
       const z = document.createElement("button");
@@ -1324,7 +1418,7 @@ function renderQuestion(i, resetAttempts=true){
   hudQnum.textContent = String(i+1);
   setProgress();
 
-  validateBtn.disabled = (type !== "drag_order"); // drag_order peut être validé direct
+  validateBtn.disabled = (type === "drag_order") ? false : true;
   startTimer(true);
 }
 
@@ -1342,7 +1436,6 @@ function showFeedback(kind, text, {allowRetry, allowNext, missionFail}){
 
   retryBtn.style.display = allowRetry ? "inline-block" : "none";
   nextBtn.style.display  = allowNext  ? "inline-block" : "none";
-  nextBtn.classList.toggle("show", !!allowNext);
 
   okBtn.style.display = "none";
   okBtn.onclick = null;
@@ -1394,12 +1487,8 @@ closeHintBtn.onclick = ()=>{
 };
 
 /* ========= Pause overlay ========= */
-function showPause(){
-  pauseOverlay.style.display = "flex";
-}
-function hidePause(){
-  pauseOverlay.style.display = "none";
-}
+function showPause(){ pauseOverlay.style.display = "flex"; }
+function hidePause(){ pauseOverlay.style.display = "none"; }
 resumeBtn.onclick = ()=>{
   hidePause();
   paused = false;
@@ -1422,6 +1511,7 @@ function registerFailedAttempt(baseMsg){
   attemptsForCurrentQuestion++;
   setAttemptsUI();
 
+  // 2 tentatives max => 2e erreur/timeout => fail
   if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
     sfxAlarmLong();
     missionFail(`❌ ${baseMsg} Deux échecs (erreurs/timeouts). Mission échouée. Retour au départ… (score & stress remis à zéro)`);
@@ -1446,11 +1536,9 @@ function resetMission(showStart=true){
   locked = true;
   paused = false;
 
-  // reset score/stress
   setScore(0);
   setStress(0);
 
-  // reset hints
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   setHintsUI();
@@ -1477,14 +1565,6 @@ function evaluateOption(opt){
     sfxCritical();
     motion("critical");
     registerFailedAttempt(opt.fb || "🚨 Erreur critique.");
-    return;
-  }
-  if(opt.kind === "partial"){
-    addStress(STRESS_RULES.wrong);
-    addScore(opt.pts ?? 3);
-    sfxWrong();
-    motion("wrong");
-    registerFailedAttempt(opt.fb || "🟡 Partiel.");
     return;
   }
   addStress(STRESS_RULES.wrong);
@@ -1527,12 +1607,6 @@ validateBtn.onclick = ()=>{
       return;
     }
   }
-  if(type==="short"){
-    if((inputValue||"").trim().length === 0){
-      needSelection("Écris une réponse avant de valider.");
-      return;
-    }
-  }
   if(type==="cloze"){
     const filled = q.blanks.every(b => ((clozeValues[b.key]||"").trim().length>0));
     if(!filled){
@@ -1567,18 +1641,11 @@ validateBtn.onclick = ()=>{
       startTimer(false);
       return;
     }
-    // hotspot scoring follows its pts/kind
     if(h.kind==="ok"){
       addScore(h.pts ?? 10);
       sfxCorrect();
       motion("good");
       showFeedback("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-    }else if(h.kind==="critical"){
-      addStress(STRESS_RULES.critical);
-      addScore(h.pts ?? -10);
-      sfxCritical();
-      motion("critical");
-      registerFailedAttempt(h.fb || "🚨 Erreur critique.");
     }else{
       addStress(STRESS_RULES.wrong);
       addScore(h.pts ?? 0);
@@ -1649,18 +1716,17 @@ hintBtn.onclick = ()=>{
   if(hintUsedThisQuestion) return;
 
   sfxClick();
-  // consume hint
+
   hintsLeft = clamp(hintsLeft - 1, 0, HINT_MAX);
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   hintUsedThisQuestion = true;
   setHintsUI();
 
-  // pause timer + show hint
   paused = true;
   locked = true;
   stopTimer();
 
-  const h = hintsTextByIndex[idx] || "Réfléchis au protocole : refroidir, protéger, alerter si gravité.";
+  const h = hintsTextByIndex[idx] || "Protocole brûlure : refroidir, protéger, alerter si gravité.";
   showHint(h);
 };
 
@@ -1685,8 +1751,6 @@ function buildAnswerKey(){
       ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
       ans = q.options.filter(o=>o.correct).map(o=>o.text).join(" ; ");
-    }else if(q.type==="short"){
-      ans = (q.answers||[]).join(" / ");
     }else if(q.type==="drag_order"){
       const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
       ans = q.expected.map(id=>map[id]).join(" → ");
@@ -1732,9 +1796,7 @@ showKeyBtn.onclick = ()=>{
   keyBody.innerHTML = buildAnswerKey();
   keyOverlay.style.display = "flex";
 };
-closeKeyBtn.onclick = ()=>{
-  keyOverlay.style.display = "none";
-};
+closeKeyBtn.onclick = ()=>{ keyOverlay.style.display = "none"; };
 
 /* ========= Badge save ========= */
 function computeBadge(percent){
@@ -1743,20 +1805,9 @@ function computeBadge(percent){
   return {type:"BRONZE", img:"assets/bronze.png"};
 }
 function saveBadge({scenarioId, mission, niveau, badgeType, badgeName, score, img}){
-  const payload = {
-    scenarioId,
-    mission,
-    niveau,
-    badgeType,
-    badgeName,
-    score,
-    img,
-    ts: new Date().toISOString()
-  };
-
+  const payload = { scenarioId, mission, niveau, badgeType, badgeName, score, img, ts: new Date().toISOString() };
   const key = `badge_s${scenarioId}_${niveau}`;
   localStorage.setItem(key, JSON.stringify(payload));
-
   const histKey = "badges_history";
   let hist = [];
   try{ hist = JSON.parse(localStorage.getItem(histKey) || "[]"); }catch(e){ hist = []; }
@@ -1772,14 +1823,12 @@ function endScenario(){
   locked = true;
   paused = false;
 
-  // disable gameplay buttons
   validateBtn.disabled = true;
   clearBtn.style.display = "none";
   hintBtn.disabled = true;
   pauseBtn.disabled = true;
 
-  // compute percent (base 10 pts per question)
-  const maxScore = TOTAL * 10;
+  const maxScore = TOTAL * 10;  // référence
   const percent = clamp(Math.round((score / maxScore) * 100), 0, 100);
   const badge = computeBadge(percent);
 
@@ -1794,11 +1843,8 @@ function endScenario(){
     img: badge.img
   });
 
-  // unlock key + show end
   showKeyBtn.disabled = false;
   endBtn.style.display = "inline-block";
-
-  setProgress();
   progressBar.style.width = "100%";
 
   sfxVictory();
@@ -1834,23 +1880,18 @@ function endScenario(){
 }
 
 /* ========= Terminer ========= */
-endBtn.onclick = ()=>{
-  sfxClick();
-  window.location.href = NEXT_SCENARIO_URL;
-};
+endBtn.onclick = ()=>{ sfxClick(); window.location.href = NEXT_SCENARIO_URL; };
 
 /* ========= Start ========= */
 startBtn.addEventListener("click", async ()=>{
   ensureAudio();
   sfxClick();
 
-  // reset run state (référence)
   localStorage.setItem("score","0");
   localStorage.setItem("stress","0");
   setScore(0);
   setStress(0);
 
-  // reset hints for a fresh mission (intermédiaire)
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
 
@@ -1886,10 +1927,11 @@ startBtn.addEventListener("click", async ()=>{
   setProgress();
   setHintsUI();
 
-  // Key overlay close
   keyOverlay.style.display = "none";
 })();
   </script>
-  <script src="badge-manager.js"></script> 
+
+  <!-- si tu utilises ton badge-manager externe, laisse-le -->
+  <script src="badge-manager.js"></script>
 </body>
 </html>
