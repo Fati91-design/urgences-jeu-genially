@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 2 — Brûlure — Intermédiaire</title>
+  <title>Scénario 2 — Brûlure — Niveau intermédiaire</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --glass: rgba(25,27,31,.72);
-      --glass2: rgba(15,17,20,.55);
+      --glass: rgba(25, 27, 31, .72);
+      --glass2: rgba(15, 17, 20, .55);
+
       --text: rgba(255,255,255,.93);
       --muted: rgba(255,255,255,.70);
 
@@ -22,197 +23,108 @@
       --ember2: rgba(255,120,50,1);
     }
 
-    *{ box-sizing:border-box; }
+    *{ box-sizing: border-box; }
+
+    /* ✅ Style Référence (Genially anti-scroll + layout fixe) */
     html,body{
       height:100%;
       margin:0;
-      background: transparent; /* Genially */
-      overflow:hidden;         /* anti-scroll Genially */
+      background: transparent;
+      overflow:hidden;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
-    /* ====== Genially stage ====== */
     .stage{
-      height:100vh;
-      padding:10px;
+      height: 100vh;
+      padding: 10px;
       overflow:hidden;
       display:flex;
       justify-content:center;
       align-items:flex-start;
     }
     .wrap{
-      width:min(1650px,100%);
-      height:100%;
+      width: min(1120px, 100%);
+      height: 100%;
       display:flex;
       flex-direction:column;
-      gap:12px;
-      min-height:0;
+      gap: 12px;
+      min-height: 0;
     }
 
-    /* ====== Top tabs ====== */
-    .topTabs{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
+    .hud{
+      display:grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 12px;
+      min-height: 0;
     }
-    .levelTab{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
+
+    .hudbox{
       background: var(--glass);
-      border:1px solid rgba(255,200,150,.22);
-      box-shadow: 0 18px 55px rgba(0,0,0,.40);
-      backdrop-filter: blur(12px);
-      position:relative;
+      border: 1px solid rgba(255, 200, 150, .22);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      position: relative;
       overflow:hidden;
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      min-height: 90px;
     }
-    .levelTab::after{
+    .hudbox::after{
       content:"";
-      position:absolute; inset:-2px;
+      position:absolute;
+      inset:-2px;
       pointer-events:none;
       background:
         radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
         radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
       opacity:.9;
     }
-    .levelDot{
-      width:12px; height:12px; border-radius:999px;
-      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
-      box-shadow:0 0 0 6px rgba(255,150,70,.12);
-      position:relative; z-index:2;
-    }
-    .levelTabText{
-      font-weight:950;
-      letter-spacing:.2px;
-      position:relative; z-index:2;
-      white-space:nowrap;
-    }
 
-    .progressShell{
-      flex:1 1 220px;
-      min-width:220px;
-      height:10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-      position:relative;
-      box-shadow: 0 18px 55px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-    }
-    .progressBar{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background: linear-gradient(90deg, rgba(255,176,90,1), rgba(255,120,50,1), rgba(80,170,255,.90));
-      transition: width .25s ease;
-    }
+    .profile{ display:flex; align-items:center; gap: 12px; min-width: 0; position: relative; z-index:2; }
 
-    .miniHint{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      background: var(--glass);
-      border:1px solid rgba(255,200,150,.22);
-      box-shadow: 0 18px 55px rgba(0,0,0,.40);
-      backdrop-filter: blur(12px);
-      font-weight:950;
-      font-size:12px;
-      color: rgba(255,255,255,.88);
-      position:relative;
-      overflow:hidden;
-    }
-    .miniHint::after{
-      content:"";
-      position:absolute; inset:-2px;
-      pointer-events:none;
-      background:
-        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.16), transparent 60%),
-        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
-      opacity:.9;
-    }
-    .miniHint span{ position:relative; z-index:2; white-space:nowrap; }
-
-    /* ====== HUD ====== */
-    .hud{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .hudbox{
-      background: var(--glass);
-      border:1px solid rgba(255,200,150,.22);
-      border-radius:18px;
-      padding:14px 16px;
-      min-height:92px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      position:relative;
-      overflow:hidden;
-      box-shadow: 0 18px 65px rgba(0,0,0,.45);
-      backdrop-filter: blur(12px);
-    }
-    .hudbox::after{
-      content:"";
-      position:absolute; inset:-2px;
-      pointer-events:none;
-      background:
-        radial-gradient(520px 200px at 18% 0%, rgba(255,150,70,.18), transparent 60%),
-        radial-gradient(680px 260px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
-      opacity:.9;
-    }
-
-    .profile{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      min-width:0;
-      position:relative; z-index:2;
-    }
+    /* ✅ Référence 1120px : avatar 72 */
     .avatarFrame{
-      width:92px; height:92px;
-      border-radius:24px;
-      padding:4px;
+      width: 72px; height: 72px;
+      border-radius: 20px;
+      padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
-      flex:0 0 auto;
+      flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.12);
-      object-fit:cover;
-      object-position:50% 6%;
-      transform: scale(1.35);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      object-fit: cover;
+      object-position: 50% 6%;
+      transform: scale(1.25);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
+
     .ptext{ min-width:0; }
     .pname{
-      font-weight:950;
-      font-size:22px;
-      line-height:1.05;
-      white-space:nowrap;
+      font-weight: 950;
+      font-size: 18px;
+      line-height: 1.05;
+      white-space: nowrap;
       overflow:hidden;
-      text-overflow:ellipsis;
+      text-overflow: ellipsis;
       text-shadow: 0 14px 30px rgba(0,0,0,.55);
     }
     .prole{
-      margin-top:4px;
-      font-weight:850;
-      font-size:13px;
+      margin-top: 4px;
+      font-weight: 850;
+      font-size: 12px;
       color: var(--muted);
-      white-space:nowrap;
+      white-space: nowrap;
       overflow:hidden;
-      text-overflow:ellipsis;
+      text-overflow: ellipsis;
     }
 
     .chip{
@@ -223,50 +135,52 @@
       font-size: 12px;
       font-weight: 950;
       white-space: nowrap;
-      position:relative; z-index:2;
+      position: relative;
+      z-index:2;
     }
 
-    .stats{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:12px;
-      flex-wrap:wrap;
-      position:relative; z-index:2;
-    }
+    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 10px; flex-wrap: wrap; position: relative; z-index:2; }
+
     .pill{
       display:flex;
       align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
       background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:950;
-      font-size:13px;
-      white-space:nowrap;
+      border: 1px solid rgba(255,255,255,.10);
+      font-weight: 950;
+      font-size: 13px;
+      white-space: nowrap;
     }
 
-    /* Timer */
-    .timerPill{ padding:8px 10px; gap:10px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
+    .timerPill{
+      padding: 8px 10px;
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+
+    /* ✅ Référence 1120px : ring 34 / inner 24 */
     .ring{
-      width:40px; height:40px; border-radius:999px;
+      width: 34px; height: 34px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width:28px; height:28px; border-radius:999px;
+      width: 24px; height: 24px; border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size:14px; font-weight:950;
+      font-size: 13px; font-weight: 950;
     }
-    .timeText{ display:flex; align-items:center; gap:8px; }
-    .timeText .label{ font-size:12px; font-weight:900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size:16px; font-weight:950; }
+
+    .timeText{ display:flex; align-items:center; gap: 8px; }
+    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 16px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -277,127 +191,107 @@
       box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
     }
 
-    /* Stress */
+    /* ✅ Référence 1120px : stress 200x10 */
     .stressWrap{
-      width:240px; height:12px;
-      border-radius:999px;
+      width: 200px; height: 10px; border-radius: 999px;
       background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
     }
     .stressBar{
-      height:100%;
-      width:0%;
+      height:100%; width:0%;
       background: linear-gradient(90deg, rgba(45,200,120,.95), rgba(255,200,80,.95), rgba(255,70,70,.95));
       transition: width .25s ease;
     }
 
-    /* ====== Frame quiz ====== */
+    /* ✅ Conteneur quiz fixe + scroll interne options */
     .frame{
       background: var(--glass2);
-      border:1px solid rgba(255,200,150,.22);
-      border-radius:18px;
-      padding:18px;
-      position:relative;
+      border: 1px solid rgba(255, 200, 150, .22);
+      border-radius: 18px;
+      padding: 16px;
+      position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
 
-      flex:1;
-      min-height:0;
+      flex: 1;
+      min-height: 0;
       display:flex;
       flex-direction:column;
-      gap:10px;
     }
     .frame::after{
       content:"";
-      position:absolute; inset:-2px;
-      pointer-events:none;
+      position:absolute; inset:-2px; pointer-events:none;
       background:
-        radial-gradient(900px 280px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
-        radial-gradient(820px 280px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
+        radial-gradient(800px 260px at 55% 0%, rgba(255,150,70,.16), transparent 60%),
+        radial-gradient(760px 260px at 40% 120%, rgba(80,170,255,.10), transparent 60%);
       opacity:.9;
     }
-    .qmeta{
-      position:relative; z-index:2;
-      color: rgba(255,255,255,.70);
-      font-size:12px;
-      font-weight:950;
-      letter-spacing:.35px;
-      text-transform:uppercase;
-    }
-    .qtitle{
-      position:relative; z-index:2;
-      margin-top:2px;
-      font-weight:950;
-      font-size: clamp(18px, 2.2vw, 26px);
-      line-height:1.2;
-      text-shadow: 0 14px 30px rgba(0,0,0,.55);
-    }
-    .qdesc{
-      position:relative; z-index:2;
-      margin-top:2px;
-      color: rgba(255,255,255,.82);
-      font-size:14px;
-      line-height:1.5;
-      max-width: 980px;
-    }
+
+    .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
     .options{
-      position:relative; z-index:2;
+      position: relative;
+      z-index:2;
       display:flex;
       flex-direction:column;
-      gap:12px;
-      margin-top:6px;
+      gap: 12px;
+      margin-top: 16px;
 
-      flex:1;
-      min-height:0;
-      overflow:auto;
-      padding-right:4px;
+      flex: 1;
+      min-height: 0;
+      overflow:auto; /* ✅ fixe taille conteneur */
+      padding-right: 6px;
     }
-    /* scrollbar */
-    .options::-webkit-scrollbar{ width:10px; }
+    .options::-webkit-scrollbar{ width: 10px; }
     .options::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.12);
-      border: 2px solid rgba(0,0,0,.25);
-      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 999px;
     }
-    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.15); border-radius:999px; }
 
     .opt{
-      border-radius:14px;
-      padding:13px 14px;
-      font-weight:950;
-      letter-spacing:.2px;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
       cursor:pointer;
       user-select:none;
       transition: transform .12s ease, filter .12s ease, background .12s ease;
-      border:1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(80,170,255,.22), rgba(80,170,255,.14));
       box-shadow: 0 10px 28px rgba(0,0,0,.20);
     }
     .opt:hover{ transform: translateY(-1px); filter: brightness(1.07); background: linear-gradient(180deg, rgba(255,150,70,.22), rgba(80,170,255,.10)); }
     .opt:active{ transform: translateY(0px); filter: brightness(.98); }
+
     .opt.sel{
       background: linear-gradient(180deg, rgba(255,150,70,.30), rgba(255,120,50,.18));
       border-color: rgba(255,150,70,.30);
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    /* ====== Actions bar ====== */
+    /* ✅ Actions FIXÉES EN BAS (dans la frame) + gauche/droite */
     .actions{
-      position:relative; z-index:2;
+      position: relative;
+      z-index: 2;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+
       display:flex;
       justify-content:space-between;
-      gap:10px;
-      margin-top:8px;
-      flex-wrap:wrap;
+      gap: 10px;
+      flex-wrap: wrap;
       align-items:center;
     }
     .actionsLeft, .actionsRight{
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      gap: 10px;
+      flex-wrap: wrap;
       align-items:center;
     }
 
@@ -410,20 +304,27 @@
       font-weight: 950;
       letter-spacing: .2px;
     }
-    .btnNeo:disabled{ opacity:.45; cursor:not-allowed; }
+    .btnNeo:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
 
     .btnPrimary{
-      border:none;
+      border: none;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       border-radius: 12px;
       padding: 10px 14px;
       font-weight: 950;
       letter-spacing: .2px;
+      display:inline-block;
     }
-    .btnPrimary:disabled{ opacity:.45; cursor:not-allowed; filter: grayscale(.2); }
+    .btnPrimary:disabled{
+      opacity:.45;
+      filter: grayscale(.2);
+      cursor: not-allowed;
+    }
 
-    /* ====== Overlays ====== */
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
@@ -431,6 +332,7 @@
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
     }
+
     .modalBox{
       width: min(760px, 92%);
       border-radius: 18px;
@@ -440,11 +342,13 @@
       overflow:hidden;
       position: relative;
     }
+
     .modalTop{
       padding: 14px 16px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
+
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
@@ -475,36 +379,6 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
 
-    /* Loading */
-    .loadingBox{
-      width: min(520px, 90%);
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(8,10,14,.70);
-      box-shadow: 0 26px 90px rgba(0,0,0,.62);
-      padding: 16px;
-      text-align:center;
-    }
-    .loadingPill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      font-weight:950;
-    }
-    .spinner{
-      width:16px; height:16px;
-      border-radius:999px;
-      border: 2px solid rgba(255,255,255,.25);
-      border-top-color: rgba(255,176,90,1);
-      animation: spin .85s linear infinite;
-    }
-    @keyframes spin{ to{ transform:rotate(360deg);} }
-
-    /* Motion */
     .shake{ animation: shake .24s linear 1; }
     @keyframes shake{
       0% { transform: translateX(0px); }
@@ -527,21 +401,16 @@
       to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
     }
 
+    @media (max-width: 860px){
+      .hud{ grid-template-columns: 1fr; }
+      .stressWrap{ width: 170px; }
+    }
+
     /* Hotspot zones */
     @keyframes hsPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
       70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
       100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); border-color: rgba(255,255,255,.55); }
-    }
-    .hotspotWrap{
-      position:relative;
-      width:100%;
-      max-width:760px;
-      margin: 0 auto;
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
     }
     .hotspot-zone{
       position:absolute;
@@ -558,12 +427,15 @@
       animation: none;
     }
 
-    /* Image single cards */
+    /* Image cards */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:16px;
       margin-top:12px;
+    }
+    @media (max-width: 900px){
+      .imgGrid{ grid-template-columns: 1fr; }
     }
     .imgCard{
       border-radius:18px;
@@ -587,7 +459,8 @@
       background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
     }
     .imgTag{
-      width:36px; height:36px;
+      width:36px;
+      height:36px;
       border-radius:12px;
       display:flex;
       align-items:center;
@@ -597,7 +470,7 @@
     }
     .imgPic{
       width:100%;
-      height:220px;
+      height:220px; /* ✅ Référence proche */
       aspect-ratio:4/3;
       object-fit:cover;
       display:block;
@@ -608,9 +481,9 @@
       font-weight:800;
     }
 
-    /* Key overlay */
+    /* Key overlay (corrigé) */
     .keyBox{
-      width: min(980px, 95%);
+      width: min(980px, 94%);
       max-height: 86vh;
       overflow:auto;
       border-radius: 18px;
@@ -619,215 +492,259 @@
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
     }
     .keyTop{
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+    }
+    .keyTitle{
+      font-weight: 950;
+      color: rgba(255,255,255,.92);
     }
     .keyClose{
-      border:none;
-      background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
       color: rgba(255,255,255,.92);
       border-radius: 12px;
-      padding: 8px 10px;
+      padding: 8px 12px;
       font-weight: 950;
-      cursor:pointer;
     }
-    .keyBody{ padding: 14px 16px; }
+    .keyBody{
+      padding: 14px;
+      color: rgba(255,255,255,.90);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+	
+    /* ===== TopTabs (niveau + progress + miniHint) ===== */
+    .topTabs{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:2px;
+    }
+    .levelTab{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 950;
+      letter-spacing:.2px;
+    }
+    .levelDot{
+      width:10px; height:10px; border-radius:50%;
+      background: linear-gradient(180deg, var(--ember), var(--ember2));
+      box-shadow: 0 0 0 4px rgba(255,150,70,.14);
+    }
+    .progressShell{
+      flex: 1 1 220px;
+      min-width: 220px;
+      height: 9px;
+      border-radius:999px;
+      overflow:hidden;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .progressBar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,150,70,1), rgba(80,170,255,1));
+      transition: width .25s ease;
+    }
+    .miniHint{
+      background: rgba(0,0,0,.14);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding: 10px 12px;
+      font-weight: 950;
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      white-space:nowrap;
+    }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .hud{ grid-template-columns: 1fr; }
-      .progressShell{ min-width: 100%; }
-      .stressWrap{ width:190px; }
-      .imgGrid{ grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 
 <body>
-  <div class="stage">
-    <div class="wrap">
-
-      <!-- Top tabs -->
+<div class="stage">
+  <div class="wrap">
+        <!-- Top tabs -->
       <div class="topTabs">
         <div class="levelTab">
-          <div class="levelDot"></div>
-          <div class="levelTabText" id="levelTabText">INTERMÉDIAIRE</div>
+          <span class="levelDot"></span>
+          <span id="levelTabText">INTERMEDIAIRE</span>
         </div>
-
-        <div class="progressShell" aria-label="Progression">
+        <div class="progressShell" aria-label="progression">
           <div class="progressBar" id="progressBar"></div>
         </div>
-
-        <div class="miniHint">
-          <span id="miniHintText">45s • 2 • 2</span>
-        </div>
+        <div class="miniHint" id="miniHint">Durée 45s • Tentatives 2 • Indices 2</div>
       </div>
 
-      <!-- HUD -->
-      <div class="hud">
-        <div class="hudbox">
-          <div class="profile">
-            <div class="avatarFrame">
-              <img class="avatar" id="hudAvatar" alt="Avatar">
-            </div>
-            <div class="ptext">
-              <div class="pname" id="hudName">Dr. Joueur</div>
-              <div class="prole" id="hudRole">Rôle: —</div>
-            </div>
+    <div class="hud">
+      <div class="hudbox">
+        <div class="profile">
+          <div class="avatarFrame">
+            <img class="avatar" id="hudAvatar" alt="Avatar">
           </div>
-          <div class="chip" id="difficultyChip">MODE: INTERMÉDIAIRE</div>
-        </div>
-
-        <div class="hudbox">
-          <div class="stats">
-            <div class="pill">⭐ <span id="hudScore">0</span></div>
-            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-            <div class="pill">🎯 <span>Essais</span> <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
-
-            <div class="pill timerPill" id="timerPill">
-              <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
-              <div class="timeText">
-                <div class="label">Temps</div>
-                <div class="sec"><span id="hudTime">45</span>s</div>
-              </div>
-            </div>
-
-            <div class="stressWrap" title="Stress">
-              <div class="stressBar" id="stressBar"></div>
-            </div>
-
-            <button class="btnNeo" id="hintBtn" type="button">💡 Indice <span id="hudHints">2</span></button>
-            <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
+          <div class="ptext">
+            <div class="pname" id="hudName">Joueur</div>
+            <div class="prole" id="hudRole">Rôle: —</div>
           </div>
         </div>
+        <div class="chip" id="difficultyChip">MODE: INTERMÉDIAIRE</div>
       </div>
 
-      <!-- Frame -->
-      <div class="frame" id="frame">
-        <div class="qmeta" id="qMeta">Scénario 2 — Brûlure</div>
-        <div class="qtitle" id="qTitle">Prépare-toi…</div>
-        <div class="qdesc" id="qDesc">Clique sur <b>DÉMARRER</b>.</div>
+      <div class="hudbox">
+        <div class="stats">
+          <div class="pill">⭐ <span id="hudScore">0</span></div>
+          <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
-        <div class="options" id="options"></div>
+          <!-- ✅ RÈGLES demandées : Tentatives 1 / Indices 2 -->
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">2</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
-        <div class="actions">
-          <div class="actionsLeft">
-            <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
-            <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
+          <div class="pill timerPill" id="timerPill">
+            <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
+            <div class="timeText">
+              <div class="label">Temps</div>
+              <div class="sec"><span id="hudTime">30</span>s</div>
+            </div>
           </div>
-          <div class="actionsRight">
-            <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
-            <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
+
+           
+          <div class="stressWrap" title="Stress">
+            <div class="stressBar" id="stressBar"></div>
           </div>
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
+          <!-- ✅ NOUVEAU : bouton Pause séparé -->
+          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
+
         </div>
       </div>
-
     </div>
-  </div>
 
-  <!-- START overlay -->
-  <div class="overlay" id="startOverlay" style="display:flex;">
-    <div class="modalBox">
-      <div class="modalTop">
-        <div class="badgeState bWarn">🎮 Prêt ?</div>
-        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Mission • Brûlure
+    <div class="frame" id="frame">
+      <div class="qmeta" id="qMeta">Scénario 2 — Brûlure</div>
+      <div class="qtitle" id="qTitle">…</div>
+      <div class="qdesc" id="qDesc">…</div>
+
+      <div class="options" id="options"></div>
+
+      <!-- ✅ Boutons en bas + structure gauche/droite (Valider / Corrigé / Continuer) -->
+      <div class="actions">
+        <div class="actionsLeft">
+          <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
+          <button class="btnPrimary" id="continueBtn" type="button" style="display:none;">✅ Continuer</button>
+        </div>
+
+        <div class="actionsRight">
+          <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
+          <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
         </div>
       </div>
-      <div class="modalBody">
-        <div class="startTitle">Mission : Brûlure (Intermédiaire)</div>
-        <div class="startText">
-          Tu vas intervenir en situation d’urgence.<br><br>
-          <b>Règles (Intermédiaire)</b><br>
-          • <b>45 secondes</b> par question<br>
-          • <b>2 tentatives</b> maximum<br>
-          • <b>2 indices</b> pour tout le scénario (<b>1 indice max par question</b>)<br><br>
-          <b>Échec mission</b> : 2 timeouts OU 2 erreurs ⇒ retour au début (score & stress remis à zéro, indices réinitialisés).
-        </div>
-      </div>
-      <div class="modalActions">
-        <button class="startBtn" id="startBtn">DÉMARRER</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- START overlay -->
+<div class="overlay" id="startOverlay" style="display:flex;">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">🎮 Prêt ?</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Mission • Brûlure
       </div>
     </div>
-  </div>
-
-  <!-- Loading overlay -->
-  <div class="overlay" id="loadingOverlay">
-    <div class="loadingBox">
-      <div class="loadingPill"><span class="spinner"></span> Chargement…</div>
-    </div>
-  </div>
-
-  <!-- Feedback overlay -->
-  <div class="overlay" id="feedbackOverlay">
-    <div class="modalBox" id="modalBox">
-      <div class="modalTop">
-        <div class="badgeState" id="badgeState">—</div>
-        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
-        </div>
-      </div>
-      <div class="modalBody" id="modalText">…</div>
-      <div class="modalActions">
-        <button class="btnNeo" id="retryBtn">Réessayer</button>
-        <button class="btnPrimary" id="nextBtn">Suivant</button>
-        <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
+    <div class="modalBody">
+      <div class="startTitle">Tu as une mission.</div>
+      <div class="startText">
+        Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
+        <br><br>
+        <b>Règles :</b> <b>30s</b> par question • <b>2 tentatives</b> • <b>2 indices</b> pour tout le quiz (1 indice max par question).
+        <br><br>
+        <b>Si le temps s’écoule ou si ta tentative est ratée, tu retournes au début de la mission (score = 0).</b>
+        <br>
+        Es-tu prêt à commencer ?
       </div>
     </div>
-  </div>
-
-  <!-- Hint overlay -->
-  <div class="overlay" id="hintOverlay">
-    <div class="modalBox">
-      <div class="modalTop">
-        <div class="badgeState bWarn">💡 Indice</div>
-        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Indices restants : <span id="hintLeftTop">0</span>
-        </div>
-      </div>
-      <div class="modalBody" id="hintText">…</div>
-      <div class="modalActions">
-        <button class="btnPrimary" id="closeHintBtn">OK</button>
-      </div>
+    <div class="modalActions">
+      <button class="startBtn" id="startBtn">DÉMARRER</button>
     </div>
   </div>
+</div>
 
-  <!-- Pause overlay -->
-  <div class="overlay" id="pauseOverlay">
-    <div class="modalBox">
-      <div class="modalTop">
-        <div class="badgeState bWarn">⏸ Pause</div>
-        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Mission en pause
-        </div>
-      </div>
-      <div class="modalBody">
-        Le chronomètre est arrêté. Clique sur <b>Reprendre</b> quand tu es prêt(e).
-      </div>
-      <div class="modalActions">
-        <button class="btnPrimary" id="resumeBtn">Reprendre</button>
+<!-- Feedback overlay -->
+<div class="overlay" id="overlay">
+  <div class="modalBox" id="modalBox">
+    <div class="modalTop">
+      <div class="badgeState" id="badgeState">—</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Score: <span id="modalScore">0</span> • Stress: <span id="modalStress">0</span>%
       </div>
     </div>
-  </div>
-
-  <!-- Key overlay -->
-  <div class="overlay" id="keyOverlay">
-    <div class="keyBox">
-      <div class="keyTop">
-        <div class="badgeState">📘 Corrigé (bonnes réponses)</div>
-        <button class="keyClose" id="closeKeyBtn" type="button">✖</button>
-      </div>
-      <div class="keyBody" id="keyBody"></div>
+    <div class="modalBody" id="modalText">…</div>
+    <div class="modalActions">
+      <button class="btnNeo" id="retryBtn">Réessayer</button>
+      <button class="btnPrimary" id="nextBtn">Suivant</button>
+      <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
     </div>
   </div>
+</div>
 
-  <script>
-/* ========= SFX (WebAudio) ========= */
+<!-- Hint overlay -->
+<div class="overlay" id="hintOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">💡 Indice</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Indices restants : <span id="hintLeftTop">2</span>/2
+      </div>
+    </div>
+    <div class="modalBody" id="hintText">…</div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="hintOkBtn">Reprendre</button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ NOUVEAU : Pause overlay -->
+<div class="overlay" id="pauseOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">⏸ Pause</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Chrono stoppé • Mission en pause
+      </div>
+    </div>
+    <div class="modalBody">
+      <div style="font-weight:950; font-size:18px; margin-bottom:6px;">Tu peux reprendre quand tu veux.</div>
+      <div style="color: rgba(255,255,255,.82); line-height:1.5;">
+        Le temps est arrêté et les actions sont verrouillées tant que la pause est active.
+      </div>
+    </div>
+    <div class="modalActions">
+      <button class="btnPrimary" id="pauseResumeBtn">Reprendre</button>
+    </div>
+  </div>
+</div>
+
+<!-- Key overlay (Corrigé) -->
+<div class="overlay" id="keyOverlay">
+  <div class="keyBox">
+    <div class="keyTop">
+      <div class="keyTitle">📘 Corrigé</div>
+      <button class="keyClose" id="keyCloseBtn" type="button">✖</button>
+    </div>
+    <div class="keyBody" id="answerKeyWrap"></div>
+  </div>
+</div>
+
+<script>
+/* ========= SCENARIO ENGINE (Design Genially-like) ========= */
 let audioCtx = null;
 function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
 function tone(freq, dur=0.08, type="sine", gain=0.05){
@@ -842,6 +759,18 @@ function tone(freq, dur=0.08, type="sine", gain=0.05){
 }
 function sfxClick(){ tone(520,0.04,"triangle",0.035); }
 function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
+function sfxVictory(){
+  ensureAudio();
+  const notes = [
+    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
+    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
+  ];
+  let t = 0;
+  notes.forEach((n)=>{
+    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
+    t += n.d + 0.03;
+  });
+}
 function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
 function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
 function sfxAlarmLong(){
@@ -859,278 +788,116 @@ function sfxAlarmLong(){
   osc.connect(g); g.connect(audioCtx.destination);
   osc.start(now); osc.stop(now + 1.25);
 }
-function sfxVictory(){
-  ensureAudio();
-  const notes = [
-    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
-    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
-  ];
-  let t = 0;
-  notes.forEach((n)=>{
-    setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
-    t += n.d + 0.03;
-  });
-}
 
-/* ========= Helpers ========= */
 const el = (id)=>document.getElementById(id);
-const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-const escapeHtml=(str)=>String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-
-/* ========= UI refs ========= */
-const levelTabText = el("levelTabText");
-const progressBar  = el("progressBar");
-const miniHintText = el("miniHintText");
-
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
-const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal");
-const hudAttempts = el("hudAttempts"), hudAttemptsMax = el("hudAttemptsMax");
+const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
 const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
-const hudHints = el("hudHints");
+const hudHints = el("hudHints"), hudHintsMax = el("hudHintsMax");
+const hintBtn = el("hintBtn");
+
+/* ✅ NOUVEAU : pause */
+const pauseBtn = el("pauseBtn");
+const pauseOverlay = el("pauseOverlay");
+const pauseResumeBtn = el("pauseResumeBtn");
 
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
-
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
-const showKeyBtn  = el("showKeyBtn"), endBtn = el("endBtn");
-const hintBtn = el("hintBtn"), pauseBtn = el("pauseBtn");
+const showKeyBtn = el("showKeyBtn"), continueBtn = el("continueBtn");
 
 const startOverlay = el("startOverlay"), startBtn = el("startBtn");
-const loadingOverlay = el("loadingOverlay");
-
-const feedbackOverlay = el("feedbackOverlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
+const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
-const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn");
+const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
 
-const hintOverlay = el("hintOverlay"), hintLeftTop = el("hintLeftTop"), hintText = el("hintText"), closeHintBtn = el("closeHintBtn");
-const pauseOverlay = el("pauseOverlay"), resumeBtn = el("resumeBtn");
+const hintOverlay = el("hintOverlay"), hintText = el("hintText"), hintOkBtn = el("hintOkBtn"), hintLeftTop = el("hintLeftTop");
+const keyOverlay = el("keyOverlay"), keyCloseBtn = el("keyCloseBtn"), answerKeyWrap = el("answerKeyWrap");
 
-const keyOverlay = el("keyOverlay"), keyBody = el("keyBody"), closeKeyBtn = el("closeKeyBtn");
-const frame = el("frame");
-
-/* ========= CONFIG (RÉFÉRENCE INTERMÉDIAIRE) ========= */
+/* ======= CONFIG ======= */
 const SCENARIO = {
   id: 2,
   label: "Scénario 2 — Brûlure",
   mission: "Brûlure",
-  level: "Intermédiaire"
+  level: "Niveau intermédiaire"
 };
-const NEXT_SCENARIO_URL = "#"; // <-- remplace par ton lien Genially
 
-const TIMER_SECONDS = 45;
-const ATTEMPTS_MAX  = 2;
-const HINT_MAX      = 2;
+// Lien "Continuer" (à remplacer par ton lien Genially)
+const NEXT_GENIALLY_URL = "#";
 
-const STRESS_RULES = { wrong:10, timeout:15, critical:25 };
-const HINT_KEY = `hints_left_s${SCENARIO.id}`;
+/* ✅ RÈGLES demandées */
+const TIMER_SECONDS = 30;   // 30s
+const MAX_ATTEMPTS = 2;     // 1 tentative
+const HINT_MAX = 2;         // 2 indices (par quiz)
 
-/* ========= Player / Role ========= */
+/* Stress */
+const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
+
+const role = "pompier";
+const playerName = localStorage.getItem("playerName") || "Joueur";
+const avatarFile = localStorage.getItem("avatar") || "medecin_f.png";
 const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
-const playerName =
-  (window.player_name || window.playerName || localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur");
-const role =
-  (window.role || localStorage.getItem("role") || "pompier");
-const avatarFile =
-  (localStorage.getItem("avatar") || "infirmier_f.png");
 
-hudName.textContent = "Dr. " + playerName;
+hudName.textContent = playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
-
-levelTabText.textContent = SCENARIO.level.toUpperCase();
 difficultyChip.textContent = "MODE: INTERMÉDIAIRE";
-miniHintText.textContent = `${TIMER_SECONDS}s • ${ATTEMPTS_MAX} • ${HINT_MAX}`;
 
-/* ========= STATE ========= */
-let score = parseInt(localStorage.getItem("score") || "0", 10); if(isNaN(score)) score = 0;
-let stress = parseInt(localStorage.getItem("stress") || "0", 10); if(isNaN(stress)) stress = 0;
-
-let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
-if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
-hintsLeft = clamp(hintsLeft, 0, HINT_MAX);
-localStorage.setItem(HINT_KEY, String(hintsLeft));
+let score = parseInt(localStorage.getItem("score") || "0", 10);
+let stress = parseInt(localStorage.getItem("stress") || "0", 10);
+if(isNaN(score)) score = 0;
+if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
-let hintUsedThisQuestion = false;
-
+let attemptsForCurrentQuestion = 2;
 let locked = true;
 let paused = false;
 
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
 
-/* ========= QUESTIONS (DU CODE FOURNI) ========= */
-const questions = [
-  {
-    "type": "single",
-    "title": "Triage & coordination",
-    "desc": "En tant que pompier, quelle est la **priorité** juste après sécurisation ?",
-    "options": [
-      {"text": "Évacuer la victime vers une zone sûre", "kind": "ok", "fb": "✅ Oui : mise en sécurité avant les soins prolongés."},
-      {"text": "Chercher une pommade", "kind": "wrong", "fb": "❌ Non : pas prioritaire."},
-      {"text": "Donner à boire", "kind": "wrong", "fb": "❌ Non : risque de vomissement/complications."},
-      {"text": "Percer les cloques", "kind": "wrong", "fb": "❌ Non : risque infectieux."}
-    ]
-  },
-  {
-    "type": "image_single",
-    "title": "Choix de l’image",
-    "desc": "Quel visuel correspond au **bon refroidissement** d’une brûlure ?",
-    "options": [
-      {"label":"A","caption":"Eau glacée / glaçons","kind":"wrong","fb":"❌ Non : le froid intense peut aggraver.","imgSrc":"assets/burn_a.png"},
-      {"label":"B","caption":"Eau du robinet (fraîche)","kind":"ok","fb":"✅ Oui : eau courante fraîche.","imgSrc":"assets/burn_b.png"},
-      {"label":"C","caption":"Beurre / dentifrice","kind":"critical","fb":"🚨 Erreur critique : à éviter.","pts":-10,"imgSrc":"assets/burn_c.png"}
-    ]
-  },
-  {
-    "type":"single",
-    "title":"Estimation de surface",
-    "desc":"La paume de la victime représente environ :",
-    "options":[
-      {"text":"1 %","kind":"ok","fb":"✅ Correct : repère rapide pour estimer la surface brûlée."},
-      {"text":"5 %","kind":"wrong","fb":"❌ Trop élevé : surestime la surface."},
-      {"text":"10 %","kind":"wrong","fb":"❌ Beaucoup trop élevé."},
-      {"text":"0,1 %","kind":"wrong","fb":"❌ Trop faible : sous-estime."}
-    ]
-  },
-  {
-    "type":"cloze",
-    "title":"Repères",
-    "desc":"15 et 1",
-    "template":"<b>{blank1}</b> min / <b>{blank2}</b> %",
-    "blanks":[{"key":"blank1","answer":"15"},{"key":"blank2","answer":"1"}],
-    "okFb":"✅ Correct : 15 min de refroidissement ; paume ≈ 1%.",
-    "badFb":"❌ Attendu : 15 et 1."
-  },
-  {
-    "type":"multi",
-    "title":"Actions",
-    "desc":"Choisir",
-    "options":[
-      {"text":"Refroidir","correct":true},
-      {"text":"Arracher tissu","correct":false}
-    ],
-    "okFb":"✅ Correct : refroidir oui, arracher un tissu collé non (aggrave la lésion).",
-    "badFb":"❌ Incorrect : ne jamais arracher un tissu collé."
-  },
-  {
-    "type":"drag_order",
-    "title":"Ordonner les étapes",
-    "desc":"Glisse les actions dans l’ordre logique.",
-    "items":[
-      {"id":"remove","text":"Retirer bagues/bijoux (si possible)"},
-      {"id":"cool","text":"Refroidir sous eau courante"},
-      {"id":"protect","text":"Protéger (compresse propre / film)"},
-      {"id":"pain","text":"Surveiller douleur / état général"},
-      {"id":"call","text":"Alerter si critères de gravité"}
-    ],
-    "expected":["remove","cool","protect","pain","call"],
-    "okFb":"✅ Très bien.",
-    "badFb":"❌ Revois l’ordre."
-  },
-  {
-    "type":"single",
-    "title":"Piège (intermédiaire)",
-    "desc":"Quelle action est une **erreur** fréquente ?",
-    "options":[
-      {"text":"Mettre une crème avant refroidissement","kind":"ok","fb":"🚨 Exact : cela enferme la chaleur."},
-      {"text":"Refroidir puis protéger","kind":"wrong","fb":"✅ Bon geste."},
-      {"text":"Retirer bijoux si possible","kind":"wrong","fb":"✅ Bon geste."},
-      {"text":"Couvrir avec compresse propre","kind":"wrong","fb":"✅ Bon geste."}
-    ]
-  },
-  {
-    "type":"hotspot",
-    "gate":true,
-    "title":"Hotspot — Localiser la brûlure",
-    "desc":"",
-    "imgSrc":"scenario_2_hotspot.png",
-    "hotspots":[
-      {"label":"ok","x":38,"y":25,"w":28,"h":26,"kind":"ok","fb":"✅ Correct.","pts":10},
-      {"label":"ko","x":12,"y":12,"w":22,"h":22,"kind":"wrong","fb":"❌ Faux.","pts":-2},
-      {"label":"ko","x":62,"y":70,"w":22,"h":22,"kind":"wrong","fb":"❌ Faux.","pts":-2}
-    ]
-  },
-  {
-    "type":"multi",
-    "title":"Critères d’évacuation (choix multiple)",
-    "desc":"Coche les situations qui imposent une évacuation/alerte rapide.",
-    "options":[
-      {"text":"Atteinte du visage / cou","correct":true},
-      {"text":"Brûlure chimique ou électrique","correct":true},
-      {"text":"Petite rougeur superficielle localisée","correct":false},
-      {"text":"Brûlure étendue ou profonde","correct":true}
-    ],
-    "okFb":"✅ Correct : ces critères définissent une brûlure potentiellement grave.",
-    "badFb":"❌ Incorrect : tu as coché un cas non grave ou oublié un critère de gravité."
-  },
-  {
-    "type":"tf",
-    "title":"Transport",
-    "desc":"Vrai ou faux : une brûlure grave doit être évacuée vers une structure hospitalière / spécialisée.",
-    "tf":{
-      "trueOpt":{"kind":"ok","fb":"✅ Vrai : brûlure grave = évacuation médicale."},
-      "falseOpt":{"kind":"wrong","fb":"❌ Faux : retarder l’évacuation met la victime en danger."}
-    }
-  }
-];
+/* ✅ Indices */
+const HINT_KEY = "hints_left_s" + SCENARIO.id;
+let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
+if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
+let hintUsedThisQuestion = false;
+
+const questions = [{"type": "single", "title": "Priorité vitale (incendie)", "desc": "Victime brûlée en milieu enfumé (toux, suie, voix rauque). Quelle est la priorité pompier ?", "options": [{"text": "Administrer de l’oxygène et suspecter une inhalation", "kind": "ok", "fb": "✅ Correct : risque d’atteinte des voies aériennes / intoxication (CO). Oxygène + alerte médicale."}, {"text": "Mettre de la glace directement sur la brûlure", "kind": "wrong", "fb": "❌ Non : le froid intense aggrave les lésions et favorise l’hypothermie."}, {"text": "Attendre l’équipe médicale sans agir", "kind": "wrong", "fb": "❌ Non : la détresse respiratoire peut évoluer rapidement."}, {"text": "Percer les cloques pour “décompresser”", "kind": "wrong", "fb": "❌ Non : augmente le risque d’infection et n’améliore pas la respiration."}]}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon refroidissement** d’une brûlure ?", "options": [{"label": "A", "caption": "Eau glacée / glaçons", "kind": "wrong", "fb": "❌ Non : le froid intense peut aggraver.", "imgSrc": "assets/burn_a.png"}, {"label": "B", "caption": "Eau du robinet (fraîche)", "kind": "ok", "fb": "✅ Oui : eau courante fraîche.", "imgSrc": "assets/burn_b.png"}, {"label": "C", "caption": "Beurre / dentifrice", "kind": "critical", "fb": "🚨 Erreur critique : à éviter.", "pts": -10, "imgSrc": "assets/burn_c.png"}]}, {"type": "single", "title": "Risque majeur", "desc": "Dans un incendie, la complication la plus dangereuse à rechercher en priorité est :", "options": [{"text": "Inhalation (voies aériennes / CO)", "kind": "ok", "fb": "✅ Correct : principale cause de gravité immédiate en milieu enfumé."}, {"text": "Entorse", "kind": "wrong", "fb": "❌ Non : ce n’est pas la priorité vitale."}, {"text": "Contusion simple", "kind": "wrong", "fb": "❌ Non : secondaire après la respiration."}, {"text": "Crampes", "kind": "wrong", "fb": "❌ Non : non prioritaire."}]}, {"type": "cloze", "title": "Repères opérationnels", "desc": "Saisis **2 valeurs** (minutes / % paume).", "template": "Refroidir <b>{blank1}</b> min ; paume ≈ <b>{blank2}</b> %.", "blanks": [{"key": "blank1", "answer": "15"}, {"key": "blank2", "answer": "1"}], "okFb": "✅ Correct : 15 minutes ; 1 % par paume.", "badFb": "❌ Attendu : 15 et 1."}, {"type": "multi", "title": "Priorités avancées (choix multiple)", "desc": "Coche les priorités **immédiates** sur intervention incendie.", "options": [{"text": "Oxygène si disponible", "correct": true}, {"text": "Évaluer signes d’inhalation (suie, voix rauque, toux)", "correct": true}, {"text": "Glace directe sur la peau", "correct": false}, {"text": "Surveiller conscience et respiration", "correct": true}], "okFb": "✅ Correct : priorité aux voies aériennes/respiration + surveillance. Pas de glace directe.", "badFb": "❌ Incorrect : tu as coché la glace (danger) ou oublié une priorité vitale."}, {"type": "drag_order", "title": "Ordonner les étapes", "desc": "Glisse les actions dans l’ordre logique.", "items": [{"id": "remove", "text": "Retirer bagues/bijoux (si possible)"}, {"id": "cool", "text": "Refroidir sous eau courante"}, {"id": "protect", "text": "Protéger (compresse propre / film)"}, {"id": "pain", "text": "Surveiller douleur / état général"}, {"id": "call", "text": "Alerter si critères de gravité"}], "expected": ["remove", "cool", "protect", "pain", "call"], "okFb": "✅ Très bien.", "badFb": "❌ Revois l’ordre."}, {"type": "single", "title": "Piège critique (avancé)", "desc": "Quelle décision met le plus en danger une victime suspecte d’inhalation ?", "options": [{"text": "Ne pas donner d’oxygène malgré suie/voix rauque", "kind": "ok", "fb": "🚨 Correct : risque d’asphyxie / intoxication CO. Oxygène + alerte urgente."}, {"text": "Refroidir la brûlure après sécurisation", "kind": "wrong", "fb": "✅ Bon geste : limite la progression thermique."}, {"text": "Protéger la brûlure avec un pansement propre", "kind": "wrong", "fb": "✅ Bon geste : réduit le risque de contamination."}, {"text": "Alerter/évacuer si critères de gravité", "kind": "wrong", "fb": "✅ Bon geste : indispensable."}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Localiser la brûlure", "desc": "", "imgSrc": "scenario_2_hotspot.png", "hotspots": [{"label": "ok", "x": 38, "y": 25, "w": 28, "h": 26, "kind": "ok", "fb": "✅ Correct.", "pts": 10}, {"label": "ko", "x": 12, "y": 12, "w": 22, "h": 22, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}, {"label": "ko", "x": 62, "y": 70, "w": 22, "h": 22, "kind": "wrong", "fb": "❌ Faux.", "pts": -2}]}, {"type": "multi", "title": "Critères de gravité (choix multiple)", "desc": "Coche les signes qui imposent une évacuation urgente (brûlure grave).", "options": [{"text": "Brûlure du visage ou du cou", "correct": true}, {"text": "Présence de suie autour de la bouche", "correct": true}, {"text": "Petite rougeur localisée", "correct": false}, {"text": "Voix rauque ou toux", "correct": true}, {"text": "Brûlure chimique", "correct": true}], "okFb": "✅ Correct : ces critères signalent une brûlure potentiellement grave / risque d’inhalation.", "badFb": "❌ Incorrect : tu as coché un signe non grave ou oublié un critère majeur."}, {"type": "tf", "title": "Brûlure chimique", "desc": "Vrai ou faux : une brûlure chimique impose une alerte rapide et une décontamination adaptée.", "tf": {"trueOpt": {"kind": "ok", "fb": "✅ Vrai : alerte rapide + décontamination / rinçage prolongé selon produit."}, "falseOpt": {"kind": "wrong", "fb": "❌ Faux : brûlure chimique = urgence (risque d’aggravation continue)."}}}];
 
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
-/* ====== Indices (2 total / 1 par question) ====== */
-const hintsTextByIndex = [
-  "Après sécurisation : priorité = mise en sécurité/évacuation vers zone sûre.",
-  "Refroidissement recommandé : eau courante fraîche (pas glace) plusieurs minutes.",
-  "Repère standard : la paume ≈ 1% de surface corporelle.",
-  "Deux valeurs-clés : 15 min et 1%.",
-  "Choisis les actions utiles et évite tout ce qui arrache le tissu/peau.",
-  "Ordre logique : retirer bijoux → refroidir → protéger → surveiller → alerter si gravité.",
-  "Erreur fréquente : crème avant refroidissement (elle enferme la chaleur).",
-  "Clique la zone exacte de la brûlure sur l’image.",
-  "Gravité : visage/cou, chimique/électrique, étendue/profonde = évacuation/alerte.",
-  "Brûlure grave = évacuation médicale (Vrai)."
-];
-
-/* ========= SCORE / STRESS / UI ========= */
-function setScore(v){
-  score = v;
-  localStorage.setItem("score", String(score));
-  hudScore.textContent = String(score);
-  modalScore.textContent = String(score);
-}
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function setScore(v){ score=v; localStorage.setItem("score", String(score)); hudScore.textContent=String(score); modalScore.textContent=String(score); }
 function addScore(d){ setScore(score + d); }
-
 function setStress(v){
-  stress = clamp(v,0,100);
+  stress=clamp(v,0,100);
   localStorage.setItem("stress", String(stress));
-  stressBar.style.width = stress + "%";
-  modalStress.textContent = String(stress);
+  stressBar.style.width=stress+"%";
+  modalStress.textContent=String(stress);
 }
 function addStress(d){ setStress(stress + d); }
-
-function setHintsUI(){
-  hudHints.textContent = String(hintsLeft);
-  hintBtn.disabled = (hintsLeft <= 0) || locked || paused || hintUsedThisQuestion;
-  hintLeftTop.textContent = String(hintsLeft);
-}
 function setAttemptsUI(){
   hudAttempts.textContent = String(attemptsForCurrentQuestion);
-  hudAttemptsMax.textContent = String(ATTEMPTS_MAX);
+  el("hudAttemptsMax").textContent = String(MAX_ATTEMPTS);
+}
+function setPauseUI(){
+  const disabled = locked || paused;
+  pauseBtn.disabled = disabled;
+  pauseBtn.style.opacity = disabled ? "0.55" : "1";
+}
+function setHintsUI(){
+  hudHints.textContent = String(hintsLeft);
+  hudHintsMax.textContent = String(HINT_MAX);
+  hintLeftTop.textContent = String(hintsLeft);
+  const disabled = locked || paused || hintsLeft<=0 || hintUsedThisQuestion;
+  hintBtn.disabled = disabled;
+  hintBtn.style.opacity = disabled ? "0.55" : "1";
+  setPauseUI();
 }
 
-setScore(score);
-setStress(stress);
-setHintsUI();
-setAttemptsUI();
+setScore(score); setStress(stress); setAttemptsUI(); setHintsUI();
 
-/* ========= Progress ========= */
-function setProgress(){
-  const p = clamp(Math.round((idx / TOTAL) * 100), 0, 100);
-  progressBar.style.width = p + "%";
-}
-
-/* ========= Timer ========= */
+/* ===== TIMER ===== */
 function setRingProgress(){
   const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
   ring.style.setProperty("--p", p + "%");
@@ -1153,202 +920,150 @@ function startTimer(reset=true){
       stopTimer();
       sfxAlarmLong();
       addStress(STRESS_RULES.timeout);
-      registerFailedAttempt("⏱️ Temps écoulé.");
+      attemptsForCurrentQuestion++;
+      setAttemptsUI();
+      if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
+        missionFail("⏱️ Temps écoulé. Mission échouée. Retour au départ… (score remis à zéro)");
+      }else{
+        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/"+MAX_ATTEMPTS+")", {allowRetry:true, allowNext:false, missionFail:false});
+      }
     }
   }, 1000);
 }
 
-/* ========= Loading ========= */
-function showLoading(ms=800){
-  loadingOverlay.style.display = "flex";
-  return new Promise(res=>setTimeout(()=>{
-    loadingOverlay.style.display = "none";
-    res();
-  }, ms));
+/* ======= PAUSE ======= */
+function showPause(){
+  if(locked || paused) return;
+  paused = true;
+  stopTimer();
+  pauseOverlay.style.display = "flex";
+  setHintsUI();
 }
+function hidePause(){
+  pauseOverlay.style.display = "none";
+}
+pauseBtn.addEventListener("click", ()=>{
+  ensureAudio(); sfxClick();
+  showPause();
+});
+pauseResumeBtn.addEventListener("click", ()=>{
+  sfxClick();
+  hidePause();
+  paused = false;
+  startTimer(false); // reprend sans reset
+  setHintsUI();
+});
 
-/* ========= Render helpers ========= */
+/* ======= SELECTION STATE ======= */
 let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
 let clozeValues = {};
 
-function resetAnswerState(){
-  selectedSingle = null;
+function resetState(){
+  selectedSingle=null;
   multiSelected.clear();
-  inputValue = "";
-  clozeValues = {};
+  inputValue="";
+  clozeValues={};
   validateBtn.disabled = true;
 }
 
 function mkOpt(text){
   const d = document.createElement("div");
   d.className="opt";
-  d.textContent = text;
+  d.textContent=text;
   return d;
 }
 
 function renderQuestion(i, resetAttempts=true){
-  locked = false;
-  paused = false;
-  hintUsedThisQuestion = false;
-
-  stopTimer();
-  hideFeedback();
-  hideHint();
+  locked=false;
+  paused=false;
   hidePause();
-
-  if(resetAttempts){
-    attemptsForCurrentQuestion = 1;
-  }
-  setAttemptsUI();
+  stopTimer();
+  hideOverlay();
+  hideHint();
+  if(resetAttempts){ attemptsForCurrentQuestion=1; setAttemptsUI(); }
+  hintUsedThisQuestion = false;
+  resetState();
   setHintsUI();
 
-  resetAnswerState();
-
   const q = questions[i];
-  qMeta.textContent  = `${SCENARIO.label} • ${SCENARIO.level}`;
+  qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
   qTitle.textContent = q.title || "—";
-  qDesc.innerHTML    = q.desc || "";
-
+  qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
   clearBtn.style.display = "none";
 
   const type = q.type;
 
-  if(type === "single"){
+  if(type==="single"){
     q.options.forEach((opt, oi)=>{
       const d = mkOpt(opt.text);
-      d.onclick = ()=>{
+      d.onclick=()=>{
+        if(locked || paused) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
-        selectedSingle = oi;
-        validateBtn.disabled = false;
+        selectedSingle=oi;
+        validateBtn.disabled=false;
       };
       optionsEl.appendChild(d);
     });
   }
 
-  if(type === "tf"){
-    const opts = [
-      {label:"Vrai", data:q.tf.trueOpt},
-      {label:"Faux", data:q.tf.falseOpt},
-    ];
+  if(type==="tf"){
+    const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
-      d.onclick = ()=>{
+      d.onclick=()=>{
+        if(locked || paused) return;
         sfxClick();
         [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
         d.classList.add("sel");
-        selectedSingle = oi;
-        validateBtn.disabled = false;
+        selectedSingle=oi;
+        validateBtn.disabled=false;
       };
       optionsEl.appendChild(d);
     });
   }
 
-  if(type === "multi"){
-    clearBtn.style.display = "inline-block";
-    validateBtn.disabled = true;
+  if(type==="multi"){
+    clearBtn.style.display="inline-block";
     q.options.forEach((opt, oi)=>{
-      const d = mkOpt(opt.text);
-      d.onclick = ()=>{
+      const d=mkOpt(opt.text);
+      d.onclick=()=>{
+        if(locked || paused) return;
         sfxClick();
         if(multiSelected.has(oi)){ multiSelected.delete(oi); d.classList.remove("sel"); }
         else { multiSelected.add(oi); d.classList.add("sel"); }
-        validateBtn.disabled = (multiSelected.size === 0);
+        validateBtn.disabled = (multiSelected.size===0);
       };
       optionsEl.appendChild(d);
     });
   }
 
-  if(type === "cloze"){
-    clearBtn.style.display = "inline-block";
+  if(type==="short"){
+    clearBtn.style.display="inline-block";
     const box = document.createElement("div");
-    box.className="opt";
-    box.style.cursor="default";
-    const html = (q.template||"")
-      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
-      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.className="opt"; box.style.cursor="default";
     box.innerHTML = `
-      <div style="line-height:1.8;">${html}</div>
-      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris seulement les chiffres (ex: 10).</div>
+      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
+      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
     `;
     optionsEl.appendChild(box);
-    const inputs = box.querySelectorAll("input[data-k]");
-    inputs.forEach(inp=>{
-      inp.addEventListener("input", ()=>{
-        clozeValues[inp.dataset.k] = inp.value;
-        const filled = q.blanks.every(b => (clozeValues[b.key]||"").trim().length > 0);
-        validateBtn.disabled = !filled;
-      });
+    const inp = box.querySelector("#shortInput");
+    inp.addEventListener("input", ()=>{
+      if(locked || paused) return;
+      inputValue = inp.value;
+      validateBtn.disabled = (inp.value.trim().length===0);
     });
   }
 
-  if(type === "drag_order"){
-    clearBtn.style.display = "inline-block";
-
-    const note = document.createElement("div");
-    note.className="pill";
-    note.style.marginBottom="6px";
-    note.textContent = "🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-    optionsEl.appendChild(note);
-
-    const list = document.createElement("div");
-    list.id="dragList";
-    list.style.display="grid";
-    list.style.gap="10px";
-
-    const items = [...q.items];
-    for(let k=items.length-1;k>0;k--){
-      const j = Math.floor(Math.random()*(k+1));
-      [items[k],items[j]]=[items[j],items[k]];
-    }
-
-    items.forEach((it)=>{
-      const row = document.createElement("div");
-      row.className="opt";
-      row.setAttribute("draggable","true");
-      row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
-      list.appendChild(row);
-    });
-
-    optionsEl.appendChild(list);
-
-    let dragSrc = null;
-    list.addEventListener("dragstart",(e)=>{
-      const target = e.target.closest("[draggable='true']");
-      if(!target) return;
-      dragSrc = target;
-      e.dataTransfer.effectAllowed="move";
-      target.style.opacity="0.6";
-      validateBtn.disabled = false;
-    });
-    list.addEventListener("dragend",(e)=>{
-      const target = e.target.closest("[draggable='true']");
-      if(target) target.style.opacity="1";
-      dragSrc = null;
-    });
-    list.addEventListener("dragover",(e)=>{
-      e.preventDefault();
-      const over = e.target.closest("[draggable='true']");
-      if(!over || !dragSrc || over===dragSrc) return;
-      const rect = over.getBoundingClientRect();
-      const before = (e.clientY - rect.top) < rect.height/2;
-      list.insertBefore(dragSrc, before ? over : over.nextSibling);
-    });
-    list.addEventListener("drop",(e)=>{
-      e.preventDefault();
-      validateBtn.disabled = false;
-    });
-  }
-
-  if(type === "image_single"){
+  if(type==="image_single"){
     const grid = document.createElement("div");
     grid.className = "imgGrid";
-
     q.options.forEach((opt, oi)=>{
       const card = document.createElement("div");
       card.className = "imgCard";
@@ -1361,6 +1076,7 @@ function renderQuestion(i, resetAttempts=true){
         <div class="imgCap">${opt.caption}</div>
       `;
       card.onclick = ()=>{
+        if(locked || paused) return;
         sfxClick();
         [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
         card.classList.add("sel");
@@ -1369,21 +1085,26 @@ function renderQuestion(i, resetAttempts=true){
       };
       grid.appendChild(card);
     });
-
     optionsEl.appendChild(grid);
   }
 
-  if(type === "hotspot"){
-    clearBtn.style.display = "inline-block";
-
+  if(type==="hotspot"){
+    clearBtn.style.display="inline-block";
     const msg = document.createElement("div");
     msg.className="pill";
-    msg.style.marginBottom="6px";
+    msg.style.marginBottom="10px";
     msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
     optionsEl.appendChild(msg);
 
     const wrap = document.createElement("div");
-    wrap.className="hotspotWrap";
+    wrap.style.position="relative";
+    wrap.style.width="100%";
+    wrap.style.maxWidth="640px";
+    wrap.style.margin="0 auto";
+    wrap.style.borderRadius="18px";
+    wrap.style.overflow="hidden";
+    wrap.style.border="1px solid rgba(255,255,255,.14)";
+    wrap.style.background="rgba(0,0,0,.18)";
     wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
     optionsEl.appendChild(wrap);
 
@@ -1394,7 +1115,6 @@ function renderQuestion(i, resetAttempts=true){
     wrap.appendChild(zones);
 
     selectedSingle = null;
-    validateBtn.disabled = false;
 
     (q.hotspots||[]).forEach((h, hi)=>{
       const z = document.createElement("button");
@@ -1402,9 +1122,11 @@ function renderQuestion(i, resetAttempts=true){
       z.className="hotspot-zone";
       z.style.left = h.x + "%";
       z.style.top  = h.y + "%";
-      z.style.width  = h.w + "%";
-      z.style.height = h.h + "%";
-      z.onclick = ()=>{
+      z.style.width = h.w + "%";
+      z.style.height= h.h + "%";
+      z.style.borderRadius = (h.r||16) + "px";
+      z.onclick=()=>{
+        if(locked || paused) return;
         sfxClick();
         [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
         z.classList.add("sel");
@@ -1415,352 +1137,382 @@ function renderQuestion(i, resetAttempts=true){
     });
   }
 
-  hudQnum.textContent = String(i+1);
-  setProgress();
+  if(type==="drag_order"){
+    clearBtn.style.display="inline-block";
+    const note = document.createElement("div");
+    note.className="pill";
+    note.style.marginBottom="10px";
+    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
+    optionsEl.appendChild(note);
 
-  validateBtn.disabled = (type === "drag_order") ? false : true;
+    const list = document.createElement("div");
+    list.id="dragList";
+    list.style.display="grid";
+    list.style.gap="10px";
+
+    const items = [...q.items];
+    for(let k=items.length-1;k>0;k--){
+      const j=Math.floor(Math.random()*(k+1));
+      [items[k],items[j]]=[items[j],items[k]];
+    }
+    items.forEach((it)=>{
+      const row = document.createElement("div");
+      row.className="opt";
+      row.setAttribute("draggable","true");
+      row.dataset.id = it.id;
+      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+      list.appendChild(row);
+    });
+    optionsEl.appendChild(list);
+
+    let dragSrc = null;
+    list.addEventListener("dragstart",(e)=>{
+      if(locked || paused) { e.preventDefault(); return; }
+      const target = e.target.closest("[draggable='true']");
+      if(!target) return;
+      dragSrc = target;
+      e.dataTransfer.effectAllowed="move";
+      target.style.opacity="0.6";
+      validateBtn.disabled = false;
+    });
+    list.addEventListener("dragend",(e)=>{
+      const target = e.target.closest("[draggable='true']");
+      if(target) target.style.opacity="1";
+      dragSrc=null;
+    });
+    list.addEventListener("dragover",(e)=>{
+      if(locked || paused) return;
+      e.preventDefault();
+      const over = e.target.closest("[draggable='true']");
+      if(!over || !dragSrc || over===dragSrc) return;
+      const rect = over.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height/2;
+      list.insertBefore(dragSrc, before ? over : over.nextSibling);
+    });
+  }
+
+  if(type==="cloze"){
+    clearBtn.style.display="inline-block";
+    const box = document.createElement("div");
+    box.className="opt"; box.style.cursor="default";
+    const html = q.template
+      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris seulement les chiffres (ex: 10).</div>`;
+    optionsEl.appendChild(box);
+    const inputs = box.querySelectorAll("input[data-k]");
+    inputs.forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        if(locked || paused) return;
+        clozeValues[inp.dataset.k] = inp.value;
+        const filled = q.blanks.every(b => (clozeValues[b.key]||"").trim().length>0);
+        validateBtn.disabled = !filled;
+      });
+    });
+  }
+
+  hudQnum.textContent = String(i+1);
   startTimer(true);
 }
 
 clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
 
-/* ========= Feedback overlay ========= */
-function showFeedback(kind, text, {allowRetry, allowNext, missionFail}){
-  badgeState.className="badgeState";
-  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
-  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
-  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
-
-  modalText.textContent = text;
-  feedbackOverlay.style.display="flex";
-
-  retryBtn.style.display = allowRetry ? "inline-block" : "none";
-  nextBtn.style.display  = allowNext  ? "inline-block" : "none";
-
-  okBtn.style.display = "none";
-  okBtn.onclick = null;
-
-  retryBtn.onclick = ()=>{
-    hideFeedback();
-    locked = false;
-    paused = false;
-    setHintsUI();
-    startTimer(true);
-  };
-  nextBtn.onclick = async ()=>{
-    hideFeedback();
-    idx++;
-    if(idx < TOTAL){
-      await showLoading(800);
-      renderQuestion(idx, true);
-    }else{
-      endScenario();
-    }
-  };
-
-  if(missionFail){
-    retryBtn.style.display="none";
-    nextBtn.style.display="none";
-    okBtn.style.display="inline-block";
-    okBtn.textContent="OK";
-    okBtn.onclick = ()=>{
-      hideFeedback();
-      resetMission(true);
-    };
+/* ===== INDICE ===== */
+function hintForQuestion(q){
+  const t = q.type;
+  if(t==="single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    return ok ? `✅ Regarde la proposition qui parle de : <b>${escapeHtml(ok.text).slice(0, 70)}…</b>` : "✅ Cherche la proposition la plus vitale (voies aériennes/respiration).";
   }
+  if(t==="tf"){
+    const correct = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
+    return `✅ La bonne réponse est : <b>${correct}</b>.`;
+  }
+  if(t==="image_single"){
+    const ok = (q.options||[]).find(o=>o.kind==="ok");
+    return ok ? `✅ Choisis l’image : <b>${escapeHtml(ok.label)}</b> (refroidissement correct).` : "✅ Cherche l’image qui montre une action correcte.";
+  }
+  if(t==="multi"){
+    const oks = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
+    return oks.length ? `✅ Il y a <b>${oks.length}</b> réponses justes. Pense aux priorités : <b>respiration / surveillance</b>.` : "✅ Plusieurs réponses sont justes.";
+  }
+  if(t==="cloze"){
+    return "✅ Ce sont des <b>valeurs standard</b> (minutes et % paume).";
+  }
+  if(t==="drag_order"){
+    return "✅ Commence par retirer ce qui peut comprimer (bijoux), puis refroidir.";
+  }
+  if(t==="hotspot"){
+    return "✅ La zone correcte est une zone centrale (observe bien la brûlure la plus évidente).";
+  }
+  return "✅ Indice : vise la priorité vitale.";
 }
-function hideFeedback(){ feedbackOverlay.style.display="none"; }
 
-/* ========= Hint overlay ========= */
-function showHint(text){
-  hintLeftTop.textContent = String(hintsLeft);
-  hintText.innerHTML = text;
+function showHint(){
+  if(locked || paused) return;
+  if(hintsLeft<=0 || hintUsedThisQuestion) return;
+
+  hintsLeft = Math.max(0, hintsLeft - 1);
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = true;
+
+  paused = true;
+  stopTimer();
+
+  const q = questions[idx];
+  hintText.innerHTML = hintForQuestion(q) + `<div style="margin-top:10px; color: rgba(255,255,255,.72); font-size:12px;">(1 indice max par question)</div>`;
+  setHintsUI();
+
   hintOverlay.style.display = "flex";
 }
-function hideHint(){ hintOverlay.style.display = "none"; }
-closeHintBtn.onclick = ()=>{
+function hideHint(){
+  hintOverlay.style.display = "none";
+}
+hintBtn.addEventListener("click", ()=>{
+  ensureAudio(); sfxClick();
+  showHint();
+});
+hintOkBtn.addEventListener("click", ()=>{
+  sfxClick();
   hideHint();
   paused = false;
-  locked = false;
-  setHintsUI();
   startTimer(false);
-};
-
-/* ========= Pause overlay ========= */
-function showPause(){ pauseOverlay.style.display = "flex"; }
-function hidePause(){ pauseOverlay.style.display = "none"; }
-resumeBtn.onclick = ()=>{
-  hidePause();
-  paused = false;
-  locked = false;
   setHintsUI();
-  startTimer(false);
-};
+});
 
-/* ========= Motion ========= */
-function motion(type){
-  frame.classList.remove("shake","pulseGood","flashBad");
-  modalBox.classList.remove("shake","pulseGood","flashBad");
-  if(type==="good"){ frame.classList.add("pulseGood"); }
-  else if(type==="wrong"){ modalBox.classList.add("shake"); }
-  else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
-}
-
-/* ========= Attempts & mission fail ========= */
-function registerFailedAttempt(baseMsg){
-  attemptsForCurrentQuestion++;
-  setAttemptsUI();
-
-  // 2 tentatives max => 2e erreur/timeout => fail
-  if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
-    sfxAlarmLong();
-    missionFail(`❌ ${baseMsg} Deux échecs (erreurs/timeouts). Mission échouée. Retour au départ… (score & stress remis à zéro)`);
-    return;
-  }
-  showFeedback("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
-}
-
-function missionFail(message){
-  stopTimer();
-  locked = true;
-  paused = false;
-  showFeedback("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
-  motion("critical");
-}
-
-function resetMission(showStart=true){
-  stopTimer();
-  idx = 0;
-  attemptsForCurrentQuestion = 1;
-  hintUsedThisQuestion = false;
-  locked = true;
-  paused = false;
-
-  setScore(0);
-  setStress(0);
-
-  hintsLeft = HINT_MAX;
-  localStorage.setItem(HINT_KEY, String(hintsLeft));
-  setHintsUI();
-  setAttemptsUI();
-  setProgress();
-
-  if(showStart){
-    startOverlay.style.display = "flex";
-  }
-}
-
-/* ========= Evaluation ========= */
-function evaluateOption(opt){
-  if(opt.kind === "ok"){
-    addScore(opt.pts ?? 10);
-    sfxCorrect();
-    motion("good");
-    showFeedback("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-    return;
-  }
-  if(opt.kind === "critical"){
-    addStress(STRESS_RULES.critical);
-    addScore(opt.pts ?? -10);
-    sfxCritical();
-    motion("critical");
-    registerFailedAttempt(opt.fb || "🚨 Erreur critique.");
-    return;
-  }
-  addStress(STRESS_RULES.wrong);
-  sfxWrong();
-  motion("wrong");
-  registerFailedAttempt(opt.fb || "❌ Incorrect.");
-}
-
-/* ========= Validate ========= */
+/* ===== VALIDATION ===== */
 validateBtn.onclick = ()=>{
-  if(locked) return;
+  if(locked || paused) return;
 
   const q = questions[idx];
   const type = q.type;
 
   const needSelection = (msg)=>{
     sfxClick();
-    showFeedback("warn", msg, {allowRetry:false, allowNext:false, missionFail:false});
+    showOverlay("warn", msg, {allowRetry:true, allowNext:false, missionFail:false});
     retryBtn.style.display="none";
     nextBtn.style.display="none";
     okBtn.style.display="inline-block";
     okBtn.textContent="OK";
-    okBtn.onclick = ()=>{
-      hideFeedback();
-      locked = false;
-      paused = false;
-      startTimer(false);
-    };
+    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(false); };
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
-    if(selectedSingle === null){
-      needSelection("Choisis une réponse avant de valider.");
-      return;
-    }
+    if(selectedSingle===null){ needSelection("Choisis une réponse avant de valider."); return; }
   }
   if(type==="multi"){
-    if(multiSelected.size === 0){
-      needSelection("Sélectionne au moins une proposition avant de valider.");
-      return;
-    }
+    if(multiSelected.size===0){ needSelection("Sélectionne au moins une proposition avant de valider."); return; }
+  }
+  if(type==="short"){
+    if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
   }
   if(type==="cloze"){
     const filled = q.blanks.every(b => ((clozeValues[b.key]||"").trim().length>0));
-    if(!filled){
-      needSelection("Complète tous les trous avant de valider.");
-      return;
-    }
+    if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
   }
 
   stopTimer();
-  locked = true;
+  locked=true;
 
   if(type==="single"){
-    evaluateOption(q.options[selectedSingle]);
-    return;
+    evaluateOption(q.options[selectedSingle]); return;
   }
-
   if(type==="tf"){
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
-    evaluateOption(opt);
-    return;
+    evaluateOption(opt); return;
   }
-
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]);
-    return;
-  }
-
-  if(type==="hotspot"){
-    const h = (q.hotspots||[])[selectedSingle];
-    if(!h){
-      locked = false;
-      startTimer(false);
-      return;
-    }
-    if(h.kind==="ok"){
-      addScore(h.pts ?? 10);
-      sfxCorrect();
-      motion("good");
-      showFeedback("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-    }else{
-      addStress(STRESS_RULES.wrong);
-      addScore(h.pts ?? 0);
-      sfxWrong();
-      motion("wrong");
-      registerFailedAttempt(h.fb || "❌ Incorrect.");
-    }
-    return;
-  }
-
   if(type==="multi"){
-    const chosen = [...multiSelected].sort((a,b)=>a-b);
-    const correctIdx = q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+    const chosen=[...multiSelected].sort((a,b)=>a-b);
+    const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
     const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
     if(ok){
       addScore(10);
-      sfxCorrect();
-      motion("good");
-      showFeedback("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+      sfxCorrect(); motion("good");
     }else{
       addStress(STRESS_RULES.wrong);
-      sfxWrong();
-      motion("wrong");
-      registerFailedAttempt(q.badFb || "❌ Incorrect.");
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Incorrect.");
     }
     return;
   }
+  if(type==="image_single"){
+    evaluateOption(q.options[selectedSingle]); return;
+  }
+  if(type==="hotspot"){
+    const h = (q.hotspots||[])[selectedSingle];
+    if(!h){ locked=false; startTimer(false); return; }
 
+    if(h.kind==="ok"){
+      addScore(h.pts ?? 10);
+      showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+      sfxCorrect(); motion("good");
+    }else if(h.kind==="critical"){
+      addStress(STRESS_RULES.critical);
+      addScore(h.pts ?? -10);
+      sfxCritical(); motion("critical");
+      failedAttempt(h.fb || "🚨 Erreur critique.");
+    }else{
+      addStress(STRESS_RULES.wrong);
+      addScore(h.pts ?? 0);
+      sfxWrong(); motion("wrong");
+      failedAttempt(h.fb || "❌ Incorrect.");
+    }
+    return;
+  }
   if(type==="drag_order"){
     const list = document.getElementById("dragList");
     const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
     const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
     if(ok){
       addScore(10);
-      sfxCorrect();
-      motion("good");
-      showFeedback("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, missionFail:false});
+      showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, missionFail:false});
+      sfxCorrect(); motion("good");
     }else{
       addStress(STRESS_RULES.wrong);
-      sfxWrong();
-      motion("wrong");
-      registerFailedAttempt(q.badFb || "❌ Ordre incorrect.");
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Ordre incorrect.");
     }
     return;
   }
-
   if(type==="cloze"){
-    const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === String(b.answer).trim().toLowerCase()));
+    const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
     if(ok){
       addScore(10);
-      sfxCorrect();
-      motion("good");
-      showFeedback("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+      showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+      sfxCorrect(); motion("good");
     }else{
       addStress(STRESS_RULES.wrong);
-      sfxWrong();
-      motion("wrong");
-      registerFailedAttempt(q.badFb || "❌ Incorrect.");
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Texte incorrect.");
     }
     return;
   }
 };
 
-/* ========= Hint button (2 total / 1 per question) ========= */
-hintBtn.onclick = ()=>{
-  if(locked || paused) return;
-  if(hintsLeft <= 0) return;
-  if(hintUsedThisQuestion) return;
+function evaluateOption(opt){
+  if(opt.kind==="ok"){
+    addScore(opt.pts ?? 10);
+    showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    sfxCorrect(); motion("good"); return;
+  }
+  if(opt.kind==="critical"){
+    addStress(STRESS_RULES.critical);
+    addScore(opt.pts ?? -10);
+    sfxCritical(); motion("critical");
+    failedAttempt(opt.fb || "🚨 Erreur critique."); return;
+  }
+  if(opt.kind==="partial"){
+    addStress(STRESS_RULES.wrong);
+    addScore(opt.pts ?? 3);
+    sfxWrong(); motion("wrong");
+    failedAttempt(opt.fb || "🟡 Partiel."); return;
+  }
+  addStress(STRESS_RULES.wrong);
+  sfxWrong(); motion("wrong");
+  failedAttempt(opt.fb || "❌ Incorrect.");
+}
 
-  sfxClick();
+function failedAttempt(baseMsg){
+  attemptsForCurrentQuestion++;
+  setAttemptsUI();
+  if(attemptsForCurrentQuestion > MAX_ATTEMPTS){
+    sfxAlarmLong();
+    missionFail("❌ Tentative ratée. Mission échouée. Retour au départ… (score remis à zéro)");
+    return;
+  }
+  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${MAX_ATTEMPTS})`, {allowRetry:true, allowNext:false, missionFail:false});
+}
 
-  hintsLeft = clamp(hintsLeft - 1, 0, HINT_MAX);
+function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
+  badgeState.className="badgeState";
+  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
+  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
+  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+
+  modalText.textContent = text;
+  overlay.style.display="flex";
+
+  retryBtn.style.display = allowRetry ? "inline-block" : "none";
+  nextBtn.style.display  = allowNext  ? "inline-block" : "none";
+
+  okBtn.style.display="none"; okBtn.onclick=null;
+
+  retryBtn.onclick = ()=>{
+    hideOverlay();
+    locked=false;
+    renderQuestion(idx, false);
+  };
+  nextBtn.onclick  = ()=>{
+    hideOverlay();
+    idx++;
+    if(idx < TOTAL) renderQuestion(idx,true);
+    else endScenario();
+  };
+
+  if(missionFail){
+    retryBtn.style.display="none"; nextBtn.style.display="none";
+    okBtn.style.display="inline-block";
+    okBtn.textContent="OK";
+    okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
+  }
+
+  setHintsUI();
+}
+function hideOverlay(){ overlay.style.display="none"; }
+
+function missionFail(message){
+  stopTimer();
+  showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
+  motion("critical");
+}
+
+function resetMission(showStart=true){
+  stopTimer();
+  idx=0;
+  attemptsForCurrentQuestion=1; setAttemptsUI();
+  setScore(0); setStress(0);
+
+  hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
-  hintUsedThisQuestion = true;
+  hintUsedThisQuestion = false;
+
+  locked=true;
+  paused=false;
+  hidePause();
+  hideHint();
+  hideOverlay();
   setHintsUI();
 
-  paused = true;
-  locked = true;
-  stopTimer();
+  if(showStart) startOverlay.style.display="flex";
+}
 
-  const h = hintsTextByIndex[idx] || "Protocole brûlure : refroidir, protéger, alerter si gravité.";
-  showHint(h);
-};
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
+}
 
-/* ========= Pause button ========= */
-pauseBtn.onclick = ()=>{
-  if(locked) return;
-  sfxClick();
-  paused = true;
-  locked = true;
-  stopTimer();
-  showPause();
-};
-
-/* ========= Answer key ========= */
+/* ===== Corrigé (table) ===== */
 function buildAnswerKey(){
   const rows = questions.map((q, i)=>{
     let ans = "";
-    if(q.type==="single"){
+    if(q.type==="single" || q.type==="image_single"){
       const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? (q.options[oi].text||"—") : "—";
+      ans = oi>=0 ? (q.type==="image_single" ? (q.options[oi].label + " — " + q.options[oi].caption) : q.options[oi].text) : "—";
     }else if(q.type==="tf"){
       ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
-      ans = q.options.filter(o=>o.correct).map(o=>o.text).join(" ; ");
+      const a = q.options.map((o)=>o.correct?o.text:null).filter(Boolean);
+      ans = a.join(" ; ");
     }else if(q.type==="drag_order"){
       const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
       ans = q.expected.map(id=>map[id]).join(" → ");
     }else if(q.type==="cloze"){
       ans = q.blanks.map(b=>b.answer).join(" | ");
-    }else if(q.type==="image_single"){
-      const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? `${q.options[oi].label} — ${q.options[oi].caption}` : "—";
     }else if(q.type==="hotspot"){
-      ans = "Zone correcte (hotspot)";
+      ans = "Zone correcte (hotspot OK)";
     }else{
       ans = "—";
     }
@@ -1770,14 +1522,15 @@ function buildAnswerKey(){
         <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td>
         <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td>
         <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td>
-      </tr>
-    `;
+      </tr>`;
   }).join("");
 
   return `
-    <div style="font-weight:950; font-size:16px; margin-bottom:10px;">📘 Corrigé (bonnes réponses)</div>
+    <div style="font-weight:950; font-size:14px; color: rgba(255,255,255,.75); margin-bottom:10px;">
+      (Disponible uniquement à la fin du quiz)
+    </div>
     <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
-      <table style="width:100%; border-collapse:collapse; min-width:760px;">
+      <table style="width:100%; border-collapse:collapse; min-width:680px;">
         <thead>
           <tr>
             <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
@@ -1790,148 +1543,109 @@ function buildAnswerKey(){
     </div>
   `;
 }
-showKeyBtn.onclick = ()=>{
-  if(showKeyBtn.disabled) return;
-  sfxClick();
-  keyBody.innerHTML = buildAnswerKey();
-  keyOverlay.style.display = "flex";
-};
-closeKeyBtn.onclick = ()=>{ keyOverlay.style.display = "none"; };
 
-/* ========= Badge save ========= */
-function computeBadge(percent){
-  if(percent >= 90) return {type:"OR", img:"assets/or.png"};
-  if(percent >= 70) return {type:"ARGENT", img:"assets/argent.png"};
-  return {type:"BRONZE", img:"assets/bronze.png"};
-}
-function saveBadge({scenarioId, mission, niveau, badgeType, badgeName, score, img}){
-  const payload = { scenarioId, mission, niveau, badgeType, badgeName, score, img, ts: new Date().toISOString() };
-  const key = `badge_s${scenarioId}_${niveau}`;
-  localStorage.setItem(key, JSON.stringify(payload));
-  const histKey = "badges_history";
-  let hist = [];
-  try{ hist = JSON.parse(localStorage.getItem(histKey) || "[]"); }catch(e){ hist = []; }
-  hist.push(payload);
-  localStorage.setItem(histKey, JSON.stringify(hist));
-}
-
-/* ========= End scenario ========= */
+/* ===== FIN ===== */
 function endScenario(){
   stopTimer();
-  hideFeedback();
+  hideOverlay();
+  hideHint();
+  hidePause();
 
   locked = true;
   paused = false;
 
+  optionsEl.innerHTML="";
+  clearBtn.style.display="none";
   validateBtn.disabled = true;
-  clearBtn.style.display = "none";
-  hintBtn.disabled = true;
-  pauseBtn.disabled = true;
 
-  const maxScore = TOTAL * 10;  // référence
-  const percent = clamp(Math.round((score / maxScore) * 100), 0, 100);
-  const badge = computeBadge(percent);
-
-  const badgeName = `Badge ${badge.type} — Brûlure (Intermédiaire)`;
-  saveBadge({
-    scenarioId: SCENARIO.id,
-    mission: SCENARIO.mission,
-    niveau: "intermédiaire",
-    badgeType: badge.type,
-    badgeName,
-    score,
-    img: badge.img
-  });
-
-  showKeyBtn.disabled = false;
-  endBtn.style.display = "inline-block";
-  progressBar.style.width = "100%";
-
+  qMeta.textContent = "Fin — Badge obtenu";
+  qTitle.textContent = "🎉 Félicitations !";
   sfxVictory();
 
-  qMeta.textContent = "FIN — BADGE OBTENU";
-  qTitle.textContent = "🎉 Félicitations !";
   qDesc.innerHTML = `
-    <div style="color: rgba(255,255,255,.86);">
-      Tu as terminé <b>${escapeHtml(SCENARIO.label)}</b>.
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-        <span class="pill">⭐ Score : <b>${score}</b> / ${maxScore}</span>
-        <span class="pill">🏅 Badge : <b>${escapeHtml(badge.type)}</b> (${percent}%)</span>
+    <div style="margin-top:8px; color: rgba(255,255,255,.86);">
+      <div style="font-weight:950; font-size:16px;">🏅 Mission Brûlure terminée</div>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="pill">⭐ Score final : <b>${score}</b></span>
         <span class="pill">😰 Stress : <b>${stress}%</b></span>
       </div>
     </div>
   `;
 
   optionsEl.innerHTML = `
-    <div class="opt" style="cursor:default;">
-      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-        <div style="width:92px; height:92px; border-radius:18px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); display:grid; place-items:center;">
-          <img src="${badge.img}" alt="${badge.type}" style="width:64px; height:64px; object-fit:contain;">
-        </div>
-        <div style="min-width:240px;">
-          <div style="font-weight:950; font-size:18px;">${escapeHtml(badgeName)}</div>
-          <div style="color: rgba(255,255,255,.74); margin-top:6px; line-height:1.45;">
-            Refroidir, protéger, estimer la gravité et éviter les erreurs critiques.
-          </div>
-        </div>
-      </div>
+    <div class="opt" style="cursor:default; text-align:center;">
+      <div style="font-size:46px; margin-bottom:4px;">🏅</div>
+      <div style="font-weight:950;">Badge obtenu</div>
+      <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Tu peux consulter le corrigé.</div>
     </div>
   `;
+
+  showKeyBtn.disabled = false;
+  continueBtn.style.display = "inline-block";
+  setHintsUI();
+
+  showKeyBtn.onclick = ()=>{
+    sfxClick();
+    answerKeyWrap.innerHTML = buildAnswerKey();
+    keyOverlay.style.display = "flex";
+  };
+
+  continueBtn.onclick = ()=>{
+    sfxClick();
+    window.location.href = NEXT_GENIALLY_URL;
+  };
 }
 
-/* ========= Terminer ========= */
-endBtn.onclick = ()=>{ sfxClick(); window.location.href = NEXT_SCENARIO_URL; };
+keyCloseBtn.onclick = ()=>{ sfxClick(); keyOverlay.style.display="none"; };
 
-/* ========= Start ========= */
-startBtn.addEventListener("click", async ()=>{
-  ensureAudio();
-  sfxClick();
+/* ===== MOTION ===== */
+function motion(type){
+  frame.classList.remove("shake","pulseGood","flashBad");
+  modalBox.classList.remove("shake","pulseGood","flashBad");
+  if(type==="good"){ frame.classList.add("pulseGood"); }
+  else if(type==="wrong"){ modalBox.classList.add("shake"); }
+  else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
+}
 
-  localStorage.setItem("score","0");
-  localStorage.setItem("stress","0");
-  setScore(0);
-  setStress(0);
+/* ===== START ===== */
+startBtn.addEventListener("click", ()=>{
+  ensureAudio(); sfxClick();
+
+  localStorage.setItem("stress", "0");
+  localStorage.setItem("score", "0");
+  stress = 0; score = 0;
+  setStress(0); setScore(0);
 
   hintsLeft = HINT_MAX;
   localStorage.setItem(HINT_KEY, String(hintsLeft));
-
-  startOverlay.style.display = "none";
-  idx = 0;
-  attemptsForCurrentQuestion = 1;
   hintUsedThisQuestion = false;
 
-  setAttemptsUI();
+  locked = false;
+  paused = false;
+  hidePause();
   setHintsUI();
-  setProgress();
 
-  await showLoading(800);
+  startOverlay.style.display="none";
+  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
   renderQuestion(0, true);
 });
 
-/* ========= Init ========= */
 (function init(){
-  locked = true;
-  paused = false;
-  idx = 0;
-
+  locked=true;
+  paused=false;
   qMeta.textContent = SCENARIO.label;
-  qTitle.textContent = "Prépare-toi…";
-  qDesc.innerHTML = `Tu as <b>${TIMER_SECONDS} secondes</b> par question. Indices : <b>${HINT_MAX}</b> (1 max/question).`;
-  optionsEl.innerHTML = "";
-
-  hudQnum.textContent = "1";
-  hudTime.textContent = String(TIMER_SECONDS);
+  qTitle.textContent="Prépare-toi…";
+  qDesc.innerHTML = `Tu as <b>${TIMER_SECONDS} secondes</b> par question. <br>Règles : <b>${MAX_ATTEMPTS}</b> tentative • <b>${HINT_MAX}</b> indices. Clique sur <b>DÉMARRER</b>.`;
+  optionsEl.innerHTML="";
+  hudQnum.textContent="1";
+  hudTime.textContent=String(TIMER_SECONDS);
   ring.style.setProperty("--p","100%");
   setRingProgress();
-
-  setProgress();
+  setAttemptsUI();
   setHintsUI();
-
-  keyOverlay.style.display = "none";
 })();
-  </script>
+</script>
 
-  <!-- si tu utilises ton badge-manager externe, laisse-le -->
-  <script src="badge-manager.js"></script>
+<script src="badge-manager.js"></script>
 </body>
 </html>
