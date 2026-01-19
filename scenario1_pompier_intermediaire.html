@@ -644,7 +644,7 @@
           <div class="stats">
             <div class="pill">⭐ <span id="hudScore">0</span></div>
             <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">3</span></div>
             <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
             <div class="pill timerPill" id="timerPill">
@@ -830,7 +830,7 @@
     const NEXT_GENIALLY_URL = "#"; // 🔁 remplace par ton lien Genially
 
     const TIMER_SECONDS = 45;
-    const MAX_ATTEMPTS = 2;
+    const MAX_ATTEMPTS = 3;
 
     const HINT_MAX = 2;
     const HINT_KEY = `hints_left_s${SCENARIO.id}`;
@@ -884,7 +884,7 @@
     if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 
     let idx = 0;
-    let attemptsForCurrentQuestion = 1;
+    let attemptsForCurrentQuestion = 3;
     let locked = true;
     let paused = false;
     let timerId = null;
