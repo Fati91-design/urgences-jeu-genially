@@ -26,6 +26,9 @@
       --blue: rgba(80,170,255,1);
       --ember: rgba(255,150,70,1);
       --ember2: rgba(255,120,50,1);
+
+      /* ✅ AJOUT: hauteur réservée à la barre d’actions fixée */
+      --actionsBarH: 92px;
     }
 
     *{ box-sizing:border-box; }
@@ -272,6 +275,9 @@
       display:flex;
       flex-direction:column;
       gap:0;
+
+      /* ✅ AJOUT: fixe la “zone questions” (évite les sauts + réserve de la place pour la barre d’actions fixée) */
+      padding-bottom: calc(18px + var(--actionsBarH));
     }
 
     .frame::after{
@@ -285,7 +291,23 @@
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
     .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+
+    /* ✅ AJOUT: fixe la hauteur de description pour stabiliser le conteneur questions */
+    .qdesc{
+      position: relative; z-index:2;
+      margin-top: 10px;
+      color: rgba(255,255,255,.82);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 980px;
+
+      max-height: 112px;
+      overflow:auto;
+      padding-right: 6px;
+    }
+    .qdesc::-webkit-scrollbar{ width:10px; }
+    .qdesc::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius:999px; border: 2px solid rgba(0,0,0,.25); }
+    .qdesc::-webkit-scrollbar-track{ background: rgba(0,0,0,.14); border-radius:999px; }
 
     .options{
       position: relative; z-index:2;
@@ -294,6 +316,9 @@
       overflow:auto;
       padding-right: 6px;
       min-height:0;
+
+      /* ✅ AJOUT: espace en bas pour éviter que les options passent sous la barre d’actions fixée */
+      padding-bottom: calc(12px + var(--actionsBarH));
     }
     .options::-webkit-scrollbar{ width:10px; }
     .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.16); border-radius:999px; border: 2px solid rgba(0,0,0,.25); }
@@ -319,14 +344,20 @@
       border-color: rgba(255,150,70,.30);
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
-    /* ✅ Actions (Référence : gauche Corrigé/Terminer, droite Valider/Effacer) */
+
+    /* ✅ Actions (fixées en bas) */
     .actions{
-      position: relative;
-      z-index:2;
+      position: fixed;            /* ✅ FIX: au lieu de relative */
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      width: min(1120px, calc(100% - 20px)); /* ✅ alignée à la zone Genially (stage padding 10px) */
+      z-index: 25;
+
       display:flex;
       justify-content:space-between;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 0;
       flex-wrap: wrap;
       align-items:center;
     }
@@ -441,6 +472,7 @@
       .hud{ grid-template-columns: 1fr; }
       .stressWrap{ width: 190px; }
       .progressShell{ min-width:100%; }
+      :root{ --actionsBarH: 132px; } /* ✅ plus de place quand ça wrap */
     }
 
     /* Hotspot zones */
@@ -571,6 +603,9 @@
           <!-- ✅ Règle demandée : 2 indices -->
           <button class="btnNeo" id="hintBtn" type="button">💡 Indice (<span id="hudHints">2</span>)</button>
 
+          <!-- ✅ AJOUT: bouton pause dans le même conteneur (chrono + éléments) -->
+          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
+
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
           </div>
@@ -665,6 +700,24 @@
   </div>
 </div>
 
+<!-- ✅ AJOUT: Pause overlay -->
+<div class="overlay" id="pauseOverlay">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div class="badgeState bWarn">⏸ Pause</div>
+      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+        Temps restant : <span id="pauseTimeTxt">30</span>s
+      </div>
+    </div>
+    <div class="modalBody">
+      Le quiz est en pause. Reprends quand tu es prêt(e).
+    </div>
+    <div class="modalActions">
+      <button class="btnPrimary show" id="pauseResumeBtn" type="button">Reprendre</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ========= SCENARIO ENGINE (Design Genially-like) ========= */
 let audioCtx = null;
@@ -732,6 +785,12 @@ const hintOverlay = el("hintOverlay"), hintText = el("hintText"), hintOkBtn = el
 const showKeyBtn = el("showKeyBtn");
 const endBtn = el("endBtn");
 const answerKeyWrap = el("answerKeyWrap");
+
+/* ✅ AJOUT: pause elements */
+const pauseBtn = el("pauseBtn");
+const pauseOverlay = el("pauseOverlay");
+const pauseTimeTxt = el("pauseTimeTxt");
+const pauseResumeBtn = el("pauseResumeBtn");
 
 /* ======= CONFIG ======= */
 const SCENARIO = { id: 1, label: "Scénario 1 — Étouffement", mission: "Étouffement", level: "Niveau avancé" };
@@ -849,6 +908,50 @@ function startTimer(){
   }, 1000);
 }
 
+/* ✅ AJOUT: reprise du timer sans reset (pause/reprendre) */
+function resumeTimer(){
+  stopTimer();
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
+  timerId = setInterval(()=>{
+    if(locked) return;
+    timeLeft--;
+    hudTime.textContent = String(timeLeft);
+    setRingProgress();
+    if(timeLeft <= 0){
+      stopTimer();
+      sfxAlarmLong();
+
+      addStress(STRESS_RULES.timeout);
+      attemptsForCurrentQuestion++;
+      setAttemptsUI();
+
+      if(attemptsForCurrentQuestion >= (ATTEMPTS_MAX + 1)){
+        missionFail("⏱️ Temps écoulé. Mission échouée. Retour au départ… (score remis à zéro)");
+      }else{
+        showOverlay("warn","⏱️ Temps écoulé.", {allowRetry:true, allowNext:false, missionFail:false});
+      }
+    }
+  }, 1000);
+}
+function showPause(){
+  if(locked) return;
+  locked = true;
+  stopTimer();
+  pauseTimeTxt.textContent = String(timeLeft);
+  pauseOverlay.style.display = "flex";
+}
+function hidePause(){
+  pauseOverlay.style.display = "none";
+}
+pauseBtn.addEventListener("click", ()=>{ sfxClick(); showPause(); });
+pauseResumeBtn.addEventListener("click", ()=>{
+  sfxClick();
+  hidePause();
+  locked = false;
+  resumeTimer();
+});
+
 /* ======= SELECTION STATE ======= */
 let selectedSingle = null;
 let multiSelected = new Set();
@@ -879,6 +982,7 @@ function renderQuestion(i, resetAttempts=true){
   stopTimer();
   hideOverlay();
   hideHint();
+  hidePause(); /* ✅ AJOUT */
 
   if(resetAttempts){
     attemptsForCurrentQuestion=1;
@@ -1023,8 +1127,6 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="drag_order"){
-
-
     const list = document.createElement("div");
     list.id="dragList";
     list.style.display="grid";
@@ -1152,7 +1254,7 @@ function hideHint(){
   hintOverlay.style.display = "none";
 }
 hintBtn.addEventListener("click", ()=>{ sfxClick(); showHint(); });
-hintOkBtn.addEventListener("click", ()=>{ sfxClick(); hideHint(); locked=false; });
+hintOkBtn.addEventListener("click", ()=>{ sfxClick(); hideHint(); locked=false; resumeTimer(); });
 
 validateBtn.onclick = ()=>{
   if(locked) return;
@@ -1167,7 +1269,7 @@ validateBtn.onclick = ()=>{
     nextBtn.style.display="none";
     okBtn.style.display="inline-block"; okBtn.classList.add("show");
     okBtn.textContent="OK";
-    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
+    okBtn.onclick = ()=>{ hideOverlay(); locked=false; resumeTimer(); };
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
@@ -1344,6 +1446,7 @@ function resetMission(showStart=true){
   hintUsedThisQuestion = false;
   setHintsUI();
 
+  hidePause(); /* ✅ AJOUT */
   locked=true;
   progressBar.style.width = "0%";
   if(showStart) startOverlay.style.display="flex";
@@ -1401,7 +1504,7 @@ function buildAnswerKey(){
 }
 
 function endScenario(){
-  stopTimer(); hideOverlay();
+  stopTimer(); hideOverlay(); hidePause();
   optionsEl.innerHTML=""; validateBtn.disabled=true; clearBtn.style.display="none";
 
   qMeta.textContent = "Fin — Badge obtenu";
@@ -1427,6 +1530,7 @@ function endScenario(){
 
   // Hint/pause/valider désactivés à la fin
   hintBtn.disabled = true;
+  pauseBtn.disabled = true;
 }
 
 function motion(type){
@@ -1457,6 +1561,8 @@ startBtn.addEventListener("click", ()=>{
   hintUsedThisQuestion = false;
   setHintsUI();
 
+  pauseBtn.disabled = false; /* ✅ AJOUT */
+
   startOverlay.style.display="none";
   attemptsForCurrentQuestion=1; setAttemptsUI();
   progressBar.style.width = "0%";
@@ -1482,6 +1588,9 @@ startBtn.addEventListener("click", ()=>{
 
   // progress
   progressBar.style.width = "0%";
+
+  // pause enabled (sera utile dès démarrage)
+  pauseBtn.disabled = false;
 })();
 </script>
 
