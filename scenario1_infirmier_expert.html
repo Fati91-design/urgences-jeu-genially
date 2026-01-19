@@ -7,6 +7,11 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- Anton (style référence) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --glass: rgba(25, 27, 31, .72);
@@ -24,50 +29,48 @@
     }
 
     *{ box-sizing:border-box; }
-
-    /* ✅ Style référence (Genially anti-scroll + version étroite) */
     html,body{
-      height:100%;
       margin:0;
       background: transparent;
-      overflow:hidden;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow:hidden; /* ✅ Genially anti-scroll (style référence) */
+      height:100%;
     }
 
+    /* ✅ Style référence : stage full height + wrap height */
     .stage{
-      height: 100vh;
-      padding: 10px;
+      height:100vh;
+      padding:10px;
       overflow:hidden;
       display:flex;
       justify-content:center;
       align-items:flex-start;
     }
-
     .wrap{
       width: min(1120px, 100%);
-      height: 100%;
+      height:100%;
       display:flex;
       flex-direction:column;
-      gap: 12px;
+      gap:12px;
       min-height:0;
     }
 
-    /* ===== Top tabs (référence) ===== */
+    /* ✅ Top tabs (style référence) */
     .topTabs{
       display:flex;
-      gap:12px;
       align-items:center;
+      gap:12px;
       flex-wrap:wrap;
     }
     .levelTab{
-      background: var(--glass);
-      border: 1px solid rgba(255,200,150,.22);
-      border-radius: 999px;
-      padding: 10px 12px;
       display:flex;
       align-items:center;
       gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: var(--glass);
+      border:1px solid rgba(255, 200, 150, .22);
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
       position:relative;
@@ -75,64 +78,52 @@
     }
     .levelTab::after{
       content:"";
-      position:absolute;
-      inset:-2px;
-      pointer-events:none;
+      position:absolute; inset:-2px; pointer-events:none;
       background:
-        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
         radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
       opacity:.9;
     }
     .levelDot{
-      width: 10px; height: 10px; border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,150,70,.9));
-      box-shadow: 0 0 0 4px rgba(255,150,70,.12), 0 0 20px rgba(255,150,70,.20);
-      position:relative;
-      z-index:2;
+      width:10px; height:10px; border-radius:999px;
+      background: linear-gradient(180deg, var(--ember), var(--ember2));
+      box-shadow: 0 0 0 4px rgba(255,150,70,.15);
+      position:relative; z-index:2;
+      flex:0 0 auto;
     }
     #levelTabText{
-      font-weight: 950;
-      letter-spacing:.3px;
-      font-size: 12px;
-      position:relative;
-      z-index:2;
+      font-weight:950;
+      letter-spacing:.25px;
+      font-size:12px;
+      position:relative; z-index:2;
       white-space:nowrap;
     }
-
     .progressShell{
-      flex: 1 1 220px;
-      min-width: 220px;
-      height: 9px;
-      border-radius: 999px;
+      flex:1 1 220px;
+      min-width:220px;
+      height:9px;
+      border-radius:999px;
       background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
       overflow:hidden;
-      position:relative;
-      box-shadow: 0 18px 65px rgba(0,0,0,.18);
-      backdrop-filter: blur(12px);
     }
     .progressBar{
       height:100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,150,70,.95), rgba(80,170,255,.75));
+      width:0%;
+      background: linear-gradient(90deg, rgba(80,170,255,.95), rgba(255,150,70,.92));
       transition: width .25s ease;
     }
-
     .miniHint{
+      padding:10px 12px;
+      border-radius:999px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-weight: 950;
-      font-size: 12px;
-      color: rgba(255,255,255,.85);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:950;
+      font-size:12px;
+      color: rgba(255,255,255,.78);
       white-space:nowrap;
-      box-shadow: 0 18px 65px rgba(0,0,0,.18);
-      backdrop-filter: blur(12px);
     }
 
-    /* ===== HUD (référence étroite) ===== */
     .hud{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -143,16 +134,16 @@
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 12px 14px;
+      padding: 14px 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
+      gap: 14px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
-      min-height: 90px;
+      min-height: 92px;
     }
     .hudbox::after{
       content:"";
@@ -165,53 +156,35 @@
       opacity:.9;
     }
 
-    .profile{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
-      position: relative;
-      z-index:2;
-    }
+    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
 
     .avatarFrame{
-      width: 72px; height: 72px;
-      border-radius: 20px;
-      padding: 4px;
+      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
       flex: 0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 16px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
-      transform: scale(1.25);
+      transform: scale(1.35);
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
 
     .ptext{ min-width:0; }
     .pname{
-      font-weight: 950;
-      font-size: 20px;
+      font-family: "Anton", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      letter-spacing:.4px;
+      font-size: 22px;
       line-height: 1.05;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
+      white-space: nowrap; overflow:hidden; text-overflow: ellipsis;
       text-shadow: 0 14px 30px rgba(0,0,0,.55);
     }
-    .prole{
-      margin-top: 4px;
-      font-weight: 850;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
+    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
     .chip{
       background: rgba(255,150,70,.14);
@@ -225,15 +198,7 @@
       z-index:2;
     }
 
-    .stats{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index:2;
-    }
+    .stats{ display:flex; align-items:center; justify-content:flex-end; gap: 10px; flex-wrap: wrap; position: relative; z-index:2; }
 
     .pill{
       display:flex;
@@ -244,37 +209,31 @@
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       font-weight: 950;
-      font-size: 12px;
+      font-size: 13px;
       white-space: nowrap;
     }
 
-    .timerPill{
-      padding: 8px 10px;
-      gap: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-    }
+    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
 
-    /* ✅ ring référence étroite: 34 / 24 */
     .ring{
-      width: 34px; height: 34px; border-radius: 999px;
+      width: 40px; height: 40px; border-radius: 999px;
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 24px; height: 24px; border-radius: 999px;
+      width: 28px; height: 28px; border-radius: 999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 13px; font-weight: 950;
+      font-size: 14px; font-weight: 950;
     }
 
     .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 11px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 15px; font-weight: 950; }
+    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
+    .timeText .sec{ font-size: 16px; font-weight: 950; }
 
     .timerWarn .ring{
       background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
@@ -285,9 +244,8 @@
       box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
     }
 
-    /* ✅ stress référence étroite: 200x10 (et 170 mobile) */
     .stressWrap{
-      width: 200px; height: 10px; border-radius: 999px;
+      width: 240px; height: 12px; border-radius: 999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
@@ -298,22 +256,24 @@
       transition: width .25s ease;
     }
 
-    /* ===== Frame (référence: flex:1 + scroll interne) ===== */
+    /* ===== Frame (Référence) ===== */
     .frame{
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
       border-radius: 18px;
-      padding: 16px;
+      padding: 18px;
       position: relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
 
-      flex: 1;
-      min-height: 0;
+      flex:1;
+      min-height:0;
       display:flex;
       flex-direction:column;
+      gap:0;
     }
+
     .frame::after{
       content:"";
       position:absolute; inset:-2px; pointer-events:none;
@@ -328,22 +288,16 @@
     .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
     .options{
-      position: relative;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
+      position: relative; z-index:2;
+      display:flex; flex-direction:column; gap: 12px;
       margin-top: 16px;
-
       overflow:auto;
       padding-right: 6px;
       min-height:0;
     }
-
-    /* scrollbar */
-    .options::-webkit-scrollbar{ width: 10px; }
-    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius: 999px; border: 2px solid rgba(0,0,0,.20); }
-    .options::-webkit-scrollbar-track{ background: rgba(255,255,255,.05); border-radius: 999px; }
+    .options::-webkit-scrollbar{ width:10px; }
+    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.16); border-radius:999px; border: 2px solid rgba(0,0,0,.25); }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.16); border-radius:999px; }
 
     .opt{
       border-radius: 14px;
@@ -365,25 +319,20 @@
       border-color: rgba(255,150,70,.30);
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
-
-    /* ✅ Actions (référence: gauche/droite) */
+    /* ✅ Actions (Référence : gauche Corrigé/Terminer, droite Valider/Effacer) */
     .actions{
       position: relative;
       z-index:2;
       display:flex;
       justify-content:space-between;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 16px;
       flex-wrap: wrap;
       align-items:center;
     }
     .actionsLeft, .actionsRight{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
     }
-
     .btnNeo{
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.14);
@@ -395,7 +344,6 @@
     }
     .btnNeo:disabled{
       opacity:.45;
-      filter: grayscale(.2);
       cursor:not-allowed;
     }
 
@@ -416,7 +364,6 @@
       cursor: not-allowed;
     }
 
-    /* overlays */
     .overlay{
       position: fixed; inset: 0;
       display:none; align-items:center; justify-content:center;
@@ -438,13 +385,6 @@
       border-bottom: 1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
-    .modalActions{
-      padding: 14px 16px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
-    }
-
     .badgeState{
       font-weight: 950;
       border-radius: 999px;
@@ -457,6 +397,13 @@
     .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
     .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
+
+    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalActions{
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+    }
 
     .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
     .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
@@ -492,8 +439,8 @@
 
     @media (max-width: 860px){
       .hud{ grid-template-columns: 1fr; }
-      .progressShell{ min-width: 100%; }
-      .stressWrap{ width: 170px; }
+      .stressWrap{ width: 190px; }
+      .progressShell{ min-width:100%; }
     }
 
     /* Hotspot zones */
@@ -518,7 +465,7 @@
       animation: none;
     }
 
-    /* Q4 images */
+    /* Q4 image cards */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -578,18 +525,17 @@
 <div class="stage">
   <div class="wrap">
 
-    <!-- ✅ Top tabs (style référence) -->
+    <!-- ✅ Top tabs (référence) -->
     <div class="topTabs">
       <div class="levelTab">
         <span class="levelDot"></span>
-        <span id="levelTabText">Scénario 1 • Avancé</span>
+        <span id="levelTabText">NIVEAU • AVANCÉ</span>
       </div>
-
-      <div class="progressShell" aria-label="progression">
+      <div class="progressShell" aria-label="Progression">
         <div class="progressBar" id="progressBar"></div>
       </div>
-
-      <div class="miniHint" id="miniHintText">30s • 1 • 2</div>
+      <!-- ✅ Règles demandées : 30s • 1 • 2 -->
+      <div class="miniHint" id="miniHint">30s • 1 • 2</div>
     </div>
 
     <div class="hud">
@@ -611,11 +557,8 @@
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
-          <!-- ✅ Règle modifiée: 1 tentative -->
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/1</div>
-
-          <!-- ✅ Règle ajoutée: indices 2 -->
-          <div class="pill">💡 Indices <span id="hudHints">2</span>/2</div>
+          <!-- ✅ Règle demandée : 1 tentative -->
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">2</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
@@ -625,12 +568,12 @@
             </div>
           </div>
 
+          <!-- ✅ Règle demandée : 2 indices -->
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice (<span id="hudHints">2</span>)</button>
+
           <div class="stressWrap" title="Stress">
             <div class="stressBar" id="stressBar"></div>
           </div>
-
-          <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
-          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
     </div>
@@ -642,7 +585,7 @@
 
       <div class="options" id="options"></div>
 
-      <!-- ✅ Actions style référence (gauche/droite) -->
+      <!-- ✅ Actions style référence (gauche: Corrigé/Terminer, droite: Valider/Effacer) -->
       <div class="actions">
         <div class="actionsLeft">
           <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
@@ -654,7 +597,7 @@
         </div>
       </div>
 
-      <div id="answerKeyWrap" style="position:relative; z-index:2;"></div>
+      <div id="answerKeyWrap" style="position:relative; z-index:2; margin-top:14px;"></div>
     </div>
 
   </div>
@@ -672,16 +615,12 @@
     <div class="modalBody">
       <div class="startTitle">Tu as une mission.</div>
       <div class="startText">
-        Tu vas intervenir en situation d’urgence.
+        Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Règles (par quiz) :</b>
-        <ul style="margin:10px 0 0 18px;">
-          <li><b>Chrono :</b> 30 secondes par question</li>
-          <li><b>Tentatives :</b> 1 seule tentative</li>
-          <li><b>Indices :</b> 2 indices pour tout le quiz (1 max par question)</li>
-        </ul>
-        <br>
-        <b>Si le temps s’écoule ou si tu te trompes, tu retournes au début de la mission (score = 0).</b>
+        <!-- ✅ Règles demandées : 30s / 1 tentative / 2 indices -->
+        <b>Règles :</b> 30 secondes par question • 2 tentative • 2 indices pour tout le quiz.
+        <br><br>
+        <b>Si le temps s’écoule ou après 1 tentative ratée, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -710,36 +649,18 @@
   </div>
 </div>
 
-<!-- Hint overlay -->
+<!-- ✅ Hint overlay -->
 <div class="overlay" id="hintOverlay">
   <div class="modalBox">
     <div class="modalTop">
       <div class="badgeState bWarn">💡 Indice</div>
       <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Restant: <span id="hintLeftTop">0</span>
+        Restants : <span id="hintLeftTxt">2</span>
       </div>
     </div>
     <div class="modalBody" id="hintText">…</div>
     <div class="modalActions">
       <button class="btnPrimary show" id="hintOkBtn" type="button">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- Pause overlay -->
-<div class="overlay" id="pauseOverlay">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div class="badgeState bWarn">⏸ Pause</div>
-      <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-        Chrono suspendu
-      </div>
-    </div>
-    <div class="modalBody">
-      Le temps est arrêté. Clique sur <b>Reprendre</b> pour continuer.
-    </div>
-    <div class="modalActions">
-      <button class="btnPrimary show" id="resumeBtn" type="button">Reprendre</button>
     </div>
   </div>
 </div>
@@ -793,51 +714,34 @@ function sfxAlarmLong(){
 const el = (id)=>document.getElementById(id);
 const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
 const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
+const hudAttemptsMax = el("hudAttemptsMax");
 const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
-const hudHints = el("hudHints");
-
 const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
 const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
 const startOverlay = el("startOverlay"), startBtn = el("startBtn");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
 const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
-
 const progressBar = el("progressBar");
-const miniHintText = el("miniHintText");
+const miniHint = el("miniHint");
 const levelTabText = el("levelTabText");
 
-const hintBtn = el("hintBtn");
-const pauseBtn = el("pauseBtn");
-const hintOverlay = el("hintOverlay");
-const hintText = el("hintText");
-const hintOkBtn = el("hintOkBtn");
-const hintLeftTop = el("hintLeftTop");
-const pauseOverlay = el("pauseOverlay");
-const resumeBtn = el("resumeBtn");
+const hintBtn = el("hintBtn"), hudHints = el("hudHints");
+const hintOverlay = el("hintOverlay"), hintText = el("hintText"), hintOkBtn = el("hintOkBtn"), hintLeftTxt = el("hintLeftTxt");
 
 const showKeyBtn = el("showKeyBtn");
 const endBtn = el("endBtn");
 const answerKeyWrap = el("answerKeyWrap");
 
 /* ======= CONFIG ======= */
-const SCENARIO = {
-  id: 1,
-  label: "Scénario 1 — Étouffement",
-  mission: "Étouffement",
-  level: "Niveau avancé"
-};
-
-// Lien "Suivant" (à remplacer par ton lien Genially)
+const SCENARIO = { id: 1, label: "Scénario 1 — Étouffement", mission: "Étouffement", level: "Niveau avancé" };
 const NEXT_GENIALLY_URL = "#";
 
-/* ✅ RÈGLES demandées */
-const TIMER_SECONDS = 30;     // ✅ 30s
-const ATTEMPTS_MAX  = 1;      // ✅ 1 tentative
-const HINT_MAX      = 2;      // ✅ 2 indices par quiz
-
-// Indices (stockés par scénario)
-const HINT_KEY = `hints_left_s${SCENARIO.id}`;
+/* ✅ Règles demandées */
+const TIMER_SECONDS = 30;     // chrono 30s
+const ATTEMPTS_MAX = 2;       // tentatives: 1
+const HINT_MAX = 2;           // indices: 2
+const HINT_KEY = "hints_left_s" + SCENARIO.id;
 
 const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
 
@@ -851,9 +755,10 @@ hudName.textContent = playerName;
 hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
 hudAvatar.src = "assets/avatars/" + avatarFile;
 difficultyChip.textContent = "MODE: " + difficulty.toUpperCase();
+levelTabText.textContent = "NIVEAU • " + difficulty.toUpperCase();
+miniHint.textContent = `${TIMER_SECONDS}s • ${ATTEMPTS_MAX} • ${HINT_MAX}`;
 
-levelTabText.textContent = "Scénario 1 • Avancé";
-miniHintText.textContent = `${TIMER_SECONDS}s • ${ATTEMPTS_MAX} • ${HINT_MAX}`;
+hudAttemptsMax.textContent = String(ATTEMPTS_MAX);
 
 let score = parseInt(localStorage.getItem("score") || "0", 10);
 let stress = parseInt(localStorage.getItem("stress") || "0", 10);
@@ -863,18 +768,18 @@ if(isNaN(stress)) stress = 0;
 let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
 if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 
+/* 1 indice max par question */
+let hintUsedThisQuestion = false;
+
 let idx = 0;
+/* ✅ on garde la logique 1-based comme ton code, mais avec ATTEMPTS_MAX=1 */
 let attemptsForCurrentQuestion = 1;
+
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
-let paused = false;
 
-let hintUsedThisQuestion = false;
-
-/* questions */
 const questions = [{"type": "single", "title": "Évaluation infirmière", "desc": "Tu es **infirmier(ère)**, victime consciente puis commence à s’épuiser (cyanose, toux inefficace). Quelle conduite optimale ?", "options": [{"text": "Enchaîner cycles 5/5, alerter, préparer RCP si perte de conscience", "kind": "ok", "fb": "✅ Oui : cycles + alerte + anticipation."}, {"text": "Arrêter les gestes pour éviter de la fatiguer", "kind": "wrong", "fb": "❌ Non : l’obstruction est vitale, il faut agir."}, {"text": "Allonger la victime sur le dos immédiatement", "kind": "wrong", "fb": "❌ Non : risque de chute/inefficacité."}, {"text": "Balayage du doigt à l’aveugle", "kind": "critical", "fb": "🚨 Erreur critique : peut enfoncer l’objet plus loin.", "pts": -10}]}, {"type": "tf", "title": "Décision", "desc": "Vrai ou faux : une toux efficace et une parole possible imposent Heimlich immédiatement.", "tf": {"trueOpt": {"kind": "wrong", "fb": "❌ Faux : on encourage la toux et on surveille."}, "falseOpt": {"kind": "ok", "fb": "✅ Vrai : pas de Heimlich si toux efficace."}}}, {"type": "multi", "title": "Actions infirmières adaptées", "desc": "Sélectionne **toutes** les bonnes actions.", "options": [{"text": "Anticiper : perte de conscience → RCP + DAE", "correct": true}, {"text": "Noter/annoncer : heure de début, cycles réalisés, évolution", "correct": true}, {"text": "Donner des aliments “pour tester”", "correct": false}, {"text": "Surveillance continue jusqu’au relais", "correct": true}], "okFb": "✅ Excellent : coordination + anticipation + traçabilité.", "badFb": "❌ Tester par alimentation est dangereux."}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?<br>", "options": [{"label": "A", "caption": "Bouche-à-bouche immédiat", "kind": "wrong", "fb": "❌ Non : la victime est consciente, priorité à la désobstruction.", "imgSrc": "assets/q4_a.png"}, {"label": "B", "caption": "5 claques dorsales", "kind": "ok", "fb": "✅ Oui : on commence par les claques dorsales.", "imgSrc": "assets/q4_b.png"}, {"label": "C", "caption": "Victime allongée sur le dos", "kind": "wrong", "fb": "❌ Non : on garde la victime penchée en avant pour les claques.", "imgSrc": "assets/q4_c.png"}]}, {"type": "drag_order", "title": "Ordonner la conduite à tenir", "desc": "Glisse les étapes dans le bon ordre.", "items": [{"id": "call", "text": "Alerter + déléguer (témoin : DAE, accès)"}, {"id": "cycle", "text": "Cycles 5 claques / 5 compressions jusqu’à expulsion"}, {"id": "uncon", "text": "Si perte de conscience : RCP + DAE"}, {"id": "handover", "text": "Transmettre : durée, gestes, réponse, état"}, {"id": "monitor", "text": "Surveiller jusqu’au relais"}], "expected": ["call", "cycle", "uncon", "handover", "monitor"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre incorrect."}, {"type": "cloze", "title": "Texte à trous", "desc": "Écris uniquement les nombres.", "template": "Obstruction grave (adulte conscient) : <b>{blank1}</b> claques dorsales puis <b>{blank2}</b> compressions abdominales (cycles répétés).", "blanks": [{"key": "blank1", "answer": "5"}, {"key": "blank2", "answer": "5"}], "okFb": "✅ 5 puis 5.", "badFb": "❌ Attendu : 5 puis 5."}, {"type": "short", "title": "Traçabilité", "desc": "Après combien de secondes sans respiration normale faut-il démarrer la RCP ? (exp : 20)", "answers": ["10"], "okFb": "✅ 10 secondes max pour vérifier la respiration.", "badFb": "❌ Attendu : 10."}, {"type": "single", "title": "Piège à éviter", "desc": "Choisis la meilleure réponse.", "options": [{"text": "Balayage du doigt à l’aveugle", "kind": "critical", "fb": "🚨 Erreur critique.", "pts": -10}, {"text": "Continuer cycles 5/5 jusqu’à expulsion ou inconscience", "kind": "ok", "fb": "✅ Correct."}, {"text": "Préparer RCP/DAE si inconscience", "kind": "ok", "fb": "✅ Anticipation correcte."}, {"text": "Laisser la victime seule après amélioration", "kind": "wrong", "fb": "❌ Non : surveillance continue."}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Où se situe le problème ?", "desc": "", "imgSrc": "scenario_1_hotspot.png", "hotspots": [{"label": "Zone correcte", "x": 38.29, "y": 45.07, "w": 23.21, "h": 23.98, "kind": "ok", "fb": "✅ Correct : zone de la gorge (étouffement).", "pts": 10}, {"label": "Zone fausse", "x": 46.63, "y": 13.35, "w": 22.22, "h": 27.08, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}, {"label": "Zone fausse", "x": 55.16, "y": 78.72, "w": 25.79, "h": 19.15, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}]}, {"type": "multi", "title": "Après les gestes", "desc": "Sélectionne toutes les réponses correctes.", "options": [{"text": "Si respiration anormale/inconscience : RCP + DAE", "correct": true}, {"text": "Transmettre : heure, cycles, évolution, score de conscience", "correct": true}, {"text": "Laisser la victime marcher seule immédiatement", "correct": false}, {"text": "Surveillance continue (risque de re-obstruction/complications)", "correct": true}], "okFb": "✅ Gestion avancée validée.", "badFb": "❌ Attention à la surveillance et à l’escalade."}];
-
 const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
@@ -889,27 +794,24 @@ function setStress(v){
 }
 function addStress(d){ setStress(stress + d); }
 
-function setHints(v){
-  hintsLeft = clamp(v, 0, HINT_MAX);
-  localStorage.setItem(HINT_KEY, String(hintsLeft));
-  hudHints.textContent = String(hintsLeft);
-  hintLeftTop.textContent = String(hintsLeft);
-  hintBtn.disabled = locked || hintsLeft<=0 || hintUsedThisQuestion;
-}
-
 function setAttemptsUI(){ hudAttempts.textContent = String(attemptsForCurrentQuestion); }
-
-/* progress */
-function setProgress(){
-  const p = clamp(Math.round((idx / TOTAL) * 100), 0, 100);
+function setProgressUI(){
+  const p = clamp(Math.round(((idx) / TOTAL) * 100), 0, 100);
   progressBar.style.width = p + "%";
 }
 
-setScore(score);
-setStress(stress);
-setHints(hintsLeft);
+function setHintsUI(){
+  hintsLeft = clamp(hintsLeft, 0, HINT_MAX);
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hudHints.textContent = String(hintsLeft);
+  hintLeftTxt.textContent = String(hintsLeft);
+  hintBtn.disabled = (hintsLeft<=0) || hintUsedThisQuestion || locked;
+}
+
+setScore(score); setStress(stress);
 setAttemptsUI();
-setProgress();
+setHintsUI();
+setProgressUI();
 
 function setRingProgress(){
   const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
@@ -918,58 +820,51 @@ function setRingProgress(){
   if(timeLeft <= 5) timerPill.classList.add("timerDanger");
   else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
 }
-
 function stopTimer(){ clearInterval(timerId); timerId=null; }
-
-function resumeTimer(){
+function startTimer(){
   stopTimer();
+  timeLeft = TIMER_SECONDS;
   hudTime.textContent = String(timeLeft);
   setRingProgress();
   timerId = setInterval(()=>{
-    if(locked || paused) return;
+    if(locked) return;
     timeLeft--;
     hudTime.textContent = String(timeLeft);
     setRingProgress();
     if(timeLeft <= 0){
       stopTimer();
       sfxAlarmLong();
+
       addStress(STRESS_RULES.timeout);
       attemptsForCurrentQuestion++;
       setAttemptsUI();
 
-      /* ✅ 1 tentative => échec direct */
-      if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
+      /* ✅ 1 tentative => échec dès le 1er timeout */
+      if(attemptsForCurrentQuestion >= (ATTEMPTS_MAX + 1)){
         missionFail("⏱️ Temps écoulé. Mission échouée. Retour au départ… (score remis à zéro)");
       }else{
-        showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/"+ATTEMPTS_MAX+")", {allowRetry:true, allowNext:false, missionFail:false});
+        showOverlay("warn","⏱️ Temps écoulé.", {allowRetry:true, allowNext:false, missionFail:false});
       }
     }
   }, 1000);
-}
-
-function startTimer(){
-  stopTimer();
-  timeLeft = TIMER_SECONDS;
-  hudTime.textContent = String(timeLeft);
-  setRingProgress();
-  paused = false;
-  resumeTimer();
 }
 
 /* ======= SELECTION STATE ======= */
 let selectedSingle = null;
 let multiSelected = new Set();
 let inputValue = "";
+let dragOrder = [];
 let clozeValues = {};
 
 function resetState(){
   selectedSingle=null;
   multiSelected.clear();
   inputValue="";
+  dragOrder=[];
   clozeValues={};
   validateBtn.disabled=false;
-  hintUsedThisQuestion=false;
-  setHints(hintsLeft);
+  hintUsedThisQuestion = false;  // ✅ 1 indice max par question
+  setHintsUI();
 }
 
 function mkOpt(text){
@@ -981,22 +876,26 @@ function mkOpt(text){
 
 function renderQuestion(i, resetAttempts=true){
   locked=false;
-  paused=false;
   stopTimer();
   hideOverlay();
-  if(resetAttempts){ attemptsForCurrentQuestion=1; setAttemptsUI(); }
+  hideHint();
+
+  if(resetAttempts){
+    attemptsForCurrentQuestion=1;
+    setAttemptsUI();
+  }
   resetState();
 
   idx = i;
-  setProgress();
+  setProgressUI();
 
   const q = questions[i];
   qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
   qTitle.textContent = q.title || "—";
   qDesc.innerHTML = q.desc || "";
   optionsEl.innerHTML = "";
-  answerKeyWrap.innerHTML = "";
   clearBtn.style.display = "none";
+  answerKeyWrap.innerHTML = "";
 
   const type = q.type;
 
@@ -1009,7 +908,7 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="tf"){
-    const opts=[{label:"Vrai"},{label:"Faux"}];
+    const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
     opts.forEach((o, oi)=>{
       const d = mkOpt(o.label);
       d.onclick=()=>{ sfxClick(); [...optionsEl.children].forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); selectedSingle=oi; validateBtn.disabled=false; };
@@ -1077,7 +976,6 @@ function renderQuestion(i, resetAttempts=true){
 
   if(type==="hotspot"){
     clearBtn.style.display="inline-block";
-
     const msg = document.createElement("div");
     msg.className="pill";
     msg.style.marginBottom="10px";
@@ -1087,13 +985,13 @@ function renderQuestion(i, resetAttempts=true){
     const wrap = document.createElement("div");
     wrap.style.position="relative";
     wrap.style.width="100%";
-    wrap.style.maxWidth="640px";
+    wrap.style.maxWidth="720px";
     wrap.style.margin="0 auto";
     wrap.style.borderRadius="18px";
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
+    wrap.innerHTML = q.svg ? q.svg : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
     optionsEl.appendChild(wrap);
 
     const zones = document.createElement("div");
@@ -1125,12 +1023,7 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="drag_order"){
-    clearBtn.style.display="inline-block";
-    const note = document.createElement("div");
-    note.className="pill";
-    note.style.marginBottom="10px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-    optionsEl.appendChild(note);
+
 
     const list = document.createElement("div");
     list.id="dragList";
@@ -1142,13 +1035,12 @@ function renderQuestion(i, resetAttempts=true){
       const j=Math.floor(Math.random()*(k+1));
       [items[k],items[j]]=[items[j],items[k]];
     }
-
     items.forEach((it)=>{
       const row = document.createElement("div");
       row.className="opt";
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+      row.innerHTML = `<div style="font-weight:950;">${it.text}</div>`;
       list.appendChild(row);
     });
     optionsEl.appendChild(list);
@@ -1185,11 +1077,10 @@ function renderQuestion(i, resetAttempts=true){
     const box = document.createElement("div");
     box.className="opt"; box.style.cursor="default";
     const html = q.template
-      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
-      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
     box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris seulement les chiffres (ex: 10).</div>`;
     optionsEl.appendChild(box);
-
     const inputs = box.querySelectorAll("input[data-k]");
     inputs.forEach(inp=>{
       inp.addEventListener("input", ()=>{
@@ -1201,82 +1092,67 @@ function renderQuestion(i, resetAttempts=true){
   }
 
   hudQnum.textContent = String(i+1);
-  hintBtn.disabled = locked || hintsLeft<=0 || hintUsedThisQuestion;
-
   startTimer();
+  setHintsUI();
 }
 
 clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx, false); };
 
-/* ✅ HINT logic (2 indices par quiz, 1 max par question) */
+/* ====== HINT SYSTEM (2 indices / quiz, 1 indice max/question) ====== */
 function getHintForQuestion(q){
-  // Indice "sur la réponse" (simple & direct)
-  if(q.type==="single" || q.type==="image_single"){
-    const ok = (q.options||[]).find(o=>o.kind==="ok");
-    return ok ? `Indice : vise la proposition qui correspond à :\n\n“${ok.text || (ok.caption||"") }”` : "Indice indisponible.";
+  if(q.hint) return q.hint;
+
+  if(q.type==="single"){
+    return "Indice : pense à la désobstruction (claques dorsales + compressions) et à l’alerte/anticipation (RCP/DAE si inconscience).";
   }
   if(q.type==="tf"){
-    const ans = (q.tf && q.tf.falseOpt && q.tf.falseOpt.kind==="ok") ? "Faux" : "Vrai";
-    return `Indice : la bonne réponse est plutôt “${ans}”.`;
+    return "Indice : si la victime tousse efficacement ou parle, on encourage la toux et on surveille (pas Heimlich immédiat).";
   }
   if(q.type==="multi"){
-    const correct = (q.options||[]).filter(o=>o.correct).map(o=>o.text);
-    return `Indice : il y a ${correct.length} bonnes réponses. Cherche celles qui parlent de coordination/anticipation/surveillance.`;
+    const n = (q.options||[]).filter(o=>o.correct).length;
+    return `Indice : il y a ${n} réponses correctes.`;
   }
-  if(q.type==="short"){
-    return "Indice : c’est un petit nombre (en secondes) pour vérifier la respiration.";
-  }
-  if(q.type==="cloze"){
-    return "Indice : les deux trous attendent le même nombre.";
+  if(q.type==="image_single"){
+    return "Indice : on commence par les claques dorsales chez l’adulte conscient en obstruction grave.";
   }
   if(q.type==="drag_order"){
-    return "Indice : commence par alerter/déléguer, puis enchaîne les cycles, ensuite RCP/DAE si inconscience.";
+    return "Indice : commence par alerter/déléguer, puis cycles 5/5, puis RCP/DAE si inconscience.";
+  }
+  if(q.type==="cloze"){
+    return "Indice : c’est la règle des cycles 5 / 5.";
+  }
+  if(q.type==="short"){
+    return "Indice : c’est un nombre très court (max 10–15 secondes).";
   }
   if(q.type==="hotspot"){
-    return "Indice : zone gorge/voies aériennes.";
+    return "Indice : la zone correcte est la gorge / voies aériennes.";
   }
-  return "Indice indisponible.";
+  return "Indice : relis bien l’énoncé, un détail te guide vers la bonne action.";
 }
 
-hintBtn.addEventListener("click", ()=>{
+function showHint(){
   if(locked) return;
   if(hintsLeft<=0) return;
   if(hintUsedThisQuestion) return;
 
-  sfxClick();
+  // consommer indice
+  hintsLeft--;
   hintUsedThisQuestion = true;
-  setHints(hintsLeft - 1);
+  setHintsUI();
 
-  // pause timer without reset
-  stopTimer();
-  paused = true;
+  const q = questions[idx];
+  hintText.textContent = getHintForQuestion(q);
+  hintLeftTxt.textContent = String(hintsLeft);
 
-  hintText.textContent = getHintForQuestion(questions[idx]);
+  // pause timer le temps de l'overlay
+  locked = true;
   hintOverlay.style.display = "flex";
-});
-
-hintOkBtn.addEventListener("click", ()=>{
-  sfxClick();
+}
+function hideHint(){
   hintOverlay.style.display = "none";
-  paused = false;
-  if(!locked) resumeTimer();
-  hintBtn.disabled = locked || hintsLeft<=0 || hintUsedThisQuestion;
-});
-
-/* Pause */
-pauseBtn.addEventListener("click", ()=>{
-  if(locked) return;
-  sfxClick();
-  stopTimer();
-  paused = true;
-  pauseOverlay.style.display = "flex";
-});
-resumeBtn.addEventListener("click", ()=>{
-  sfxClick();
-  pauseOverlay.style.display = "none";
-  paused = false;
-  if(!locked) resumeTimer();
-});
+}
+hintBtn.addEventListener("click", ()=>{ sfxClick(); showHint(); });
+hintOkBtn.addEventListener("click", ()=>{ sfxClick(); hideHint(); locked=false; });
 
 validateBtn.onclick = ()=>{
   if(locked) return;
@@ -1291,7 +1167,7 @@ validateBtn.onclick = ()=>{
     nextBtn.style.display="none";
     okBtn.style.display="inline-block"; okBtn.classList.add("show");
     okBtn.textContent="OK";
-    okBtn.onclick = ()=>{ hideOverlay(); locked=false; resumeTimer(); };
+    okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
   };
 
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
@@ -1311,15 +1187,11 @@ validateBtn.onclick = ()=>{
   stopTimer();
   locked=true;
 
-  if(type==="single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
-
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
   if(type==="tf"){
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
     evaluateOption(opt); return;
   }
-
   if(type==="multi"){
     const chosen=[...multiSelected].sort((a,b)=>a-b);
     const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
@@ -1335,7 +1207,6 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
   if(type==="short"){
     const norm=(inputValue||"").trim().toLowerCase();
     const accepted=(q.answers||[]).map(a=>String(a).trim().toLowerCase());
@@ -1351,15 +1222,9 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
-
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
   if(type==="hotspot"){
     const h = (q.hotspots||[])[selectedSingle];
-    if(!h){ locked=false; resumeTimer(); return; }
-
     if(h.kind==="ok"){
       addScore(h.pts ?? 10);
       showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
@@ -1377,7 +1242,6 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
   if(type==="drag_order"){
     const list = document.getElementById("dragList");
     const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
@@ -1393,7 +1257,6 @@ validateBtn.onclick = ()=>{
     }
     return;
   }
-
   if(type==="cloze"){
     const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
     if(ok){
@@ -1421,20 +1284,27 @@ function evaluateOption(opt){
     sfxCritical(); motion("critical");
     failedAttempt(opt.fb || "🚨 Erreur critique."); return;
   }
+  if(opt.kind==="partial"){
+    addStress(STRESS_RULES.wrong);
+    addScore(opt.pts ?? 3);
+    sfxWrong(); motion("wrong");
+    failedAttempt(opt.fb || "🟡 Partiel."); return;
+  }
   addStress(STRESS_RULES.wrong);
   sfxWrong(); motion("wrong");
   failedAttempt(opt.fb || "❌ Incorrect.");
 }
 
-/* ✅ 1 tentative => échec direct (après la 1ère erreur) */
 function failedAttempt(baseMsg){
   attemptsForCurrentQuestion++; setAttemptsUI();
-  if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
+
+  /* ✅ 1 tentative => mission fail dès la 1ère erreur */
+  if(attemptsForCurrentQuestion >= (ATTEMPTS_MAX + 1)){
     sfxAlarmLong();
     missionFail("❌ Tentative ratée. Mission échouée. Retour au départ… (score remis à zéro)");
     return;
   }
-  showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
+  showOverlay("warn", `${baseMsg}`, {allowRetry:true, allowNext:false, missionFail:false});
 }
 
 function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
@@ -1452,7 +1322,7 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
 
   okBtn.style.display="none"; okBtn.onclick=null;
 
-  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; resumeTimer(); };
+  retryBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
   nextBtn.onclick  = ()=>{ hideOverlay(); const ni = idx+1; if(ni < TOTAL) renderQuestion(ni,true); else endScenario(); };
 
   if(missionFail){
@@ -1462,22 +1332,21 @@ function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
   }
 }
 function hideOverlay(){ overlay.style.display="none"; }
-function missionFail(message){ stopTimer(); locked=true; showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
-
+function missionFail(message){ stopTimer(); showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
 function resetMission(showStart=true){
   stopTimer();
   idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
   setScore(0); setStress(0);
 
-  /* ✅ reset indices par quiz à 2 */
-  localStorage.setItem(HINT_KEY, String(HINT_MAX));
-  setHints(HINT_MAX);
+  // ✅ reset indices à 2 par quiz (au reset aussi)
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
+  setHintsUI();
 
   locked=true;
-  paused=false;
-
+  progressBar.style.width = "0%";
   if(showStart) startOverlay.style.display="flex";
-  setProgress();
 }
 
 function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
@@ -1485,16 +1354,14 @@ function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll(
 function buildAnswerKey(){
   const rows = questions.map((q, i)=>{
     let ans = "";
-    if(q.type==="single"){
+    if(q.type==="single" || q.type==="image_single"){
       const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? q.options[oi].text : "—";
-    }else if(q.type==="image_single"){
-      const oi = q.options.findIndex(o=>o.kind==="ok");
-      ans = oi>=0 ? (q.options[oi].label + " — " + q.options[oi].caption) : "—";
+      ans = oi>=0 ? (q.options[oi].text || ("Option "+q.options[oi].label)) : "—";
+      if(q.type==="image_single" && oi>=0) ans = (q.options[oi].label + " — " + q.options[oi].caption);
     }else if(q.type==="tf"){
       ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
     }else if(q.type==="multi"){
-      const a = q.options.map((o)=>o.correct?o.text:null).filter(Boolean);
+      const a = q.options.map((o,idx)=>o.correct?o.text:null).filter(Boolean);
       ans = a.join(" ; ");
     }else if(q.type==="short"){
       ans = (q.answers||[]).join(" / ");
@@ -1504,7 +1371,7 @@ function buildAnswerKey(){
     }else if(q.type==="cloze"){
       ans = q.blanks.map(b=>b.answer).join(" | ");
     }else if(q.type==="hotspot"){
-      ans = "Zone gorge/voies aériennes";
+      ans = "Gorge / voies aériennes";
     }else{
       ans = "—";
     }
@@ -1515,68 +1382,51 @@ function buildAnswerKey(){
     </tr>`;
   }).join("");
 
-  return `<div style="margin-top:14px;">
-    <div style="font-weight:950; font-size:16px; margin-bottom:8px;">📘 Corrigé (bonnes réponses)</div>
-    <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
-      <table style="width:100%; border-collapse:collapse; min-width:680px;">
-        <thead>
-          <tr>
-            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
-            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
-            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`;
+  return `
+    <div style="margin-top:14px;">
+      <div style="font-weight:950; font-size:16px; margin-bottom:8px;">📘 Corrigé (bonnes réponses)</div>
+      <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
+        <table style="width:100%; border-collapse:collapse; min-width:680px;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
+              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
+              <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 function endScenario(){
   stopTimer(); hideOverlay();
-  optionsEl.innerHTML=""; clearBtn.style.display="none";
-  validateBtn.disabled = true;
+  optionsEl.innerHTML=""; validateBtn.disabled=true; clearBtn.style.display="none";
 
-  qMeta.textContent = "FIN — BADGE OBTENU";
+  qMeta.textContent = "Fin — Badge obtenu";
   qTitle.textContent = "🎉 Félicitations !";
   sfxVictory();
 
   qDesc.innerHTML = `
     <div style="margin-top:8px; color: rgba(255,255,255,.86);">
-      <div style="font-weight:950; font-size:16px;">🏅 Badge débloqué</div>
-      <div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">
-        Scénario Étouffement — Infirmier — Avancé terminé.
-      </div>
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <div style="font-weight:950; font-size:16px;">🏁 Scénario terminé</div>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
         <span class="pill">⭐ Score final : <b>${score}</b></span>
         <span class="pill">😰 Stress : <b>${stress}%</b></span>
       </div>
     </div>
   `;
 
-  optionsEl.innerHTML = `<div class="opt" style="cursor:default; text-align:center;">
-    <div style="font-size:46px; margin-bottom:4px;">🏅</div>
-    <div style="font-weight:950;">Badge Avancé — Étouffement</div>
-    <div style="color: rgba(255,255,255,.74); font-size:13px; margin-top:4px;">Badge débloqué</div>
-  </div>`;
-
+  // ✅ Déverrouiller corrigé + afficher terminer (style référence)
   showKeyBtn.disabled = false;
   endBtn.style.display = "inline-block";
   endBtn.classList.add("show");
 
-  showKeyBtn.onclick = ()=>{
-    sfxClick();
-    answerKeyWrap.innerHTML = answerKeyWrap.innerHTML ? "" : buildAnswerKey();
-  };
-  endBtn.onclick = ()=>{
-    window.location.href = NEXT_GENIALLY_URL;
-  };
+  endBtn.onclick = ()=>{ window.location.href = NEXT_GENIALLY_URL; };
 
-  // Bloquer indice/pause
+  // Hint/pause/valider désactivés à la fin
   hintBtn.disabled = true;
-  pauseBtn.disabled = true;
-
-  progressBar.style.width = "100%";
 }
 
 function motion(type){
@@ -1587,45 +1437,51 @@ function motion(type){
   else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
 }
 
+showKeyBtn.addEventListener("click", ()=>{
+  sfxClick();
+  answerKeyWrap.innerHTML = answerKeyWrap.innerHTML ? "" : buildAnswerKey();
+});
+
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // reset score/stress
+  // score/stress à 0
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress = 0; score = 0;
   setStress(0); setScore(0);
 
-  // ✅ reset indices par quiz à 2
-  localStorage.setItem(HINT_KEY, String(HINT_MAX));
-  setHints(HINT_MAX);
+  // ✅ indices : 2 par quiz (reset au démarrage)
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
+  setHintsUI();
 
   startOverlay.style.display="none";
+  attemptsForCurrentQuestion=1; setAttemptsUI();
+  progressBar.style.width = "0%";
   renderQuestion(0, true);
 });
 
 (function init(){
   locked=true;
-  paused=false;
-
   qMeta.textContent = SCENARIO.label;
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question, <b>${ATTEMPTS_MAX} tentative</b>, et <b>${HINT_MAX} indices</b> pour tout le quiz. Clique sur <b>DÉMARRER</b>.`;
+  qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question • <b>${ATTEMPTS_MAX} tentative</b> • <b>${HINT_MAX} indices</b> pour tout le quiz.`;
   optionsEl.innerHTML="";
-
   hudQnum.textContent="1";
   hudTime.textContent=String(TIMER_SECONDS);
-  timeLeft = TIMER_SECONDS;
   ring.style.setProperty("--p","100%");
   setRingProgress();
 
-  showKeyBtn.disabled = true;
-  endBtn.style.display = "none";
+  // UI max attempts
+  hudAttemptsMax.textContent = String(ATTEMPTS_MAX);
 
-  hintBtn.disabled = true;
-  pauseBtn.disabled = true;
+  // hints
+  setHintsUI();
 
-  setProgress();
+  // progress
+  progressBar.style.width = "0%";
 })();
 </script>
 
