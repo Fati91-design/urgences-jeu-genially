@@ -572,7 +572,7 @@
             <div class="pill">⭐ <span id="hudScore">0</span></div>
             <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">20</span></div>
 
-            <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">2</span></div>
+            <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
 
             <div class="pill">💡 Indices <span id="hudHints">0</span>/<span id="hudHintsMax">0</span></div>
 
@@ -808,8 +808,8 @@ const difficulty = normDifficulty(difficultyRaw);
 
 const RULES = {
   debutant:      { TIMER_SECONDS: 60, ATTEMPTS_MAX: 3, HINT_MAX: 3, label:"DÉBUTANT" },
-  intermediaire: { TIMER_SECONDS: 45, ATTEMPTS_MAX: 2, HINT_MAX: 2, label:"INTERMÉDIAIRE" },
-  avance:        { TIMER_SECONDS: 30, ATTEMPTS_MAX: 1, HINT_MAX: 1, label:"EXPERT" },
+  intermediaire: { TIMER_SECONDS: 45, ATTEMPTS_MAX: 3, HINT_MAX: 2, label:"INTERMÉDIAIRE" },
+  avance:        { TIMER_SECONDS: 30, ATTEMPTS_MAX: 3, HINT_MAX: 2, label:"EXPERT" },
   expert:        { TIMER_SECONDS: 30, ATTEMPTS_MAX: 1, HINT_MAX: 1, label:"EXPERT" }
 };
 
