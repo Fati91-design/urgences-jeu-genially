@@ -746,7 +746,7 @@ const NEXT_GENIALLY_URL = "#";
 
 /* ✅ RÈGLES demandées */
 const TIMER_SECONDS = 30;      // 30s par question
-const MAX_ATTEMPTS  = 2;       // 1 tentative (si erreur/timeout => échec)
+const MAX_ATTEMPTS  = 3;       // 1 tentative (si erreur/timeout => échec)
 const HINT_MAX      = 2;       // 2 indices pour tout le quiz
 
 // Stress (inchangé)
@@ -768,7 +768,7 @@ if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 2;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let paused = false;
 
