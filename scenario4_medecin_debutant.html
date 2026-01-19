@@ -1458,7 +1458,7 @@ function renderQuestion(i, resetAttempts=true){
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-    wrap.innerHTML = `<img src="${escapeHtml(q.imgSrc||"")}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+    wrap.innerHTML = `<img src="${escapeHtml(q.imgSrc||"")}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
     optionsEl.appendChild(wrap);
 
     const zones = document.createElement("div");
