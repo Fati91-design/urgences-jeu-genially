@@ -580,7 +580,7 @@
         <div class="progressShell" aria-label="progression">
           <div class="progressBar" id="progressBar"></div>
         </div>
-        <div class="miniHint" id="miniHint">Durée 45s • Tentatives 2 • Indices 2</div>
+        <div class="miniHint" id="miniHint">Durée 45s • Tentatives 3 • Indices 2</div>
       </div>
 
     <div class="hud">
@@ -603,7 +603,7 @@
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
           <!-- ✅ RÈGLES demandées : Tentatives 1 / Indices 2 -->
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">2</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">3</span>/<span id="hudAttemptsMax">3</span></div>
           <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
           <div class="pill timerPill" id="timerPill">
@@ -664,7 +664,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Règles :</b> <b>30s</b> par question • <b>2 tentatives</b> • <b>2 indices</b> pour tout le quiz (1 indice max par question).
+        <b>Règles :</b> <b>30s</b> par question • <b>3 tentatives</b> • <b>2 indices</b> pour tout le quiz (1 indice max par question).
         <br><br>
         <b>Si le temps s’écoule ou si ta tentative est ratée, tu retournes au début de la mission (score = 0).</b>
         <br>
@@ -826,7 +826,7 @@ const NEXT_GENIALLY_URL = "#";
 
 /* ✅ RÈGLES demandées */
 const TIMER_SECONDS = 30;   // 30s
-const MAX_ATTEMPTS = 2;     // 1 tentative
+const MAX_ATTEMPTS = 3;     // 1 tentative
 const HINT_MAX = 2;         // 2 indices (par quiz)
 
 /* Stress */
@@ -848,7 +848,7 @@ if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 2;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let paused = false;
 
