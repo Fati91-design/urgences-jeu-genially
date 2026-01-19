@@ -805,7 +805,7 @@ const NEXT_GENIALLY_URL = "#";
 const TIMER_SECONDS = 30;
 
 // ✅ Tentatives: 1
-const MAX_ATTEMPTS = 1;
+const MAX_ATTEMPTS = 3;
 
 // ✅ Indices: 2 (par quiz)
 const HINT_MAX = 2;
@@ -835,7 +835,7 @@ let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10)
 if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
