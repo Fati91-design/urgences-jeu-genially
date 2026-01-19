@@ -912,6 +912,8 @@ const NEXT_SCENARIO_URL = "#";
 /* Intermédiaire */
 const TIMER_SECONDS = 45;
 const ATTEMPTS_MAX = 2;
+
+/* ✅ IMPORTANT : 2 indices par quiz (par partie) */
 const HINT_MAX = 2;
 
 const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
@@ -941,6 +943,10 @@ miniHints.textContent = String(HINT_MAX);
 
 /* ✅ Hint storage */
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
+
+/* ✅ FIX (2 indices par quiz) :
+   On garde la persistance pour l’affichage, MAIS on remettra TOUJOURS à 2 au démarrage du quiz (clic DÉMARRER)
+*/
 let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
 if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 hintsLeft = clamp(hintsLeft, 0, HINT_MAX);
@@ -956,8 +962,8 @@ let idx = 0;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
-let timeoutsCount = 0;           // ✅ nombre de timeouts (mission fail à 2)
-let attemptsUsed = 0;            // ✅ tentatives ratées sur la question (0..ATTEMPTS_MAX)
+let timeoutsCount = 0;
+let attemptsUsed = 0;
 let hintUsedThisQuestion = false;
 let paused = false;
 
@@ -986,6 +992,15 @@ function addStress(d){ setStress(stress + d); }
 function setAttemptsUI(){
   hudAttempts.textContent = String(attemptsUsed);
 }
+
+/* ✅ petit helper : reset indices à 2 (par partie) */
+function resetHintsForNewQuiz(){
+  hintsLeft = HINT_MAX;
+  localStorage.setItem(HINT_KEY, String(hintsLeft));
+  hintUsedThisQuestion = false;
+  setHintsUI();
+}
+
 function setHintsUI(){
   hintBtn.disabled = locked || hintsLeft<=0 || hintUsedThisQuestion;
   hintBtn.textContent = hintsLeft<=0 ? "💡 Indice (0)" : `💡 Indice (${hintsLeft})`;
@@ -1197,7 +1212,7 @@ async function renderQuestion(i, resetAttempts=true){
     wrap.style.overflow="hidden";
     wrap.style.border="1px solid rgba(255,255,255,.14)";
     wrap.style.background="rgba(0,0,0,.18)";
-    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
     optionsEl.appendChild(wrap);
 
     const zones = document.createElement("div");
@@ -1230,12 +1245,6 @@ async function renderQuestion(i, resetAttempts=true){
   }
 
   if(type==="drag_order"){
-    clearBtn.style.display="inline-block";
-    const note = document.createElement("div");
-    note.className="pill";
-    note.style.marginBottom="10px";
-    note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-    optionsEl.appendChild(note);
 
     const list = document.createElement("div");
     list.id="dragList";
@@ -1253,7 +1262,7 @@ async function renderQuestion(i, resetAttempts=true){
       row.className="opt";
       row.setAttribute("draggable","true");
       row.dataset.id = it.id;
-      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+      row.innerHTML = `<div style="font-weight:950;">${it.text}</div>`;
       list.appendChild(row);
     });
 
@@ -1529,10 +1538,8 @@ function resetMission(showStart=true){
   setScore(0);
   setStress(0);
 
-  // ✅ reset hints to max for this scenario
-  hintsLeft = HINT_MAX;
-  localStorage.setItem(HINT_KEY, String(hintsLeft));
-  setHintsUI();
+  // ✅ reset hints to max for this scenario (toujours 2)
+  resetHintsForNewQuiz();
 
   if(showStart) startOverlay.style.display="flex";
 }
@@ -1603,10 +1610,8 @@ keyCloseBtn.addEventListener("click", ()=>{
 
 /* ========= Indice ========= */
 function getHintForQuestion(q){
-  // ✅ si un champ hint existe un jour
   if(q.hint) return String(q.hint);
 
-  // Sinon: indice basé sur feedback ok (sans tout dévoiler trop long)
   if(q.type==="single" || q.type==="image_single"){
     const ok = (q.options||[]).find(o=>o.kind==="ok");
     if(ok && ok.fb) return stripEmojiPrefix(ok.fb);
@@ -1648,7 +1653,6 @@ hintBtn.addEventListener("click", ()=>{
   if(locked || hintsLeft<=0 || hintUsedThisQuestion) return;
   ensureAudio(); sfxClick();
 
-  // pause timer
   paused = true;
 
   hintsLeft = clamp(hintsLeft - 1, 0, HINT_MAX);
@@ -1667,12 +1671,8 @@ hintOkBtn.addEventListener("click", ()=>{
 });
 
 /* ========= Pause ========= */
-function showPauseOverlay(){
-  pauseOverlay.style.display="flex";
-}
-function hidePauseOverlay(){
-  pauseOverlay.style.display="none";
-}
+function showPauseOverlay(){ pauseOverlay.style.display="flex"; }
+function hidePauseOverlay(){ pauseOverlay.style.display="none"; }
 pauseBtn.addEventListener("click", ()=>{
   if(locked) return;
   sfxClick();
@@ -1687,7 +1687,6 @@ resumeBtn.addEventListener("click", ()=>{
 
 /* ========= Badge storage (variables + localStorage) ========= */
 function computeBadgeFromScore(scoreVal){
-  // score max = TOTAL*10
   const maxScore = TOTAL * 10;
   const pct = maxScore>0 ? Math.round((scoreVal / maxScore) * 100) : 0;
 
@@ -1725,11 +1724,9 @@ async function flyBadgeToTarget(imgSrc, targetEl){
   badgeFlyImg.src = imgSrc;
   badgeFly.style.display="flex";
 
-  // start at center
   badgeFlyImg.style.opacity = "1";
   badgeFlyImg.style.transform = "translate(0px,0px) scale(1)";
 
-  // wait image layout
   await new Promise(r=>setTimeout(r, 60));
 
   const flyRect = badgeFlyImg.getBoundingClientRect();
@@ -1738,10 +1735,8 @@ async function flyBadgeToTarget(imgSrc, targetEl){
   const dx = (tgtRect.left + tgtRect.width/2) - (flyRect.left + flyRect.width/2);
   const dy = (tgtRect.top + tgtRect.height/2) - (flyRect.top + flyRect.height/2);
 
-  // scale down to target size
   const scale = clamp(tgtRect.width / flyRect.width, 0.18, 1);
 
-  // animate "recule"
   badgeFlyImg.animate([
     { transform: `translate(0px, 0px) scale(1)`, opacity: 1 },
     { transform: `translate(${dx*0.72}px, ${dy*0.72}px) scale(${Math.max(scale*1.15, 0.22)})`, opacity: 1, offset: 0.7 },
@@ -1751,7 +1746,6 @@ async function flyBadgeToTarget(imgSrc, targetEl){
     easing: "cubic-bezier(.2,.85,.15,1)"
   });
 
-  // fade backdrop a bit
   badgeFly.animate([{opacity:1},{opacity:0.0}], { duration: 980, easing:"ease" });
 
   await new Promise(r=>setTimeout(r, 980));
@@ -1766,21 +1760,17 @@ async function endScenario(){
   locked=true;
   paused=false;
 
-  // disable gameplay buttons
   validateBtn.disabled=true;
   clearBtn.style.display="none";
   hintBtn.disabled=true;
   pauseBtn.disabled=true;
 
-  // enable end buttons
   showKeyBtn.disabled=false;
   endBtn.style.display="inline-block";
 
-  // compute badge
   const b = computeBadgeFromScore(score);
   const stressState = (stress>=80) ? "🔴 Pression extrême" : (stress>=40) ? "🟡 Sous pression" : "🟢 Calme";
 
-  // ✅ variables badge (affichage depuis variables)
   const badge_type  = b.badgeType;
   const badge_name  = b.badgeName;
   const badge_img   = b.badgeImg;
@@ -1788,7 +1778,6 @@ async function endScenario(){
   const badge_score = score;
   const badge_ts    = new Date().toISOString();
 
-  // ✅ save badge
   saveBadge({
     scenarioId: SCENARIO.id,
     mission: SCENARIO.mission,
@@ -1829,10 +1818,8 @@ async function endScenario(){
 
   sfxVictory();
 
-  // ✅ badge fullscreen then recule to its place
   const target = el("badgeTargetImg");
   if(target){
-    // hide target while flying to it
     target.style.opacity = "0";
     await new Promise(r=>setTimeout(r, 120));
     await flyBadgeToTarget(badge_img, target);
@@ -1850,19 +1837,14 @@ endBtn.addEventListener("click", ()=>{
 startBtn.addEventListener("click", ()=>{
   ensureAudio(); sfxClick();
 
-  // reset for fresh start
+  // reset score/stress
   localStorage.setItem("stress", "0");
   localStorage.setItem("score", "0");
   stress = 0; score = 0;
   setStress(0); setScore(0);
 
-  // reset hint pool if first time or user wants new run
-  if(!localStorage.getItem(HINT_KEY)){
-    localStorage.setItem(HINT_KEY, String(HINT_MAX));
-  }
-  hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
-  if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
-  hintsLeft = clamp(hintsLeft, 0, HINT_MAX);
+  // ✅ FIX: 2 indices AU DÉBUT DE CHAQUE QUIZ (chaque partie)
+  resetHintsForNewQuiz();
 
   timeoutsCount = 0;
 
