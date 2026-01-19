@@ -585,7 +585,7 @@
           <div class="stats">
             <div class="pill">⭐ <span id="hudScore">0</span></div>
             <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">1</span></div>
+            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">3</span></div>
             <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
 
@@ -787,7 +787,7 @@ const NEXT_GENIALLY_URL = "#";
 
 /* ✅ demandé */
 const TIMER_SECONDS = 30;
-const MAX_ATTEMPTS = 1;     // ✅ 1 tentative
+const MAX_ATTEMPTS = 3;     // ✅ 1 tentative
 const HINT_MAX = 2;         // ✅ 2 indices par quiz
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 
@@ -823,7 +823,7 @@ let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10)
 if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
@@ -1348,7 +1348,7 @@ function failedAttempt(baseMsg){
   attemptsForCurrentQuestion++;
   setAttemptsUI();
   sfxAlarmLong();
-  missionFail(baseMsg + " Mission échouée (1 tentative). Retour au départ… (score remis à zéro)");
+  missionFail(baseMsg + " Mission échouée (3 tentative). Retour au départ… (score remis à zéro)");
 }
 
 /* overlays */
@@ -1536,7 +1536,7 @@ continueBtn.addEventListener("click", ()=>{
 
   qMeta.textContent = SCENARIO.label;
   qTitle.textContent = "Prépare-toi…";
-  qDesc.innerHTML = "Tu as <b>30 secondes</b> par question • <b>1 tentative</b> • <b>2 indices</b> (max 1 par question). Clique sur <b>DÉMARRER</b>.";
+  qDesc.innerHTML = "Tu as <b>30 secondes</b> par question • <b>3 tentative</b> • <b>2 indices</b> (max 1 par question). Clique sur <b>DÉMARRER</b>.";
   optionsEl.innerHTML = "";
   hudQnum.textContent="1";
   hudTime.textContent=String(TIMER_SECONDS);
