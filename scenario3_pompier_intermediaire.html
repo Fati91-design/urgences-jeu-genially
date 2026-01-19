@@ -370,6 +370,7 @@
 }
 .imgPic{
   width:100%;
+  height:240px;
   aspect-ratio:4/3;
   object-fit:cover;
   display:block;
@@ -810,7 +811,7 @@ function renderQuestion(i, resetAttempts=true){
 
     wrap.innerHTML = q.svg
       ? q.svg
-      : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+      : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
 
     optionsEl.appendChild(wrap);
 
