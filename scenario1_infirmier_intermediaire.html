@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Scénario 1 — Étouffement — Infirmier — intermédiaire</title>
+  <title>Scénario 1 — Étouffement (Référence)</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     :root{
-      --glass: rgba(25, 27, 31, .72);
-      --glass2: rgba(15, 17, 20, .55);
-
+      --glass: rgba(25,27,31,.72);
+      --glass2: rgba(15,17,20,.55);
       --text: rgba(255,255,255,.93);
       --muted: rgba(255,255,255,.70);
 
@@ -21,141 +20,162 @@
       --blue: rgba(80,170,255,1);
       --ember: rgba(255,150,70,1);
       --ember2: rgba(255,120,50,1);
+
+      /* ✅ NEW: hauteur réserve pour la barre d’actions fixée */
+      --actionsH: 84px; /* ajuste si tu changes padding/boutons (80–96) */
     }
 
+    *{ box-sizing:border-box; }
     html,body{
+      height:100%;
       margin:0;
       background: transparent;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      overflow:hidden; /* ✅ Genially anti-scroll */
+      overflow:hidden; /* ✅ anti-scroll Genially */
     }
 
-    /* ✅ Genially stage */
+    /* ✅ Stage / Wrap (référence large) */
     .stage{
-      height: 100vh;
-      padding: 10px;
+      height:100vh;
+      padding:10px;
       overflow:hidden;
       display:flex;
       justify-content:center;
       align-items:flex-start;
     }
     .wrap{
-      width: min(1650px, 100%);
-      height: 100%;
+      width:min(1650px,100%);
+      height:100%;
       display:flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 0;
+      flex-direction:column;
+      gap:12px;
+      min-height:0;
     }
 
-    /* ======= TOP TABS (référence) ======= */
+    /* ✅ TopTabs */
     .topTabs{
       display:flex;
-      gap: 10px;
-      align-items:center;
+      gap:12px;
       flex-wrap:wrap;
+      align-items:center;
     }
     .levelTab{
       display:flex;
       align-items:center;
       gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
+      padding:10px 12px;
+      border-radius:999px;
       background: var(--glass);
-      border: 1px solid rgba(255, 200, 150, .22);
-      box-shadow: 0 18px 65px rgba(0,0,0,.35);
+      border:1px solid rgba(255, 200, 150, .22);
+      box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
+      position:relative;
+      overflow:hidden;
+    }
+    .levelTab::after{
+      content:"";
+      position:absolute; inset:-2px; pointer-events:none;
+      background:
+        radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
+        radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
+      opacity:.9;
     }
     .levelDot{
-      width: 12px; height: 12px; border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255,200,80,1), rgba(255,120,50,1));
-      box-shadow: 0 0 0 4px rgba(255,200,80,.16);
+      width:12px; height:12px;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      box-shadow: 0 0 0 4px rgba(255,150,70,.12);
+      position:relative; z-index:2;
     }
-    #levelTabText{
-      font-weight: 950;
-      letter-spacing: .25px;
-      font-size: 12px;
-      color: rgba(255,255,255,.88);
-      text-transform: uppercase;
-      white-space: nowrap;
+    .levelTabText{
+      font-weight:950;
+      letter-spacing:.2px;
+      position:relative; z-index:2;
+      white-space:nowrap;
     }
+
     .progressShell{
-      flex:1;
-      min-width: 220px;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.10);
+      flex:1 1 220px;
+      min-width:220px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
       overflow:hidden;
-      position: relative;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
-      backdrop-filter: blur(12px);
+      position:relative;
+      box-shadow: 0 18px 65px rgba(0,0,0,.30);
+      backdrop-filter: blur(10px);
     }
     .progressBar{
       height:100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(80,170,255,1), rgba(255,200,80,1), rgba(255,120,50,1));
+      width:0%;
+      background: linear-gradient(90deg, rgba(45,200,120,.95), rgba(255,200,80,.95), rgba(255,120,50,.95));
       transition: width .25s ease;
     }
+
     .miniHint{
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: var(--glass);
-      border: 1px solid rgba(255, 200, 150, .18);
-      font-size: 12px;
-      font-weight: 950;
-      color: rgba(255,255,255,.84);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 18px 65px rgba(0,0,0,.30);
-      white-space: nowrap;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.14);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.86);
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+      box-shadow: 0 18px 65px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
     }
 
-    /* ======= HUD ======= */
+    /* ✅ HUD */
     .hud{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap:12px;
+      margin-top:2px;
     }
-
     .hudbox{
       background: var(--glass);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 14px 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      position: relative;
+      border-radius:18px;
+      padding:14px 16px;
+      position:relative;
       overflow:hidden;
       box-shadow: 0 18px 65px rgba(0,0,0,.45);
       backdrop-filter: blur(12px);
-      min-height: 92px;
+      min-height:92px;
     }
     .hudbox::after{
       content:"";
-      position:absolute;
-      inset:-2px;
-      pointer-events:none;
+      position:absolute; inset:-2px; pointer-events:none;
       background:
         radial-gradient(420px 160px at 15% 0%, rgba(255,150,70,.18), transparent 60%),
         radial-gradient(520px 220px at 85% 120%, rgba(80,170,255,.10), transparent 60%);
       opacity:.9;
     }
 
-    .profile{ display:flex; align-items:center; gap: 14px; min-width: 0; position: relative; z-index:2; }
-
+    .profile{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+      position:relative;
+      z-index:2;
+    }
     .avatarFrame{
-      width: 92px; height: 92px; border-radius: 24px; padding: 4px;
+      width:92px; height:92px;
+      border-radius:24px;
+      padding:4px;
       background: linear-gradient(180deg, rgba(255,150,70,.36), rgba(80,170,255,.14));
       box-shadow: 0 18px 42px rgba(0,0,0,.45);
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
     .avatar{
       width:100%; height:100%;
-      border-radius: 20px;
+      border-radius:20px;
       border: 1px solid rgba(255,255,255,.12);
       object-fit: cover;
       object-position: 50% 6%;
@@ -163,20 +183,36 @@
       transform-origin: 50% 12%;
       background: rgba(255,255,255,.06);
     }
-
     .ptext{ min-width:0; }
-    .pname{ font-weight: 950; font-size: 22px; line-height: 1.05; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .prole{ margin-top: 4px; font-weight: 850; font-size: 13px; color: var(--muted); white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .pname{
+      font-weight:950;
+      font-size:22px;
+      line-height:1.05;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-shadow: 0 14px 30px rgba(0,0,0,.55);
+    }
+    .prole{
+      margin-top:4px;
+      font-weight:850;
+      font-size:13px;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
     .chip{
+      margin-left:auto;
       background: rgba(255,150,70,.14);
       border: 1px solid rgba(255,150,70,.20);
-      border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
-      font-weight: 950;
-      white-space: nowrap;
-      position: relative;
+      border-radius:999px;
+      padding:9px 12px;
+      font-size:12px;
+      font-weight:950;
+      white-space:nowrap;
+      position:relative;
       z-index:2;
     }
 
@@ -184,83 +220,119 @@
       display:flex;
       align-items:center;
       justify-content:flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative;
+      gap:10px;
+      flex-wrap:wrap;
+      position:relative;
       z-index:2;
     }
-
     .pill{
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 999px;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
-      font-weight: 950;
-      font-size: 13px;
-      white-space: nowrap;
+      font-weight:950;
+      font-size:13px;
+      white-space:nowrap;
     }
-
-    .timerPill{ padding: 8px 10px; gap: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.18); }
-
+    .timerPill{
+      padding:8px 10px;
+      gap:10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
     .ring{
-      width: 40px; height: 40px; border-radius: 999px;
-      background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
+      width:40px; height:40px;
+      border-radius:999px;
+      background: conic-gradient(var(--gold) var(--p,0%), rgba(255,255,255,.14) 0);
       display:grid; place-items:center;
       box-shadow: 0 0 0 5px rgba(255,200,80,.14), 0 0 28px rgba(255,200,80,.10);
       transition: box-shadow .2s ease;
     }
     .ringInner{
-      width: 28px; height: 28px; border-radius: 999px;
+      width:28px; height:28px;
+      border-radius:999px;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       color: rgba(255,255,255,.9);
-      font-size: 14px; font-weight: 950;
+      font-size:14px;
+      font-weight:950;
     }
-
-    .timeText{ display:flex; align-items:center; gap: 8px; }
-    .timeText .label{ font-size: 12px; font-weight: 900; color: rgba(255,255,255,.75); }
-    .timeText .sec{ font-size: 16px; font-weight: 950; }
-
     .timerWarn .ring{
-      background: conic-gradient(var(--gold) var(--p, 0%), rgba(255,255,255,.14) 0);
+      background: conic-gradient(var(--gold) var(--p,0%), rgba(255,255,255,.14) 0);
       box-shadow: 0 0 0 5px rgba(255,200,80,.18), 0 0 32px rgba(255,200,80,.14);
     }
     .timerDanger .ring{
-      background: conic-gradient(var(--red) var(--p, 0%), rgba(255,255,255,.14) 0);
+      background: conic-gradient(var(--red) var(--p,0%), rgba(255,255,255,.14) 0);
       box-shadow: 0 0 0 5px rgba(255,70,70,.20), 0 0 40px rgba(255,70,70,.18);
     }
 
     .stressWrap{
-      width: 240px; height: 12px; border-radius: 999px;
+      width:240px; height:12px;
+      border-radius:999px;
       background: rgba(255,255,255,.10);
       border: 1px solid rgba(255,255,255,.10);
       overflow:hidden;
     }
     .stressBar{
-      height:100%; width:0%;
+      height:100%;
+      width:0%;
       background: linear-gradient(90deg, rgba(45,200,120,.95), rgba(255,200,80,.95), rgba(255,70,70,.95));
       transition: width .25s ease;
     }
 
-    /* ======= FRAME (référence) ======= */
+    /* ✅ Buttons */
+    .btnNeo{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      color: rgba(255,255,255,.90);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      cursor:pointer;
+    }
+    .btnNeo:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .btnPrimary{
+      border:none;
+      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
+      color: rgba(10,12,18,.96);
+      border-radius:12px;
+      padding: 10px 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      cursor:pointer;
+    }
+    .btnPrimary:disabled{
+      opacity:.45;
+      filter: grayscale(.2);
+      cursor:not-allowed;
+    }
+
+    /* ✅ Frame / options scroll interne */
     .frame{
-      flex: 1;
-      min-height: 0;
       background: var(--glass2);
       border: 1px solid rgba(255, 200, 150, .22);
-      border-radius: 18px;
-      padding: 18px;
-      position: relative;
+      border-radius:18px;
+      padding:18px;
+      position:relative;
       overflow:hidden;
       box-shadow: 0 18px 70px rgba(0,0,0,.50);
       backdrop-filter: blur(12px);
+      flex:1;
+      min-height:0;
       display:flex;
-      flex-direction: column;
-      gap: 10px;
+      flex-direction:column;
+
+      /* ✅ NEW: réserve en bas pour la barre fixée */
+      padding-bottom: calc(var(--actionsH) + 16px);
     }
     .frame::after{
       content:"";
@@ -272,33 +344,35 @@
     }
 
     .qmeta{ position: relative; z-index:2; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 950; letter-spacing: .35px; text-transform: uppercase; }
-    .qtitle{ position: relative; z-index:2; margin-top: 2px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
-    .qdesc{ position: relative; z-index:2; margin-top: 4px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
+    .qtitle{ position: relative; z-index:2; margin-top: 6px; font-weight: 950; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.2; text-shadow: 0 14px 30px rgba(0,0,0,.55); }
+    .qdesc{ position: relative; z-index:2; margin-top: 10px; color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.5; max-width: 980px; }
 
     .options{
       position: relative;
       z-index:2;
       display:flex;
       flex-direction:column;
-      gap: 12px;
-      margin-top: 8px;
-      overflow:auto;              /* ✅ scroll interne */
-      padding-right: 4px;
-      min-height: 0;
-      flex: 1;
+      gap:12px;
+      margin-top:16px;
+
+      overflow:auto;        /* ✅ scroll interne */
+      min-height:0;
+
+      padding-right:6px;
+
+      /* ✅ NEW: garde le bas visible même avec barre fixée */
+      padding-bottom: 12px;
     }
-    .options::-webkit-scrollbar{ width: 10px; }
-    .options::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.12);
-      border-radius: 999px;
-      border: 2px solid rgba(0,0,0,.15);
-    }
+    /* scrollbar light */
+    .options::-webkit-scrollbar{ width:10px; }
+    .options::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.14); border-radius: 999px; border:2px solid rgba(0,0,0,.20); }
+    .options::-webkit-scrollbar-track{ background: rgba(0,0,0,.12); border-radius:999px; }
 
     .opt{
-      border-radius: 14px;
-      padding: 13px 14px;
-      font-weight: 950;
-      letter-spacing: .2px;
+      border-radius:14px;
+      padding:13px 14px;
+      font-weight:950;
+      letter-spacing:.2px;
       cursor:pointer;
       user-select:none;
       transition: transform .12s ease, filter .12s ease, background .12s ease;
@@ -314,65 +388,42 @@
       box-shadow: 0 0 0 3px rgba(255,150,70,.10), 0 16px 34px rgba(0,0,0,.28);
     }
 
-    /* ======= ACTIONS (référence: gauche Corrigé/Terminer, droite Valider/Effacer) ======= */
+    /* ✅ Actions bar (FIXED BOTTOM) */
     .actions{
-      position: relative;
-      z-index:2;
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      width: min(1650px, calc(100% - 20px)); /* ✅ aligné à .wrap (padding stage=10px) */
+      z-index: 25;
+
       display:flex;
       justify-content:space-between;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+      gap:10px;
+      flex-wrap:wrap;
       align-items:center;
+
     }
-    .actions .leftActions,
-    .actions .rightActions{
+    .actionsLeft, .actionsRight{
       display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap:10px;
+      flex-wrap:wrap;
       align-items:center;
     }
 
-    .btnNeo{
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      color: rgba(255,255,255,.90);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-weight: 950;
-      letter-spacing: .2px;
-    }
-    .btnNeo:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
-
-    .btnPrimary{
-      border: none;
-      background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
-      color: rgba(10,12,18,.96);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-weight: 950;
-      letter-spacing: .2px;
-    }
-    .btnPrimary:disabled{
-      opacity:.45;
-      filter: grayscale(.2);
-      cursor: not-allowed;
-    }
-
-    /* ======= OVERLAYS ======= */
+    /* ✅ Overlays */
     .overlay{
       position: fixed; inset: 0;
-      display:none; align-items:center; justify-content:center;
-      z-index: 60;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 50;
       background: rgba(0,0,0,.48);
       backdrop-filter: blur(8px);
     }
     .modalBox{
-      width: min(860px, 92%);
-      border-radius: 18px;
+      width: min(760px, 92%);
+      border-radius:18px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(8,10,14,.82);
       box-shadow: 0 26px 90px rgba(0,0,0,.62);
@@ -380,139 +431,89 @@
       position: relative;
     }
     .modalTop{
-      padding: 14px 16px;
+      padding:14px 16px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
     .badgeState{
-      font-weight: 950;
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 12px;
+      font-weight:950;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       white-space: nowrap;
     }
     .bGood{ border-color: rgba(45,200,120,.30); background: rgba(45,200,120,.12); }
     .bWarn{ border-color: rgba(255,200,80,.30); background: rgba(255,200,80,.12); }
-    .bBad { border-color: rgba(255,70,70,.35); background: rgba(255,70,70,.12); }
+    .bBad { border-color: rgba(255,70,70,.35);  background: rgba(255,70,70,.12); }
 
-    .modalBody{ padding: 16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
+    .modalBody{ padding:16px; color: rgba(255,255,255,.92); line-height: 1.5; font-size: 14px; }
     .modalActions{
-      padding: 14px 16px;
+      padding:14px 16px;
       border-top: 1px solid rgba(255,255,255,.10);
-      display:flex; justify-content:flex-end; gap: 10px; flex-wrap: wrap;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    .startTitle{ font-weight: 950; font-size: 22px; margin-bottom: 6px; }
+    .startTitle{ font-weight:950; font-size:22px; margin-bottom:6px; }
     .startText{ color: rgba(255,255,255,.82); font-size: 14px; line-height: 1.45; }
     .startBtn{
-      border:none; border-radius: 14px; padding: 12px 16px;
-      font-weight: 950; letter-spacing: .3px;
+      border:none;
+      border-radius:14px;
+      padding: 12px 16px;
+      font-weight:950;
+      letter-spacing:.3px;
       background: linear-gradient(180deg, rgba(255,176,90,1), rgba(255,120,50,1));
       color: rgba(10,12,18,.96);
       box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      cursor:pointer;
     }
 
-    /* ======= KEY OVERLAY (corrigé) ======= */
+    /* ✅ Key overlay (corrigé) */
     .keyBox{
-      width: min(980px, 94%);
+      width: min(980px, 95%);
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(8,10,14,.88);
-      box-shadow: 0 26px 90px rgba(0,0,0,.68);
+      background: rgba(8,10,14,.90);
+      box-shadow: 0 26px 90px rgba(0,0,0,.62);
       overflow:hidden;
       position: relative;
     }
     .keyTop{
-      padding: 14px 16px;
+      padding:14px 16px;
       border-bottom: 1px solid rgba(255,255,255,.10);
-      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
     .keyTitle{
-      font-weight: 950;
-      font-size: 14px;
-      letter-spacing: .25px;
-      color: rgba(255,255,255,.88);
-      text-transform: uppercase;
+      font-weight:950;
+      font-size:14px;
+      color: rgba(255,255,255,.90);
     }
     .keyClose{
-      width: 40px; height: 40px;
-      border-radius: 12px;
+      width:42px; height:42px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.14);
       color: rgba(255,255,255,.92);
-      font-weight: 950;
-      display:grid;
-      place-items:center;
+      font-weight:950;
       cursor:pointer;
     }
     .keyBody{
-      padding: 16px;
-      max-height: min(62vh, 620px);
+      padding:16px;
+      max-height: min(70vh, 620px);
       overflow:auto;
     }
-    .keyBody::-webkit-scrollbar{ width: 10px; }
-    .keyBody::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.12);
-      border-radius: 999px;
-      border: 2px solid rgba(0,0,0,.15);
-    }
-    .keyTable{
-      width:100%;
-      border-collapse: collapse;
-      min-width: 760px;
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      overflow:hidden;
-    }
-    .keyTable th, .keyTable td{
-      padding: 10px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      vertical-align: top;
-    }
-    .keyTable th{
-      text-align:left;
-      color: rgba(255,255,255,.68);
-      font-size: 12px;
-      font-weight: 950;
-    }
-    .keyTable td{
-      color: rgba(255,255,255,.88);
-      font-size: 13px;
-      font-weight: 850;
-    }
-    .keyHint{
-      color: rgba(255,255,255,.76);
-      font-size: 12px;
-      font-weight: 850;
-      margin: 8px 0 0;
-    }
 
-    /* Anim */
-    .shake{ animation: shake .24s linear 1; }
-    @keyframes shake{
-      0% { transform: translateX(0px); }
-      20%{ transform: translateX(-6px); }
-      40%{ transform: translateX(6px); }
-      60%{ transform: translateX(-4px); }
-      80%{ transform: translateX(4px); }
-      100%{ transform: translateX(0px); }
-    }
-    .pulseGood{ animation: pulseGood .32s ease 1; }
-    @keyframes pulseGood{
-      from{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
-      50%{ box-shadow: 0 0 0 7px rgba(45,200,120,.18); }
-      to{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
-    }
-    .flashBad{ animation: flashBad .30s ease 1; }
-    @keyframes flashBad{
-      from{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
-      50%{ box-shadow: 0 0 0 7px rgba(255,70,70,.22); }
-      to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
-    }
-
-    /* Hotspot */
+    /* Hotspot zones */
     @keyframes hsPulse {
       0% { box-shadow: 0 0 0 0 rgba(255,255,255,.25); border-color: rgba(255,255,255,.55); }
       70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); border-color: rgba(255,255,255,.85); }
@@ -534,14 +535,16 @@
       animation: none;
     }
 
-    /* image_single */
+    /* image_single cards */
     .imgGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:16px;
-      margin-top:2px;
+      margin-top:12px;
     }
-    @media (max-width: 980px){ .imgGrid{ grid-template-columns: 1fr; } }
+    @media (max-width: 980px){
+      .imgGrid{ grid-template-columns: 1fr; }
+    }
     .imgCard{
       border-radius:18px;
       overflow:hidden;
@@ -564,8 +567,7 @@
       background:linear-gradient(180deg, rgba(120,180,255,.25), rgba(120,180,255,.10));
     }
     .imgTag{
-      width:36px;
-      height:36px;
+      width:36px; height:36px;
       border-radius:12px;
       display:flex;
       align-items:center;
@@ -575,7 +577,7 @@
     }
     .imgPic{
       width:100%;
-      height: 220px;
+      height:220px;
       object-fit:cover;
       display:block;
     }
@@ -585,10 +587,33 @@
       font-weight:800;
     }
 
+    /* Animations feedback */
+    .shake{ animation: shake .24s linear 1; }
+    @keyframes shake{
+      0%{ transform: translateX(0px); }
+      20%{ transform: translateX(-6px); }
+      40%{ transform: translateX(6px); }
+      60%{ transform: translateX(-4px); }
+      80%{ transform: translateX(4px); }
+      100%{ transform: translateX(0px); }
+    }
+    .pulseGood{ animation: pulseGood .32s ease 1; }
+    @keyframes pulseGood{
+      from{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
+      50%{ box-shadow: 0 0 0 7px rgba(45,200,120,.18); }
+      to{ box-shadow: 0 0 0 0 rgba(45,200,120,.0); }
+    }
+    .flashBad{ animation: flashBad .30s ease 1; }
+    @keyframes flashBad{
+      from{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
+      50%{ box-shadow: 0 0 0 7px rgba(255,70,70,.22); }
+      to{ box-shadow: 0 0 0 0 rgba(255,70,70,.0); }
+    }
+
     @media (max-width: 980px){
       .hud{ grid-template-columns: 1fr; }
-      .stressWrap{ width: 190px; }
-      .progressShell{ min-width: 100%; }
+      .progressShell{ min-width:100%; }
+      .stressWrap{ width:190px; }
     }
   </style>
 </head>
@@ -597,20 +622,23 @@
   <div class="stage">
     <div class="wrap">
 
-      <!-- ✅ TopTabs (référence) -->
+      <!-- ✅ TopTabs -->
       <div class="topTabs">
         <div class="levelTab">
-          <div class="levelDot"></div>
-          <div id="levelTabText">NIVEAU: INTERMÉDIAIRE</div>
+          <span class="levelDot"></span>
+          <span class="levelTabText" id="levelTabText">Niveau • Intermédiaire</span>
         </div>
 
         <div class="progressShell" aria-label="Progression">
           <div class="progressBar" id="progressBar"></div>
         </div>
 
-        <div class="miniHint" id="miniHint">45s • 2 essais • 2 indices</div>
+        <div class="miniHint" title="Règles">
+          ⏱ <span id="miniTime">45s</span> • 🎯 <span id="miniAttempts">2</span> • 💡 <span id="miniHints">2</span>
+        </div>
       </div>
 
+      <!-- ✅ HUD -->
       <div class="hud">
         <div class="hudbox">
           <div class="profile">
@@ -618,26 +646,25 @@
               <img class="avatar" id="hudAvatar" alt="Avatar">
             </div>
             <div class="ptext">
-              <div class="pname" id="hudName">Joueur</div>
+              <div class="pname" id="hudName">Dr. Joueur</div>
               <div class="prole" id="hudRole">Rôle: —</div>
             </div>
+            <div class="chip" id="difficultyChip">MODE: INTERMÉDIAIRE</div>
           </div>
-          <div class="chip" id="difficultyChip">MODE: INTERMEDIAIRE</div>
         </div>
 
         <div class="hudbox">
           <div class="stats">
             <div class="pill">⭐ <span id="hudScore">0</span></div>
-            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-            <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/2</div>
-
-            <div class="pill">💡 Indices <span id="hudHints">2</span>/2</div>
+            <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">1</span></div>
+            <div class="pill">🎯 <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+            <div class="pill">💡 <span id="hudHints">2</span></div>
 
             <div class="pill timerPill" id="timerPill">
               <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
-              <div class="timeText">
-                <div class="label">Temps</div>
-                <div class="sec"><span id="hudTime">45</span>s</div>
+              <div style="display:flex; flex-direction:column; line-height:1;">
+                <span style="font-size:12px; font-weight:900; color: rgba(255,255,255,.75);">Temps</span>
+                <span style="font-size:16px; font-weight:950;"><span id="hudTime">45</span>s</span>
               </div>
             </div>
 
@@ -651,6 +678,7 @@
         </div>
       </div>
 
+      <!-- ✅ Frame -->
       <div class="frame" id="frame">
         <div class="qmeta" id="qMeta">Scénario 1 — Étouffement</div>
         <div class="qtitle" id="qTitle">…</div>
@@ -658,13 +686,14 @@
 
         <div class="options" id="options"></div>
 
+        <!-- ✅ Actions FIXÉES en bas (même HTML, juste CSS changé) -->
         <div class="actions">
-          <div class="leftActions">
+          <div class="actionsLeft">
             <button class="btnNeo" id="showKeyBtn" type="button" disabled>📘 Corrigé</button>
             <button class="btnPrimary" id="endBtn" type="button" style="display:none;">✅ Terminer</button>
           </div>
-          <div class="rightActions">
-            <button class="btnPrimary" id="validateBtn" type="button">Valider</button>
+          <div class="actionsRight">
+            <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
             <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
           </div>
         </div>
@@ -673,28 +702,25 @@
     </div>
   </div>
 
-  <!-- START overlay -->
+  <!-- ✅ START overlay -->
   <div class="overlay" id="startOverlay" style="display:flex;">
     <div class="modalBox">
       <div class="modalTop">
         <div class="badgeState bWarn">🎮 Prêt ?</div>
         <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Mission • Étouffement
+          Mission • Étouffement • Intermédiaire
         </div>
       </div>
       <div class="modalBody">
         <div class="startTitle">Tu as une mission.</div>
         <div class="startText">
-          Tu vas intervenir en situation d’urgence.
+          Tu interviens en situation d’urgence.
           <br><br>
-          <b>Règles (intermédiaire) :</b>
-          <ul style="margin:10px 0 0 18px; padding:0; color: rgba(255,255,255,.82);">
-            <li><b>45 secondes</b> par question</li>
-            <li><b>2 tentatives</b> maximum par question</li>
-            <li><b>2 indices</b> pour tout le scénario (<b>1 seul indice</b> max par question)</li>
-          </ul>
+          <b>Règles (Intermédiaire)</b> : <b>45 secondes</b> par question, <b>2 tentatives</b>.
           <br>
-          <b>Si le temps s’écoule 2 fois ou après 2 erreurs, tu retournes au début de la mission (score = 0).</b>
+          <b>2 indices</b> pour tout le scénario (max 1 indice par question).
+          <br><br>
+          <b>Si tu échoues (temps écoulé ou 2 erreurs), tu retournes au départ (score/stress/indices réinitialisés).</b>
         </div>
       </div>
       <div class="modalActions">
@@ -703,8 +729,27 @@
     </div>
   </div>
 
-  <!-- FEEDBACK overlay -->
-  <div class="overlay" id="overlay">
+  <!-- ✅ LOADING overlay -->
+  <div class="overlay" id="loadingOverlay">
+    <div class="modalBox" style="width:min(520px,92%);">
+      <div class="modalTop">
+        <div class="badgeState bWarn">⏳ Chargement…</div>
+        <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
+          Préparation de la question
+        </div>
+      </div>
+      <div class="modalBody" style="text-align:center;">
+        <div style="font-weight:950; font-size:16px;">Mise en place de la scène…</div>
+        <div style="margin-top:8px; color: rgba(255,255,255,.75);">Reste concentré(e).</div>
+      </div>
+      <div class="modalActions">
+        <button class="btnNeo" type="button" disabled style="opacity:.7;">Veuillez patienter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ FEEDBACK overlay -->
+  <div class="overlay" id="feedbackOverlay">
     <div class="modalBox" id="modalBox">
       <div class="modalTop">
         <div class="badgeState" id="badgeState">—</div>
@@ -714,1040 +759,1117 @@
       </div>
       <div class="modalBody" id="modalText">…</div>
       <div class="modalActions">
-        <button class="btnNeo" id="retryBtn">Réessayer</button>
-        <button class="btnPrimary" id="nextBtn">Suivant</button>
-        <button class="btnPrimary" id="okBtn" style="display:none;">OK</button>
+        <button class="btnNeo" id="retryBtn" type="button">Réessayer</button>
+        <button class="btnPrimary" id="nextBtn" type="button">Suivant</button>
+        <button class="btnPrimary" id="okBtn" type="button" style="display:none;">OK</button>
       </div>
     </div>
   </div>
 
-  <!-- HINT overlay -->
+  <!-- ✅ HINT overlay -->
   <div class="overlay" id="hintOverlay">
     <div class="modalBox">
       <div class="modalTop">
         <div class="badgeState bWarn">💡 Indice</div>
         <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Indices restants : <span id="hintLeftTop">2</span>
+          Restants : <span id="hintLeftTop">0</span>
         </div>
       </div>
-      <div class="modalBody" id="hintText">…</div>
+      <div class="modalBody">
+        <div style="font-weight:950; font-size:16px; margin-bottom:8px;">Indice pour cette question</div>
+        <div id="hintText" style="color: rgba(255,255,255,.86); line-height:1.55;">…</div>
+      </div>
       <div class="modalActions">
-        <button class="btnPrimary" id="hintOkBtn">OK</button>
+        <button class="btnNeo" id="closeHintBtn" type="button">Fermer</button>
       </div>
     </div>
   </div>
 
-  <!-- PAUSE overlay -->
+  <!-- ✅ PAUSE overlay -->
   <div class="overlay" id="pauseOverlay">
     <div class="modalBox">
       <div class="modalTop">
         <div class="badgeState bWarn">⏸ Pause</div>
         <div style="color: rgba(255,255,255,.75); font-size:12px; font-weight:950;">
-          Chrono arrêté
+          Respire • Reprends quand tu es prêt(e)
         </div>
       </div>
       <div class="modalBody">
-        Reprends quand tu es prêt(e).
+        <div style="font-weight:950; font-size:16px;">Jeu en pause.</div>
+        <div style="margin-top:8px; color: rgba(255,255,255,.75); line-height:1.55;">
+          Le temps est arrêté. Clique sur “Reprendre” pour continuer.
+        </div>
       </div>
       <div class="modalActions">
-        <button class="btnPrimary" id="resumeBtn">▶ Reprendre</button>
+        <button class="btnPrimary" id="resumeBtn" type="button">▶ Reprendre</button>
       </div>
     </div>
   </div>
 
-  <!-- KEY overlay -->
+  <!-- ✅ KEY overlay -->
   <div class="overlay" id="keyOverlay">
     <div class="keyBox">
       <div class="keyTop">
-        <div class="keyTitle">📘 Corrigé (bonnes réponses)</div>
+        <div class="keyTitle">📘 Corrigé — Bonnes réponses</div>
         <button class="keyClose" id="keyCloseBtn" type="button">✕</button>
       </div>
       <div class="keyBody" id="keyBody"></div>
     </div>
   </div>
 
-  <script>
-    /* ========= SFX (référence) ========= */
-    let audioCtx = null;
-    function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
-    function tone(freq, dur=0.08, type="sine", gain=0.05){
-      ensureAudio();
-      const t0 = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = type; osc.frequency.value = freq;
-      g.gain.value = gain;
-      osc.connect(g); g.connect(audioCtx.destination);
-      osc.start(t0); osc.stop(t0 + dur);
-    }
-    function sfxClick(){ tone(520,0.04,"triangle",0.035); }
-    function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
-    function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
-    function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
-    function sfxAlarmLong(){
-      ensureAudio();
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.linearRampToValueAtTime(380, now + 0.35);
-      osc.frequency.linearRampToValueAtTime(520, now + 0.70);
-      g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-      osc.connect(g); g.connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + 1.25);
-    }
-    function sfxVictory(){
-      ensureAudio();
-      const notes = [
-        {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
-        {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
-      ];
-      let t = 0;
-      notes.forEach((n)=>{
-        setTimeout(()=>tone(n.f, n.d, "sine", 0.065), t*1000);
-        t += n.d + 0.03;
-      });
-    }
+<script>
+/* ========= SFX (WebAudio) ========= */
+let audioCtx = null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+function tone(freq, dur=0.08, type="sine", gain=0.05){
+  ensureAudio();
+  const t0 = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  g.gain.value = gain;
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0 + dur);
+}
+function sfxClick(){ tone(520,0.04,"triangle",0.035); }
+function sfxCorrect(){ tone(660,0.07,"sine",0.06); setTimeout(()=>tone(880,0.08,"sine",0.06), 80); }
+function sfxWrong(){ tone(220,0.10,"square",0.05); setTimeout(()=>tone(180,0.12,"square",0.05), 90); }
+function sfxCritical(){ tone(140,0.14,"sawtooth",0.05); setTimeout(()=>tone(120,0.16,"sawtooth",0.05), 120); }
+function sfxAlarmLong(){
+  ensureAudio();
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(520, now);
+  osc.frequency.linearRampToValueAtTime(380, now + 0.35);
+  osc.frequency.linearRampToValueAtTime(520, now + 0.70);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(now); osc.stop(now + 1.25);
+}
+function sfxVictory(){
+  ensureAudio();
+  const notes = [
+    {f:659,d:0.10},{f:784,d:0.10},{f:988,d:0.14},
+    {f:1175,d:0.18},{f:988,d:0.14},{f:1047,d:0.22}
+  ];
+  let t=0;
+  notes.forEach(n=>{
+    setTimeout(()=>tone(n.f,n.d,"sine",0.065), t*1000);
+    t += n.d + 0.03;
+  });
+}
 
-    const el = (id)=>document.getElementById(id);
+/* ========= Helpers ========= */
+const el = (id)=>document.getElementById(id);
+const clamp = (n,a,b)=>Math.max(a, Math.min(b,n));
 
-    const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
-    const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal"), hudAttempts = el("hudAttempts");
-    const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
-    const hudHints = el("hudHints");
-    const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
-    const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
-    const startOverlay = el("startOverlay"), startBtn = el("startBtn");
-    const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
-    const modalScore = el("modalScore"), modalStress = el("modalStress");
-    const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn"), frame = el("frame");
+/* ========= DOM ========= */
+const levelTabText = el("levelTabText");
+const progressBar = el("progressBar");
 
-    const progressBar = el("progressBar");
-    const miniHint = el("miniHint");
+const hudName = el("hudName"), hudRole = el("hudRole"), hudAvatar = el("hudAvatar"), difficultyChip = el("difficultyChip");
+const hudScore = el("hudScore"), hudQnum = el("hudQnum"), hudQtotal = el("hudQtotal");
+const hudAttempts = el("hudAttempts"), hudAttemptsMax = el("hudAttemptsMax");
+const hudHints = el("hudHints"), miniHints = el("miniHints");
+const hudTime = el("hudTime"), ring = el("ring"), timerPill = el("timerPill"), stressBar = el("stressBar");
 
-    const hintBtn = el("hintBtn");
-    const hintOverlay = el("hintOverlay");
-    const hintText = el("hintText");
-    const hintOkBtn = el("hintOkBtn");
-    const hintLeftTop = el("hintLeftTop");
+const qMeta = el("qMeta"), qTitle = el("qTitle"), qDesc  = el("qDesc"), optionsEl = el("options");
+const validateBtn = el("validateBtn"), clearBtn = el("clearBtn");
+const showKeyBtn = el("showKeyBtn"), endBtn = el("endBtn");
 
-    const pauseBtn = el("pauseBtn");
-    const pauseOverlay = el("pauseOverlay");
-    const resumeBtn = el("resumeBtn");
+const hintBtn = el("hintBtn"), pauseBtn = el("pauseBtn");
 
-    const showKeyBtn = el("showKeyBtn");
-    const endBtn = el("endBtn");
-    const keyOverlay = el("keyOverlay");
-    const keyBody = el("keyBody");
-    const keyCloseBtn = el("keyCloseBtn");
+const startOverlay = el("startOverlay"), startBtn = el("startBtn");
+const loadingOverlay = el("loadingOverlay");
+const feedbackOverlay = el("feedbackOverlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
+const modalScore = el("modalScore"), modalStress = el("modalStress");
+const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn");
 
-    /* ======= CONFIG (intermédiaire demandé) ======= */
-    const SCENARIO = {
-      id: 1,
-      label: "Scénario 1 — Étouffement",
-      mission: "Étouffement",
-      level: "Niveau intermédiaire"
-    };
+const hintOverlay = el("hintOverlay"), hintText = el("hintText"), hintLeftTop = el("hintLeftTop"), closeHintBtn = el("closeHintBtn");
+const pauseOverlay = el("pauseOverlay"), resumeBtn = el("resumeBtn");
 
-    const NEXT_GENIALLY_URL = "#";   // 🔁 remplace par ton lien Genially
+const keyOverlay = el("keyOverlay"), keyBody = el("keyBody"), keyCloseBtn = el("keyCloseBtn");
 
-    const TIMER_SECONDS = 45;        // intermédiaire
-    const ATTEMPTS_MAX  = 2;         // ✅ demandé
-    const HINT_MAX      = 2;         // ✅ demandé
-    const HINT_KEY      = `hints_left_s${SCENARIO.id}`;
+const frame = el("frame");
 
-    const STRESS_RULES = { wrong: 10, timeout: 15, critical: 25 };
+/* ========= CONFIG (Référence Intermédiaire) ========= */
+const SCENARIO = {
+  id: 1,
+  label: "Scénario 1 — Étouffement",
+  mission: "Étouffement",
+  level: "Intermédiaire"
+};
 
-    const role = "infirmier";
-    const playerName = localStorage.getItem("playerName") || "Joueur";
-    const avatarFile = localStorage.getItem("avatar") || "infirmier_f.png";
-    const difficulty = (localStorage.getItem("difficulty") || "intermédiaire").toLowerCase();
+// ✅ Difficulty (référence)
+const TIMER_SECONDS = 45;
+const ATTEMPTS_MAX = 2;
+const HINT_MAX = 2;
 
-    const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
-    hudName.textContent = "Dr. " + playerName;
-    hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
-    hudAvatar.src = "assets/avatars/" + avatarFile;
-    difficultyChip.textContent = "MODE: " + difficulty.toUpperCase();
-    el("levelTabText").textContent = difficulty.toUpperCase();
-    miniHint.textContent = `${TIMER_SECONDS}s • ${ATTEMPTS_MAX} essais • ${HINT_MAX} indices`;
+// ✅ Hints stockés scénario
+const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 
-    let score = parseInt(localStorage.getItem("score") || "0", 10);
-    let stress = parseInt(localStorage.getItem("stress") || "0", 10);
-    if(isNaN(score)) score = 0;
-    if(isNaN(stress)) stress = 0;
+// Stress rules (référence)
+const STRESS_RULES = { wrong:10, timeout:15, critical:25 };
 
-    let hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
-    if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
+// Navigation (si tu veux rediriger Genially)
+const NEXT_SCENARIO_URL = "#";
 
-    /* ======= ENGINE STATE ======= */
-    let idx = 0;
-    let attemptsUsed = 0;               // ✅ 0..ATTEMPTS_MAX
-    let locked = true;
-    let timerId = null;
-    let timeLeft = TIMER_SECONDS;
-    let paused = false;
-    let hintUsedThisQuestion = false;
+/* ========= Player data ========= */
+const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompier" };
 
-    /* ========= QUESTIONS (inchangées) ========= */
-    const questions = [{"type": "single", "title": "Évaluation infirmière", "desc": "Tu es **infirmier(ère)** en service. La victime ne parle pas, respiration difficile, toux inefficace. Quelle priorité immédiate ?", "options": [{"text": "Désobstruction : 5 claques dorsales puis 5 compressions abdominales", "kind": "ok", "fb": "✅ Oui : gestes de désobstruction immédiatement."}, {"text": "Installer en PLS", "kind": "wrong", "fb": "❌ Pas si la victime est consciente et s’étouffe (PLS si elle respire mais est inconsciente)."}, {"text": "Prendre la tension / pouls d’abord", "kind": "wrong", "fb": "❌ Perte de temps : urgence vitale."}, {"text": "Donner à boire", "kind": "critical", "fb": "🚨 Erreur critique : risque d’aspiration/aggravation.", "pts": -10}]}, {"type": "tf", "title": "Décision", "desc": "Vrai ou faux : une toux efficace et une parole possible imposent Heimlich immédiatement.", "tf": {"trueOpt": {"kind": "wrong", "fb": "❌ Faux : on encourage la toux et on surveille."}, "falseOpt": {"kind": "ok", "fb": "✅ Vrai : pas de Heimlich si toux efficace."}}}, {"type": "multi", "title": "Actions infirmières adaptées", "desc": "Sélectionne **toutes** les bonnes actions.", "options": [{"text": "Surveiller conscience/respiration en continu", "correct": true}, {"text": "Transmettre localisation + état + évolution aux secours", "correct": true}, {"text": "Laisser la victime seule après amélioration", "correct": false}, {"text": "Préparer du matériel (DAE à proximité) si aggravation", "correct": true}], "okFb": "✅ Correct : surveillance + transmission + anticipation.", "badFb": "❌ Attention : ne jamais laisser la victime seule."}, {"type": "image_single", "title": "Choix de l’image", "desc": "Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?<br>", "options": [{"label": "A", "caption": "Bouche-à-bouche immédiat", "kind": "wrong", "fb": "❌ Non : la victime est consciente, priorité à la désobstruction.", "imgSrc": "assets/q4_a.png"}, {"label": "B", "caption": "5 claques dorsales", "kind": "ok", "fb": "✅ Oui : on commence par les claques dorsales.", "imgSrc": "assets/q4_b.png"}, {"label": "C", "caption": "Victime allongée sur le dos", "kind": "wrong", "fb": "❌ Non : on garde la victime penchée en avant pour les claques.", "imgSrc": "assets/q4_c.png"}]}, {"type": "drag_order", "title": "Ordonner la conduite à tenir", "desc": "Glisse les étapes dans le bon ordre.", "items": [{"id": "call", "text": "Alerter (SAMU) / demander un DAE"}, {"id": "back", "text": "5 claques dorsales"}, {"id": "abd", "text": "5 compressions abdominales"}, {"id": "cycle", "text": "Répéter les cycles 5/5"}, {"id": "monitor", "text": "Surveiller conscience/respiration (évolution)"}], "expected": ["call", "back", "abd", "cycle", "monitor"], "okFb": "✅ Ordre correct.", "badFb": "❌ Ordre incorrect."}, {"type": "cloze", "title": "Texte à trous", "desc": "Écris uniquement les nombres.", "template": "On réalise <b>{blank1}</b> claques dorsales puis <b>{blank2}</b> compressions abdominales.", "blanks": [{"key": "blank1", "answer": "5"}, {"key": "blank2", "answer": "5"}], "okFb": "✅ 5 puis 5.", "badFb": "❌ Attendu : 5 puis 5."}, {"type": "short", "title": "Transmission", "desc": "Combien de claques dorsales par cycle ? (nombre)", "answers": ["5"], "okFb": "✅ 5.", "badFb": "❌ Attendu : 5."}, {"type": "single", "title": "Piège à éviter", "desc": "Choisis la meilleure réponse.", "options": [{"text": "Donner à boire", "kind": "critical", "fb": "🚨 Erreur critique : aspiration.", "pts": -10}, {"text": "Pencher la victime en avant avant les claques", "kind": "ok", "fb": "✅ Correct."}, {"text": "Arrêter les gestes car “ça fait mal”", "kind": "wrong", "fb": "❌ Non : priorité vitale."}, {"text": "Alerter et déléguer l’appel", "kind": "ok", "fb": "✅ Oui, en parallèle."}]}, {"type": "hotspot", "gate": true, "title": "Hotspot — Où se situe le problème ?", "desc": "", "imgSrc": "scenario_1_hotspot.png", "hotspots": [{"label": "Zone correcte", "x": 38.29, "y": 45.07, "w": 23.21, "h": 23.98, "kind": "ok", "fb": "✅ Correct : zone de la gorge (étouffement).", "pts": 10}, {"label": "Zone fausse", "x": 46.63, "y": 13.35, "w": 22.22, "h": 27.08, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}, {"label": "Zone fausse", "x": 55.16, "y": 78.72, "w": 25.79, "h": 19.15, "kind": "wrong", "fb": "❌ Faux : ce n’est pas la bonne zone.", "pts": -2}]}, {"type": "multi", "title": "Après les gestes", "desc": "Sélectionne toutes les réponses correctes.", "options": [{"text": "Surveiller conscience/respiration jusqu’aux secours", "correct": true}, {"text": "Préparer RCP si inconscience", "correct": true}, {"text": "Interrompre toute surveillance si ça va mieux", "correct": false}, {"text": "Transmettre aux secours ce qui a été fait", "correct": true}], "okFb": "✅ Bonne conduite.", "badFb": "❌ Surveillance + transmission obligatoires."}];
+// essaie de récupérer role depuis Genially/window/localStorage
+const role = (window.role || localStorage.getItem("role") || "infirmier").toLowerCase();
+const playerName = (window.player_name || window.playerName || localStorage.getItem("player_name") || localStorage.getItem("playerName") || "Joueur");
+const avatarFile = (localStorage.getItem("avatar") || (role==="pompier" ? "pompier_f.png" : role==="medecin" ? "medecin_f.png" : "infirmier_f.png"));
 
-    const TOTAL = questions.length;
-    hudQtotal.textContent = String(TOTAL);
+hudName.textContent = `Dr. ${playerName}`;
+hudRole.textContent = "Rôle: " + (roleLabelMap[role] || "—");
+hudAvatar.src = "assets/avatars/" + avatarFile;
 
-    /* ======= Helpers ======= */
-    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-    function escapeHtml(str){ return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
+difficultyChip.textContent = "MODE: INTERMÉDIAIRE";
+levelTabText.textContent = "Niveau • Intermédiaire";
 
-    function setScore(v){
-      score=v;
-      localStorage.setItem("score", String(score));
-      hudScore.textContent=String(score);
-      modalScore.textContent=String(score);
-    }
-    function addScore(d){ setScore(score + d); }
+/* ========= Questions (importées de TON code) ========= */
+const questions = [{"type":"single","title":"Priorité binôme","desc":"Priorité n°1 du binôme pompier ?","options":[{"text":"Sécuriser + évaluer A/B","kind":"ok","fb":"✅ Correct."},{"text":"Chercher une pièce d’identité","kind":"wrong","fb":"❌ Non."},{"text":"Mettre au sol immédiatement","kind":"wrong","fb":"❌ Pas si consciente."},{"text":"Donner à boire","kind":"critical","fb":"🚨 ERREUR CRITIQUE.","pts":-10}]},{"type":"tf","title":"Délégation","desc":"V/F : déléguer l’alerte et le DAE pendant les gestes est recommandé.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai."},"falseOpt":{"kind":"wrong","fb":"❌ Faux."}}},{"type":"multi","title":"Gravité","desc":"Signes d’obstruction grave :","options":[{"text":"Impossible de parler","correct":true},{"text":"Toux inefficace","correct":true},{"text":"Cyanose/agitation","correct":true},{"text":"Toux forte + parle","correct":false}],"okFb":"✅ Correct.","badFb":"❌ Revois les signes."},{"type":"image_single","title":"Choix de l’image","desc":"Quel visuel correspond au **bon** geste initial (adulte conscient, obstruction grave) ?","options":[{"label":"A","caption":"Bouche-à-bouche immédiat","kind":"wrong","fb":"❌ Non : victime consciente → désobstruction d’abord.","imgSrc":"assets/q4_a.png"},{"label":"B","caption":"5 claques dorsales","kind":"ok","fb":"✅ Oui : commencer par les claques dorsales.","imgSrc":"assets/q4_b.png"},{"label":"C","caption":"Victime allongée sur le dos","kind":"wrong","fb":"❌ Non : garder penchée en avant.","imgSrc":"assets/q4_c.png"}]},{"type":"drag_order","title":"Ordonner équipe","desc":"Ordonne la conduite à tenir.","items":[{"id":"secure","text":"Sécuriser/EPI"},{"id":"call","text":"Déléguer alerte/DAE"},{"id":"assess","text":"Évaluer"},{"id":"cycle","text":"Cycles 5/5"}],"expected":["secure","call","assess","cycle"],"okFb":"✅ Bien.","badFb":"❌ Revois l’ordre."},{"type":"cloze","title":"Texte à trous","desc":"Complète avec **un seul mot**.","template":"Si l’obstruction persiste, poursuivre les cycles jusqu’à expulsion ou <b>{blank1}</b>.","blanks":[{"key":"blank1","answer":"inconscience"}],"okFb":"✅ inconscience.","badFb":"❌ Attendu : inconscience."},{"type":"short","title":"Manœuvre","desc":"Après les claques dorsales, quelle manœuvre ? (1 mot)","answers":["Heimlich"],"okFb":"✅ Heimlich.","badFb":"❌ Attendu : Heimlich."},{"type":"single","title":"Interdit","desc":"Quel geste est interdit ?","options":[{"text":"Balayage digital à l’aveugle","kind":"critical","fb":"🚨 ERREUR CRITIQUE.","pts":-10},{"text":"Claques dorsales","kind":"ok","fb":"✅ Oui."},{"text":"Compressions abdominales","kind":"ok","fb":"✅ Oui."},{"text":"Alerter / renfort","kind":"partial","fb":"🟡 Oui.","pts":3}]},{"type":"hotspot","gate":true,"title":"Hotspot — Zone à traiter","desc":"","imgSrc":"scenario_1_hotspot.png","hotspots":[{"label":"ok","x":38.29,"y":45.07,"w":23.21,"h":23.98,"kind":"ok","fb":"✅ Correct : gorge.","pts":10},{"label":"ko","x":46.63,"y":13.35,"w":22.22,"h":27.08,"kind":"wrong","fb":"❌ Faux.","pts":-2},{"label":"ko","x":55.16,"y":78.72,"w":25.79,"h":19.15,"kind":"wrong","fb":"❌ Faux.","pts":-2}]},{"type":"multi","title":"RCP/DAE","desc":"Quand préparer la RCP/DAE ?","options":[{"text":"Inconscience","correct":true},{"text":"Respiration absente/anormale","correct":true},{"text":"Toux efficace","correct":false},{"text":"Aggravation + échec","correct":true}],"okFb":"✅ Correct.","badFb":"❌ Toux efficace ≠ RCP."}];
 
-    function setStress(v){
-      stress=clamp(v,0,100);
-      localStorage.setItem("stress", String(stress));
-      stressBar.style.width=stress+"%";
-      modalStress.textContent=String(stress);
-    }
-    function addStress(d){ setStress(stress + d); }
+const TOTAL = questions.length;
+hudQtotal.textContent = String(TOTAL);
 
-    function setAttemptsUI(){ hudAttempts.textContent = String(attemptsUsed); }
+/* ========= Score / Stress / Hints ========= */
+let score = parseInt(localStorage.getItem("score") || "0", 10);
+let stress = parseInt(localStorage.getItem("stress") || "0", 10);
+if(isNaN(score)) score = 0;
+if(isNaN(stress)) stress = 0;
 
-    function setHintsUI(){
-      hudHints.textContent = String(hintsLeft);
-      hintLeftTop.textContent = String(hintsLeft);
-      localStorage.setItem(HINT_KEY, String(hintsLeft));
-      updateHintBtn();
-    }
+function getHintsLeft(){
+  const raw = localStorage.getItem(HINT_KEY);
+  const n = raw===null ? HINT_MAX : parseInt(raw,10);
+  return isNaN(n) ? HINT_MAX : clamp(n,0,HINT_MAX);
+}
+function setHintsLeft(v){
+  const n = clamp(v,0,HINT_MAX);
+  localStorage.setItem(HINT_KEY, String(n));
+  hudHints.textContent = String(n);
+  miniHints.textContent = String(n);
+  hintLeftTop.textContent = String(n);
+}
+let hintsLeft = getHintsLeft();
+setHintsLeft(hintsLeft);
 
-    function updateHintBtn(){
-      const canUse = (!locked && !paused && hintsLeft > 0 && !hintUsedThisQuestion);
-      hintBtn.disabled = !canUse;
-    }
+function setScore(v){
+  score = v;
+  localStorage.setItem("score", String(score));
+  hudScore.textContent = String(score);
+  modalScore.textContent = String(score);
+}
+function addScore(d){ setScore(score + d); }
 
-    function setProgress(){
-      const pct = clamp(Math.round((idx / TOTAL) * 100), 0, 100);
-      progressBar.style.width = pct + "%";
-    }
+function setStress(v){
+  stress = clamp(v,0,100);
+  localStorage.setItem("stress", String(stress));
+  stressBar.style.width = stress + "%";
+  modalStress.textContent = String(stress);
+}
+function addStress(d){ setStress(stress + d); }
 
-    function setRingProgress(){
-      const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
-      ring.style.setProperty("--p", p + "%");
-      timerPill.classList.remove("timerWarn","timerDanger");
-      if(timeLeft <= 5) timerPill.classList.add("timerDanger");
-      else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
-    }
+setScore(score);
+setStress(stress);
 
-    function stopTimer(){ clearInterval(timerId); timerId=null; }
-    function startTimer(){
+/* ========= Timer / Attempts ========= */
+let idx = 0;
+let attemptsForCurrentQuestion = 1;
+let locked = true;
+let timerId = null;
+let timeLeft = TIMER_SECONDS;
+
+function setAttemptsUI(){
+  hudAttempts.textContent = String(attemptsForCurrentQuestion);
+  hudAttemptsMax.textContent = String(ATTEMPTS_MAX);
+}
+setAttemptsUI();
+
+function setRingProgress(){
+  const p = clamp(Math.round((timeLeft / TIMER_SECONDS) * 100), 0, 100);
+  ring.style.setProperty("--p", p + "%");
+  timerPill.classList.remove("timerWarn","timerDanger");
+  if(timeLeft <= 5) timerPill.classList.add("timerDanger");
+  else if(timeLeft <= 10) timerPill.classList.add("timerWarn");
+}
+function stopTimer(){ clearInterval(timerId); timerId=null; }
+function startTimer(){
+  stopTimer();
+  timeLeft = TIMER_SECONDS;
+  hudTime.textContent = String(timeLeft);
+  setRingProgress();
+  timerId = setInterval(()=>{
+    if(locked) return;
+    timeLeft--;
+    hudTime.textContent = String(timeLeft);
+    setRingProgress();
+    if(timeLeft <= 0){
       stopTimer();
-      timeLeft = TIMER_SECONDS;
-      hudTime.textContent = String(timeLeft);
-      setRingProgress();
-      timerId = setInterval(()=>{
-        if(locked || paused) return;
-        timeLeft--;
-        hudTime.textContent = String(timeLeft);
-        setRingProgress();
-        if(timeLeft <= 0){
-          stopTimer();
-          sfxAlarmLong();
-          addStress(STRESS_RULES.timeout);
-          attemptsUsed++;
-          setAttemptsUI();
-
-          if(attemptsUsed >= ATTEMPTS_MAX){
-            missionFail(`⏱️ Temps écoulé (${ATTEMPTS_MAX} fois). Mission échouée. Retour au départ… (score remis à zéro)`);
-          }else{
-            showOverlay("warn", `⏱️ Temps écoulé. (Tentative ${attemptsUsed}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
-          }
-        }
-      }, 1000);
-    }
-
-    function motion(type){
-      frame.classList.remove("shake","pulseGood","flashBad");
-      modalBox.classList.remove("shake","pulseGood","flashBad");
-      if(type==="good"){ frame.classList.add("pulseGood"); }
-      else if(type==="wrong"){ modalBox.classList.add("shake"); }
-      else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
-    }
-
-    /* ======= Selection state ======= */
-    let selectedSingle = null;
-    let multiSelected = new Set();
-    let inputValue = "";
-    let clozeValues = {};
-
-    function resetState(){
-      selectedSingle=null;
-      multiSelected.clear();
-      inputValue="";
-      clozeValues={};
-      validateBtn.disabled=false;
-      hintUsedThisQuestion = false;
-      updateHintBtn();
-    }
-
-    function mkOpt(text){
-      const d = document.createElement("div");
-      d.className="opt";
-      d.textContent=text;
-      return d;
-    }
-
-    /* ======= Hint builder (auto) ======= */
-    function buildHint(q){
-      // Si tu veux un vrai hint “éditorial”, ajoute q.hint dans ton JSON.
-      if(q.hint) return q.hint;
-
-      if(q.type==="single"){
-        const ok = (q.options||[]).find(o=>o.kind==="ok");
-        if(ok && ok.text) return "Indice : pense à la priorité vitale immédiate (désobstruction).";
-      }
-      if(q.type==="tf"){
-        return "Indice : si la toux est efficace, on n’applique pas Heimlich tout de suite.";
-      }
-      if(q.type==="multi"){
-        return "Indice : choisis les actions de surveillance + transmission + anticipation.";
-      }
-      if(q.type==="image_single"){
-        return "Indice : le bon geste initial commence par des claques dorsales (adulte conscient).";
-      }
-      if(q.type==="drag_order"){
-        return "Indice : on alerte tôt, puis on enchaîne les cycles 5/5, tout en surveillant.";
-      }
-      if(q.type==="cloze" || q.type==="short"){
-        return "Indice : c’est le protocole classique en série (même nombre répété).";
-      }
-      if(q.type==="hotspot"){
-        return "Indice : cible la zone de la gorge (là où l’obstruction se produit).";
-      }
-      return "Indice : relis bien l’énoncé, un mot-clé te guide vers la bonne action.";
-    }
-
-    /* ======= Render question ======= */
-    function renderQuestion(i){
-      locked=false;
-      paused=false;
-      hideOverlay();
-      hintOverlay.style.display="none";
-      pauseOverlay.style.display="none";
-
-      attemptsUsed = 0;
+      sfxAlarmLong();
+      addStress(STRESS_RULES.timeout);
+      attemptsForCurrentQuestion++;
       setAttemptsUI();
-      resetState();
-
-      const q = questions[i];
-      qMeta.textContent = SCENARIO.label + " • " + SCENARIO.level;
-      qTitle.textContent = q.title || "—";
-      qDesc.innerHTML = q.desc || "";
-      optionsEl.innerHTML = "";
-      clearBtn.style.display = "none";
-
-      // Progress
-      hudQnum.textContent = String(i+1);
-      setProgress();
-
-      const type = q.type;
-
-      if(type==="single"){
-        q.options.forEach((opt, oi)=>{
-          const d = mkOpt(opt.text);
-          d.onclick=()=>{
-            sfxClick();
-            [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
-            d.classList.add("sel");
-            selectedSingle=oi;
-            validateBtn.disabled=false;
-          };
-          optionsEl.appendChild(d);
-        });
-      }
-
-      if(type==="tf"){
-        const opts=[{label:"Vrai",data:q.tf.trueOpt},{label:"Faux",data:q.tf.falseOpt}];
-        opts.forEach((o, oi)=>{
-          const d = mkOpt(o.label);
-          d.onclick=()=>{
-            sfxClick();
-            [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
-            d.classList.add("sel");
-            selectedSingle=oi;
-            validateBtn.disabled=false;
-          };
-          optionsEl.appendChild(d);
-        });
-      }
-
-      if(type==="multi"){
-        clearBtn.style.display="inline-block";
-        q.options.forEach((opt, oi)=>{
-          const d=mkOpt(opt.text);
-          d.onclick=()=>{
-            sfxClick();
-            if(multiSelected.has(oi)){ multiSelected.delete(oi); d.classList.remove("sel"); }
-            else { multiSelected.add(oi); d.classList.add("sel"); }
-            validateBtn.disabled = (multiSelected.size===0);
-          };
-          optionsEl.appendChild(d);
-        });
-        validateBtn.disabled = true;
-      }
-
-      if(type==="short"){
-        clearBtn.style.display="inline-block";
-        validateBtn.disabled = true;
-        const box = document.createElement("div");
-        box.className="opt"; box.style.cursor="default";
-        box.innerHTML = `
-          <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
-          <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
-            style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
-          <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
-        `;
-        optionsEl.appendChild(box);
-        const inp = box.querySelector("#shortInput");
-        inp.addEventListener("input", ()=>{
-          inputValue = inp.value;
-          validateBtn.disabled = (inp.value.trim().length===0);
-        });
-      }
-
-      if(type==="image_single"){
-        validateBtn.disabled = true;
-        const grid = document.createElement("div");
-        grid.className = "imgGrid";
-
-        q.options.forEach((opt, oi)=>{
-          const card = document.createElement("div");
-          card.className = "imgCard";
-          card.innerHTML = `
-            <div class="imgHead">
-              <div>Option ${opt.label}</div>
-              <div class="imgTag">${opt.label}</div>
-            </div>
-            <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
-            <div class="imgCap">${opt.caption}</div>
-          `;
-          card.onclick = ()=>{
-            sfxClick();
-            [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
-            card.classList.add("sel");
-            selectedSingle = oi;
-            validateBtn.disabled = false;
-          };
-          grid.appendChild(card);
-        });
-
-        optionsEl.appendChild(grid);
-      }
-
-      if(type==="hotspot"){
-        clearBtn.style.display="inline-block";
-        validateBtn.disabled = true;
-
-        const msg = document.createElement("div");
-        msg.className="pill";
-        msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
-        optionsEl.appendChild(msg);
-
-        const wrap = document.createElement("div");
-        wrap.style.position="relative";
-        wrap.style.width="100%";
-        wrap.style.maxWidth="760px";
-        wrap.style.margin="0 auto";
-        wrap.style.borderRadius="18px";
-        wrap.style.overflow="hidden";
-        wrap.style.border="1px solid rgba(255,255,255,.14)";
-        wrap.style.background="rgba(0,0,0,.18)";
-        wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
-        optionsEl.appendChild(wrap);
-
-        const zones = document.createElement("div");
-        zones.style.position="absolute";
-        zones.style.inset="0";
-        zones.style.pointerEvents="auto";
-        wrap.appendChild(zones);
-
-        (q.hotspots||[]).forEach((h, hi)=>{
-          const z = document.createElement("button");
-          z.type="button";
-          z.className="hotspot-zone";
-          z.style.left = h.x + "%";
-          z.style.top  = h.y + "%";
-          z.style.width = h.w + "%";
-          z.style.height= h.h + "%";
-          z.onclick=()=>{
-            sfxClick();
-            [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
-            z.classList.add("sel");
-            selectedSingle = hi;
-            validateBtn.disabled = false;
-          };
-          zones.appendChild(z);
-        });
-      }
-
-      if(type==="drag_order"){
-        clearBtn.style.display="inline-block";
-        validateBtn.disabled = false;
-
-        const note = document.createElement("div");
-        note.className="pill";
-        note.textContent="🖱️ Glisse-dépose les cartes pour les mettre dans l’ordre.";
-        optionsEl.appendChild(note);
-
-        const list = document.createElement("div");
-        list.id="dragList";
-        list.style.display="grid";
-        list.style.gap="10px";
-
-        const items = [...q.items];
-        for(let k=items.length-1;k>0;k--){
-          const j=Math.floor(Math.random()*(k+1));
-          [items[k],items[j]]=[items[j],items[k]];
-        }
-
-        items.forEach((it)=>{
-          const row = document.createElement("div");
-          row.className="opt";
-          row.setAttribute("draggable","true");
-          row.dataset.id = it.id;
-          row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
-          list.appendChild(row);
-        });
-        optionsEl.appendChild(list);
-
-        let dragSrc = null;
-        list.addEventListener("dragstart",(e)=>{
-          const target = e.target.closest("[draggable='true']");
-          if(!target) return;
-          dragSrc = target;
-          e.dataTransfer.effectAllowed="move";
-          target.style.opacity="0.6";
-        });
-        list.addEventListener("dragend",(e)=>{
-          const target = e.target.closest("[draggable='true']");
-          if(target) target.style.opacity="1";
-          dragSrc=null;
-        });
-        list.addEventListener("dragover",(e)=>{
-          e.preventDefault();
-          const over = e.target.closest("[draggable='true']");
-          if(!over || !dragSrc || over===dragSrc) return;
-          const rect = over.getBoundingClientRect();
-          const before = (e.clientY - rect.top) < rect.height/2;
-          list.insertBefore(dragSrc, before ? over : over.nextSibling);
-        });
-      }
-
-      if(type==="cloze"){
-        clearBtn.style.display="inline-block";
-        validateBtn.disabled = true;
-
-        const box = document.createElement("div");
-        box.className="opt"; box.style.cursor="default";
-
-        const html = (q.template || "")
-          .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
-          .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:220px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
-
-        box.innerHTML = `<div style="line-height:1.8;">${html}</div><div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : écris seulement les chiffres.</div>`;
-        optionsEl.appendChild(box);
-
-        const inputs = box.querySelectorAll("input[data-k]");
-        inputs.forEach(inp=>{
-          inp.addEventListener("input", ()=>{
-            clozeValues[inp.dataset.k] = inp.value;
-            const filled = (q.blanks||[]).every(b => (clozeValues[b.key]||"").trim().length>0);
-            validateBtn.disabled = !filled;
-          });
-        });
-      }
-
-      updateHintBtn();
-      startTimer();
-    }
-
-    clearBtn.onclick = ()=>{ sfxClick(); renderQuestion(idx); };
-
-    /* ======= Overlay helpers ======= */
-    function showOverlay(kind, text, {allowRetry, allowNext, missionFail}){
-      badgeState.className="badgeState";
-      if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
-      if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
-      if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
-
-      modalText.textContent = text;
-      overlay.style.display="flex";
-
-      retryBtn.style.display = allowRetry ? "inline-block" : "none";
-      nextBtn.style.display  = allowNext  ? "inline-block" : "none";
-
-      okBtn.style.display="none"; okBtn.onclick=null;
-
-      retryBtn.onclick = ()=>{
-        hideOverlay();
-        locked=false;
-        startTimer();
-      };
-      nextBtn.onclick  = ()=>{
-        hideOverlay();
-        idx++;
-        if(idx < TOTAL) renderQuestion(idx);
-        else endScenario();
-      };
-
-      if(missionFail){
-        retryBtn.style.display="none"; nextBtn.style.display="none";
-        okBtn.style.display="inline-block";
-        okBtn.onclick = ()=>{ hideOverlay(); resetMission(true); };
+      if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
+        missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
+      }else{
+        showFeedback("warn", `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
       }
     }
+  }, 1000);
+}
 
-    function hideOverlay(){ overlay.style.display="none"; }
+/* ========= Loading ========= */
+function showLoading(ms=800){
+  loadingOverlay.style.display="flex";
+  frame.style.opacity = "0.0";
+  setTimeout(()=>{
+    loadingOverlay.style.display="none";
+    frame.style.opacity = "1";
+  }, ms);
+}
 
-    function missionFail(message){
-      stopTimer();
-      showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
-      motion("critical");
-    }
+/* ========= Progress ========= */
+function setProgress(){
+  const pct = clamp(Math.round(((idx) / TOTAL) * 100), 0, 100);
+  progressBar.style.width = pct + "%";
+}
 
-    function failedAttempt(baseMsg){
-      attemptsUsed++;
-      setAttemptsUI();
+/* ========= Render engine ========= */
+let selectedSingle = null;
+let multiSelected = new Set();
+let inputValue = "";
+let clozeValues = {};
+let hintUsedThisQuestion = false;
 
-      if(attemptsUsed >= ATTEMPTS_MAX){
-        sfxAlarmLong();
-        missionFail(`❌ ${ATTEMPTS_MAX} tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)`);
-        return;
-      }
-      showOverlay("warn", `${baseMsg} (Tentative ${attemptsUsed}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
-    }
+function resetState(){
+  selectedSingle = null;
+  multiSelected.clear();
+  inputValue = "";
+  clozeValues = {};
+  validateBtn.disabled = true;
+}
 
-    function resetMission(showStart=true){
-      stopTimer();
-      idx=0;
-      setProgress();
-      setScore(0);
-      setStress(0);
-      hintsLeft = HINT_MAX;
-      setHintsUI();
-      locked=true;
-      paused=false;
-      if(showStart) startOverlay.style.display="flex";
-    }
+function mkOpt(text){
+  const d = document.createElement("div");
+  d.className="opt";
+  d.textContent=text;
+  return d;
+}
 
-    /* ======= Evaluate ======= */
-    function evaluateOption(opt){
-      if(opt.kind==="ok"){
-        addScore(opt.pts ?? 10);
-        showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-        sfxCorrect(); motion("good"); return;
-      }
-      if(opt.kind==="critical"){
-        addStress(STRESS_RULES.critical);
-        addScore(opt.pts ?? -10);
-        sfxCritical(); motion("critical");
-        failedAttempt(opt.fb || "🚨 Erreur critique."); return;
-      }
-      if(opt.kind==="partial"){
-        addStress(STRESS_RULES.wrong);
-        addScore(opt.pts ?? 3);
-        sfxWrong(); motion("wrong");
-        failedAttempt(opt.fb || "🟡 Partiel."); return;
-      }
-      addStress(STRESS_RULES.wrong);
-      sfxWrong(); motion("wrong");
-      failedAttempt(opt.fb || "❌ Incorrect.");
-    }
+function renderQuestion(i, resetAttempts=true){
+  locked = false;
+  stopTimer();
+  hideAllOverlays();
+  if(resetAttempts){
+    attemptsForCurrentQuestion = 1;
+    setAttemptsUI();
+  }
+  resetState();
+  hintUsedThisQuestion = false;
 
-    validateBtn.onclick = ()=>{
-      if(locked || paused) return;
+  const q = questions[i];
+  qMeta.textContent = `${SCENARIO.label} • Niveau ${SCENARIO.level}`;
+  qTitle.textContent = q.title || "—";
+  qDesc.innerHTML = q.desc || "";
+  optionsEl.innerHTML = "";
+  clearBtn.style.display = "none";
 
-      const q = questions[idx];
-      const type = q.type;
+  // progression
+  hudQnum.textContent = String(i+1);
+  setProgress();
 
-      const needSelection = (msg)=>{
+  if(q.type==="single"){
+    q.options.forEach((opt, oi)=>{
+      const d = mkOpt(opt.text);
+      d.onclick = ()=>{
         sfxClick();
-        showOverlay("warn", msg, {allowRetry:false, allowNext:false, missionFail:false});
-        retryBtn.style.display="none";
-        nextBtn.style.display="none";
-        okBtn.style.display="inline-block";
-        okBtn.textContent="OK";
-        okBtn.onclick = ()=>{ hideOverlay(); locked=false; startTimer(); };
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle = oi;
+        validateBtn.disabled = false;
       };
+      optionsEl.appendChild(d);
+    });
+  }
 
-      if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
-        if(selectedSingle===null){ needSelection("Choisis une réponse avant de valider."); return; }
-      }
-      if(type==="multi"){
-        if(multiSelected.size===0){ needSelection("Sélectionne au moins une proposition avant de valider."); return; }
-      }
-      if(type==="short"){
-        if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
-      }
-      if(type==="cloze"){
-        const filled = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().length>0));
-        if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
-      }
-
-      stopTimer();
-      locked=true;
-
-      if(type==="single"){
-        evaluateOption(q.options[selectedSingle]); return;
-      }
-
-      if(type==="tf"){
-        const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
-        evaluateOption(opt); return;
-      }
-
-      if(type==="multi"){
-        const chosen=[...multiSelected].sort((a,b)=>a-b);
-        const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
-        const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
-        if(ok){
-          addScore(10);
-          showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-          sfxCorrect(); motion("good");
-        }else{
-          addStress(STRESS_RULES.wrong);
-          sfxWrong(); motion("wrong");
-          failedAttempt(q.badFb || "❌ Incorrect.");
-        }
-        return;
-      }
-
-      if(type==="short"){
-        const norm=(inputValue||"").trim().toLowerCase();
-        const accepted=(q.answers||[]).map(a=>String(a).trim().toLowerCase());
-        const ok = accepted.includes(norm);
-        if(ok){
-          addScore(10);
-          showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, missionFail:false});
-          sfxCorrect(); motion("good");
-        }else{
-          addStress(STRESS_RULES.wrong);
-          sfxWrong(); motion("wrong");
-          failedAttempt(q.badFb || "❌ Réponse incorrecte.");
-        }
-        return;
-      }
-
-      if(type==="image_single"){
-        evaluateOption(q.options[selectedSingle]); return;
-      }
-
-      if(type==="hotspot"){
-        const h = (q.hotspots||[])[selectedSingle];
-        if(!h){ locked=false; startTimer(); return; }
-        if(h.kind==="ok"){
-          addScore(h.pts ?? 10);
-          showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-          sfxCorrect(); motion("good");
-        }else if(h.kind==="critical"){
-          addStress(STRESS_RULES.critical);
-          addScore(h.pts ?? -10);
-          sfxCritical(); motion("critical");
-          failedAttempt(h.fb || "🚨 Erreur critique.");
-        }else{
-          addStress(STRESS_RULES.wrong);
-          addScore(h.pts ?? 0);
-          sfxWrong(); motion("wrong");
-          failedAttempt(h.fb || "❌ Incorrect.");
-        }
-        return;
-      }
-
-      if(type==="drag_order"){
-        const list = document.getElementById("dragList");
-        const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
-        const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
-        if(ok){
-          addScore(10);
-          showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, missionFail:false});
-          sfxCorrect(); motion("good");
-        }else{
-          addStress(STRESS_RULES.wrong);
-          sfxWrong(); motion("wrong");
-          failedAttempt(q.badFb || "❌ Ordre incorrect.");
-        }
-        return;
-      }
-
-      if(type==="cloze"){
-        const ok = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
-        if(ok){
-          addScore(10);
-          showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
-          sfxCorrect(); motion("good");
-        }else{
-          addStress(STRESS_RULES.wrong);
-          sfxWrong(); motion("wrong");
-          failedAttempt(q.badFb || "❌ Texte incorrect.");
-        }
-        return;
-      }
-    };
-
-    /* ======= Hint button (2 indices total, 1 par question) ======= */
-    hintBtn.onclick = ()=>{
-      if(locked || paused) return;
-      if(hintsLeft <= 0) return;
-      if(hintUsedThisQuestion) return;
-
-      sfxClick();
-      // consomme un indice
-      hintsLeft = Math.max(0, hintsLeft - 1);
-      hintUsedThisQuestion = true;
-      setHintsUI();
-
-      // pause chrono + overlay
-      paused = true;
-      stopTimer();
-
-      const q = questions[idx];
-      hintText.textContent = buildHint(q);
-      hintOverlay.style.display = "flex";
-    };
-
-    hintOkBtn.onclick = ()=>{
-      hintOverlay.style.display = "none";
-      paused = false;
-      locked = false;
-      startTimer();
-      updateHintBtn();
-    };
-
-    /* ======= Pause ======= */
-    pauseBtn.onclick = ()=>{
-      if(locked) return;
-      sfxClick();
-      paused = true;
-      stopTimer();
-      pauseOverlay.style.display="flex";
-      updateHintBtn();
-    };
-    resumeBtn.onclick = ()=>{
-      pauseOverlay.style.display="none";
-      paused = false;
-      locked = false;
-      startTimer();
-      updateHintBtn();
-    };
-
-    /* ======= Corrigé (débloqué à la fin) ======= */
-    function buildAnswerKeyHtml(){
-      const rows = questions.map((q, i)=>{
-        let ans = "—";
-
-        if(q.type==="single"){
-          const ok = (q.options||[]).filter(o=>o.kind==="ok");
-          ans = ok.map(o=>o.text).join(" / ") || "—";
-        }else if(q.type==="tf"){
-          ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
-        }else if(q.type==="multi"){
-          ans = (q.options||[]).map(o=>o.correct?o.text:null).filter(Boolean).join(" ; ") || "—";
-        }else if(q.type==="short"){
-          ans = (q.answers||[]).join(" / ") || "—";
-        }else if(q.type==="image_single"){
-          const oi = (q.options||[]).findIndex(o=>o.kind==="ok");
-          if(oi>=0){
-            const o = q.options[oi];
-            ans = `${o.label} — ${o.caption}`;
-          }
-        }else if(q.type==="drag_order"){
-          const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
-          ans = (q.expected||[]).map(id=>map[id]).join(" → ") || "—";
-        }else if(q.type==="cloze"){
-          ans = (q.blanks||[]).map(b=>b.answer).join(" | ") || "—";
-        }else if(q.type==="hotspot"){
-          ans = "Zone correcte (gorge)";
-        }
-
-        return `
-          <tr>
-            <td style="width:60px; color: rgba(255,255,255,.72); font-weight:950;">Q${i+1}</td>
-            <td>${escapeHtml(q.title||"")}</td>
-            <td>${escapeHtml(ans)}</td>
-          </tr>
-        `;
-      }).join("");
-
-      return `
-        <div class="keyHint">Ce corrigé se débloque uniquement à la fin de la mission.</div>
-        <div style="overflow:auto; margin-top:12px;">
-          <table class="keyTable">
-            <thead>
-              <tr>
-                <th style="width:60px;">#</th>
-                <th>Question</th>
-                <th>Bonne réponse</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-      `;
-    }
-
-    showKeyBtn.onclick = ()=>{
-      sfxClick();
-      keyBody.innerHTML = buildAnswerKeyHtml();
-      keyOverlay.style.display="flex";
-    };
-    keyCloseBtn.onclick = ()=>{ keyOverlay.style.display="none"; };
-
-    endBtn.onclick = ()=>{
-      sfxClick();
-      window.location.href = NEXT_GENIALLY_URL;
-    };
-
-    /* ======= Fin scénario (badge + déblocage Corrigé/Terminer) ======= */
-    function computeBadgeType(scoreValue){
-      // Max théorique: 10 points par question (approx)
-      const max = TOTAL * 10;
-      const pct = clamp(Math.round((scoreValue / max) * 100), 0, 100);
-      if(pct >= 90) return "OR";
-      if(pct >= 70) return "ARGENT";
-      return "BRONZE";
-    }
-    function badgeImg(type){
-      if(type==="OR") return "or.png";
-      if(type==="ARGENT") return "argent.png";
-      return "bronze.png";
-    }
-
-    function saveBadge(type){
-      const payload = {
-        scenarioId: SCENARIO.id,
-        mission: SCENARIO.mission,
-        niveau: difficulty.toUpperCase(),
-        badgeType: type,
-        badgeName: `${type} — ${SCENARIO.mission}`,
-        score: score,
-        img: badgeImg(type),
-        ts: Date.now()
+  if(q.type==="tf"){
+    const opts=[{label:"Vrai", data:q.tf.trueOpt},{label:"Faux", data:q.tf.falseOpt}];
+    opts.forEach((o, oi)=>{
+      const d = mkOpt(o.label);
+      d.onclick = ()=>{
+        sfxClick();
+        [...optionsEl.children].forEach(x=>x.classList.remove("sel"));
+        d.classList.add("sel");
+        selectedSingle = oi;
+        validateBtn.disabled = false;
       };
-      const key = `badge_s${SCENARIO.id}_${difficulty}`;
-      localStorage.setItem(key, JSON.stringify(payload));
+      optionsEl.appendChild(d);
+    });
+  }
 
-      const histKey = "badges_history";
-      const hist = JSON.parse(localStorage.getItem(histKey) || "[]");
-      hist.push({ ...payload, dateISO: new Date().toISOString() });
-      localStorage.setItem(histKey, JSON.stringify(hist));
-      return payload;
+  if(q.type==="multi"){
+    clearBtn.style.display="inline-block";
+    q.options.forEach((opt, oi)=>{
+      const d = mkOpt(opt.text);
+      d.onclick = ()=>{
+        sfxClick();
+        if(multiSelected.has(oi)){ multiSelected.delete(oi); d.classList.remove("sel"); }
+        else { multiSelected.add(oi); d.classList.add("sel"); }
+        validateBtn.disabled = (multiSelected.size===0);
+      };
+      optionsEl.appendChild(d);
+    });
+  }
+
+  if(q.type==="short"){
+    clearBtn.style.display="inline-block";
+    const box = document.createElement("div");
+    box.className="opt";
+    box.style.cursor="default";
+    box.innerHTML = `
+      <div style="font-weight:950; margin-bottom:8px;">Ta réponse</div>
+      <input id="shortInput" class="form-control" type="text" placeholder="Écris ici…"
+        style="background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" />
+      <div style="margin-top:8px; font-size:12px; color: rgba(255,255,255,.72);">Astuce : une valeur courte suffit.</div>
+    `;
+    optionsEl.appendChild(box);
+    const inp = box.querySelector("#shortInput");
+    inp.addEventListener("input", ()=>{
+      inputValue = inp.value;
+      validateBtn.disabled = (inp.value.trim().length===0);
+    });
+  }
+
+  if(q.type==="cloze"){
+    clearBtn.style.display="inline-block";
+    const box = document.createElement("div");
+    box.className="opt";
+    box.style.cursor="default";
+    const html = (q.template||"")
+      .replace("{blank1}", `<input data-k="blank1" class="form-control" style="display:inline-block; width:240px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`)
+      .replace("{blank2}", `<input data-k="blank2" class="form-control" style="display:inline-block; width:260px; margin:0 6px; background: rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.92);" placeholder="..." />`);
+    box.innerHTML = `<div style="line-height:1.8;">${html}</div>`;
+    optionsEl.appendChild(box);
+
+    const inputs = box.querySelectorAll("input[data-k]");
+    inputs.forEach(inp=>{
+      inp.addEventListener("input", ()=>{
+        clozeValues[inp.dataset.k] = inp.value;
+        const filled = (q.blanks||[]).every(b => (clozeValues[b.key]||"").trim().length>0);
+        validateBtn.disabled = !filled;
+      });
+    });
+  }
+
+  if(q.type==="drag_order"){
+    clearBtn.style.display="inline-block";
+
+    const note = document.createElement("div");
+    note.className="pill";
+    note.style.marginBottom="10px";
+    note.innerHTML = "🖱️ <b>Glisse-dépose</b> les cartes pour les mettre dans l’ordre.";
+    optionsEl.appendChild(note);
+
+    const list = document.createElement("div");
+    list.id="dragList";
+    list.style.display="grid";
+    list.style.gap="10px";
+
+    const items = [...q.items];
+    for(let k=items.length-1;k>0;k--){
+      const j=Math.floor(Math.random()*(k+1));
+      [items[k],items[j]]=[items[j],items[k]];
     }
 
-    function endScenario(){
-      stopTimer(); hideOverlay();
-      locked = true; paused=false;
+    items.forEach((it)=>{
+      const row = document.createElement("div");
+      row.className="opt";
+      row.setAttribute("draggable","true");
+      row.dataset.id = it.id;
+      row.innerHTML = `<div style="font-weight:950;">${it.text}</div><div style="font-size:12px; color: rgba(255,255,255,.68); margin-top:3px;">(glisser)</div>`;
+      list.appendChild(row);
+    });
+    optionsEl.appendChild(list);
 
-      // unlock
-      showKeyBtn.disabled = false;
-      endBtn.style.display = "inline-block";
-      validateBtn.disabled = true;
-      clearBtn.style.display = "none";
-      hintBtn.disabled = true;
-      pauseBtn.disabled = true;
-
-      // Badge
-      const type = computeBadgeType(score);
-      const badge = saveBadge(type);
-
-      qMeta.textContent = "FIN — BADGE OBTENU";
-      qTitle.textContent = `🎉 Félicitations, Dr. ${playerName} !`;
-      qDesc.innerHTML = `
-        <div style="margin-top:6px; color: rgba(255,255,255,.86);">
-          Tu as terminé le scénario <b>${escapeHtml(SCENARIO.mission)}</b> en mode <b>${escapeHtml(difficulty.toUpperCase())}</b>.
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <span class="pill">⭐ Score final : <b>${score}</b></span>
-            <span class="pill">😰 Stress : <b>${stress}%</b></span>
-            <span class="pill">🏅 Badge : <b>${escapeHtml(type)}</b></span>
-          </div>
-        </div>
-      `;
-
-      optionsEl.innerHTML = `
-        <div class="opt" style="cursor:default; text-align:center;">
-          <div style="display:flex; justify-content:center; align-items:center; gap:14px; flex-wrap:wrap;">
-            <img src="assets/${escapeHtml(badge.img)}" alt="badge" style="width:92px; height:92px; object-fit:contain; filter: drop-shadow(0 18px 30px rgba(0,0,0,.45));">
-            <div style="text-align:left; max-width: 520px;">
-              <div style="font-weight:950; font-size:18px;">${escapeHtml(badge.badgeName)}</div>
-              <div style="margin-top:6px; color: rgba(255,255,255,.76); font-size:13px; line-height:1.5;">
-                Badge enregistré (localStorage) : <b>badge_s${SCENARIO.id}_${escapeHtml(difficulty)}</b> + <b>badges_history</b>.
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // progress full
-      progressBar.style.width = "100%";
-
-      sfxVictory();
-      frame.classList.add("pulseGood");
-    }
-
-    /* ======= Start ======= */
-    startBtn.addEventListener("click", ()=>{
-      ensureAudio(); sfxClick();
-
-      // reset mission stats + hints for new run
-      localStorage.setItem("stress", "0");
-      localStorage.setItem("score", "0");
-      stress = 0; score = 0;
-      setStress(0); setScore(0);
-
-      hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
-      if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
-      setHintsUI();
-
-      showKeyBtn.disabled = true;
-      endBtn.style.display = "none";
+    let dragSrc = null;
+    list.addEventListener("dragstart",(e)=>{
+      const target = e.target.closest("[draggable='true']");
+      if(!target) return;
+      dragSrc = target;
+      e.dataTransfer.effectAllowed="move";
+      target.style.opacity="0.6";
+    });
+    list.addEventListener("dragend",(e)=>{
+      const target = e.target.closest("[draggable='true']");
+      if(target) target.style.opacity="1";
+      dragSrc=null;
+    });
+    list.addEventListener("dragover",(e)=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect="move";
+      const over = e.target.closest("[draggable='true']");
+      if(!over || !dragSrc || over===dragSrc) return;
+      const rect = over.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height/2;
+      list.insertBefore(dragSrc, before ? over : over.nextSibling);
+    });
+    list.addEventListener("drop",(e)=>{
+      e.preventDefault();
       validateBtn.disabled = false;
-      pauseBtn.disabled = false;
-      hintBtn.disabled = false;
+    });
+  }
 
-      startOverlay.style.display="none";
-      idx = 0;
-      setProgress();
-      renderQuestion(0);
+  if(q.type==="image_single"){
+    const grid = document.createElement("div");
+    grid.className="imgGrid";
+
+    q.options.forEach((opt, oi)=>{
+      const card = document.createElement("div");
+      card.className="imgCard";
+      card.innerHTML = `
+        <div class="imgHead">
+          <div>Option ${opt.label}</div>
+          <div class="imgTag">${opt.label}</div>
+        </div>
+        <img class="imgPic" src="${opt.imgSrc}" alt="Option ${opt.label}">
+        <div class="imgCap">${opt.caption}</div>
+      `;
+      card.onclick = ()=>{
+        sfxClick();
+        [...grid.querySelectorAll(".imgCard")].forEach(c=>c.classList.remove("sel"));
+        card.classList.add("sel");
+        selectedSingle = oi;
+        validateBtn.disabled = false;
+      };
+      grid.appendChild(card);
     });
 
-    (function init(){
-      locked=true;
-      paused=false;
-      qMeta.textContent = SCENARIO.label;
-      qTitle.textContent="Prépare-toi…";
-      qDesc.innerHTML=`Tu as <b>${TIMER_SECONDS} secondes</b> par question. Clique sur <b>DÉMARRER</b>.`;
-      optionsEl.innerHTML="";
-      hudQnum.textContent="1";
-      hudTime.textContent=String(TIMER_SECONDS);
-      ring.style.setProperty("--p","100%");
-      setRingProgress();
-      setScore(score);
-      setStress(stress);
+    optionsEl.appendChild(grid);
+  }
 
-      // Hints init
-      hintsLeft = parseInt(localStorage.getItem(HINT_KEY) || String(HINT_MAX), 10);
-      if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
-      setHintsUI();
+  if(q.type==="hotspot"){
+    clearBtn.style.display="inline-block";
 
-      setAttemptsUI();
-      setProgress();
-      updateHintBtn();
-    })();
-  </script>
+    const msg = document.createElement("div");
+    msg.className="pill";
+    msg.style.marginBottom="10px";
+    msg.innerHTML = "🎯 <b>Clique sur la zone correcte</b> sur l’image, puis appuie sur <b>Valider</b>.";
+    optionsEl.appendChild(msg);
+
+    const wrap = document.createElement("div");
+    wrap.style.position="relative";
+    wrap.style.width="100%";
+    wrap.style.maxWidth="760px";
+    wrap.style.margin="0 auto";
+    wrap.style.borderRadius="18px";
+    wrap.style.overflow="hidden";
+    wrap.style.border="1px solid rgba(255,255,255,.14)";
+    wrap.style.background="rgba(0,0,0,.18)";
+    wrap.innerHTML = `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+    optionsEl.appendChild(wrap);
+
+    const zones = document.createElement("div");
+    zones.style.position="absolute";
+    zones.style.inset="0";
+    zones.style.pointerEvents="auto";
+    wrap.appendChild(zones);
+
+    selectedSingle = null;
+    validateBtn.disabled = false;
+
+    (q.hotspots||[]).forEach((h, hi)=>{
+      const z = document.createElement("button");
+      z.type="button";
+      z.className="hotspot-zone";
+      z.style.left = h.x + "%";
+      z.style.top  = h.y + "%";
+      z.style.width = h.w + "%";
+      z.style.height= h.h + "%";
+      z.onclick=()=>{
+        sfxClick();
+        [...zones.querySelectorAll("button")].forEach(b=>b.classList.remove("sel"));
+        z.classList.add("sel");
+        selectedSingle = hi;
+        validateBtn.disabled = false;
+      };
+      zones.appendChild(z);
+    });
+  }
+
+  startTimer();
+}
+
+/* ========= Clear ========= */
+clearBtn.onclick = ()=>{
+  sfxClick();
+  renderQuestion(idx, false);
+};
+
+/* ========= Validation ========= */
+function needSelection(msg){
+  sfxClick();
+  showFeedback("warn", msg, {allowRetry:false, allowNext:false, missionFail:false, useOk:true});
+}
+
+validateBtn.onclick = ()=>{
+  if(locked) return;
+
+  const q = questions[idx];
+
+  if(q.type==="single" || q.type==="tf" || q.type==="image_single" || q.type==="hotspot"){
+    if(selectedSingle===null){ needSelection("Choisis une réponse avant de valider."); return; }
+  }
+  if(q.type==="multi"){
+    if(multiSelected.size===0){ needSelection("Sélectionne au moins une proposition avant de valider."); return; }
+  }
+  if(q.type==="short"){
+    if((inputValue||"").trim().length===0){ needSelection("Écris une réponse avant de valider."); return; }
+  }
+  if(q.type==="cloze"){
+    const filled = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().length>0));
+    if(!filled){ needSelection("Complète tous les trous avant de valider."); return; }
+  }
+
+  stopTimer();
+  locked = true;
+
+  if(q.type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
+
+  if(q.type==="tf"){
+    const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
+    evaluateOption(opt); return;
+  }
+
+  if(q.type==="multi"){
+    const chosen=[...multiSelected].sort((a,b)=>a-b);
+    const correctIdx=q.options.map((o,i)=>o.correct?i:null).filter(v=>v!==null);
+    const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
+    if(ok){
+      addScore(10);
+      sfxCorrect(); motion("good");
+      showFeedback("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    }else{
+      addStress(STRESS_RULES.wrong);
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Incorrect.");
+    }
+    return;
+  }
+
+  if(q.type==="short"){
+    const norm=(inputValue||"").trim().toLowerCase();
+    const accepted=(q.answers||[]).map(a=>String(a).trim().toLowerCase());
+    const ok = accepted.includes(norm);
+    if(ok){
+      addScore(10);
+      sfxCorrect(); motion("good");
+      showFeedback("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, missionFail:false});
+    }else{
+      addStress(STRESS_RULES.wrong);
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Réponse incorrecte.");
+    }
+    return;
+  }
+
+  if(q.type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
+
+  if(q.type==="hotspot"){
+    const h = (q.hotspots||[])[selectedSingle];
+    if(!h){ locked=false; startTimer(); return; }
+    if(h.kind==="ok"){
+      addScore(h.pts ?? 10);
+      sfxCorrect(); motion("good");
+      showFeedback("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    }else if(h.kind==="critical"){
+      addStress(STRESS_RULES.critical);
+      addScore(h.pts ?? -10);
+      sfxCritical(); motion("critical");
+      failedAttempt(h.fb || "🚨 Erreur critique.");
+    }else{
+      addStress(STRESS_RULES.wrong);
+      addScore(h.pts ?? 0);
+      sfxWrong(); motion("wrong");
+      failedAttempt(h.fb || "❌ Incorrect.");
+    }
+    return;
+  }
+
+  if(q.type==="drag_order"){
+    const list = document.getElementById("dragList");
+    const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
+    const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
+    if(ok){
+      addScore(10);
+      sfxCorrect(); motion("good");
+      showFeedback("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, missionFail:false});
+    }else{
+      addStress(STRESS_RULES.wrong);
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Ordre incorrect.");
+    }
+    return;
+  }
+
+  if(q.type==="cloze"){
+    const ok = (q.blanks||[]).every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === b.answer.trim().toLowerCase()));
+    if(ok){
+      addScore(10);
+      sfxCorrect(); motion("good");
+      showFeedback("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    }else{
+      addStress(STRESS_RULES.wrong);
+      sfxWrong(); motion("wrong");
+      failedAttempt(q.badFb || "❌ Texte incorrect.");
+    }
+    return;
+  }
+};
+
+function evaluateOption(opt){
+  if(opt.kind==="ok"){
+    addScore(opt.pts ?? 10);
+    sfxCorrect(); motion("good");
+    showFeedback("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, missionFail:false});
+    return;
+  }
+  if(opt.kind==="critical"){
+    addStress(STRESS_RULES.critical);
+    addScore(opt.pts ?? -10);
+    sfxCritical(); motion("critical");
+    failedAttempt(opt.fb || "🚨 Erreur critique.");
+    return;
+  }
+  if(opt.kind==="partial"){
+    addStress(STRESS_RULES.wrong);
+    addScore(opt.pts ?? 3);
+    sfxWrong(); motion("wrong");
+    failedAttempt(opt.fb || "🟡 Partiel.");
+    return;
+  }
+  addStress(STRESS_RULES.wrong);
+  sfxWrong(); motion("wrong");
+  failedAttempt(opt.fb || "❌ Incorrect.");
+}
+
+function failedAttempt(baseMsg){
+  attemptsForCurrentQuestion++;
+  setAttemptsUI();
+
+  if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
+    sfxAlarmLong();
+    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
+    return;
+  }
+  showFeedback("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, missionFail:false});
+}
+
+/* ========= Feedback overlay ========= */
+function showFeedback(kind, text, {allowRetry, allowNext, missionFail, useOk=false}){
+  badgeState.className="badgeState";
+  if(kind==="good"){ badgeState.classList.add("bGood"); badgeState.textContent="✅ Bonne réponse"; }
+  if(kind==="warn"){ badgeState.classList.add("bWarn"); badgeState.textContent="⚠️ À corriger"; }
+  if(kind==="bad") { badgeState.classList.add("bBad");  badgeState.textContent="🚨 Mission échouée"; }
+
+  modalText.textContent = text;
+  feedbackOverlay.style.display="flex";
+
+  retryBtn.style.display = allowRetry ? "inline-block" : "none";
+  nextBtn.style.display  = allowNext  ? "inline-block" : "none";
+  okBtn.style.display = useOk ? "inline-block" : "none";
+
+  retryBtn.onclick = ()=>{
+    hideAllOverlays();
+    locked=false;
+    startTimer();
+  };
+
+  nextBtn.onclick = ()=>{
+    hideAllOverlays();
+    idx++;
+    if(idx < TOTAL){
+      showLoading(800);
+      setTimeout(()=>renderQuestion(idx,true), 820);
+    }else{
+      endScenario();
+    }
+  };
+
+  okBtn.onclick = ()=>{
+    hideAllOverlays();
+    locked=false;
+    startTimer();
+  };
+
+  if(missionFail){
+    retryBtn.style.display="none";
+    nextBtn.style.display="none";
+    okBtn.style.display="inline-block";
+    okBtn.textContent="OK";
+    okBtn.onclick = ()=>{
+      hideAllOverlays();
+      resetMission(true);
+    };
+  }
+}
+
+function missionFail(message){
+  stopTimer();
+  showFeedback("bad", message, {allowRetry:false, allowNext:false, missionFail:true});
+  motion("critical");
+}
+
+function hideAllOverlays(){
+  feedbackOverlay.style.display="none";
+  hintOverlay.style.display="none";
+  pauseOverlay.style.display="none";
+  keyOverlay.style.display="none";
+}
+
+/* ========= Reset mission ========= */
+function resetMission(showStart=true){
+  stopTimer();
+  idx = 0;
+  attemptsForCurrentQuestion = 1;
+  setAttemptsUI();
+  setScore(0);
+  setStress(0);
+  setHintsLeft(HINT_MAX);
+  hintsLeft = HINT_MAX;
+  hintUsedThisQuestion = false;
+  locked = true;
+
+  progressBar.style.width = "0%";
+  qMeta.textContent = SCENARIO.label;
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = "Clique sur <b>DÉMARRER</b> pour commencer.";
+  optionsEl.innerHTML = "";
+
+  validateBtn.disabled = true;
+  clearBtn.style.display = "none";
+
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+
+  hintBtn.disabled = false;
+  pauseBtn.disabled = false;
+
+  if(showStart) startOverlay.style.display="flex";
+}
+
+/* ========= Indice (HINT) ========= */
+function getDefaultHint(q){
+  if(q.type==="image_single") return "Repère le geste initial recommandé pour une obstruction grave (adulte conscient).";
+  if(q.type==="hotspot") return "Vise la zone la plus logique liée à l’obstruction des voies aériennes.";
+  if(q.type==="drag_order") return "Pense : sécuriser → alerter/DAE → évaluer → gestes/cycles.";
+  if(q.type==="cloze") return "Quel état survient si l’obstruction persiste sans résolution ?";
+  if(q.type==="short") return "Nom de la manœuvre après les claques dorsales.";
+  return "Relis l’énoncé : priorité à la sécurité, à l’évaluation et aux gestes adaptés.";
+}
+
+hintBtn.onclick = ()=>{
+  if(locked) return;
+
+  if(hintUsedThisQuestion){
+    sfxClick();
+    hintText.textContent = "Tu as déjà utilisé un indice pour cette question.";
+    hintLeftTop.textContent = String(getHintsLeft());
+    hintOverlay.style.display="flex";
+    return;
+  }
+
+  const left = getHintsLeft();
+  if(left <= 0){
+    sfxClick();
+    hintText.textContent = "Plus d’indices disponibles pour ce scénario.";
+    hintLeftTop.textContent = "0";
+    hintOverlay.style.display="flex";
+    return;
+  }
+
+  setHintsLeft(left - 1);
+  hintsLeft = left - 1;
+  hintUsedThisQuestion = true;
+
+  locked = true;
+  stopTimer();
+  sfxClick();
+
+  const q = questions[idx];
+  hintText.textContent = (q.hint || getDefaultHint(q));
+  hintLeftTop.textContent = String(getHintsLeft());
+  hintOverlay.style.display="flex";
+};
+
+closeHintBtn.onclick = ()=>{
+  hintOverlay.style.display="none";
+  if(!startOverlay.style.display || startOverlay.style.display==="none"){
+    locked = false;
+    startTimer();
+  }
+};
+
+/* ========= Pause ========= */
+pauseBtn.onclick = ()=>{
+  if(locked) return;
+  locked = true;
+  stopTimer();
+  sfxClick();
+  pauseOverlay.style.display="flex";
+};
+resumeBtn.onclick = ()=>{
+  pauseOverlay.style.display="none";
+  locked = false;
+  startTimer();
+};
+
+/* ========= Corrigé overlay ========= */
+function escapeHtml(str){
+  return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function buildAnswerKey(){
+  const rows = questions.map((q, i)=>{
+    let ans = "";
+    if(q.type==="single"){
+      const oi = q.options.findIndex(o=>o.kind==="ok");
+      ans = oi>=0 ? q.options[oi].text : "—";
+    }else if(q.type==="tf"){
+      ans = (q.tf.trueOpt.kind==="ok") ? "Vrai" : "Faux";
+    }else if(q.type==="multi"){
+      const a = q.options.map((o,idx)=>o.correct?o.text:null).filter(Boolean);
+      ans = a.join(" ; ");
+    }else if(q.type==="short"){
+      ans = (q.answers||[]).join(" / ");
+    }else if(q.type==="drag_order"){
+      const map = Object.fromEntries(q.items.map(it=>[it.id,it.text]));
+      ans = (q.expected||[]).map(id=>map[id]).join(" → ");
+    }else if(q.type==="cloze"){
+      ans = (q.blanks||[]).map(b=>b.answer).join(" | ");
+    }else if(q.type==="image_single"){
+      const oi = q.options.findIndex(o=>o.kind==="ok");
+      ans = oi>=0 ? `${q.options[oi].label} — ${q.options[oi].caption}` : "—";
+    }else if(q.type==="hotspot"){
+      const okH = (q.hotspots||[]).find(h=>h.kind==="ok");
+      ans = okH ? "Zone correcte (gorge)" : "—";
+    }else{
+      ans = "—";
+    }
+
+    return `
+      <tr>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); width:52px; color: rgba(255,255,255,.75);">Q${i+1}</td>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); font-weight:900;">${escapeHtml(q.title||"")}</td>
+        <td style="padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.86);">${escapeHtml(ans)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  return `
+    <div style="font-weight:950; font-size:16px; margin-bottom:10px;">📘 Corrigé (bonnes réponses)</div>
+    <div style="overflow:auto; border-radius:14px; border:1px solid rgba(255,255,255,.12);">
+      <table style="width:100%; border-collapse:collapse; min-width:680px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">#</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Question</th>
+            <th style="text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.65); font-size:12px;">Bonne réponse</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+showKeyBtn.onclick = ()=>{
+  if(showKeyBtn.disabled) return;
+  sfxClick();
+  keyBody.innerHTML = buildAnswerKey();
+  keyOverlay.style.display="flex";
+};
+keyCloseBtn.onclick = ()=>{
+  keyOverlay.style.display="none";
+};
+
+/* ========= Badge (référence) ========= */
+function computeMaxScore(){
+  let max = 0;
+  questions.forEach(q=>{
+    if(q.type==="multi" || q.type==="short" || q.type==="drag_order" || q.type==="cloze") max += 10;
+    else if(q.type==="tf"){
+      const opt = (q.tf.trueOpt.kind==="ok") ? q.tf.trueOpt : q.tf.falseOpt;
+      max += (opt.pts ?? 10);
+    }else if(q.type==="single" || q.type==="image_single"){
+      const okOpt = (q.options||[]).find(o=>o.kind==="ok");
+      max += (okOpt ? (okOpt.pts ?? 10) : 10);
+    }else if(q.type==="hotspot"){
+      const okH = (q.hotspots||[]).find(h=>h.kind==="ok");
+      max += (okH ? (okH.pts ?? 10) : 10);
+    }else{
+      max += 10;
+    }
+  });
+  return Math.max(1, max);
+}
+
+function saveBadge(payload){
+  const key = `badge_s${SCENARIO.id}_${SCENARIO.level.toLowerCase()}`;
+  localStorage.setItem(key, JSON.stringify(payload));
+
+  const histKey = "badges_history";
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem(histKey) || "[]"); }catch(e){ hist=[]; }
+  hist.unshift({
+    scenarioId: SCENARIO.id,
+    mission: SCENARIO.mission,
+    niveau: SCENARIO.level,
+    badgeType: payload.badgeType,
+    badgeName: payload.badgeName,
+    score: payload.score,
+    dateISO: payload.ts
+  });
+  localStorage.setItem(histKey, JSON.stringify(hist.slice(0,200)));
+}
+
+/* ========= End scenario ========= */
+function endScenario(){
+  stopTimer();
+  hideAllOverlays();
+
+  locked = true;
+  validateBtn.disabled = true;
+  clearBtn.style.display = "none";
+  hintBtn.disabled = true;
+  pauseBtn.disabled = true;
+
+  progressBar.style.width = "100%";
+
+  const maxScore = computeMaxScore();
+  const pct = clamp(Math.round((score / maxScore) * 100), 0, 100);
+
+  let badgeType = "BRONZE";
+  let badgeImg = "assets/bronze.png";
+  if(pct >= 90){ badgeType="OR"; badgeImg="assets/or.png"; }
+  else if(pct >= 70){ badgeType="ARGENT"; badgeImg="assets/argent.png"; }
+
+  const roleLabel = roleLabelMap[role] || "Rôle";
+  const badgeName = `${badgeType} — ${roleLabel} (${SCENARIO.level})`;
+
+  const payload = {
+    scenarioId: SCENARIO.id,
+    name: SCENARIO.label,
+    type: SCENARIO.mission,
+    niveau: SCENARIO.level,
+    role: roleLabel,
+    score,
+    percent: pct,
+    badgeType,
+    badgeName,
+    img: badgeImg,
+    ts: new Date().toISOString()
+  };
+  saveBadge(payload);
+
+  qMeta.textContent = "FIN — BADGE OBTENU";
+  qTitle.textContent = "🎉 Félicitations !";
+  qDesc.innerHTML = `
+    <div style="margin-top:8px; color: rgba(255,255,255,.86);">
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <div style="width:92px; height:92px; border-radius:18px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); display:grid; place-items:center;">
+          <img src="${badgeImg}" alt="badge" style="width:64px; height:64px; object-fit:contain;">
+        </div>
+        <div>
+          <div style="font-weight:950; font-size:16px;">🏅 ${escapeHtml(badgeName)}</div>
+          <div style="margin-top:6px; color: rgba(255,255,255,.78); line-height:1.55;">
+            Score final <b>${score}</b> / ${maxScore} • <b>${pct}%</b> • Stress <b>${stress}%</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  optionsEl.innerHTML = `
+    <div class="opt" style="cursor:default; text-align:center;">
+      <div style="font-size:46px; margin-bottom:6px;">🏁</div>
+      <div style="font-weight:950;">Mission terminée</div>
+      <div style="margin-top:6px; color: rgba(255,255,255,.74); font-size:13px;">Corrigé disponible • Tu peux passer au scénario suivant</div>
+    </div>
+  `;
+
+  showKeyBtn.disabled = false;
+  endBtn.style.display = "inline-block";
+
+  sfxVictory();
+}
+
+/* ========= Terminer ========= */
+endBtn.onclick = ()=>{
+  sfxClick();
+  window.location.href = NEXT_SCENARIO_URL;
+};
+
+/* ========= Motion ========= */
+function motion(type){
+  frame.classList.remove("shake","pulseGood","flashBad");
+  modalBox.classList.remove("shake","pulseGood","flashBad");
+  if(type==="good"){ frame.classList.add("pulseGood"); }
+  else if(type==="wrong"){ modalBox.classList.add("shake"); }
+  else if(type==="critical"){ modalBox.classList.add("shake"); frame.classList.add("flashBad"); }
+}
+
+/* ========= START ========= */
+startBtn.addEventListener("click", ()=>{
+  ensureAudio();
+  sfxClick();
+
+  localStorage.setItem("score","0");
+  localStorage.setItem("stress","0");
+  setScore(0);
+  setStress(0);
+
+  setHintsLeft(HINT_MAX);
+  hintsLeft = HINT_MAX;
+
+  startOverlay.style.display="none";
+
+  idx = 0;
+  attemptsForCurrentQuestion = 1;
+  setAttemptsUI();
+  setProgress();
+
+  showLoading(800);
+  setTimeout(()=>renderQuestion(0, true), 820);
+});
+
+/* ========= Init ========= */
+(function init(){
+  locked = true;
+  qMeta.textContent = SCENARIO.label;
+  qTitle.textContent = "Prépare-toi…";
+  qDesc.innerHTML = `Tu as <b>${TIMER_SECONDS} secondes</b> par question, <b>${ATTEMPTS_MAX} tentatives</b>, et <b>${HINT_MAX} indices</b> au total.`;
+  optionsEl.innerHTML = "";
+  hudQnum.textContent = "1";
+  hudTime.textContent = String(TIMER_SECONDS);
+  ring.style.setProperty("--p","100%");
+  setRingProgress();
+  setProgress();
+
+  el("miniTime").textContent = TIMER_SECONDS + "s";
+  el("miniAttempts").textContent = ATTEMPTS_MAX;
+  miniHints.textContent = getHintsLeft();
+
+  showKeyBtn.disabled = true;
+  endBtn.style.display = "none";
+})();
+</script>
   <script src="badge-manager.js"></script>
+
 </body>
 </html>
