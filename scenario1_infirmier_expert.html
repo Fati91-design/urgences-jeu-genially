@@ -590,7 +590,7 @@
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
 
           <!-- ✅ Règle demandée : 1 tentative -->
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">0</span>/<span id="hudAttemptsMax">3</span></div>
 
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
@@ -653,9 +653,9 @@
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
         <!-- ✅ Règles demandées : 30s / 1 tentative / 2 indices -->
-        <b>Règles :</b> 30 secondes par question • 2 tentative • 2 indices pour tout le quiz.
+        <b>Règles :</b> 30 secondes par question • 3 tentatives • 2 indices pour tout le quiz.
         <br><br>
-        <b>Si le temps s’écoule ou après 1 tentative ratée, tu retournes au début de la mission (score = 0).</b>
+        <b>Si le temps s’écoule ou après 3 tentative ratée, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -798,7 +798,7 @@ const NEXT_GENIALLY_URL = "#";
 
 /* ✅ Règles demandées */
 const TIMER_SECONDS = 30;     // chrono 30s
-const ATTEMPTS_MAX = 2;       // tentatives: 1
+const ATTEMPTS_MAX = 3;       // tentatives: 1
 const HINT_MAX = 2;           // indices: 2
 const HINT_KEY = "hints_left_s" + SCENARIO.id;
 
@@ -1437,7 +1437,7 @@ function hideOverlay(){ overlay.style.display="none"; }
 function missionFail(message){ stopTimer(); showOverlay("bad", message, {allowRetry:false, allowNext:false, missionFail:true}); motion("critical"); }
 function resetMission(showStart=true){
   stopTimer();
-  idx=0; attemptsForCurrentQuestion=1; setAttemptsUI();
+  idx=0; attemptsForCurrentQuestion=3; setAttemptsUI();
   setScore(0); setStress(0);
 
   // ✅ reset indices à 2 par quiz (au reset aussi)
