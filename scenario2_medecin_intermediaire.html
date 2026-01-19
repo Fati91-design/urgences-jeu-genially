@@ -653,7 +653,7 @@
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">3</span>/<span id="hudAttemptsMax">3</span></div>
           <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
           <!-- ✅ ordre "référence" : timer + stress + boutons -->
@@ -715,7 +715,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence (brûlure). Tu as peu de temps.
         <br><br>
-        <b>Intermédiaire :</b> <b>45 secondes</b> • <b>2 tentatives</b> • <b>2 indices</b> (1 indice max par question).
+        <b>Intermédiaire :</b> <b>45 secondes</b> • <b>3 tentatives</b> • <b>2 indices</b> (1 indice max par question).
         <br><br>
         <b>Si tu échoues (2 erreurs / 2 timeouts), la mission redémarre (score et stress à 0, indices réinitialisés).</b>
       </div>
@@ -883,7 +883,7 @@ const SCENARIO = {
 const NEXT_SCENARIO_URL = "#"; // <- remplace par le lien Genially du prochain scénario
 
 const TIMER_SECONDS = 45;
-const ATTEMPTS_MAX = 2;
+const ATTEMPTS_MAX = 3;
 const HINT_MAX = 2;
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 
@@ -927,7 +927,7 @@ if(isNaN(hintsLeft)) hintsLeft = HINT_MAX;
 hintsLeft = clamp(hintsLeft, 0, HINT_MAX);
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let hintUsedThisQuestion = false;
 let locked = true;
 let paused = false;
@@ -1024,7 +1024,7 @@ function startTimer(){
       setAttemptsUI();
 
       if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
-        missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
+        missionFail("⏱️ Temps écoulé (3 fois). Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
       }else{
         showOverlay("warn", `⏱️ Temps écoulé. (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, isMissionFail:false});
       }
@@ -1440,7 +1440,7 @@ function failedAttempt(baseMsg){
 
   if(attemptsForCurrentQuestion > ATTEMPTS_MAX){
     sfxAlarmLong();
-    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
+    missionFail("❌ Trois tentatives ratées. Mission échouée. Retour au départ… (score/stress/indices réinitialisés)");
     return;
   }
   showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/${ATTEMPTS_MAX})`, {allowRetry:true, allowNext:false, isMissionFail:false});
