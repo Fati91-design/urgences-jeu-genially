@@ -1203,7 +1203,7 @@ function renderQuestion(i, resetAttempts=true){
     wrap.style.background="rgba(0,0,0,.18)";
     wrap.innerHTML = q.svg
       ? q.svg
-      : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:auto; display:block;">`;
+      : `<img src="${q.imgSrc||""}" alt="hotspot" style="width:100%; height:240px; display:block;">`;
     optionsEl.appendChild(wrap);
 
     const zones = document.createElement("div");
