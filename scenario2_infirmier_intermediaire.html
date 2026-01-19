@@ -709,7 +709,7 @@
           <div class="stats">
             <div class="pill">⭐ <span id="hudScore">0</span></div>
             <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-            <div class="pill">🎯 <span style="opacity:.9;">Essais</span> <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+            <div class="pill">🎯 <span style="opacity:.9;">Essais</span> <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">3</span></div>
             <div class="pill">💡 <span style="opacity:.9;">Indices</span> <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
             <!-- (Indice masqué par CSS #hintBtn{display:none}) -->
@@ -769,7 +769,7 @@
       <div class="modalBody">
         <div class="startTitle">Tu as une mission.</div>
         <div class="startText" id="startRules">
-          Tu as <b>45 secondes</b> par question, <b>2 tentatives</b> max, et <b>2 indices</b> pour tout le scénario (1 seul indice par question).<br><br>
+          Tu as <b>45 secondes</b> par question, <b>3 tentatives</b> max, et <b>2 indices</b> pour tout le scénario (1 seul indice par question).<br><br>
           <b>Si 2 timeouts ou 2 erreurs</b> → mission échouée (score = 0) et retour au début.
         </div>
       </div>
@@ -925,7 +925,7 @@ const SCENARIO = {
 const NEXT_SCENARIO_URL = "#"; // <-- remplace par ton lien Genially
 
 const TIMER_SECONDS = 45;
-const ATTEMPTS_MAX = 2;
+const ATTEMPTS_MAX = 3;
 const HINT_MAX = 2;
 const STRESS_RULES = { wrong:10, timeout:15, critical:25 };
 
@@ -1011,7 +1011,7 @@ const TOTAL = questions.length;
 hudQtotal.textContent = String(TOTAL);
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let paused = false;
 let timerId = null;
