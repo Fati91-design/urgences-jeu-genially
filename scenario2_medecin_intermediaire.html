@@ -655,12 +655,8 @@
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
           <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
           <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
-                    <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
-          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
-		  
-		            <div class="stressWrap" title="Stress">
-            <div class="stressBar" id="stressBar"></div>
-          </div>
+
+          <!-- ✅ ordre "référence" : timer + stress + boutons -->
           <div class="pill timerPill" id="timerPill">
             <div class="ring" id="ring"><div class="ringInner">⏱</div></div>
             <div class="timeText">
@@ -668,9 +664,13 @@
               <div class="sec"><span id="hudTime">45</span>s</div>
             </div>
           </div>
-		  
 
+          <div class="stressWrap" title="Stress">
+            <div class="stressBar" id="stressBar"></div>
+          </div>
 
+          <button class="btnNeo" id="hintBtn" type="button">💡 Indice</button>
+          <button class="btnNeo" id="pauseBtn" type="button">⏸ Pause</button>
         </div>
       </div>
     </div>
@@ -692,7 +692,6 @@
         </div>
 
         <div class="actionsRight">
-
           <button class="btnPrimary" id="validateBtn" type="button" disabled>Valider</button>
           <button class="btnNeo" id="clearBtn" type="button" style="display:none;">Effacer</button>
         </div>
@@ -844,7 +843,6 @@ function sfxAlarmLong(){
 /* ========= Helpers ========= */
 const el = (id)=>document.getElementById(id);
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -868,7 +866,7 @@ const loadingOverlay = el("loadingOverlay");
 const overlay = el("overlay"), modalBox = el("modalBox"), badgeState = el("badgeState"), modalText = el("modalText");
 const modalScore = el("modalScore"), modalStress = el("modalStress");
 const retryBtn = el("retryBtn"), nextBtn = el("nextBtn"), okBtn = el("okBtn");
-const frame = el("frame"), frameInner = el("frameInner");
+const frame = el("frame");
 
 const hintOverlay = el("hintOverlay"), hintText = el("hintText"), closeHintBtn = el("closeHintBtn"), hintOkBtn = el("hintOkBtn");
 const pauseOverlay = el("pauseOverlay"), closePauseBtn = el("closePauseBtn"), resumeBtn = el("resumeBtn");
@@ -882,7 +880,6 @@ const SCENARIO = {
   mission: "Brûlure",
   level: "Intermédiaire"
 };
-
 const NEXT_SCENARIO_URL = "#"; // <- remplace par le lien Genially du prochain scénario
 
 const TIMER_SECONDS = 45;
@@ -900,7 +897,6 @@ const playerName =
   (window.player_name) ||
   (window.playerName) ||
   localStorage.getItem("player_name") ||
-  localStorage.getItem("playerName") ||
   localStorage.getItem("playerName") ||
   "Joueur";
 
@@ -969,7 +965,7 @@ function setProgress(){
   progressBar.style.width = pct + "%";
 }
 
-/* ========= Questions (copiées depuis TON code) ========= */
+/* ========= Questions (TES questions intégrées) ========= */
 const questions = [
   {"type":"tf","title":"Triage","desc":"V/F : localisation peut rendre grave même petite surface.","tf":{"trueOpt":{"kind":"ok","fb":"✅ Vrai : la localisation (visage, mains, OG) peut rendre une brûlure grave même si la surface est faible."},"falseOpt":{"kind":"wrong","fb":"❌ Non : la localisation compte énormément (visage, mains, organes génitaux…)."}}},
   {"type":"image_single","title":"Choix de l’image","desc":"Quel visuel correspond au <b>bon refroidissement</b> d’une brûlure ?","options":[{"label":"A","caption":"Eau glacée / glaçons","kind":"wrong","fb":"❌ Non : le froid intense peut aggraver.","imgSrc":"assets/burn_a.png"},{"label":"B","caption":"Eau du robinet (fraîche)","kind":"ok","fb":"✅ Oui : eau courante fraîche.","imgSrc":"assets/burn_b.png"},{"label":"C","caption":"Beurre / dentifrice","kind":"critical","fb":"🚨 Erreur critique : à éviter.","pts":-10,"imgSrc":"assets/burn_c.png"}]},
@@ -983,7 +979,7 @@ const questions = [
   {"type":"short","title":"Mot-clé","desc":"Objectif immédiat = (1 mot)","answers":["refroidir","refroidissement"],"okFb":"✅ Correct : l’objectif immédiat est de refroidir (arrêter l’agression thermique).","badFb":"❌ Attendu : refroidir."}
 ];
 
-/* ======= Hints (réglage indices) ======= */
+/* ======= Hints (2 indices total, 1 max/question) ======= */
 const hintMap = [
   "Pense aux <b>localisations à risque</b> (visage, mains, organes génitaux) même si la surface est petite.",
   "Le refroidissement se fait avec de l’<b>eau courante fraîche</b>, pas glacée.",
@@ -1051,7 +1047,7 @@ function resetState(){
 }
 
 /* ========= Loading (Référence) ========= */
-function showLoading(ms=700){
+function showLoading(ms=800){
   loadingOverlay.style.display="flex";
   frame.style.visibility="hidden";
   setTimeout(()=>{
@@ -1248,7 +1244,6 @@ function renderQuestion(i, resetAttempts=true){
       setHintsUI();
     });
 
-    // On autorise valider (l'ordre existe)
     validateBtn.disabled=false;
     setHintsUI();
   }
@@ -1330,7 +1325,6 @@ function renderQuestion(i, resetAttempts=true){
     });
   }
 
-  // boutons
   validateBtn.disabled = validateBtn.disabled || locked;
   clearBtn.disabled = locked;
   setHintsUI();
@@ -1357,27 +1351,18 @@ hintBtn.onclick = ()=>{
   if(hintUsedThisQuestion) return;
 
   sfxClick();
-  // consomme 1 indice
   hintsLeft = clamp(hintsLeft - 1, 0, HINT_MAX);
   localStorage.setItem(HINT_KEY, String(hintsLeft));
   hintUsedThisQuestion = true;
   setHintsUI();
 
-  // pause timer pendant l'indice (référence)
   paused = true;
-
   const h = hintMap[idx] || "Relis l’énoncé et applique le protocole.";
   showHint(h);
 };
 
-closeHintBtn.onclick = ()=>{
-  hideHint();
-  paused = false;
-};
-hintOkBtn.onclick = ()=>{
-  hideHint();
-  paused = false;
-};
+closeHintBtn.onclick = ()=>{ hideHint(); paused = false; };
+hintOkBtn.onclick    = ()=>{ hideHint(); paused = false; };
 
 /* ========= Pause ========= */
 function showPause(){ pauseOverlay.style.display="flex"; }
@@ -1390,7 +1375,7 @@ pauseBtn.onclick = ()=>{
   showPause();
 };
 closePauseBtn.onclick = ()=>{ hidePause(); paused=false; };
-resumeBtn.onclick = ()=>{ hidePause(); paused=false; };
+resumeBtn.onclick     = ()=>{ hidePause(); paused=false; };
 
 /* ========= Feedback overlay ========= */
 function showOverlay(kind, text, {allowRetry, allowNext, isMissionFail}){
@@ -1480,26 +1465,26 @@ function needSelection(msg){
 
 function evaluateOption(opt){
   if(opt.kind==="ok"){
-    addScore(opt.pts ?? 10);
+    setScore(score + (opt.pts ?? 10));
     showOverlay("good", opt.fb || "✅ Correct.", {allowRetry:false, allowNext:true, isMissionFail:false});
     sfxCorrect(); motion("good");
     return;
   }
   if(opt.kind==="critical"){
-    addStress(STRESS_RULES.critical);
-    addScore(opt.pts ?? -10);
+    setStress(stress + STRESS_RULES.critical);
+    setScore(score + (opt.pts ?? -10));
     sfxCritical(); motion("critical");
     failedAttempt(opt.fb || "🚨 Erreur critique.");
     return;
   }
   if(opt.kind==="partial"){
-    addStress(STRESS_RULES.wrong);
-    addScore(opt.pts ?? 3);
+    setStress(stress + STRESS_RULES.wrong);
+    setScore(score + (opt.pts ?? 3));
     sfxWrong(); motion("wrong");
     failedAttempt(opt.fb || "🟡 Partiel.");
     return;
   }
-  addStress(STRESS_RULES.wrong);
+  setStress(stress + STRESS_RULES.wrong);
   sfxWrong(); motion("wrong");
   failedAttempt(opt.fb || "❌ Incorrect.");
 }
@@ -1510,7 +1495,6 @@ validateBtn.onclick = ()=>{
   const q = questions[idx];
   const type = q.type;
 
-  // vérif saisie
   if(type==="single" || type==="tf" || type==="image_single" || type==="hotspot"){
     if(selectedSingle===null){ needSelection("Choisis une réponse avant de valider."); return; }
   }
@@ -1528,18 +1512,14 @@ validateBtn.onclick = ()=>{
   stopTimer();
   locked=true;
 
-  if(type==="single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="tf"){
     const opt = (selectedSingle===0) ? q.tf.trueOpt : q.tf.falseOpt;
     evaluateOption(opt); return;
   }
 
-  if(type==="image_single"){
-    evaluateOption(q.options[selectedSingle]); return;
-  }
+  if(type==="image_single"){ evaluateOption(q.options[selectedSingle]); return; }
 
   if(type==="multi"){
     const chosen=[...multiSelected].sort((a,b)=>a-b);
@@ -1547,11 +1527,11 @@ validateBtn.onclick = ()=>{
     const ok = chosen.length===correctIdx.length && chosen.every((v,i)=>v===correctIdx[i]);
 
     if(ok){
-      addScore(10);
+      setScore(score + 10);
       showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, isMissionFail:false});
       sfxCorrect(); motion("good");
     }else{
-      addStress(STRESS_RULES.wrong);
+      setStress(stress + STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
       failedAttempt(q.badFb || "❌ Incorrect.");
     }
@@ -1563,11 +1543,11 @@ validateBtn.onclick = ()=>{
     const accepted=(q.answers||[]).map(a=>String(a).trim().toLowerCase());
     const ok = accepted.includes(norm);
     if(ok){
-      addScore(10);
+      setScore(score + 10);
       showOverlay("good", q.okFb || "✅ Bonne réponse.", {allowRetry:false, allowNext:true, isMissionFail:false});
       sfxCorrect(); motion("good");
     }else{
-      addStress(STRESS_RULES.wrong);
+      setStress(stress + STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
       failedAttempt(q.badFb || "❌ Réponse incorrecte.");
     }
@@ -1577,11 +1557,11 @@ validateBtn.onclick = ()=>{
   if(type==="cloze"){
     const ok = q.blanks.every(b => ((clozeValues[b.key]||"").trim().toLowerCase() === String(b.answer).trim().toLowerCase()));
     if(ok){
-      addScore(10);
+      setScore(score + 10);
       showOverlay("good", q.okFb || "✅ Correct.", {allowRetry:false, allowNext:true, isMissionFail:false});
       sfxCorrect(); motion("good");
     }else{
-      addStress(STRESS_RULES.wrong);
+      setStress(stress + STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
       failedAttempt(q.badFb || "❌ Incorrect.");
     }
@@ -1593,11 +1573,11 @@ validateBtn.onclick = ()=>{
     const order = [...list.querySelectorAll("[draggable='true']")].map(x=>x.dataset.id);
     const ok = order.length===q.expected.length && q.expected.every((v,i)=>order[i]===v);
     if(ok){
-      addScore(10);
+      setScore(score + 10);
       showOverlay("good", q.okFb || "✅ Bon ordre.", {allowRetry:false, allowNext:true, isMissionFail:false});
       sfxCorrect(); motion("good");
     }else{
-      addStress(STRESS_RULES.wrong);
+      setStress(stress + STRESS_RULES.wrong);
       sfxWrong(); motion("wrong");
       failedAttempt(q.badFb || "❌ Ordre incorrect.");
     }
@@ -1609,17 +1589,17 @@ validateBtn.onclick = ()=>{
     if(!h){ locked=false; startTimer(); return; }
 
     if(h.kind==="ok"){
-      addScore(h.pts ?? 10);
+      setScore(score + (h.pts ?? 10));
       showOverlay("good", h.fb || "✅ Correct.", {allowRetry:false, allowNext:true, isMissionFail:false});
       sfxCorrect(); motion("good");
     }else if(h.kind==="critical"){
-      addStress(STRESS_RULES.critical);
-      addScore(h.pts ?? -10);
+      setStress(stress + STRESS_RULES.critical);
+      setScore(score + (h.pts ?? -10));
       sfxCritical(); motion("critical");
       failedAttempt(h.fb || "🚨 Erreur critique.");
     }else{
-      addStress(STRESS_RULES.wrong);
-      addScore(h.pts ?? 0);
+      setStress(stress + STRESS_RULES.wrong);
+      setScore(score + (h.pts ?? 0));
       sfxWrong(); motion("wrong");
       failedAttempt(h.fb || "❌ Incorrect.");
     }
@@ -1636,7 +1616,6 @@ function resetMission(showStart=true){
   locked=true;
   paused=false;
 
-  // reset score/stress + reset indices (référence)
   setScore(0);
   setStress(0);
 
@@ -1710,7 +1689,6 @@ function computeBadge(pct){
   if(pct >= 70) return {type:"ARGENT", img:"assets/argent.png"};
   return {type:"BRONZE", img:"assets/bronze.png"};
 }
-
 function saveBadge(payload){
   const key = `badge_s${SCENARIO.id}_${difficulty}`;
   localStorage.setItem(key, JSON.stringify(payload));
@@ -1726,7 +1704,6 @@ function endScenario(){
   locked=true;
   paused=false;
 
-  // déverrouille corrigé, désactive contrôles
   showKeyBtn.disabled = false;
   hintBtn.disabled = true;
   pauseBtn.disabled = true;
@@ -1780,9 +1757,7 @@ function endScenario(){
     </div>
   `;
 
-  endBtn.onclick = ()=>{
-    window.location.href = NEXT_SCENARIO_URL;
-  };
+  endBtn.onclick = ()=>{ window.location.href = NEXT_SCENARIO_URL; };
 }
 
 /* ========= Init / Start ========= */
@@ -1808,7 +1783,7 @@ startBtn.addEventListener("click", ()=>{
   ensureAudio();
   sfxClick();
 
-  // ✅ Réinitialiser la partie (référence intermédiaire)
+  // ✅ reset intermédiaire
   localStorage.setItem("score","0");
   localStorage.setItem("stress","0");
   score=0; stress=0;
@@ -1833,6 +1808,8 @@ startBtn.addEventListener("click", ()=>{
   initUI();
 })();
 </script>
+
+<!-- optionnel si tu utilises ton gestionnaire externe -->
 <script src="badge-manager.js"></script>
 
 </body>
