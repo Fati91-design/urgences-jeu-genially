@@ -614,7 +614,7 @@
             <div class="pill">⭐ <span id="hudScore">0</span></div>
             <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">0</span></div>
 
-            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">2</span></div>
+            <div class="pill">🎯 Tentatives <span id="hudAttempts">1</span>/<span id="hudAttemptsMax">3</span></div>
             <div class="pill">💡 Indices <span id="hudHints">2</span></div>
 
             <div class="pill timerPill" id="timerPill">
@@ -839,7 +839,7 @@ const NEXT_SCENARIO_URL = "#"; // ✅ remplace par ton lien Genially
 
 // Intermédiaire (référence)
 const TIMER_SECONDS = 45;
-const ATTEMPTS_MAX = 2;
+const ATTEMPTS_MAX = 3;
 const HINT_MAX = 2;
 const HINT_KEY = `hints_left_s${SCENARIO.id}`;
 
@@ -939,7 +939,7 @@ function startTimer(reset=false){
 /* ========= Mission logic ========= */
 let idx = 0;
 let locked = true;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let hintUsedThisQuestion = false;
 
 let wrongCount = 0;    // ✅ global scénario
