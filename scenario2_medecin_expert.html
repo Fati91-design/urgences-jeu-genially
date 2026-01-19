@@ -553,7 +553,7 @@
           <div class="progressBar" id="progressBar"></div>
         </div>
 
-        <div class="miniHint" id="miniHint">Durée 30s • Tentatives 2 • Indices 2</div>
+        <div class="miniHint" id="miniHint">Durée 30s • Tentatives 3 • Indices 2</div>
       </div>
     <div class="hud">
       <div class="hudbox">
@@ -573,7 +573,7 @@
         <div class="stats">
           <div class="pill">⭐ <span id="hudScore">0</span></div>
           <div class="pill">Q <span id="hudQnum">1</span>/<span id="hudQtotal">10</span></div>
-          <div class="pill">🎯 Tentatives <span id="hudAttempts">2</span>/<span id="hudAttemptsMax">2</span></div>
+          <div class="pill">🎯 Tentatives <span id="hudAttempts">3</span>/<span id="hudAttemptsMax">3</span></div>
           <div class="pill">💡 Indices <span id="hudHints">2</span>/<span id="hudHintsMax">2</span></div>
 
           <div class="stressWrap" title="Stress">
@@ -641,7 +641,7 @@
         <b>Règles (avancé) :</b>
         <ul style="margin:10px 0 0 18px;">
           <li><b>30 secondes</b> par question</li>
-          <li><b>1 seule tentative</b> (si erreur ou temps écoulé → retour au départ, score = 0)</li>
+          <li><b>3 tentatives</b> (si erreur ou temps écoulé → retour au départ, score = 0)</li>
           <li><b>2 indices</b> pour tout le quiz (1 indice max par question)</li>
         </ul>
         Es-tu prêt à commencer ?
@@ -1488,7 +1488,7 @@ startBtn.addEventListener("click", ()=>{
   setPausedUI();
   qMeta.textContent = SCENARIO.label;
   qTitle.textContent="Prépare-toi…";
-  qDesc.innerHTML="Tu as <b>30 secondes</b> par question, <b>2 tentative</b>, et <b>2 indices</b> pour tout le quiz.";
+  qDesc.innerHTML="Tu as <b>30 secondes</b> par question, <b>3 tentative</b>, et <b>2 indices</b> pour tout le quiz.";
   optionsEl.innerHTML="";
   hudQnum.textContent="1";
   hudTime.textContent=String(TIMER_SECONDS);
