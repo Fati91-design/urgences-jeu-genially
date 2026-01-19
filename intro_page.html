@@ -519,11 +519,103 @@
 </script>
 
 <script>
-  (function resetGameIfNewRun(){
-    const keys = ["player_name","playerName","role","avatar","niveau","score","tentatives","badges"];
-    keys.forEach(k => localStorage.removeItem(k));
-    keys.forEach(k => sessionStorage.removeItem(k));
-  })();
+/* =========================
+   ✅ RESET / VIDAGE VARIABLES (localStorage)
+   - Supprime les clés "Urgences" sans toucher au reste du navigateur
+========================= */
+function resetUrgencesStorage(options = {}){
+  const opts = {
+    resetProfile: true,   // true = supprime playerName/role/avatar
+    resetBadges: true,    // true = supprime badges + history
+    resetProgress: true,  // true = supprime score/stress/niveau/difficulty + hints
+    ...options
+  };
+
+  // 1) Clés directes utilisées dans ce code (et tes autres pages)
+  const keysAlways = [
+    "badges_filter",
+    "no_show_last_badge",
+    "last_badge_key"
+  ];
+
+  const keysProfile = [
+    "player_name",
+    "playerName",
+    "role",
+    "avatar"
+  ];
+
+  const keysProgress = [
+    "niveau",
+    "difficulty",
+    "score",
+    "stress"
+  ];
+
+  // Supprime d'abord les clés simples
+  keysAlways.forEach(k => localStorage.removeItem(k));
+  if(opts.resetProfile)  keysProfile.forEach(k => localStorage.removeItem(k));
+  if(opts.resetProgress) keysProgress.forEach(k => localStorage.removeItem(k));
+
+  // 2) Suppression par préfixes (plus sûr + couvre tous les scénarios/niveaux)
+  // - badge_s1_DEBUTANT, badge_s1_intermediaire, badge_s1, etc.
+  // - hints_left_s1, hints_left_s2, ...
+  // - badges_history
+  const prefixes = [];
+  if(opts.resetBadges)   prefixes.push("badge_s");
+  if(opts.resetProgress) prefixes.push("hints_left_s");
+
+  const toRemove = [];
+
+  for(let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(!k) continue;
+
+    // badges_history (historique)
+    if(opts.resetBadges && k === "badges_history") {
+      toRemove.push(k);
+      continue;
+    }
+
+    // last_badge_key peut pointer vers une clé badge_s... => on l'a déjà supprimée
+    // mais on peut aussi supprimer la clé pointée si elle existe encore
+    if(k === "last_badge_key"){
+      const pointed = localStorage.getItem("last_badge_key");
+      if(pointed) toRemove.push(pointed);
+      continue;
+    }
+
+    // suppression par préfixe
+    if(prefixes.some(p => k.startsWith(p))){
+      toRemove.push(k);
+    }
+  }
+
+  // Supprime après la boucle (évite de casser l’indexation de localStorage)
+  [...new Set(toRemove)].forEach(k => localStorage.removeItem(k));
+
+  // (Optionnel) petit reset visuel immédiat si tu veux
+  // location.reload();
+}
+
+/* ✅ Raccourci: tout vider (profil + badges + progression) */
+function resetAllUrgences(){
+  resetUrgencesStorage({ resetProfile:true, resetBadges:true, resetProgress:true });
+}
+
+/* ✅ Raccourci: garder le profil (nom/avatar/role) mais vider badges + progression */
+function resetUrgencesKeepProfile(){
+  resetUrgencesStorage({ resetProfile:false, resetBadges:true, resetProgress:true });
+}
+  
+$("bfContinue").addEventListener("click", ()=>{
+  sfxClick();
+  resetAllUrgences();          // ✅ ICI l’appel
+  hideCongrats();
+  showAppMain();
+});
+
+
 </script>
 
 </body>
