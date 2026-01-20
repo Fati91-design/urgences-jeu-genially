@@ -452,7 +452,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <b>Si le temps s’écoule ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -592,7 +592,7 @@ if(isNaN(score)) score = 0;
 if(isNaN(stress)) stress = 0;
 
 let idx = 0;
-let attemptsForCurrentQuestion = 1;
+let attemptsForCurrentQuestion = 3;
 let locked = true;
 let timerId = null;
 let timeLeft = TIMER_SECONDS;
@@ -1088,7 +1088,7 @@ function failedAttempt(baseMsg){
   attemptsForCurrentQuestion++; setAttemptsUI();
   if(attemptsForCurrentQuestion >= 3){
     sfxAlarmLong();
-    missionFail("❌ Deux tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
+    missionFail("❌ Trois tentatives ratées. Mission échouée. Retour au départ… (score remis à zéro)");
     return;
   }
   showOverlay("warn", `${baseMsg} (Tentative ${attemptsForCurrentQuestion}/2)`, {allowRetry:true, allowNext:false, missionFail:false});
