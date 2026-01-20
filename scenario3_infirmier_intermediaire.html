@@ -708,9 +708,9 @@
       <div style="color: rgba(255,255,255,.82); font-size:14px; line-height:1.45;">
         Tu vas intervenir en situation d’urgence. Tu as <b>45 secondes</b> par question.
         <br><br>
-        <b>Intermédiaire :</b> <b>2 tentatives</b> max par question, <b>2 indices</b> pour tout le scénario (1 indice max par question).
+        <b>Intermédiaire :</b> <b>3 tentatives</b> max par question, <b>2 indices</b> pour tout le scénario (1 indice max par question).
         <br><br>
-        <b>Si le temps s’écoule 2 fois ou après 2 tentatives ratées, tu retournes au début (score = 0).</b>
+        <b>Si le temps s’écoule 3 fois ou après 3 tentatives ratées, tu retournes au début (score = 0).</b>
       </div>
     </div>
     <div class="modalActions">
@@ -889,7 +889,7 @@ const roleLabelMap = { medecin:"Médecin", infirmier:"Infirmier", pompier:"Pompi
 
 const difficulty = "intermédiaire"; // on force intermédiaire ici (référence)
 const TIMER_SECONDS = 45;
-const ATTEMPTS_MAX = 2;
+const ATTEMPTS_MAX = 3;
 const HINT_MAX = 2;
 
 const STRESS_RULES = { wrong:10, timeout:15, critical:25 };
