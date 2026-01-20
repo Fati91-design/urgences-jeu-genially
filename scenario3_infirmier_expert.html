@@ -451,7 +451,7 @@
       <div class="startText">
         Tu vas intervenir en situation d’urgence. Tu as peu de temps pour répondre.
         <br><br>
-        <b>Si le temps s’écoule ou après 2 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
+        <b>Si le temps s’écoule ou après 3 tentatives ratées, tu retournes au début de la mission (score = 0).</b>
         <br>
         Es-tu prêt à commencer ?
       </div>
@@ -641,7 +641,7 @@ function startTimer(){
       setAttemptsUI();
       // 2 essais max comme ton design initial
       if(attemptsForCurrentQuestion >= 3){
-        missionFail("⏱️ Temps écoulé (2 fois). Mission échouée. Retour au départ… (score remis à zéro)");
+        missionFail("⏱️ Temps écoulé (3 fois). Mission échouée. Retour au départ… (score remis à zéro)");
       }else{
         showOverlay("warn","⏱️ Temps écoulé. (Tentative "+attemptsForCurrentQuestion+"/2)", {allowRetry:true, allowNext:false, missionFail:false});
       }
